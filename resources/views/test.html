@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1">
+
+    <title>Test Page</title>
+</head>
+<body>
+
+<h1>Welcome to the Greenshoot Labs Test Page</h1>
+
+<div>
+    <p>
+        Click on the chat icon in the bottom right to talk to our bot
+    </p>
+</div>
+
+<button onclick="document.querySelector('#greenshoot-chatwindow').contentWindow.postMessage({ expandChat: true }, '*');">Expand chat</button>
+<button onclick="document.querySelector('#greenshoot-chatwindow').contentWindow.postMessage({ collapseChat: true }, '*');">Collapse chat</button>
+
+<script>
+    var URL = "https://demo.app";
+    var validPath = "/test.html";
+
+    window.greenshootSettings = {
+        url: URL,
+        validPath: validPath
+    };
+</script>
+<script src="https://demo.app/vendor/webchat/js/greenshoot-bot.js"></script>
+
+</body>
+</html>

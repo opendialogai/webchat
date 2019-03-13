@@ -1,0 +1,211 @@
+// Bootstrap-vue
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import 'node_modules/bootstrap-vue/src/index.scss';
+
+.sc-chat-window {
+  border-radius: 0 !important;
+  width: 100% !important;
+  max-height: 100% !important;
+  bottom: 0 !important;
+  right: 0 !important;
+
+  &.closed {
+    .sc-header--minimize-button {
+      background: url('/images/vendor/webchat/images/max.svg') center center no-repeat;
+    }
+  }
+  &.opened {
+    .sc-header--minimize-button {
+      background: url('/images/vendor/webchat/images/min.svg') center center no-repeat;
+    }
+  }
+
+  .sc-header {
+    border-radius: 0;
+    box-shadow: none;
+    text-align: center;
+    min-height: 48px;
+    padding: 7px 10px;
+
+    .sc-header--expand-button {
+      display: block;
+    }
+
+    .sc-header--minimize-button {
+      display: block;
+      margin-right: 0;
+      img {
+        display: none;
+      }
+    }
+  }
+
+  .sc-message-list {
+    box-shadow: #CFCFCF 0 1px 5px;
+    z-index: 1;
+
+    .sc-message {
+      width: calc(100% - 22px);
+    }
+    @media screen and (min-width: 490px) {
+      .sc-message {
+        width: calc(100% - 44px);
+      }
+    }
+
+    .sc-message--content {
+      &.sent {
+        &.internal {
+          margin-top: -17px;
+          .sc-message--text,
+          .sc-message--list,
+          .sc-message--button,
+          .sc-message--image {
+            border-top-right-radius: 0;
+          }
+        }
+        .sc-message--text,
+        .sc-message--list,
+        .sc-message--button,
+        .sc-message--button-response,
+        .sc-message--image,
+        .sc-typing-indicator {
+          max-width: calc(100% - 40px);
+          border-radius: 15px;
+          border-bottom-right-radius: 0;
+          box-shadow: #CFCFCF 1px 1px 1px;
+        }
+      }
+      &.received {
+        &.internal {
+          margin-top: -17px;
+          .sc-message--text,
+          .sc-message--list,
+          .sc-message--button,
+          .sc-message--image {
+            border-top-left-radius: 0;
+          }
+        }
+        .sc-message--long-text,
+        .sc-message--text,
+        .sc-message--list,
+        .sc-message--button,
+        .sc-message--image,
+        .sc-typing-indicator {
+          max-width: calc(100% - 40px);
+          border-radius: 15px;
+          border-bottom-left-radius: 0;
+          box-shadow: #CFCFCF -1px 1px 1px;
+          margin-right: 10px;
+        }
+      }
+    }
+
+    .sc-message--time-read {
+      color: #8E8E92;
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+
+    .sc-message {
+      .sc-message--button-response {
+        .button {
+          padding: 0;
+          background: transparent;
+          color: inherit;
+          margin: 0;
+        }
+      }
+    }
+
+    .sc-message--list {
+      max-width: calc(100% - 10px);
+      .sc-message--list--element {
+        padding: 12px 15px;
+        width: calc(100% - 30px);
+        .sc-message--list--subtitle {
+          font-size: 14px;
+        }
+        .sc-message--list--button {
+          a, button {
+            font-size: 14px;
+            padding: 7px 17px;
+            border-radius: 12px;
+          }
+        }
+      }
+    }
+
+    .sc-message--button {
+      padding: 0 15px;
+      .sc-message--button--text {
+        margin-top: 7px;
+      }
+      .sc-message--button--buttons {
+        padding-bottom: 10px;
+        button {
+          font-size: 14px;
+          padding: 7px 17px;
+          width: 100%;
+          border-radius: 12px;
+          margin-bottom: 5px;
+        }
+      }
+    }
+
+    .sc-message--text {
+      font-size: 14px;
+      padding: 7px 15px;
+    }
+
+    .sc-message--button-response {
+      padding: 7px 15px;
+      .button {
+        display: inline-block;
+        font-size: 14px;
+        padding: 7px 17px;
+        border-radius: 12px;
+        text-align: center;
+        margin: 0 -4px;
+      }
+    }
+  }
+
+  .sc-user-input {
+    border-radius: 0;
+    .sc-user-input--text {
+      width: calc(100% - 35px);
+      font-size: 16px;
+      transform-origin: left;
+      transform: scale(0.94);
+      padding: 16px 18px;
+    }
+    .sc-user-input--buttons {
+      right: 10px;
+      width: auto;
+      .sc-user-input--send-icon-wrapper {
+        background: url('/images/vendor/webchat/images/message.svg') center center no-repeat;
+        height: 16px;
+        cursor: pointer;
+        svg {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.no-close {
+  .sc-header {
+    cursor: default;
+    .sc-header--minimize-button {
+      background: none;
+    }
+  }
+}
+
+.mobile {
+  .sc-message {
+    width: calc(100% - 22px);
+  }
+}

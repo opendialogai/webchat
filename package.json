@@ -1,0 +1,47 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "eslint": "./node_modules/.bin/eslint resources/assets/js/ --ext .js,.vue",
+        "watch": "npm run development -- --watch",
+        "watch-poll": "npm run watch -- --watch-poll",
+        "prod": "npm run production",
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    },
+    "devDependencies": {
+        "axios": "^0.18",
+        "babel-eslint": "^10.0.1",
+        "bootstrap": "^4.3.1",
+        "cross-env": "^5.2.0",
+        "eslint": "^5.15.1",
+        "eslint-config-airbnb-base": "^13.1.0",
+        "eslint-import-resolver-alias": "^1.1.2",
+        "eslint-loader": "^2.1.2",
+        "eslint-plugin-import": "^2.16.0",
+        "eslint-plugin-vue": "^5.2.2",
+        "jquery": "^3.2",
+        "laravel-mix": "^4.0.14",
+        "lodash": "^4.17.11",
+        "popper.js": "^1.14.7",
+        "resolve-url-loader": "2.3.1",
+        "sass": "^1.17.2",
+        "sass-loader": "7.*",
+        "vue": "^2.6.8"
+    },
+    "dependencies": {
+        "@babel/core": "^7.3.4",
+        "@reststate/vuex": "0.0.9",
+        "bootstrap-vue": "^2.0.0-rc.13",
+        "detect-browser": "^4.1.0",
+        "jstz": "^2.1.1",
+        "laravel-echo": "^1.5.3",
+        "moment-timezone": "^0.5.23",
+        "pusher-js": "^4.4.0",
+        "vue-beautiful-chat": "git+https://7793e538466954b1f6953051ed45f18ce3d90fc1:x-oauth-basic@github.com/GreenShootLabs/vue-beautiful-chat.git#s2/feature/author-message",
+        "vue-js-cookie": "^2.1.0",
+        "vue-template-compiler": "^2.6.8",
+        "vue-uuid": "^1.1.1",
+        "vuex": "^3.1.0"
+    }
+}
