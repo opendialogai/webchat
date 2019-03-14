@@ -1,13 +1,18 @@
 <template>
   <div
-    class="opendialog-chat-window"
-    :class="[ isMobile ? 'mobile' : '' ]"
+    :class="[
+      'opendialog-chat-window',
+      (commentsEnabled ? 'comments-enabled' : 'comments-disabled'),
+      (isMobile ? 'mobile' : 'desktop'),
+    ]"
     :style="cssProps"
   >
     <b-nav
+      v-show="commentsEnabled"
       ref="opendialogWidgetTabs"
       fill
       pills
+      :style="{visibility: showTabs ? 'visible' : 'hidden'}"
     >
       <b-nav-item
         v-if="commentsEnabled"
@@ -15,14 +20,14 @@
         class="pr-1"
         @click="activateTab('comments')"
       >
-        Comments
+        {{ commentsName ? commentsName : 'Comments' }}
       </b-nav-item>
       <b-nav-item
         :class="{ active: activeTab === 'webchat' }"
         class="pr-1"
         @click="activateTab('webchat')"
       >
-        WebChat
+        {{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}
       </b-nav-item>
     </b-nav>
     <div
@@ -47,7 +52,6 @@
         :key="commentsKey"
         :agent-profile="agentProfile"
         :callback-map="callbackMap"
-        :can-close-chat="canCloseChat"
         :colours="colours"
         :comments-api-config="commentsApiConfig"
         :is-expand="isExpand"
@@ -64,7 +68,7 @@
       />
     </div>
     <div
-      v-if="activeTab == 'webchat'"
+      v-show="activeTab == 'webchat'"
       class="webchat-container"
     >
       <WebChat
@@ -75,6 +79,7 @@
         :colours="colours"
         :is-expand="isExpand"
         :is-mobile="isMobile"
+        :chat-is-open="isOpen"
         :load-history="loadHistory"
         :message-delay="messageDelay"
         :new-message-icon="newMessageIcon"
@@ -83,6 +88,8 @@
         :user="user"
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
+        @expandChat="expandChat"
+        @toggleChatOpen="toggleChatOpen"
       />
     </div>
   </div>
@@ -139,6 +146,7 @@ export default {
       commentsApiConfig: {},
       commentsKey: 0,
       commentsEnabled: false,
+      commentsName: '',
       commentsEnabledPathPattern: '',
       cssProps: {},
       isExpand: false,
@@ -148,10 +156,15 @@ export default {
       messageDelay: 1000,
       newMessageIcon: '',
       parentUrl: '',
+      pathInitialised: false,
+      sectionFilterPathPattern: '',
+      sectionFilterQuery: '',
       sectionId: '',
       sectionOptions: [],
+      sectionQueryString: '',
       settingsInitialised: false,
       showExpandButton: true,
+      showTabs: false,
       timezoneInitialised: false,
       user: {},
       userTimezone: '',
@@ -165,6 +178,21 @@ export default {
     },
   },
   watch: {
+    apiReady(apiIsReady) {
+      if (apiIsReady && this.pathInitialised && this.commentsEnabled) {
+        this.getCommentSections();
+      }
+    },
+    commentsEnabled(commentsAreEnabled) {
+      if (commentsAreEnabled && this.pathInitialised && this.apiReady) {
+        this.getCommentSections();
+      }
+    },
+    pathInitialised(pathIsInitialised) {
+      if (pathIsInitialised && this.apiReady && this.commentsEnabled) {
+        this.getCommentSections();
+      }
+    },
     // Refresh comments when the section is changed.
     sectionId(newId, oldId) {
       if (newId !== oldId) {
@@ -192,6 +220,34 @@ export default {
       // for the height calculation.
       setTimeout(() => { this.cssProps = this.getCssProps(); }, 0);
     },
+    expandChat(forceExpand = false) {
+      if (!this.showExpandButton && !forceExpand) {
+        return;
+      }
+
+      this.isExpand = !this.isExpand;
+
+      if (this.isExpand) {
+        window.parent.postMessage({ dataLayerEvent: 'chatbot_maximized' }, '*');
+      } else {
+        window.parent.postMessage({ dataLayerEvent: 'chatbot_minimized' }, '*');
+      }
+
+      if (!this.isOpen) {
+        this.toggleChatOpen();
+      }
+
+      // Only add the expanded class on non-mobile devices
+      if (window.self !== window.top && !this.isMobile) {
+        if (!this.isExpand) {
+          window.parent.postMessage({ removeClass: 'expanded' }, '*');
+          this.$root.$emit('scroll-down-message-list');
+        } else {
+          window.parent.postMessage({ addClass: 'expanded' }, '*');
+          this.$root.$emit('scroll-down-message-list');
+        }
+      }
+    },
     getCssProps() {
       const cssVars = {};
 
@@ -211,6 +267,9 @@ export default {
         headerHeight += this.$refs.opendialogWidgetSectionSelector.clientHeight;
       }
       cssVars['--header-height'] = `${headerHeight}px`;
+
+      // Show the tabs, now that we've got the correct CSS.
+      this.showTabs = true;
 
       return cssVars;
     },
@@ -299,8 +358,7 @@ export default {
           }
 
           if (event.data.user && !window._.isEmpty(event.data.user)) {
-            self.user = event.data.user;
-            self.userUuid = self.user.email;
+            self.userUuid = event.data.user.email;
           }
 
           if (event.data.newMessageIcon) {
@@ -334,6 +392,10 @@ export default {
           if (event.data.commentsEnabled) {
             self.commentsEnabled = true;
 
+            if (event.data.commentsName) {
+              self.commentsName = event.data.commentsName;
+            }
+
             if (event.data.commentsEnabledPathPattern) {
               self.commentsEnabledPathPattern = event.data.commentsEnabledPathPattern;
             }
@@ -343,7 +405,11 @@ export default {
 
               if (this.commentsApiConfig.section
                 && this.commentsApiConfig.section.entityName) {
-                this.getCommentSections();
+                // Set up convenience mappings.
+                this.sectionFilterQuery = this.commentsApiConfig.sectionFilterQuery
+                  ? this.commentsApiConfig.sectionFilterQuery : '';
+                this.sectionFilterPathPattern = this.commentsApiConfig.sectionFilterPathPattern
+                  ? this.commentsApiConfig.sectionFilterPathPattern : '';
               }
             }
           }
@@ -375,8 +441,28 @@ export default {
       });
     },
     getCommentSections() {
-      this.$store.dispatch('sections/loadAll').then(() => {
-        const sections = this.$store.getters['sections/all'];
+      let action = '';
+      let getter = '';
+      let filter = {};
+      if (this.sectionQueryString) {
+        filter = {
+          [this.sectionFilterQuery]: this.sectionQueryString,
+        };
+        action = 'sections/loadWhere';
+        getter = 'sections/where';
+      } else {
+        action = 'sections/loadAll';
+        getter = 'sections/all';
+      }
+
+      this.$store.dispatch(action, { filter }).then(() => {
+        let sections = [];
+        if (window._.isEmpty(filter)) {
+          sections = this.$store.getters[getter];
+        } else {
+          sections = this.$store.getters[getter]({ filter });
+        }
+
         sections.forEach((section) => {
           this.sectionOptions.push({
             value: section.id,
@@ -404,6 +490,16 @@ export default {
         }
       }
 
+      if (this.sectionFilterPathPattern) {
+        const matches = e.match(this.sectionFilterPathPattern);
+        if (matches && matches.length > 0) {
+          // eslint-disable-next-line prefer-destructuring
+          this.sectionQueryString = matches[1];
+        } else {
+          this.sectionQueryString = '';
+        }
+      }
+
       // React to changes in the comment section.
       if (this.commentsApiConfig && this.commentsApiConfig.sectionPathPattern) {
         const matches = e.match(this.commentsApiConfig.sectionPathPattern);
@@ -411,15 +507,25 @@ export default {
           this.updateSectionSelection(matches[1]);
         }
       }
+
+      this.pathInitialised = true;
     },
-    toggleChatOpen() {
+    toggleChatOpen(headerHeight = 0) {
       if (this.canCloseChat) {
         this.isOpen = !this.isOpen;
 
+        if (!this.isOpen) {
+          this.$root.$emit('scroll-down-message-list');
+        }
+
         if (window.self !== window.top) {
           if (!this.isOpen) {
-            const height = document.querySelector('.opendialog-chat-window').offsetHeight;
-            window.parent.postMessage({ height: `${height}px` }, '*');
+            if (headerHeight) {
+              window.parent.postMessage({ height: `${headerHeight}px` }, '*');
+            } else if (this.commentsEnabled) {
+              const height = document.querySelector('.nav').offsetHeight;
+              window.parent.postMessage({ height: `${height}px` }, '*');
+            }
           } else {
             window.parent.postMessage({ height: 'auto' }, '*');
           }
@@ -437,21 +543,21 @@ export default {
 
 <style>
 .nav {
-  background-color: var(--header-background-color);
-  border-bottom: 1px solid var(--header-text-color);
+  background-color: var(--header-text-color);
+  border-bottom: 1px solid var(--header-background-color);
   color: var(--header-text-color);
 }
 .nav .nav-item a.nav-link {
-  color: var(--header-text-color);
-}
-.nav .nav-item.active {
-  background-color: var(--header-text-color);
-}
-.nav .nav-item.active a.nav-link {
   color: var(--header-background-color);
 }
+.nav .nav-item.active {
+  background-color: var(--header-background-color);
+}
+.nav .nav-item.active a.nav-link {
+  color: var(--header-text-color);
+}
 .comment-section-selector-wrapper {
-  border-bottom: 1px solid var(--header-text-color);
+  border-bottom: 1px solid var(--header-background-color);
 }
 .comment-section-selector-wrapper .comment-section-selector {
   border: none;
@@ -459,5 +565,8 @@ export default {
 
 .sc-chat-window {
   height: calc(100vh - var(--header-height)) !important;
+}
+.comments-disabled .sc-chat-window {
+  height: 100% !important;
 }
 </style>

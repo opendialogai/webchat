@@ -67,13 +67,13 @@ export default {
       required: true,
     },
     canCloseChat: Boolean,
+    chatIsOpen: Boolean,
     colours: {
       type: Object,
       required: true,
     },
     isExpand: Boolean,
     isMobile: Boolean,
-    isOpen: Boolean,
     loadHistory: Boolean,
     messageDelay: {
       type: Number,
@@ -106,8 +106,10 @@ export default {
       buttonText: 'Submit',
       confirmationMessage: null,
       contentEditable: false,
+      headerHeight: 0,
       headerText: '',
       initialText: null,
+      isOpen: this.chatIsOpen,
       loading: true,
       maxInputCharacters: 0,
       messageList: [],
@@ -144,6 +146,16 @@ export default {
     isOpen(isOpen) {
       if (isOpen) {
         this.agentProfile.imageUrl = null;
+      }
+    },
+    loading(isLoading) {
+      if (!isLoading) {
+        setTimeout(() => {
+          const header = document.querySelector('.sc-header');
+          if (header) {
+            this.headerHeight = header.offsetHeight;
+          }
+        }, 1000);
       }
     },
   },
@@ -190,8 +202,8 @@ export default {
       newMsg.id = this.$uuid.v4();
 
       // Add the user information.
-      if (window.greenshootSettings && window.greenshootSettings.user) {
-        newMsg.user = window.greenshootSettings.user;
+      if (window.openDialogSettings && window.openDialogSettings.user) {
+        newMsg.user = window.openDialogSettings.user;
         if (!newMsg.user.name && newMsg.user.first_name && newMsg.user.last_name) {
           newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
         }
@@ -340,7 +352,7 @@ export default {
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {
-        this.expandChat();
+        this.$emit('expandChat');
       }
     },
     userInputBlur() {
@@ -400,52 +412,7 @@ export default {
       this.sendMessage(msgToSend);
       this.placeholder = 'Write a reply';
     },
-    openChat() {},
-    toggleChatOpen() {
-      if (this.canCloseChat) {
-        this.isOpen = !this.isOpen;
-
-        if (!this.isOpen) {
-          this.$root.$emit('scroll-down-message-list');
-        }
-
-        if (window.self !== window.top) {
-          if (!this.isOpen) {
-            const height = document.querySelector('.sc-header').offsetHeight;
-            window.parent.postMessage({ height: `${height}px` }, '*');
-          } else {
-            window.parent.postMessage({ height: 'auto' }, '*');
-          }
-        }
-      }
-    },
-    expandChat(forceExpand = false) {
-      if (!this.showExpandButton && !forceExpand) {
-        return;
-      }
-
-      this.isExpand = !this.isExpand;
-
-      if (this.isExpand) {
-        window.parent.postMessage({ dataLayerEvent: 'chatbot_maximized' }, '*');
-      } else {
-        window.parent.postMessage({ dataLayerEvent: 'chatbot_minimized' }, '*');
-      }
-
-      if (!this.isOpen) {
-        this.toggleChatOpen();
-      }
-
-      // Only add the expanded class on non-mobile devices
-      if (window.self !== window.top && !this.isMobile) {
-        if (!this.isExpand) {
-          window.parent.postMessage({ removeClass: 'expanded' }, '*');
-          this.$root.$emit('scroll-down-message-list');
-        } else {
-          window.parent.postMessage({ addClass: 'expanded' }, '*');
-          this.$root.$emit('scroll-down-message-list');
-        }
-      }
+    openChat() {
     },
     onButtonClick(button, msg) {
       if (msg.data.clear_after_interaction) {
@@ -453,7 +420,7 @@ export default {
       }
 
       if (!this.isExpand) {
-        this.expandChat();
+        this.$emit('expandChat');
       }
 
       this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
@@ -518,6 +485,13 @@ export default {
         },
       });
     },
+    expandChat() {
+      this.$emit('expandChat');
+    },
+    toggleChatOpen() {
+      this.isOpen = !this.isOpen;
+      this.$emit('toggleChatOpen', this.headerHeight);
+    },
     workoutCallback() {
       // Default
       let callbackId = 'WELCOME';
@@ -563,7 +537,7 @@ export default {
     getChatHistory() {
       this.loading = true;
 
-      const userId = (this.user) ? this.user.email : this.uuid;
+      const userId = (this.user && this.user.email) ? this.user.email : this.uuid;
 
       return axios.get(`/chat-init/${userId}`)
         .then((response) => {
@@ -624,7 +598,7 @@ export default {
       if (urlParams.has('hide')) {
         if (urlParams.get('hide')) {
           this.$nextTick(() => {
-            this.toggleChatOpen();
+            this.$emit('toggleChatOpen');
           });
         }
       }
@@ -804,7 +778,7 @@ export default {
 </style>
 
 <style>
-    .sc-header {
+    .comments-enabled .sc-header {
         display: none !important;
     }
 </style>
