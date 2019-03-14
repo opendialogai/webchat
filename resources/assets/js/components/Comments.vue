@@ -1,62 +1,43 @@
 <template>
   <div :class="[ isMobile ? 'mobile' : '', canCloseChat ? '' : 'no-close' ]">
-    <template v-if="loading">
-      <div class="loading">
-        <div class="loading-message">
-          Loading chat history
-        </div>
-
-        <div class="loading-indicator">
-          <span />
-          <span />
-          <span />
-        </div>
-      </div>
-    </template>
-    <template v-else>
+    <template>
       <beautiful-chat
+        v-if="messageListReady"
         :agent-profile="agentProfile"
-        :close="toggleChatOpen"
+        :always-scroll-to-bottom="true"
+        :button-text="buttonText"
+        :colors="colours"
+        :content-editable="messageListReady"
+        :close="closeComments"
         :expand="expandChat"
+        :header-text="headerText"
+        :is-expand="true"
         :is-open="isOpen"
-        :is-expand="isExpand"
-        :on-message-was-sent="onMessageWasSent"
         :message-list="messageList"
-        :open="openChat"
         :on-button-click="onButtonClick"
         :on-form-button-click="onFormButtonClick"
         :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
-        :content-editable="contentEditable"
-        :show-emoji="false"
-        :show-file="false"
-        :show-expand-button="false"
-        :show-typing-indicator="showTypingIndicator"
-        :show-long-text-input="showLongTextInput"
-        :show-messages="showMessages"
-        :max-input-characters="maxInputCharacters"
-        :button-text="buttonText"
-        :always-scroll-to-bottom="true"
-        :colors="colours"
+        :on-message-was-sent="onMessageWasSent"
+        :open="openComments"
         :placeholder="placeholder"
-        :confirmation-message="confirmationMessage"
-        :initial-text="initialText"
-        @vbc-user-typing="sendTypingIndicatorOn"
-        @vbc-user-not-typing="sendTypingIndicatorOff"
-        @vbc-user-input-focus="userInputFocus"
-        @vbc-user-input-blur="userInputBlur"
+        :show-emoji="false"
+        :show-expand-button="false"
+        :show-file="false"
+        :show-messages="showMessages"
+        :show-typing-indicator="false"
       />
     </template>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import { mapActions } from 'vuex';
 
 const moment = require('moment-timezone');
 
 export default {
-  name: 'WebChat',
+  name: 'Comments',
   props: {
     agentProfile: {
       type: Object,
@@ -67,13 +48,17 @@ export default {
       required: true,
     },
     canCloseChat: Boolean,
-    chatIsOpen: Boolean,
     colours: {
+      type: Object,
+      required: true,
+    },
+    commentsApiConfig: {
       type: Object,
       required: true,
     },
     isExpand: Boolean,
     isMobile: Boolean,
+    isOpen: Boolean,
     loadHistory: Boolean,
     messageDelay: {
       type: Number,
@@ -86,6 +71,10 @@ export default {
     parentUrl: {
       type: String,
       required: true,
+    },
+    sectionId: {
+      type: String,
+      default: '',
     },
     showExpandButton: Boolean,
     user: {
@@ -103,620 +92,207 @@ export default {
   },
   data() {
     return {
-      buttonText: 'Submit',
+      authorMapping: '',
+      authorNameMapping: '',
+      authorType: '',
+      buttonText: 'Add Comment',
+      commentDateMapping: '',
+      comments: [],
+      commentTextMapping: '',
       confirmationMessage: null,
-      contentEditable: false,
-      headerHeight: 0,
       headerText: '',
       initialText: null,
-      isOpen: this.chatIsOpen,
-      loading: true,
+      loggedInUserId: '',
       maxInputCharacters: 0,
       messageList: [],
-      placeholder: 'Write a reply',
+      messageListReady: false,
+      participants: {},
+      placeholder: 'Write a comment',
       showLongTextInput: false,
       showMessages: true,
       showTypingIndicator: false,
       users: [],
-      uuid: this.userUuid,
     };
   },
-  watch: {
-    messageList() {
-      const previousMessage = this.messageList[this.messageList.length - 2];
-      const lastMessage = this.messageList[this.messageList.length - 1];
-
-      if (!previousMessage || previousMessage.type !== 'datetime') {
-        if (!previousMessage || previousMessage.data.date !== lastMessage.data.date) {
-          this.messageList.splice(this.messageList.length - 1, 0, {
-            type: 'datetime',
-            datetime: lastMessage.data.date,
-          });
-        }
-      }
-
-      if (this.newMessageIcon && !this.loading && !this.isOpen) {
-        this.agentProfile.imageUrl = this.newMessageIcon;
-      }
-
-      if (!lastMessage.data.hidetime && !lastMessage.read) {
-        this.dateTimezoneFormat(lastMessage);
-      }
-    },
-    isOpen(isOpen) {
-      if (isOpen) {
-        this.agentProfile.imageUrl = null;
-      }
-    },
-    loading(isLoading) {
-      if (!isLoading) {
-        setTimeout(() => {
-          const header = document.querySelector('.sc-header');
-          if (header) {
-            this.headerHeight = header.offsetHeight;
-          }
-        }, 1000);
-      }
-    },
-  },
   created() {
-    const urlParams = new URLSearchParams(window.location.search);
-
-    if (urlParams.has('mobile')) {
-      if (urlParams.get('mobile')) {
-        this.isMobile = true;
-        this.showExpandButton = false;
-      }
+    // Some convenience mappings.
+    this.authorMapping = this.commentsApiConfig.author.relationshipName;
+    this.authorNameMapping = this.commentsApiConfig.author.fieldMapping.nameField;
+    this.authorType = this.commentsApiConfig.author.entityName;
+    this.commentDateMapping = this.commentsApiConfig.comment.fieldMapping.createdField;
+    this.commentTextMapping = this.commentsApiConfig.comment.fieldMapping.textField;
+    this.loggedInUserId = this.commentsApiConfig.loggedInUserId;
+    this.sectionMapping = this.commentsApiConfig.section.relationshipName;
+    this.sectionType = this.commentsApiConfig.section.entityName;
+  },
+  mounted() {
+    let action = '';
+    let getter = '';
+    let filter = {};
+    if (this.sectionId) {
+      filter = {
+        [this.sectionMapping]: this.sectionId,
+      };
+      action = 'comments/loadWhere';
+      getter = 'comments/where';
+    } else {
+      action = 'comments/loadAll';
+      getter = 'comments/all';
     }
 
-    this.initChat();
-    this.setUpListeners();
-
-    this.fetchMessages(this.user);
+    this.$store.dispatch(action, { filter }).then(() => {
+      let comments = [];
+      if (window._.isEmpty(filter)) {
+        comments = this.$store.getters[getter];
+      } else {
+        comments = this.$store.getters[getter]({ filter });
+      }
+      this.comments = comments;
+      this.processComments();
+    });
   },
   methods: {
+    ...mapActions({
+      createComment: 'comments/create',
+    }),
+    closeComments() {},
     dateTimezoneFormat(message) {
-      if (this.userTimezone !== 'utc') {
-        const date = moment.tz(`${message.data.date} ${message.data.time}`, 'ddd D MMM hh:mm A', 'utc').tz(this.userTimezone);
+      const date = moment(message.data.date).tz(this.userTimezone);
 
-        /* eslint-disable no-param-reassign */
-        message.data.date = date.format('ddd D MMM');
-        message.data.time = date.format('hh:mm A');
-        /* eslint-enable no-param-reassign */
-      }
-    },
-    sendMessage(msg) {
-      const newMsg = msg;
-      newMsg.data.date = moment().tz('UTC').format('ddd D MMM');
-      newMsg.data.time = moment().tz('UTC').format('hh:mm A');
-
-      if (this.user) {
-        newMsg.user_id = this.user.email;
-        newMsg.user = this.user;
-      } else {
-        // Add the uuid to the message sent
-        newMsg.user_id = this.uuid;
-      }
-
-      // Give the message an id.
-      newMsg.id = this.$uuid.v4();
-
-      // Add the user information.
-      if (window.openDialogSettings && window.openDialogSettings.user) {
-        newMsg.user = window.openDialogSettings.user;
-        if (!newMsg.user.name && newMsg.user.first_name && newMsg.user.last_name) {
-          newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
-        }
-      }
-
-      if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
-        this.buttonText = 'Submit';
-        this.headerText = '';
-        this.maxInputCharacters = 0;
-        this.showLongTextInput = false;
-        this.showMessages = true;
-        this.messageList.push(newMsg);
-      }
-
-      if (newMsg.type === 'text' && newMsg.data.text.length > 0) {
-        window.parent.postMessage({ dataLayerEvent: 'message_sent_to_chatbot' }, '*');
-      }
-      if (newMsg.type === 'button_response') {
-        window.parent.postMessage({ dataLayerEvent: 'user_clicked_button_in_chatbot' }, '*');
-      }
-
-      if (newMsg.type === 'chat_open' || newMsg.type === 'url_click' || newMsg.type === 'trigger' || newMsg.type === 'webchat_form_response' || newMsg.type === 'webchat_list_response' || newMsg.data.text.length > 0) {
-        // Make a copy of the message to send to the backend.
-        // This is needed so that the author change will not affect this.messageList.
-        const msgCopy = Object.assign({}, newMsg);
-
-        // Set the message author ID.
-        msgCopy.author = msgCopy.user_id;
-        const webchatMessage = {
-          notification: 'message',
-          user_id: msgCopy.user_id,
-          author: msgCopy.author,
-          message_id: msgCopy.id,
-          content: msgCopy,
-        };
-
-        // Need to add error handling here
-        axios.post('/incoming/webchat', webchatMessage).then(
-          (response) => {
-            // Register presence after getting a response from the
-            // chat open so that we know a user exists.
-            if (newMsg.type === 'chat_open') {
-              this.registerPresence();
-            }
-
-            if (response.data instanceof Array) {
-              response.data.forEach((message, i) => {
-                this.showTypingIndicator = true;
-                setTimeout(() => {
-                  this.showTypingIndicator = false;
-
-                  this.messageList.push(message);
-
-                  if (message.data) {
-                    this.contentEditable = !message.data.disable_text;
-                  }
-
-                  if (i < (response.data.length - 1)) {
-                    this.$nextTick(() => {
-                      this.$nextTick(() => {
-                        this.showTypingIndicator = true;
-                      });
-                    });
-                  }
-                }, (i + 1) * this.messageDelay);
-
-                window.parent.postMessage({ dataLayerEvent: 'message_received_from_chatbot' }, '*');
-              });
-            } else if (response.data) {
-              if (newMsg.type === 'chat_open') {
-                if (response.data && response.data.data) {
-                  this.messageList.push(response.data);
-                  this.contentEditable = !response.data.data.disable_text;
-                } else {
-                  // If we don't get data about whether to disable the editor, turn it on
-                  this.contentEditable = true;
-                }
-              } else {
-                if (response.data.data) {
-                  this.showTypingIndicator = true;
-                }
-                setTimeout(() => {
-                  // Only add a message to the list if it is a message object
-                  if (typeof response.data === 'object' && response.data !== null) {
-                    this.messageList.push(response.data);
-                  }
-
-                  if (response.data.data) {
-                    this.contentEditable = !response.data.data.disable_text;
-                  }
-
-                  if (response.data.type === 'longtext') {
-                    if (response.data.data.character_limit) {
-                      this.maxInputCharacters = response.data.data.character_limit;
-                    }
-
-                    if (response.data.data.submit_text) {
-                      this.buttonText = response.data.data.submit_text;
-                    }
-
-                    if (response.data.data.text) {
-                      this.headerText = response.data.data.text;
-                    }
-
-                    if (response.data.data.placeholder) {
-                      this.placeholder = response.data.data.placeholder;
-                    }
-
-                    if (response.data.data.initial_text) {
-                      this.initialText = response.data.data.initial_text;
-                    } else {
-                      this.initialText = null;
-                    }
-
-                    if (response.data.data.confirmation_text) {
-                      this.confirmationMessage = response.data.data.confirmation_text;
-                    } else {
-                      this.confirmationMessage = null;
-                    }
-
-                    this.showLongTextInput = true;
-                    this.showMessages = false;
-                  }
-                  this.showTypingIndicator = false;
-                }, this.messageDelay);
-
-                window.parent.postMessage({ dataLayerEvent: 'message_received_from_chatbot' }, '*');
-              }
-            }
-          },
-          // Axios error handler.
-          () => {
-            setTimeout(() => {
-              this.messageList.push({
-                type: 'text',
-                author: 'them',
-                data: {
-                  text: "We're sorry, that didn't work, please try again",
-                },
-              });
-              this.showTypingIndicator = false;
-            }, this.messageDelay);
-          },
-        );
-      }
-    },
-    userInputFocus() {
-      if (!this.isExpand && !this.isMobile) {
-        this.$emit('expandChat');
-      }
-    },
-    userInputBlur() {
-    },
-    sendReadReceipt(newMessage) {
-      // Create the message object to send to our endpoint.
-      const pusherMsg = {
-        notification: 'read_receipt', // Is mapped to the broadcast event type.
-        user_id: this.uuid, // UUID of the webchat end user.
-        author: this.uuid, // UUID of the webchat end user.
-        message_id: newMessage.id, // Unique id for this message.
-      };
-
-      axios.post('/incoming/webchat', pusherMsg).then(() => {});
-    },
-    sendTypingIndicatorOn() {
-      const messageId = this.$uuid.v4();
-
-      // Create the message object to send to our pusher endpoint.
-      const pusherMsg = {
-        notification: 'typing_on', // Is mapped to the broadcast event type.
-        user_id: this.uuid, // UUID of the webchat end user.
-        author: this.uuid, // UUID of the webchat end user.
-        message_id: messageId, // Unique id for this message.
-        content: {
-          author: this.uuid,
-          id: messageId,
-        },
-      };
-
-      axios.post('/incoming/webchat', pusherMsg).then(() => {});
-    },
-    sendTypingIndicatorOff() {
-      const messageId = this.$uuid.v4();
-
-      // Create the message object to send to our pusher endpoint.
-      const pusherMsg = {
-        notification: 'typing_off', // Is mapped to the broadcast event type.
-        user_id: this.uuid, // UUID of the webchat end user.
-        author: this.uuid, // UUID of the webchat end user.
-        message_id: messageId, // Unique id for this message.
-        content: {
-          author: this.uuid,
-          id: messageId,
-        },
-      };
-
-      axios.post('/incoming/webchat', pusherMsg).then(() => {});
-    },
-    onMessageWasSent(msg) {
-      const msgToSend = msg;
-      if (this.messageList.length && this.messageList[this.messageList.length - 1].type === 'longtext') {
-        msgToSend.type = 'longtext_response';
-        msgToSend.data.callback_id = this.messageList[this.messageList.length - 1].data.callback_id;
-      }
-
-      this.sendMessage(msgToSend);
-      this.placeholder = 'Write a reply';
-    },
-    openChat() {
-    },
-    onButtonClick(button, msg) {
-      if (msg.data.clear_after_interaction) {
-        this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
-      }
-
-      if (!this.isExpand) {
-        this.$emit('expandChat');
-      }
-
-      this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
-
-      this.sendMessage({
-        type: 'button_response',
-        author: 'me',
-        data: {
-          text: button.text,
-          callback_id: button.callback_id,
-          value: button.value,
-        },
-      });
-    },
-    onListButtonClick(callback) {
-      this.sendMessage({
-        type: 'webchat_list_response',
-        author: 'me',
-        callback_id: callback,
-        data: {},
-      });
-    },
-    onLinkClick(url) {
-      this.sendMessage({
-        type: 'url_click',
-        author: this.uuid,
-        data: {
-          url,
-        },
-      });
-    },
-    onFormButtonClick(data, msg) {
-      this.messageList[this.messageList.indexOf(msg)].type = 'text';
-
-      const responseData = {};
-      const newMessageText = [];
-
-      msg.data.elements.forEach((element) => {
-        responseData[element.name] = data[element.name].value;
-
-        if (element.display) {
-          newMessageText.push(`${element.display}: ${data[element.name].value}`);
-        } else {
-          newMessageText.push(data[element.name].value);
-        }
-      });
-
-      this.sendMessage({
-        type: 'webchat_form_response',
-        author: this.uuid,
-        callback_id: msg.data.callback_id,
-        data: responseData,
-      });
-
-      this.messageList.push({
-        type: 'text',
-        author: this.uuid,
-        data: {
-          date: moment().tz('UTC').format('ddd D MMM'),
-          time: moment().tz('UTC').format('hh:mm A'),
-          text: newMessageText.join('\n'),
-        },
-      });
+      /* eslint-disable no-param-reassign */
+      message.data.date = date.format('ddd D MMM');
+      message.data.time = date.format('hh:mm A');
+      /* eslint-enable no-param-reassign */
     },
     expandChat() {
       this.$emit('expandChat');
     },
-    toggleChatOpen() {
-      this.isOpen = !this.isOpen;
-      this.$emit('toggleChatOpen', this.headerHeight);
-    },
-    workoutCallback() {
-      // Default
-      let callbackId = 'WELCOME';
-      const urlParams = new URLSearchParams(window.location.search);
-
-      // If the url has a callback id present, use that
-      if (urlParams.has('callback_id')) {
-        callbackId = urlParams.get('callback_id');
-      } else {
-        // Check if the url matches one in the callback map
-        this.callbackMap.forEach((url, idx) => {
-          if (this.parentUrl.match(this.wildcardToRegExp(url))) {
-            callbackId = this.callbackMap[idx];
-          }
-        });
-      }
-      return callbackId;
-    },
-    wildcardToRegExp(string) {
-      return new RegExp(`^${string.split(/\*+/).map(this.regExpEscape).join('.*')}$`);
-    },
-    regExpEscape(string) {
-      return string.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
-    },
-    async fetchMessages(user) {
-      if (this.loadHistory) {
-        await this.getChatHistory();
-      } else {
-        this.loading = false;
-        this.checkHideChat();
-      }
-
-      const message = {
-        type: 'chat_open',
-        data: {
-          user,
-          callback_id: this.workoutCallback(),
+    onButtonClick() {},
+    onFormButtonClick() {},
+    onListButtonClick() {},
+    onLinkClick() {},
+    onMessageWasSent(msg) {
+      // Format the new comment for JSON:API.
+      const commentData = {
+        attributes: {
+          [this.commentDateMapping]: moment().utc().format(),
+          [this.commentTextMapping]: msg.data.text,
+        },
+        relationships: {
+          [this.authorMapping]: {
+            data: {
+              id: this.loggedInUserId,
+              type: this.authorType,
+            },
+          },
         },
       };
 
-      this.sendMessage(message);
-    },
-    getChatHistory() {
-      this.loading = true;
+      if (this.sectionId) {
+        commentData.relationships[this.sectionMapping] = {
+          data: {
+            id: this.sectionId,
+            type: this.sectionType,
+          },
+        };
+      }
 
-      const userId = (this.user && this.user.email) ? this.user.email : this.uuid;
+      // Send the comment to the backend.
+      this.$store.dispatch('comments/create', commentData).then(() => {
+        const newComment = this.$store.getters['comments/lastCreated'];
+        const lastMessage = this.messageList[this.messageList.length - 1];
 
-      return axios.get(`/chat-init/${userId}`)
-        .then((response) => {
-          response.data.reverse().forEach((message, i, messages) => {
-            // Ignore 'url_click' messages.
-            if (message.type === 'url_click') {
-              return;
-            }
-
-            // Ignore 'trigger' messages.
-            if (message.type === 'trigger') {
-              return;
-            }
-
-            const currentMessage = message;
-
-            // Sets the author to 'me' for messages from the current user
-            if (currentMessage.author === userId) {
-              currentMessage.author = 'me';
-            } else {
-              currentMessage.author = 'them';
-            }
-
-            // Convert to the right message type for display
-            if (currentMessage.type === 'action') {
-              currentMessage.type = (currentMessage.author === 'me') ? 'text' : 'button';
-            } else if (currentMessage.type === 'long_text' || currentMessage.type === 'form') {
-              currentMessage.type = 'text';
-            }
-
-            if (i === 0 && currentMessage.data && currentMessage.data.internal) {
-              delete currentMessage.data.internal;
-            }
-
-            if ((i === 0 && currentMessage.data)
-              || this.messageList[this.messageList.length - 1].data.date
-              !== currentMessage.data.date) {
-              this.messageList.push({
-                type: 'datetime',
-                datetime: currentMessage.data.date,
-              });
-            }
-
-            if (i < messages.length - 1) {
-              this.dateTimezoneFormat(currentMessage);
-            }
-
-            this.messageList.push(currentMessage);
-          });
-
-          this.loading = false;
-          this.checkHideChat();
-        });
-    },
-    checkHideChat() {
-      const urlParams = new URLSearchParams(window.location.search);
-
-      if (urlParams.has('hide')) {
-        if (urlParams.get('hide')) {
-          this.$nextTick(() => {
-            this.$emit('toggleChatOpen');
-          });
+        // Add a new author message if necessary.
+        if (!lastMessage || (lastMessage && lastMessage.author !== 'me')) {
+          const authorMsg = {
+            type: 'author',
+            author: 'me',
+            data: {
+              authorId: this.loggedInUserId,
+              text: this.participants[this.loggedInUserId].name,
+            },
+          };
+          this.messageList.push(authorMsg);
         }
-      }
-    },
-    registerPresence() {
-      // Only try to join the presence channel if Echo is defined.
-      if (typeof window.Echo !== 'undefined') {
-        window.Echo.join(`${this.uuid}`)
-          .here((users) => {
-            this.users = users;
-          })
-          .joining((user) => {
-            this.users.push(user);
 
-            const joinMsg = {
-              id: this.$uuid.v4(),
-              author: 'them',
-              type: 'system',
-              data: {
-                text: `${window.appName} team member ${user.name} has joined the chat.`,
-              },
-            };
-            this.messageList.push(joinMsg);
-          })
-          .leaving((user) => {
-            this.users = this.users.filter(u => (u.id !== user.id));
-
-            const leaveMsg = {
-              id: this.$uuid.v4(),
-              author: 'them',
-              type: 'system',
-              data: {
-                text: `${window.appName} team member ${user.name} has left the chat.`,
-              },
-            };
-            this.messageList.push(leaveMsg);
-          });
-      }
+        // Add the message to the list.
+        const message = {
+          type: 'text',
+          author: 'me',
+          data: {
+            date: newComment.attributes[this.commentDateMapping],
+            text: newComment.attributes[this.commentTextMapping],
+          },
+        };
+        this.dateTimezoneFormat(message);
+        this.messageList.push(message);
+      });
     },
-    createUuid() {
-      const uuid = this.$uuid.v4();
-      this.uuid = uuid;
-      sessionStorage.uuid = uuid;
-    },
-    initChat() {
-      // The uuid might have already been set to the user's email address
-      if (!this.uuid) {
-        if (sessionStorage.uuid) {
-          this.uuid = sessionStorage.uuid;
-        } else {
-          this.createUuid();
-        }
-      }
-    },
-    setUpListeners() {
-      if (typeof window.Echo !== 'undefined') {
-        window.Echo.channel(`webchat-${this.uuid}`)
-        // Listen for regular messages.
-          .listen('BroadcastMessage', (e) => {
-            // Only add the message received from pusher if we don't already have it.
-            if (window._.findIndex(this.messageList, { id: e.messageData.id }) === -1) {
-              const newMessage = {
-                user_id: e.userId,
-                id: e.messageData.id,
-                author: 'them', // If it came in from pusher and we didn't send it, we're not the author. QED.
-                type: e.messageData.type,
-                data: e.messageData.data,
-                user: e.messageData.user,
-              };
-              this.messageList.push(newMessage);
-              this.sendReadReceipt(newMessage);
-            }
-          })
-        // Listen for typing indicator on events.
-          .listen('BroadcastTypingIndicatorOn', (e) => {
-            // Don't turn on the typing indicator when we are typing!
-            if (e.userId === e.author) return;
+    openComments() {},
+    processComments() {
+      // Fetch info for the current user.
+      this.$set(this.participants, this.loggedInUserId, { name: '' });
 
-            // Only show the indicator if there is not one already.
-            if (window._.findIndex(this.messageList, { type: 'typing' }) === -1) {
-              const typingMessage = {
-                user_id: e.userId,
-                id: this.$uuid.v4(),
-                author: 'them',
-                type: 'typing',
-              };
-              this.messageList.push(typingMessage);
-            }
-          })
-        // Listen for typing indicator off events.
-          .listen('BroadcastTypingIndicatorOff', (e) => {
-            // Don't turn on the typing indicator when we are typing!
-            if (e.userId === e.author) return;
+      this.$store.dispatch('authors/loadById', { id: this.loggedInUserId }).then(() => {
+        const author = this.$store.getters['authors/byId']({ id: this.loggedInUserId });
+        this.participants[this.loggedInUserId].name = author.attributes[this.authorNameMapping];
+      }).then(() => {
+        this.comments.forEach((comment, cmntIdx) => {
+          const authorId = comment.relationships[this.authorMapping].data.id;
+          const message = {
+            type: 'text',
+            author: authorId,
+            data: {
+              date: comment.attributes[this.commentDateMapping],
+              text: comment.attributes[this.commentTextMapping],
+            },
+          };
+          this.dateTimezoneFormat(message);
 
-            // Remove any existing typing indicators.
-            const typingIndicatorIndexes = window._.keys(window._.pickBy(this.messageList, { type: 'typing' }));
-            typingIndicatorIndexes.forEach((typingIndicatorIndex) => {
-              this.$delete(this.messageList, typingIndicatorIndex);
-            });
-          })
-        // Listen for read receipts.
-          .listen('BroadcastMessageRead', (e) => {
-            if (e.author !== this.uuid) {
-              for (let i = 0; i < this.messageList.length; i += 1) {
-                // Iterate the current message list.
-                if (this.messageList[i].id === e.messageId) {
-                  // If this message ID matches the one sent, add the 'read' property.
-                  const msg = this.messageList[i];
-                  msg.read = true;
-                  this.$set(this.messageList, i, msg);
-                  break;
+          if (comment.relationships[this.authorMapping].data.id === this.loggedInUserId) {
+            message.author = 'me';
+          }
+
+          // Get the author name and add it to participants if we haven't already.
+          if (!this.participants[authorId]) {
+            this.$set(this.participants, authorId, { name: '' });
+
+            this.$store.dispatch('authors/loadById', { id: authorId }).then(() => {
+              const author = this.$store.getters['authors/byId']({ id: authorId });
+              this.participants[authorId].name = author.attributes[this.authorNameMapping];
+
+              // Update name for any author messages that have already been created.
+              this.messageList.forEach((msg, msgIdx) => {
+                if (msg.type === 'author' && msg.data.authorId === authorId) {
+                  const newMsg = msg;
+                  newMsg.data.text = author.attributes[this.authorNameMapping];
+                  this.$set(this.messageList, msgIdx, newMsg);
                 }
-              }
-            }
-          });
-      }
-    },
+              });
+            });
+          }
 
+          if (cmntIdx === 0 || (message.author !== this.comments[cmntIdx - 1]
+            .relationships[this.authorMapping].data.id
+          )) {
+            const authorMsg = {
+              type: 'author',
+              data: {
+                authorId,
+                text: this.participants[authorId].name,
+              },
+            };
+            if (comment.relationships[this.authorMapping].data.id === this.loggedInUserId) {
+              authorMsg.author = 'me';
+            }
+            this.messageList.push(authorMsg);
+          }
+          this.messageList.push(message);
+        });
+
+        this.messageListReady = true;
+      });
+    },
   },
 };
 
@@ -728,8 +304,7 @@ export default {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        /* var inherited from OpenDialogChat component. */
-        height: calc(100vh - var(--header-height));
+        height: 100%;
     }
 
     .loading-message {
@@ -778,7 +353,7 @@ export default {
 </style>
 
 <style>
-    .comments-enabled .sc-header {
+    .comments-container .sc-header {
         display: none !important;
     }
 </style>

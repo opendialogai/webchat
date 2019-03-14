@@ -27,20 +27,20 @@
         "resolve-url-loader": "2.3.1",
         "sass": "^1.17.2",
         "sass-loader": "7.*",
-        "vue": "^2.6.8"
+        "vue": "^2.6.9"
     },
     "dependencies": {
         "@babel/core": "^7.3.4",
         "@reststate/vuex": "0.0.9",
-        "bootstrap-vue": "^2.0.0-rc.13",
+        "bootstrap-vue": "^2.0.0-rc.14",
         "detect-browser": "^4.1.0",
         "jstz": "^2.1.1",
         "laravel-echo": "^1.5.3",
         "moment-timezone": "^0.5.23",
         "pusher-js": "^4.4.0",
-        "vue-beautiful-chat": "git+https://7793e538466954b1f6953051ed45f18ce3d90fc1:x-oauth-basic@github.com/GreenShootLabs/vue-beautiful-chat.git#s2/feature/author-message",
+        "vue-beautiful-chat": "git+https://7793e538466954b1f6953051ed45f18ce3d90fc1:x-oauth-basic@github.com/GreenShootLabs/vue-beautiful-chat.git#develop",
         "vue-js-cookie": "^2.1.0",
-        "vue-template-compiler": "^2.6.8",
+        "vue-template-compiler": "^2.6.9",
         "vue-uuid": "^1.1.1",
         "vuex": "^3.1.0"
     }
