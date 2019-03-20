@@ -1,17 +1,18 @@
 // This is the webpack builder for the opendialog-bot.js file
 
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 module.exports = {
     entry: {
-      app: './resources/assets/js/app.js',
-      'opendialog-bot': './resources/assets/js/opendialog-bot.js',
+      'public/js/app': './resources/assets/js/app.js',
+      'public/opendialog-bot': './resources/assets/js/opendialog-bot.js',
     },
     module: {
         rules: [
             {
                 enforce: 'pre',
-                exclude: /node_modules/,
+                exclude: ['/node_modules/', '/resources/images/'],
                 loader: 'eslint-loader',
                 test: /\.(js|vue)?$/
             },
@@ -19,8 +20,13 @@ module.exports = {
     },
     output: {
         filename: '[name].js',
-        path: path.resolve(__dirname, 'public/js')
+        path: path.resolve(__dirname, '.')
     },
+    plugins: [
+        new CopyWebpackPlugin([
+            { from : 'node_modules/vue-beautiful-chat/src/assets', to: 'images/vendor/vue-beautiful-chat'}
+        ]),
+    ],
     resolve: {
         alias: {
             /**
