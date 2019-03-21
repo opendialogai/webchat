@@ -24,17 +24,19 @@ class WebchatSettingsTableSeeder extends Seeder
             WebchatSetting::NUMBER => [
                 WebchatSetting::MESSAGE_DELAY,
             ],
-            WebchatSetting::COLOUR => [
-                WebchatSetting::HEADER_BACKGROUND,
-                WebchatSetting::HEADER_TEXT,
-                WebchatSetting::LAUNCHER_BACKGROUND,
-                WebchatSetting::MESSAGE_LIST_BACKGROUND,
-                WebchatSetting::SENT_MESSAGE_BACKGROUND,
-                WebchatSetting::SENT_MESSAGE_TEXT,
-                WebchatSetting::RECEIVED_MESSAGE_BACKGROUND,
-                WebchatSetting::RECEIVED_MESSAGE_TEXT,
-                WebchatSetting::USER_INPUT_BACKGROUND,
-                WebchatSetting::USER_INPUT_TEXT,
+            WebchatSetting::COLOURS => [
+                WebchatSetting::COLOUR => [
+                    WebchatSetting::HEADER_BACKGROUND,
+                    WebchatSetting::HEADER_TEXT,
+                    WebchatSetting::LAUNCHER_BACKGROUND,
+                    WebchatSetting::MESSAGE_LIST_BACKGROUND,
+                    WebchatSetting::SENT_MESSAGE_BACKGROUND,
+                    WebchatSetting::SENT_MESSAGE_TEXT,
+                    WebchatSetting::RECEIVED_MESSAGE_BACKGROUND,
+                    WebchatSetting::RECEIVED_MESSAGE_TEXT,
+                    WebchatSetting::USER_INPUT_BACKGROUND,
+                    WebchatSetting::USER_INPUT_TEXT,
+                ],
             ],
             WebchatSetting::MAP => [
                 WebchatSetting::VALID_PATH,
@@ -49,14 +51,27 @@ class WebchatSettingsTableSeeder extends Seeder
         ];
 
         foreach ($settings as $type => $values) {
-            foreach ($values as $value) {
-                DB::table('webchat_settings')->insert([
-                    'type' => $type,
-                    'name' => $value,
+            foreach ($values as $subType => $value) {
+                $configItemId = DB::table('webchat_settings')->insertGetId([
+                    'type' => is_array($value) ? WebchatSetting::OBJECT : $type,
+                    'name' => is_array($value) ? $type : $value,
                     'value' => null,
                     'created_at' => now(),
-                    'updated_at' => now()
+                    'updated_at' => now(),
                 ]);
+
+                if (is_array($value)) {
+                    foreach ($value as $subValue) {
+                        DB::table('webchat_settings')->insert([
+                            'type' => $subType,
+                            'name' => $subValue,
+                            'value' => null,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                            'parent_id' => $configItemId,
+                        ]);
+                    }
+                }
             }
         }
     }

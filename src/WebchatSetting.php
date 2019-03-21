@@ -26,6 +26,7 @@ class WebchatSetting extends Model
     const START_MINIMIZED       = 'startMinimized';
 
     // Colours
+    const COLOURS                     = 'colours';
     const HEADER_BACKGROUND           = 'headerBackground';
     const HEADER_TEXT                 = 'headerText';
     const LAUNCHER_BACKGROUND         = 'launcherBackground';
@@ -43,4 +44,5 @@ class WebchatSetting extends Model
     const COLOUR  = 'colour';
     const MAP     = 'map';
     const BOOLEAN = 'boolean';
+    const OBJECT  = 'object';
 }
