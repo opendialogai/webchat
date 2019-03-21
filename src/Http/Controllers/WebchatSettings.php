@@ -2,11 +2,10 @@
 
 namespace OpenDialogAi\Webchat\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use OpenDialogAi\Webchat\WebchatSetting;
 
-class WebchatSettings extends Controller
+class WebchatSettings
 {
     /**
      * Handle the incoming request.
