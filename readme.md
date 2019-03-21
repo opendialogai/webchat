@@ -120,3 +120,7 @@ window.opendialogSettings = {
     },
 };
 ```
+
+## Running Code Sniffer
+To run code sniffer, run the following command
+```./vendor/bin/phpcs --standard=psr12 src/```

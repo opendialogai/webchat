@@ -7,7 +7,5 @@ Route::group(['middleware' => 'web'], function() {
         return view('webchat::webchat', ['settings' => config('webchat')]);
     });
 
-    Route::get('webchat-config', function() {
-        return config('webchat');
-    });
+    Route::get('/webchat-config', 'OpenDialogAi\Webchat\Http\Controllers\WebchatSettings');
 });
