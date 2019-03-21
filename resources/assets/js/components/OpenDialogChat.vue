@@ -7,8 +7,23 @@
     ]"
     :style="cssProps"
   >
+    <IMG
+      v-if="commentsEnabled && !isMinimized"
+      src="/images/vendor/webchat/images/minimize-button.svg"
+      class="minimize-button"
+      @click="minimizeChat"
+    />
+    <div
+      v-show="commentsEnabled && isMinimized"
+      class="minimized-header"
+      @click="maximizeChat"
+    >
+      {{ commentsName ? commentsName : 'Comments' }}
+      /
+      {{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}
+    </div>
     <b-nav
-      v-show="commentsEnabled"
+      v-show="commentsEnabled && !isMinimized"
       ref="opendialogWidgetTabs"
       fill
       pills
@@ -150,6 +165,7 @@ export default {
       commentsEnabledPathPattern: '',
       cssProps: {},
       isExpand: false,
+      isMinimized: false,
       isMobile: false,
       isOpen: true,
       loadHistory: true,
@@ -537,6 +553,14 @@ export default {
         this.sectionId = sectionId;
       }
     },
+    minimizeChat() {
+      this.isMinimized = true;
+      window.parent.postMessage({ height: '40px' }, '*');
+    },
+    maximizeChat() {
+      this.isMinimized = false;
+      window.parent.postMessage({ height: 'auto' }, '*');
+    },
   },
 };
 </script>
@@ -568,5 +592,19 @@ export default {
 }
 .comments-disabled .sc-chat-window {
   height: 100% !important;
+}
+
+.minimize-button {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.minimized-header {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  background-color: var(--header-background-color);
+  color: var(--header-text-color);
 }
 </style>
