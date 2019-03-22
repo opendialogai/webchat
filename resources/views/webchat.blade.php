@@ -26,26 +26,18 @@
 </div>
 
 <script>
-    let openDialogSettings = {};
+    /**
+     * Gets the webchat settings from the database
+     * @returns {Promise<any>}
+     */
+    async function getSettings(url) {
+      const response = await fetch(`${url}/webchat-config`);
+      const json = await response.json();
+      return json;
+    }
 
-    @foreach(config('webchat') ?? [] as $name => $value)
-      @if (is_array($value))
-        value = [];
-        @foreach ($value as $item)
-          value.push("{{$item}}");
-        @endforeach
-        @if (!empty($value))
-          openDialogSettings.{{$name}} = value;
-        @endif
-      @elseif (is_string($value) && !empty($value))
-        openDialogSettings.{{$name}} = "{{$value}}";
-      @elseif (!empty($value))
-        openDialogSettings.{{$name}} = {{$value}};
-      @endif
-    @endforeach
-
-    addEventListener('load', () => {
-        postMessage(openDialogSettings, '*');
+    getSettings("{{ config('APP_URL', '') }}").then((settings) => {
+      postMessage(settings, '*');
     });
 </script>
 
