@@ -36,7 +36,7 @@ class WebchatSettings
                 $config[$setting->name] = $setting->value;
             } else {
                 foreach ($childSettings as $idx => $childSetting) {
-                    if ($childSetting->parent_id === $setting->id && $childSetting->value) {
+                    if (($childSetting->parent_id == $setting->id) && $childSetting->value) {
                         $config[$setting->name][$childSetting->name] = $childSetting->value;
                     }
                     unset($childSettings[$idx]);
