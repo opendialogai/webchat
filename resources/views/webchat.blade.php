@@ -25,22 +25,6 @@
     <opendialog-chat></opendialog-chat>
 </div>
 
-<script>
-    /**
-     * Gets the webchat settings from the database
-     * @returns {Promise<any>}
-     */
-    async function getSettings(url) {
-      const response = await fetch(`${url}/webchat-config`);
-      const json = await response.json();
-      return json;
-    }
-
-    getSettings("{{ config('APP_URL', '') }}").then((settings) => {
-      postMessage(settings, '*');
-    });
-</script>
-
 <link rel="stylesheet" type="text/css" href="/vendor/webchat/css/app.css?{{env("CSS_VERSION", "v1")}}">
 
 <script src="/vendor/webchat/js/app.js?{{env("JS_VERSION", "v1")}}"></script>
