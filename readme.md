@@ -73,13 +73,13 @@ deals with that callback_id
 ## Comments tab
 
 The webchat widget can fetch comments from an endpoint matching the JSON:API spec. To enable comments, add a
-commentsEnabled parameter to opendialogSettings, set to true. You will additionally need to pass information
+commentsEnabled parameter to openDialogSettings, set to true. You will additionally need to pass information
 about the comment entity name, author entity name, and section entity name. (If present)
 
 Example config:
 
 ```javascript
-window.opendialogSettings = {
+window.openDialogSettings = {
     url: "{{env('APP_URL')}}",
     commentsEnabled: true,
     commentsApiConfig: {
