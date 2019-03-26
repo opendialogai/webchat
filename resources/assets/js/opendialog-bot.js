@@ -1,10 +1,7 @@
 import '@/url-search-params-polyfill';
 
-if (!window.openDialogSettings) {
-  window.openDialogSettings = {};
-}
-
 let query = 'open=true';
+let url = '';
 
 function addCssToPage(href) {
   const link = document.createElement('link');
@@ -165,47 +162,49 @@ function isValidPath() {
   return retVal;
 }
 
-const { url } = window.openDialogSettings;
-getSettings(url).then((settings) => {
+if (window.openDialogSettings) {
+  url = window.openDialogSettings.url;
 
-  mergeSettings(settings);
+  getSettings(url).then((settings) => {
+    mergeSettings(settings);
 
-  const mobileWidth = (window.openDialogSettings.mobileWidth)
-    ? window.openDialogSettings.mobileWidth : 480;
+    const mobileWidth = (window.openDialogSettings.mobileWidth)
+      ? window.openDialogSettings.mobileWidth : 480;
 
-  // Set the current url of the parent to pass into the iFrame
-  window.openDialogSettings.parentUrl = window.location.pathname;
+    // Set the current url of the parent to pass into the iFrame
+    window.openDialogSettings.parentUrl = window.location.pathname;
 
-  const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(window.location.search);
 
-  if (urlParams.has('callback_id')) {
-    query = `${query}&callback_id=${urlParams.get('callback_id')}`;
-  }
-
-  if (window.innerWidth <= mobileWidth) {
-    query = `${query}&mobile=true`;
-  }
-
-  if (isValidPath()) {
-    addCssToPage(`${url}/vendor/webchat/css/opendialog-chat-bot.css`);
-
-    if (window.openDialogSettings.hideOpenCloseIcons === 'false' || !window.openDialogSettings.hideOpenCloseIcons) {
-      drawOpenCloseIcons();
+    if (urlParams.has('callback_id')) {
+      query = `${query}&callback_id=${urlParams.get('callback_id')}`;
     }
 
-    if (window.openDialogSettings.customCssPath) {
-      addCssToPage(window.openDialogSettings.customCssPath);
+    if (window.innerWidth <= mobileWidth) {
+      query = `${query}&mobile=true`;
     }
 
-    if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {
-      openChatWindow();
-    } else if (window.innerWidth <= mobileWidth || settings.startMinimized) {
-      query = `${query}&hide=true`;
-      openChatWindow();
+    if (isValidPath()) {
+      addCssToPage(`${url}/vendor/webchat/css/opendialog-chat-bot.css`);
 
-      document.body.classList.remove('chatbot-no-scroll');
-    } else if (settings.open) {
-      openChatWindow();
+      if (window.openDialogSettings.hideOpenCloseIcons === 'false' || !window.openDialogSettings.hideOpenCloseIcons) {
+        drawOpenCloseIcons();
+      }
+
+      if (window.openDialogSettings.customCssPath) {
+        addCssToPage(window.openDialogSettings.customCssPath);
+      }
+
+      if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {
+        openChatWindow();
+      } else if (window.innerWidth <= mobileWidth || settings.startMinimized) {
+        query = `${query}&hide=true`;
+        openChatWindow();
+
+        document.body.classList.remove('chatbot-no-scroll');
+      } else if (settings.open) {
+        openChatWindow();
+      }
     }
-  }
-});
+  });
+}
