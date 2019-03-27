@@ -116,14 +116,14 @@ export default {
   },
   created() {
     // Some convenience mappings.
-    this.authorMapping = this.commentsApiConfig.author.relationshipName;
-    this.authorNameMapping = this.commentsApiConfig.author.fieldMapping.nameField;
-    this.authorType = this.commentsApiConfig.author.entityName;
-    this.commentDateMapping = this.commentsApiConfig.comment.fieldMapping.createdField;
-    this.commentTextMapping = this.commentsApiConfig.comment.fieldMapping.textField;
-    this.loggedInUserId = this.commentsApiConfig.loggedInUserId;
-    this.sectionMapping = this.commentsApiConfig.section.relationshipName;
-    this.sectionType = this.commentsApiConfig.section.entityName;
+    this.authorMapping = this.commentsApiConfig.commentsAuthorRelationshipName;
+    this.authorNameMapping = this.commentsApiConfig.commentsAuthorNameFieldName;
+    this.authorType = this.commentsApiConfig.commentsAuthorEntityName;
+    this.commentDateMapping = this.commentsApiConfig.commentsCreatedFieldName;
+    this.commentTextMapping = this.commentsApiConfig.commentsTextFieldName;
+    this.loggedInUserId = this.commentsApiConfig.commentsLoggedInUserId;
+    this.sectionMapping = this.commentsApiConfig.commentsSectionRelationshipName;
+    this.sectionType = this.commentsApiConfig.commentsSectionEntityName;
   },
   mounted() {
     let action = '';
