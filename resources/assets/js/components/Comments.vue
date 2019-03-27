@@ -85,6 +85,10 @@ export default {
       type: String,
       required: true,
     },
+    userExternalId: {
+      type: String,
+      required: true,
+    },
     userUuid: {
       type: String,
       required: true,
@@ -102,7 +106,6 @@ export default {
       confirmationMessage: null,
       headerText: '',
       initialText: null,
-      loggedInUserId: '',
       maxInputCharacters: 0,
       messageList: [],
       messageListReady: false,
@@ -121,7 +124,6 @@ export default {
     this.authorType = this.commentsApiConfig.commentsAuthorEntityName;
     this.commentDateMapping = this.commentsApiConfig.commentsCreatedFieldName;
     this.commentTextMapping = this.commentsApiConfig.commentsTextFieldName;
-    this.loggedInUserId = this.commentsApiConfig.commentsLoggedInUserId;
     this.sectionMapping = this.commentsApiConfig.commentsSectionRelationshipName;
     this.sectionType = this.commentsApiConfig.commentsSectionEntityName;
   },
@@ -181,7 +183,7 @@ export default {
         relationships: {
           [this.authorMapping]: {
             data: {
-              id: this.loggedInUserId,
+              id: this.userExternalId,
               type: this.authorType,
             },
           },
@@ -208,8 +210,8 @@ export default {
             type: 'author',
             author: 'me',
             data: {
-              authorId: this.loggedInUserId,
-              text: this.participants[this.loggedInUserId].name,
+              authorId: this.userExternalId,
+              text: this.participants[this.userExternalId].name,
             },
           };
           this.messageList.push(authorMsg);
@@ -231,11 +233,11 @@ export default {
     openComments() {},
     processComments() {
       // Fetch info for the current user.
-      this.$set(this.participants, this.loggedInUserId, { name: '' });
+      this.$set(this.participants, this.userExternalId, { name: '' });
 
-      this.$store.dispatch('authors/loadById', { id: this.loggedInUserId }).then(() => {
-        const author = this.$store.getters['authors/byId']({ id: this.loggedInUserId });
-        this.participants[this.loggedInUserId].name = author.attributes[this.authorNameMapping];
+      this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
+        const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
+        this.participants[this.userExternalId].name = author.attributes[this.authorNameMapping];
       }).then(() => {
         this.comments.forEach((comment, cmntIdx) => {
           const authorId = comment.relationships[this.authorMapping].data.id;
@@ -249,7 +251,7 @@ export default {
           };
           this.dateTimezoneFormat(message);
 
-          if (comment.relationships[this.authorMapping].data.id === this.loggedInUserId) {
+          if (comment.relationships[this.authorMapping].data.id === this.userExternalId) {
             message.author = 'me';
           }
 
@@ -282,7 +284,7 @@ export default {
                 text: this.participants[authorId].name,
               },
             };
-            if (comment.relationships[this.authorMapping].data.id === this.loggedInUserId) {
+            if (comment.relationships[this.authorMapping].data.id === this.userExternalId) {
               authorMsg.author = 'me';
             }
             this.messageList.push(authorMsg);

@@ -80,6 +80,7 @@
         :user="user"
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
+        :user-external-id="userExternalId"
       />
     </div>
     <div
@@ -182,6 +183,9 @@ export default {
       timezoneInitialised: false,
       user: {},
       userTimezone: '',
+      userFirstName: '',
+      userLastName: '',
+      userExternalId: '',
       userUuid: '',
     };
   },
@@ -474,6 +478,18 @@ export default {
 
       if (config.user && !window._.isEmpty(config.user)) {
         this.userUuid = config.user.email;
+
+        if (config.user.first_name) {
+          this.userFirstName = config.user.first_name;
+        }
+
+        if (config.user.last_name) {
+          this.userLastName = config.user.last_name;
+        }
+
+        if (config.user.external_id) {
+          this.userExternalId = config.user.external_id;
+        }
       }
 
       if (config.newMessageIcon) {
