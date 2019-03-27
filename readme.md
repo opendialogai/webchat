@@ -81,42 +81,35 @@ Example config:
 ```javascript
 window.openDialogSettings = {
     url: "{{env('APP_URL')}}",
-    commentsEnabled: true,
-    commentsApiConfig: {
-        axiosConfig: {
+    user : {
+        first_name: 'Jane',
+        last_name: 'Smith',
+        email: 'jane.smith@opendialog.ai',
+        external_id: "{{ auth()->user()->id }}",
+    },
+    comments: {
+        commentsEnabled: true,
+        commentsName: 'Comments',
+        commentsAxiosConfig: {
             baseURL: 'http://localhost/json/',
             headers: {
-              // Authorization: `Bearer ${Laravel.apiToken}`,
-              'Content-Type': 'application/vnd.api+json'
-            }
-        },
-        // Pass the user ID here.
-        loggedInUserId: '{{ env('USER_ID') }}',
-        comment: {
-            entityName: 'comments',
-            fieldMapping: {
-                createdField: 'created',
-                textField: 'comment',
-                readField: 'read',
+                // eslint-disable-next-line no-undef
+                Authorization: `Bearer {{ auth()->user()->api_token }}`,
+                'Content-Type': 'application/vnd.api+json',
             },
         },
-        author: {
-            entityName: 'people',
-            relationshipName: 'commentAuthor',
-            fieldMapping: {
-                idField: 'id',
-                nameField: 'name',
-            },
-        },
-        section: {
-            entityName: 'posts',
-            relationshipName: 'post',
-            fieldMapping: {
-                idField: 'id',
-                nameField: 'title',
-            },
-        },
-        sectionPathPattern: 'home\\\/posts\\\/(\\\d*)$',
+        commentsEntityName: 'comments',
+        commentsCreatedFieldName: 'created',
+        commentsTextFieldName: 'comment',
+        commentsAuthorEntityName: 'people',
+        commentsAuthorRelationshipName: 'commentAuthor',
+        commentsAuthorIdFieldName: 'id',
+        commentsAuthorNameFieldName: 'name',
+        commentsSectionEntityName: 'posts',
+        commentsSectionRelationshipName: 'post',
+        commentsSectionIdFieldName: 'id',
+        commentsSectionNameFieldName: 'title',
+        commentsSectionPathPattern: 'home\\\/posts\\\/(\\\d*)$',
     },
 };
 ```

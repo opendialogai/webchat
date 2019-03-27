@@ -44,7 +44,6 @@ class WebchatSetting extends Model
     const COMMENTS_NAME                        = 'commentsName';
     const COMMENTS_ENABLED_PATH_PATTERN        = 'commentsEnabledPathPattern';
     const COMMENTS_AXIOS_CONFIG                = 'commentsAxiosConfig';
-    const COMMENTS_LOGGED_IN_USERID            = 'commentsLoggedInUserId';
     const COMMENTS_ENTITY_NAME                 = 'commentsEntityName';
     const COMMENTS_CREATED_FIELDNAME           = 'commentsCreatedFieldName';
     const COMMENTS_TEXT_FIELDNAME              = 'commentsTextFieldName';

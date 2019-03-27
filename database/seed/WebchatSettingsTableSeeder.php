@@ -45,7 +45,6 @@ class WebchatSettingsTableSeeder extends Seeder
                 WebchatSetting::STRING => [
                     WebchatSetting::COMMENTS_NAME,
                     WebchatSetting::COMMENTS_ENABLED_PATH_PATTERN,
-                    WebchatSetting::COMMENTS_LOGGED_IN_USERID,
                     WebchatSetting::COMMENTS_ENTITY_NAME,
                     WebchatSetting::COMMENTS_CREATED_FIELDNAME,
                     WebchatSetting::COMMENTS_TEXT_FIELDNAME,
