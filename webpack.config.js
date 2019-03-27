@@ -6,7 +6,7 @@ const path = require('path');
 module.exports = {
     entry: {
       'public/js/app': './resources/assets/js/app.js',
-      'public/opendialog-bot': './resources/assets/js/opendialog-bot.js',
+      'public/js/opendialog-bot': './resources/assets/js/opendialog-bot.js',
     },
     module: {
         rules: [
