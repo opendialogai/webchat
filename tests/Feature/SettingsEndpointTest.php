@@ -74,7 +74,7 @@ class SettingsEndpointTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'teamName' => 'OpenDialog Webchat',
-                'open' => '1',
+                'open' => true,
                 'colours' => [
                     'headerBackground' => '#ffffff',
                     'headerText' => '#000000',
