@@ -25,30 +25,6 @@
     <opendialog-chat></opendialog-chat>
 </div>
 
-<script>
-    let openDialogSettings = {};
-
-    @foreach(config('webchat') ?? [] as $name => $value)
-      @if (is_array($value))
-        value = [];
-        @foreach ($value as $item)
-          value.push("{{$item}}");
-        @endforeach
-        @if (!empty($value))
-          openDialogSettings.{{$name}} = value;
-        @endif
-      @elseif (is_string($value) && !empty($value))
-        openDialogSettings.{{$name}} = "{{$value}}";
-      @elseif (!empty($value))
-        openDialogSettings.{{$name}} = {{$value}};
-      @endif
-    @endforeach
-
-    addEventListener('load', () => {
-        postMessage(openDialogSettings, '*');
-    });
-</script>
-
 <link rel="stylesheet" type="text/css" href="/vendor/webchat/css/app.css?{{env("CSS_VERSION", "v1")}}">
 
 <script src="/vendor/webchat/js/app.js?{{env("JS_VERSION", "v1")}}"></script>

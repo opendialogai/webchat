@@ -38,6 +38,27 @@ class WebchatSetting extends Model
     const USER_INPUT_BACKGROUND       = 'userInputBackground';
     const USER_INPUT_TEXT             = 'userInputText';
 
+    // Comments
+    const COMMENTS                             = 'comments';
+    const COMMENTS_ENABLED                     = 'commentsEnabled';
+    const COMMENTS_NAME                        = 'commentsName';
+    const COMMENTS_ENABLED_PATH_PATTERN        = 'commentsEnabledPathPattern';
+    const COMMENTS_AXIOS_CONFIG                = 'commentsAxiosConfig';
+    const COMMENTS_ENTITY_NAME                 = 'commentsEntityName';
+    const COMMENTS_CREATED_FIELDNAME           = 'commentsCreatedFieldName';
+    const COMMENTS_TEXT_FIELDNAME              = 'commentsTextFieldName';
+    const COMMENTS_AUTHOR_ENTITY_NAME          = 'commentsAuthorEntityName';
+    const COMMENTS_AUTHOR_RELATIONSHIP_NAME    = 'commentsAuthorRelationshipName';
+    const COMMENTS_AUTHOR_ID_FIELDNAME         = 'commentsAuthorIdFieldName';
+    const COMMENTS_AUTHOR_NAME_FIELDNAME       = 'commentsAuthorNameFieldName';
+    const COMMENTS_SECTION_ENTITY_NAME         = 'commentsSectionEntityName';
+    const COMMENTS_SECTION_RELATIONSHIP_NAME   = 'commentsSectionRelationshipName';
+    const COMMENTS_SECTION_ID_FIELDNAME        = 'commentsSectionIdFieldName';
+    const COMMENTS_SECTION_NAME_FIELDNAME      = 'commentsSectionNameFieldName';
+    const COMMENTS_SECTION_FILTER_PATH_PATTERN = 'commentsSectionFilterPathPattern';
+    const COMMENTS_SECTION_FILTER_QUERY        = 'commentsSectionFilterQuery';
+    const COMMENTS_SECTION_PATH_PATTERN        = 'commentsSectionPathPattern';
+
     // Types
     const STRING  = 'string';
     const NUMBER  = 'number';

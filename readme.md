@@ -51,7 +51,7 @@ Change the value for BROADCAST_DRIVER from whatever it is currently to 'pusher',
 The webchat configuration can be found in the `webchat_settings` table. Before running, the config table should be seeded
 by running:
 
-```php artisan db:seed --class="OpenDialog\Webchat\Database\Seed\WebchatSettingsTableSeeder"```
+```php artisan db:seed --class="OpenDialogAi\Webchat\Database\Seed\WebchatSettingsTableSeeder"```
 
 This will load a row for each available setting. If new settings are added, they should be added in a separate seeder file.
 
@@ -73,50 +73,47 @@ deals with that callback_id
 ## Comments tab
 
 The webchat widget can fetch comments from an endpoint matching the JSON:API spec. To enable comments, add a
-commentsEnabled parameter to opendialogSettings, set to true. You will additionally need to pass information
+commentsEnabled parameter to openDialogSettings, set to true. You will additionally need to pass information
 about the comment entity name, author entity name, and section entity name. (If present)
 
 Example config:
 
 ```javascript
-window.opendialogSettings = {
+window.openDialogSettings = {
     url: "{{env('APP_URL')}}",
-    commentsEnabled: true,
-    commentsApiConfig: {
-        axiosConfig: {
+    user : {
+        first_name: 'Jane',
+        last_name: 'Smith',
+        email: 'jane.smith@opendialog.ai',
+        external_id: "{{ auth()->user()->id }}",
+    },
+    comments: {
+        commentsEnabled: true,
+        commentsName: 'Comments',
+        commentsAxiosConfig: {
             baseURL: 'http://localhost/json/',
             headers: {
-              // Authorization: `Bearer ${Laravel.apiToken}`,
-              'Content-Type': 'application/vnd.api+json'
-            }
-        },
-        // Pass the user ID here.
-        loggedInUserId: '{{ env('USER_ID') }}',
-        comment: {
-            entityName: 'comments',
-            fieldMapping: {
-                createdField: 'created',
-                textField: 'comment',
-                readField: 'read',
+                // eslint-disable-next-line no-undef
+                Authorization: `Bearer {{ auth()->user()->api_token }}`,
+                'Content-Type': 'application/vnd.api+json',
             },
         },
-        author: {
-            entityName: 'people',
-            relationshipName: 'commentAuthor',
-            fieldMapping: {
-                idField: 'id',
-                nameField: 'name',
-            },
-        },
-        section: {
-            entityName: 'posts',
-            relationshipName: 'post',
-            fieldMapping: {
-                idField: 'id',
-                nameField: 'title',
-            },
-        },
-        sectionPathPattern: 'home\\\/posts\\\/(\\\d*)$',
+        commentsEntityName: 'comments',
+        commentsCreatedFieldName: 'created',
+        commentsTextFieldName: 'comment',
+        commentsAuthorEntityName: 'people',
+        commentsAuthorRelationshipName: 'commentAuthor',
+        commentsAuthorIdFieldName: 'id',
+        commentsAuthorNameFieldName: 'name',
+        commentsSectionEntityName: 'posts',
+        commentsSectionRelationshipName: 'post',
+        commentsSectionIdFieldName: 'id',
+        commentsSectionNameFieldName: 'title',
+        commentsSectionPathPattern: 'home\\\/posts\\\/(\\\d*)$',
     },
 };
 ```
+
+## Running Code Sniffer
+To run code sniffer, run the following command
+```./vendor/bin/phpcs --standard=psr12 src/```

@@ -18,7 +18,7 @@
       class="minimized-header"
       @click="maximizeChat"
     >
-      {{ commentsName ? commentsName : 'Comments' }}
+      {{ comments.commentsName ? comments.commentsName : 'Comments' }}
       /
       {{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}
     </div>
@@ -35,7 +35,7 @@
         class="pr-1"
         @click="activateTab('comments')"
       >
-        {{ commentsName ? commentsName : 'Comments' }}
+        {{ comments.commentsName ? comments.commentsName : 'Comments' }}
       </b-nav-item>
       <b-nav-item
         :class="{ active: activeTab === 'webchat' }"
@@ -68,7 +68,7 @@
         :agent-profile="agentProfile"
         :callback-map="callbackMap"
         :colours="colours"
-        :comments-api-config="commentsApiConfig"
+        :comments-api-config="comments"
         :is-expand="isExpand"
         :is-mobile="isMobile"
         :load-history="loadHistory"
@@ -80,6 +80,7 @@
         :user="user"
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
+        :user-external-id="userExternalId"
       />
     </div>
     <div
@@ -158,11 +159,9 @@ export default {
           text: '#565867',
         },
       },
-      commentsApiConfig: {},
+      comments: {},
       commentsKey: 0,
       commentsEnabled: false,
-      commentsName: '',
-      commentsEnabledPathPattern: '',
       cssProps: {},
       isExpand: false,
       isMinimized: false,
@@ -184,6 +183,9 @@ export default {
       timezoneInitialised: false,
       user: {},
       userTimezone: '',
+      userFirstName: '',
+      userLastName: '',
+      userExternalId: '',
       userUuid: '',
     };
   },
@@ -290,8 +292,6 @@ export default {
       return cssVars;
     },
     initSettings() {
-      const self = this;
-
       axios.get('https://ipinfo.io/').then(
         (response) => {
           const browserInfo = detect();
@@ -322,137 +322,27 @@ export default {
         },
       );
 
+      // Add event listener for custom open dialog settings.
+      const customConfig = {};
       window.addEventListener('message', (event) => {
         if (event.data) {
-          if (event.data.parentUrl) {
-            self.parentUrl = event.data.parentUrl;
-          }
+          // Add config items to our custom config object.
+          Object.keys(event.data).forEach((key) => {
+            customConfig[key] = event.data[key];
+          });
+        }
+      });
 
-          if (event.data.colours) {
-            const { colours } = event.data;
+      // Get default settings from the config endpoint.
+      this.getWebchatConfig().then((config) => {
+        this.setConfig(config);
+        return true;
+      }).then(() => {
+        // Over-ride default config with any custom settings.
+        this.setConfig(customConfig);
 
-            if (colours.headerBackground) {
-              self.colours.header.bg = colours.headerBackground;
-            }
-            if (colours.headerText) {
-              self.colours.header.text = colours.headerText;
-            }
-            if (colours.launcherBackground) {
-              self.colours.launcher.bg = colours.launcherBackground;
-            }
-            if (colours.messageListBackground) {
-              self.colours.messageList.bg = colours.messageListBackground;
-            }
-            if (colours.sentMessageBackground) {
-              self.colours.sentMessage.bg = colours.sentMessageBackground;
-            }
-            if (colours.sentMessageText) {
-              self.colours.sentMessage.text = colours.sentMessageText;
-            }
-            if (colours.receivedMessageBackground) {
-              self.colours.receivedMessage.bg = colours.receivedMessageBackground;
-            }
-            if (colours.receivedMessageText) {
-              self.colours.receivedMessage.text = colours.receivedMessageText;
-            }
-            if (colours.userInputBackground) {
-              self.colours.userInput.bg = colours.userInputBackground;
-            }
-            if (colours.userInputText) {
-              self.colours.userInput.text = colours.userInputText;
-            }
-
-            this.cssProps = this.getCssProps();
-          }
-
-          if (event.data.teamName) {
-            self.agentProfile.teamName = event.data.teamName;
-          }
-
-          if (event.data.messageDelay) {
-            self.messageDelay = event.data.messageDelay;
-          }
-
-          if (event.data.user && !window._.isEmpty(event.data.user)) {
-            self.userUuid = event.data.user.email;
-          }
-
-          if (event.data.newMessageIcon) {
-            self.newMessageIcon = event.data.newMessageIcon;
-          }
-
-          if (event.data.callbackMap) {
-            self.callbackMap = event.data.callbackMap;
-          }
-
-          if (event.data.disableCloseChat) {
-            self.canCloseChat = false;
-          }
-
-          if (event.data.expandChat) {
-            if (!self.isExpand || !self.isOpen) {
-              self.expandChat(true);
-            }
-          }
-
-          if (event.data.disableExpandChat) {
-            self.showExpandButton = false;
-          }
-
-          if (event.data.collapseChat) {
-            if (self.isExpand) {
-              self.expandChat();
-            }
-          }
-
-          if (event.data.commentsEnabled) {
-            self.commentsEnabled = true;
-
-            if (event.data.commentsName) {
-              self.commentsName = event.data.commentsName;
-            }
-
-            if (event.data.commentsEnabledPathPattern) {
-              self.commentsEnabledPathPattern = event.data.commentsEnabledPathPattern;
-            }
-
-            if (event.data.commentsApiConfig) {
-              self.commentsApiConfig = event.data.commentsApiConfig;
-
-              if (this.commentsApiConfig.section
-                && this.commentsApiConfig.section.entityName) {
-                // Set up convenience mappings.
-                this.sectionFilterQuery = this.commentsApiConfig.sectionFilterQuery
-                  ? this.commentsApiConfig.sectionFilterQuery : '';
-                this.sectionFilterPathPattern = this.commentsApiConfig.sectionFilterPathPattern
-                  ? this.commentsApiConfig.sectionFilterPathPattern : '';
-              }
-            }
-          }
-
-          if (event.data.triggerConversation) {
-            // FIXME pass this to child component.
-            self.sendMessage({
-              type: 'trigger',
-              author: self.userUuid,
-              data: {
-                callback_id: event.data.triggerConversation.callback_id,
-              },
-            });
-          }
-
-          if (event.data.loadHistory !== undefined) {
-            self.loadHistory = event.data.loadHistory;
-            self.loading = event.data.loadHistory;
-          }
-
-          if (event.data.newPathname !== undefined) {
-            this.handleHistoryChange(event.data.newPathname);
-          }
-
-          if (!self.settingsInitialised) {
-            self.settingsInitialised = true;
-          }
+        if (!this.settingsInitialised) {
+          this.settingsInitialised = true;
         }
       });
     },
@@ -483,7 +373,7 @@ export default {
           this.sectionOptions.push({
             value: section.id,
             text: section.attributes[
-              this.commentsApiConfig.section.fieldMapping.nameField
+              this.comments.commentsSectionNameFieldName
             ],
           });
         });
@@ -496,9 +386,19 @@ export default {
         this.cssProps = this.getCssProps();
       });
     },
+    async getWebchatConfig(url = '') {
+      let configUrl = url;
+      if (configUrl === '') {
+        configUrl = `${window.location.origin}/webchat-config`;
+      }
+
+      const response = await fetch(configUrl);
+      const json = await response.json();
+      return json;
+    },
     handleHistoryChange(e) {
-      if (this.commentsEnabledPathPattern) {
-        const matches = e.match(this.commentsEnabledPathPattern);
+      if (this.comments.commentsEnabledPathPattern) {
+        const matches = e.match(this.comments.commentsEnabledPathPattern);
         if (matches && matches.length > 0) {
           this.commentsEnabled = true;
         } else {
@@ -517,14 +417,146 @@ export default {
       }
 
       // React to changes in the comment section.
-      if (this.commentsApiConfig && this.commentsApiConfig.sectionPathPattern) {
-        const matches = e.match(this.commentsApiConfig.sectionPathPattern);
+      if (this.comments && this.comments.commentsSectionPathPattern) {
+        const matches = e.match(this.comments.commentsSectionPathPattern);
         if (matches && matches.length > 1) {
           this.updateSectionSelection(matches[1]);
         }
       }
 
       this.pathInitialised = true;
+    },
+    setConfig(config) {
+      if (config.parentUrl) {
+        this.parentUrl = config.parentUrl;
+      }
+
+      if (config.colours) {
+        const { colours } = config;
+
+        if (colours.headerBackground) {
+          this.colours.header.bg = colours.headerBackground;
+        }
+        if (colours.headerText) {
+          this.colours.header.text = colours.headerText;
+        }
+        if (colours.launcherBackground) {
+          this.colours.launcher.bg = colours.launcherBackground;
+        }
+        if (colours.messageListBackground) {
+          this.colours.messageList.bg = colours.messageListBackground;
+        }
+        if (colours.sentMessageBackground) {
+          this.colours.sentMessage.bg = colours.sentMessageBackground;
+        }
+        if (colours.sentMessageText) {
+          this.colours.sentMessage.text = colours.sentMessageText;
+        }
+        if (colours.receivedMessageBackground) {
+          this.colours.receivedMessage.bg = colours.receivedMessageBackground;
+        }
+        if (colours.receivedMessageText) {
+          this.colours.receivedMessage.text = colours.receivedMessageText;
+        }
+        if (colours.userInputBackground) {
+          this.colours.userInput.bg = colours.userInputBackground;
+        }
+        if (colours.userInputText) {
+          this.colours.userInput.text = colours.userInputText;
+        }
+
+        this.cssProps = this.getCssProps();
+      }
+
+      if (config.teamName) {
+        this.agentProfile.teamName = config.teamName;
+      }
+
+      if (config.messageDelay) {
+        this.messageDelay = config.messageDelay;
+      }
+
+      if (config.user && !window._.isEmpty(config.user)) {
+        this.userUuid = config.user.email;
+
+        if (config.user.first_name) {
+          this.userFirstName = config.user.first_name;
+        }
+
+        if (config.user.last_name) {
+          this.userLastName = config.user.last_name;
+        }
+
+        if (config.user.external_id) {
+          this.userExternalId = config.user.external_id;
+        }
+      }
+
+      if (config.newMessageIcon) {
+        this.newMessageIcon = config.newMessageIcon;
+      }
+
+      if (config.callbackMap) {
+        this.callbackMap = config.callbackMap;
+      }
+
+      if (config.disableCloseChat) {
+        this.canCloseChat = false;
+      }
+
+      if (config.expandChat) {
+        if (!this.isExpand || !this.isOpen) {
+          this.expandChat(true);
+        }
+      }
+
+      if (config.disableExpandChat) {
+        this.showExpandButton = false;
+      }
+
+      if (config.collapseChat) {
+        if (this.isExpand) {
+          this.expandChat();
+        }
+      }
+
+      if (config.comments) {
+        if (config.comments.commentsEnabled) {
+          this.commentsEnabled = true;
+        }
+
+        Object.keys(config.comments).forEach((commentConfigKey) => {
+          this.comments[commentConfigKey] = config.comments[commentConfigKey];
+        });
+
+        if (this.comments.commentsSectionEntityName) {
+          // Set up convenience mappings.
+          this.sectionFilterQuery = this.comments.commentsSectionFilterQuery
+            ? this.comments.commentSectionFilterQuery : '';
+          this.sectionFilterPathPattern = this.comments.commentsSectionFilterPathPattern
+            ? this.comments.commentsSectionFilterPathPattern : '';
+        }
+      }
+
+      if (config.triggerConversation) {
+        // FIXME pass this to child component.
+        this.sendMessage({
+          type: 'trigger',
+          author: this.userUuid,
+          data: {
+            callback_id: config.triggerConversation.callback_id,
+          },
+        });
+      }
+
+      if (config.loadHistory !== undefined) {
+        this.loadHistory = config.loadHistory;
+        this.loading = config.loadHistory;
+      }
+
+      if (config.newPathname !== undefined) {
+        this.handleHistoryChange(config.newPathname);
+      }
     },
     toggleChatOpen(headerHeight = 0) {
       if (this.canCloseChat) {
