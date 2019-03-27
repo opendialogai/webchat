@@ -53,6 +53,27 @@ class SettingsTest extends TestCase
         $setting5->parent_id = $setting3->id;
         $setting5->save();
 
+        $setting6 = new WebchatSetting();
+        $setting6->name = 'comments';
+        $setting6->value = 'comments';
+        $setting6->type = 'object';
+        $setting6->save();
+
+        $setting7 = new WebchatSetting();
+        $setting7->name = 'commentsName';
+        $setting7->value = 'Comments Tab';
+        $setting7->type = 'string';
+        $setting7->parent_id = $setting6->id;
+        $setting7->save();
+
+        $setting8 = new WebchatSetting();
+        $setting8->name = 'commentsEnabled';
+        $setting8->value = TRUE;
+        $setting8->type = 'boolean';
+        $setting8->parent_id = $setting6->id;
+        $setting8->save();
+
+
         $response = $this->json('GET', '/webchat-config');
         $response
             ->assertStatus(200)
@@ -62,6 +83,10 @@ class SettingsTest extends TestCase
                 'colours' => [
                     'headerBackground' => '#ffffff',
                     'headerText' => '#000000',
+                ],
+                'comments' => [
+                    'commentsName' => 'Comments Tab',
+                    'commentsEnabled' => '1',
                 ],
             ]);
 

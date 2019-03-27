@@ -38,8 +38,8 @@ class WebchatSettings
                 foreach ($childSettings as $idx => $childSetting) {
                     if (($childSetting->parent_id == $setting->id) && $childSetting->value) {
                         $config[$setting->name][$childSetting->name] = $childSetting->value;
+                        unset($childSettings[$idx]);
                     }
-                    unset($childSettings[$idx]);
                 }
             }
         }

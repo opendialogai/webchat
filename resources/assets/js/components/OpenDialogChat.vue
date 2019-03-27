@@ -18,7 +18,7 @@
       class="minimized-header"
       @click="maximizeChat"
     >
-      {{ commentsName ? commentsName : 'Comments' }}
+      {{ comments.commentsName ? comments.commentsName : 'Comments' }}
       /
       {{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}
     </div>
@@ -35,7 +35,7 @@
         class="pr-1"
         @click="activateTab('comments')"
       >
-        {{ commentsName ? commentsName : 'Comments' }}
+        {{ comments.commentsName ? comments.commentsName : 'Comments' }}
       </b-nav-item>
       <b-nav-item
         :class="{ active: activeTab === 'webchat' }"
@@ -68,7 +68,7 @@
         :agent-profile="agentProfile"
         :callback-map="callbackMap"
         :colours="colours"
-        :comments-api-config="commentsApiConfig"
+        :comments-api-config="comments"
         :is-expand="isExpand"
         :is-mobile="isMobile"
         :load-history="loadHistory"
@@ -80,6 +80,7 @@
         :user="user"
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
+        :user-external-id="userExternalId"
       />
     </div>
     <div
@@ -158,11 +159,9 @@ export default {
           text: '#565867',
         },
       },
-      commentsApiConfig: {},
+      comments: {},
       commentsKey: 0,
       commentsEnabled: false,
-      commentsName: '',
-      commentsEnabledPathPattern: '',
       cssProps: {},
       isExpand: false,
       isMinimized: false,
@@ -184,6 +183,9 @@ export default {
       timezoneInitialised: false,
       user: {},
       userTimezone: '',
+      userFirstName: '',
+      userLastName: '',
+      userExternalId: '',
       userUuid: '',
     };
   },
@@ -371,7 +373,7 @@ export default {
           this.sectionOptions.push({
             value: section.id,
             text: section.attributes[
-              this.commentsApiConfig.section.fieldMapping.nameField
+              this.comments.commentsSectionNameFieldName
             ],
           });
         });
@@ -395,8 +397,8 @@ export default {
       return json;
     },
     handleHistoryChange(e) {
-      if (this.commentsEnabledPathPattern) {
-        const matches = e.match(this.commentsEnabledPathPattern);
+      if (this.comments.commentsEnabledPathPattern) {
+        const matches = e.match(this.comments.commentsEnabledPathPattern);
         if (matches && matches.length > 0) {
           this.commentsEnabled = true;
         } else {
@@ -415,8 +417,8 @@ export default {
       }
 
       // React to changes in the comment section.
-      if (this.commentsApiConfig && this.commentsApiConfig.sectionPathPattern) {
-        const matches = e.match(this.commentsApiConfig.sectionPathPattern);
+      if (this.comments && this.comments.commentsSectionPathPattern) {
+        const matches = e.match(this.comments.commentsSectionPathPattern);
         if (matches && matches.length > 1) {
           this.updateSectionSelection(matches[1]);
         }
@@ -476,6 +478,18 @@ export default {
 
       if (config.user && !window._.isEmpty(config.user)) {
         this.userUuid = config.user.email;
+
+        if (config.user.first_name) {
+          this.userFirstName = config.user.first_name;
+        }
+
+        if (config.user.last_name) {
+          this.userLastName = config.user.last_name;
+        }
+
+        if (config.user.external_id) {
+          this.userExternalId = config.user.external_id;
+        }
       }
 
       if (config.newMessageIcon) {
@@ -506,28 +520,21 @@ export default {
         }
       }
 
-      if (config.commentsEnabled) {
-        this.commentsEnabled = true;
-
-        if (config.commentsName) {
-          this.commentsName = config.commentsName;
+      if (config.comments) {
+        if (config.comments.commentsEnabled) {
+          this.commentsEnabled = true;
         }
 
-        if (config.commentsEnabledPathPattern) {
-          this.commentsEnabledPathPattern = config.commentsEnabledPathPattern;
-        }
+        Object.keys(config.comments).forEach((commentConfigKey) => {
+          this.comments[commentConfigKey] = config.comments[commentConfigKey];
+        });
 
-        if (config.commentsApiConfig) {
-          this.commentsApiConfig = config.commentsApiConfig;
-
-          if (this.commentsApiConfig.section
-            && this.commentsApiConfig.section.entityName) {
-            // Set up convenience mappings.
-            this.sectionFilterQuery = this.commentsApiConfig.sectionFilterQuery
-              ? this.commentsApiConfig.sectionFilterQuery : '';
-            this.sectionFilterPathPattern = this.commentsApiConfig.sectionFilterPathPattern
-              ? this.commentsApiConfig.sectionFilterPathPattern : '';
-          }
+        if (this.comments.commentsSectionEntityName) {
+          // Set up convenience mappings.
+          this.sectionFilterQuery = this.comments.commentsSectionFilterQuery
+            ? this.comments.commentSectionFilterQuery : '';
+          this.sectionFilterPathPattern = this.comments.commentsSectionFilterPathPattern
+            ? this.comments.commentsSectionFilterPathPattern : '';
         }
       }
 
