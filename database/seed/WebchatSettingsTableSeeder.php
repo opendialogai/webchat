@@ -38,6 +38,33 @@ class WebchatSettingsTableSeeder extends Seeder
                     WebchatSetting::USER_INPUT_TEXT,
                 ],
             ],
+            WebchatSetting::COMMENTS => [
+                WebchatSetting::BOOLEAN => [
+                    WebchatSetting::COMMENTS_ENABLED,
+                ],
+                WebchatSetting::STRING => [
+                    WebchatSetting::COMMENTS_NAME,
+                    WebchatSetting::COMMENTS_ENABLED_PATH_PATTERN,
+                    WebchatSetting::COMMENTS_LOGGED_IN_USERID,
+                    WebchatSetting::COMMENTS_ENTITY_NAME,
+                    WebchatSetting::COMMENTS_CREATED_FIELDNAME,
+                    WebchatSetting::COMMENTS_TEXT_FIELDNAME,
+                    WebchatSetting::COMMENTS_AUTHOR_ENTITY_NAME,
+                    WebchatSetting::COMMENTS_AUTHOR_RELATIONSHIP_NAME,
+                    WebchatSetting::COMMENTS_AUTHOR_ID_FIELDNAME,
+                    WebchatSetting::COMMENTS_AUTHOR_NAME_FIELDNAME,
+                    WebchatSetting::COMMENTS_SECTION_ENTITY_NAME,
+                    WebchatSetting::COMMENTS_SECTION_RELATIONSHIP_NAME,
+                    WebchatSetting::COMMENTS_SECTION_ID_FIELDNAME,
+                    WebchatSetting::COMMENTS_SECTION_NAME_FIELDNAME,
+                    WebchatSetting::COMMENTS_SECTION_FILTER_PATH_PATTERN,
+                    WebchatSetting::COMMENTS_SECTION_FILTER_QUERY,
+                    WebchatSetting::COMMENTS_SECTION_PATH_PATTERN,
+                ],
+                WebchatSetting::OBJECT => [
+                    WebchatSetting::COMMENTS_AXIOS_CONFIG
+                ],
+            ],
             WebchatSetting::MAP => [
                 WebchatSetting::VALID_PATH,
                 WebchatSetting::CALLBACK_MAP,
@@ -50,15 +77,27 @@ class WebchatSettingsTableSeeder extends Seeder
             ]
         ];
 
+        $createdItems = [];
         foreach ($settings as $type => $values) {
             foreach ($values as $subType => $value) {
-                $configItemId = DB::table('webchat_settings')->insertGetId([
-                    'type' => is_array($value) ? WebchatSetting::OBJECT : $type,
-                    'name' => is_array($value) ? $type : $value,
-                    'value' => null,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                if (is_array($value) && !in_array($type, $createdItems)) {
+                  $configItemId = DB::table('webchat_settings')->insertGetId([
+                      'type' => is_array($value) ? WebchatSetting::OBJECT : $type,
+                      'name' => is_array($value) ? $type : $value,
+                      'value' => null,
+                      'created_at' => now(),
+                      'updated_at' => now(),
+                  ]);
+                  $createdItems[] = $type;
+                } elseif (!is_array($value)) {
+                  DB::table('webchat_settings')->insert([
+                      'type' => is_array($value) ? WebchatSetting::OBJECT : $type,
+                      'name' => is_array($value) ? $type : $value,
+                      'value' => null,
+                      'created_at' => now(),
+                      'updated_at' => now(),
+                  ]);
+                }
 
                 if (is_array($value)) {
                     foreach ($value as $subValue) {
