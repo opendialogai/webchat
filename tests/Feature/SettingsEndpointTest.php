@@ -58,11 +58,16 @@ class SettingsEndpointTest extends TestCase
 
         $setting8 = new WebchatSetting();
         $setting8->name = 'commentsEnabled';
-        $setting8->value = TRUE;
+        $setting8->value = FALSE;
         $setting8->type = 'boolean';
         $setting8->parent_id = $setting6->id;
         $setting8->save();
 
+        $setting9 = new WebchatSetting();
+        $setting9->name = 'messageDelay';
+        $setting9->value = 1000;
+        $setting9->type = 'number';
+        $setting9->save();
 
         $response = $this->json('GET', '/webchat-config');
         $response
@@ -76,8 +81,9 @@ class SettingsEndpointTest extends TestCase
                 ],
                 'comments' => [
                     'commentsName' => 'Comments Tab',
-                    'commentsEnabled' => '1',
+                    'commentsEnabled' => false,
                 ],
-            ]);
+                'messageDelay' => 1000,
+            ], TRUE);
     }
 }
