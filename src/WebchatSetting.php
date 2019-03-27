@@ -66,4 +66,20 @@ class WebchatSetting extends Model
     const MAP     = 'map';
     const BOOLEAN = 'boolean';
     const OBJECT  = 'object';
+
+    /**
+     * Define parent relationship.
+     */
+    public function parent()
+    {
+        return $this->belongsTo('OpenDialogAi\Webchat\WebchatSetting', 'parent_id');
+    }
+
+    /**
+     * Define child relationship.
+     */
+    public function children()
+    {
+        return $this->hasMany('OpenDialogAi\Webchat\WebchatSetting', 'parent_id');
+    }
 }
