@@ -18,6 +18,7 @@ const store = new Vuex.Store({
 });
 
 const commentConfig = {};
+const userConfig = {};
 
 // Helper function - retrieve DB settings from endpoint.
 async function getWebchatConfig(url = '') {
@@ -35,6 +36,12 @@ function setConfig(config) {
   if (config.comments) {
     Object.keys(config.comments).forEach((commentConfigKey) => {
       commentConfig[commentConfigKey] = config.comments[commentConfigKey];
+    });
+  }
+
+  if (config.user) {
+    Object.keys(config.user).forEach((userConfigKey) => {
+      userConfig[userConfigKey] = config.user[userConfigKey];
     });
   }
 }
@@ -59,6 +66,10 @@ getWebchatConfig().then((config) => {
   setConfig(customConfig);
 
   if (commentConfig && commentConfig.commentsEnabled && commentConfig.commentsAxiosConfig) {
+    if (!commentConfig.commentsAxiosConfig.headers['X-Requested-For-OD-User-ID']
+      && userConfig.external_id) {
+      commentConfig.commentsAxiosConfig.headers['X-Requested-For-OD-User-ID'] = userConfig.external_id;
+    }
     const httpClient = axios.create(commentConfig.commentsAxiosConfig);
 
     // Add the json:api modules.
