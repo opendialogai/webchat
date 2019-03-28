@@ -32,12 +32,26 @@ class WebchatSettings
 
         // Build the config array.
         foreach ($settings as $setting) {
-            if (!in_array($setting->id, $parentIds) && $setting->value) {
-                $config[$setting->name] = $setting->value;
+            if (!in_array($setting->id, $parentIds) && !is_null($setting->value)) {
+                $value = $setting->value;
+                if ($setting->type === 'number') {
+                    $value = (int) $value;
+                }
+                if ($setting->type === 'boolean') {
+                    $value = boolval($value);
+                }
+                $config[$setting->name] = $value;
             } else {
                 foreach ($childSettings as $idx => $childSetting) {
-                    if (($childSetting->parent_id == $setting->id) && $childSetting->value) {
-                        $config[$setting->name][$childSetting->name] = $childSetting->value;
+                    if (($childSetting->parent_id == $setting->id) && !is_null($childSetting->value)) {
+                        $value = $childSetting->value;
+                        if ($childSetting->type === 'number') {
+                            $value = (int) $value;
+                        }
+                        if ($childSetting->type === 'boolean') {
+                            $value = boolval($value);
+                        }
+                        $config[$setting->name][$childSetting->name] = $value;
                         unset($childSettings[$idx]);
                     }
                 }
