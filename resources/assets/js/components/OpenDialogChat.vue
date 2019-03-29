@@ -371,7 +371,14 @@ export default {
           sections = this.$store.getters[getter]({ filter });
         }
 
-        sections.forEach((section) => {
+        sections.sort((a, b) => {
+          const numberA = a.attributes.number;
+          const numberB = b.attributes.number;
+
+          if (numberA > numberB) return 1;
+          if (numberA < numberB) return -1;
+          return 0;
+        }).forEach((section) => {
           this.sectionOptions.push({
             value: section.id,
             text: section.attributes[
