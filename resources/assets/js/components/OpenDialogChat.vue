@@ -7,9 +7,8 @@
     ]"
     :style="cssProps"
   >
-    <IMG
+    <div
       v-if="commentsEnabled && !isMinimized"
-      src="/images/vendor/webchat/images/minimize-button.svg"
       class="minimize-button"
       @click="minimizeChat"
     />
@@ -642,12 +641,6 @@ export default {
   height: 100% !important;
 }
 
-.minimize-button {
-  cursor: pointer;
-  position: absolute;
-  top: 0;
-  right: 0;
-}
 .minimized-header {
   cursor: pointer;
   padding: 0.5rem 1rem;
