@@ -354,6 +354,7 @@ export default {
       if (this.sectionQueryString) {
         filter = {
           [this.sectionFilterQuery]: this.sectionQueryString,
+          enabled: '1',
         };
         action = 'sections/loadWhere';
         getter = 'sections/where';
