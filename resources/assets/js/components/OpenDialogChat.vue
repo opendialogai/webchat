@@ -628,6 +628,13 @@ export default {
   border: none;
 }
 
+.comments-enabled .nav .nav-item {
+  width: 40%;
+}
+.comments-enabled .nav .nav-item.active {
+  width: 60%;
+}
+
 .sc-chat-window {
   height: calc(100vh - var(--header-height)) !important;
 }
