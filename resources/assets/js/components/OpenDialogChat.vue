@@ -338,12 +338,14 @@ export default {
         this.setConfig(config);
         return true;
       }).then(() => {
-        // Over-ride default config with any custom settings.
-        this.setConfig(customConfig);
+        setTimeout(() => {
+          // Over-ride default config with any custom settings.
+          this.setConfig(customConfig);
 
-        if (!this.settingsInitialised) {
-          this.settingsInitialised = true;
-        }
+          if (!this.settingsInitialised) {
+            this.settingsInitialised = true;
+          }
+        }, 200);
       });
     },
     getCommentSections() {
