@@ -20,7 +20,7 @@
 iframe#opendialog-chatwindow {
     position: fixed;
     height: 70%;
-    bottom: 10px;
+    bottom: 0;
     right: 10px;
     border: none;
     width: 400px;
