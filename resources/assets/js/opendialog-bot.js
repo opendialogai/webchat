@@ -77,7 +77,9 @@ function openChatWindow(div = null) {
   });
 
   window.addEventListener('mouseup', () => {
-    ifrm.contentWindow.postMessage({ collapseChat: true }, '*');
+    if (ifrm.contentWindow) {
+      ifrm.contentWindow.postMessage({ collapseChat: true }, '*');
+    }
   });
 
   // Listen for back/forward button presses in SPAs.

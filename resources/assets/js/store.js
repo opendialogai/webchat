@@ -62,26 +62,28 @@ getWebchatConfig().then((config) => {
   setConfig(config);
   return true;
 }).then(() => {
-  // Over-ride default config with any custom settings.
-  setConfig(customConfig);
+  setTimeout(() => {
+    // Over-ride default config with any custom settings.
+    setConfig(customConfig);
 
-  if (commentConfig && commentConfig.commentsEnabled && commentConfig.commentsAxiosConfig) {
-    if (!commentConfig.commentsAxiosConfig.headers['X-Requested-For-OD-User-ID']
-      && userConfig.external_id) {
-      commentConfig.commentsAxiosConfig.headers['X-Requested-For-OD-User-ID'] = userConfig.external_id;
+    if (commentConfig && commentConfig.commentsEnabled && commentConfig.commentsAxiosConfig) {
+      if (!commentConfig.commentsAxiosConfig.headers['X-Requested-For-OD-User-ID']
+        && userConfig.external_id) {
+        commentConfig.commentsAxiosConfig.headers['X-Requested-For-OD-User-ID'] = userConfig.external_id;
+      }
+      const httpClient = axios.create(commentConfig.commentsAxiosConfig);
+
+      // Add the json:api modules.
+      store.registerModule('comments', resourceModule({ name: commentConfig.commentsEntityName, httpClient }));
+      store.registerModule('authors', resourceModule({ name: commentConfig.commentsAuthorEntityName, httpClient }));
+      if (commentConfig.commentsSectionEntityName) {
+        store.registerModule('sections', resourceModule({ name: commentConfig.commentsSectionEntityName, httpClient }));
+      }
+
+      // Tell vue we're ready.
+      store.commit('setApiReady', true);
     }
-    const httpClient = axios.create(commentConfig.commentsAxiosConfig);
-
-    // Add the json:api modules.
-    store.registerModule('comments', resourceModule({ name: commentConfig.commentsEntityName, httpClient }));
-    store.registerModule('authors', resourceModule({ name: commentConfig.commentsAuthorEntityName, httpClient }));
-    if (commentConfig.commentsSectionEntityName) {
-      store.registerModule('sections', resourceModule({ name: commentConfig.commentsSectionEntityName, httpClient }));
-    }
-
-    // Tell vue we're ready.
-    store.commit('setApiReady', true);
-  }
+  }, 200);
 });
 
 export default store;
