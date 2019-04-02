@@ -7,9 +7,8 @@
     ]"
     :style="cssProps"
   >
-    <IMG
+    <div
       v-if="commentsEnabled && !isMinimized"
-      src="/images/vendor/webchat/images/minimize-button.svg"
       class="minimize-button"
       @click="minimizeChat"
     />
@@ -338,12 +337,14 @@ export default {
         this.setConfig(config);
         return true;
       }).then(() => {
-        // Over-ride default config with any custom settings.
-        this.setConfig(customConfig);
+        setTimeout(() => {
+          // Over-ride default config with any custom settings.
+          this.setConfig(customConfig);
 
-        if (!this.settingsInitialised) {
-          this.settingsInitialised = true;
-        }
+          if (!this.settingsInitialised) {
+            this.settingsInitialised = true;
+          }
+        }, 200);
       });
     },
     getCommentSections() {
@@ -353,6 +354,7 @@ export default {
       if (this.sectionQueryString) {
         filter = {
           [this.sectionFilterQuery]: this.sectionQueryString,
+          enabled: '1',
         };
         action = 'sections/loadWhere';
         getter = 'sections/where';
@@ -369,7 +371,14 @@ export default {
           sections = this.$store.getters[getter]({ filter });
         }
 
-        sections.forEach((section) => {
+        sections.sort((a, b) => {
+          const numberA = a.attributes.number;
+          const numberB = b.attributes.number;
+
+          if (numberA > numberB) return 1;
+          if (numberA < numberB) return -1;
+          return 0;
+        }).forEach((section) => {
           this.sectionOptions.push({
             value: section.id,
             text: section.attributes[
@@ -619,6 +628,13 @@ export default {
   border: none;
 }
 
+.comments-enabled .nav .nav-item {
+  width: 40%;
+}
+.comments-enabled .nav .nav-item.active {
+  width: 60%;
+}
+
 .sc-chat-window {
   height: calc(100vh - var(--header-height)) !important;
 }
@@ -626,12 +642,6 @@ export default {
   height: 100% !important;
 }
 
-.minimize-button {
-  cursor: pointer;
-  position: absolute;
-  top: 0;
-  right: 0;
-}
 .minimized-header {
   cursor: pointer;
   padding: 0.5rem 1rem;

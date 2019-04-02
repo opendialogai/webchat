@@ -209,3 +209,13 @@
     width: calc(100% - 22px);
   }
 }
+
+.minimize-button {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: url('/images/vendor/webchat/images/min.svg') center center no-repeat;
+  width: 40px;
+  height: 40px;
+}
