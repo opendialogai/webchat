@@ -13,9 +13,9 @@ class IncreaseValueColumnSizeForWebchatSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('webchat_settings', function (Blueprint $table) {
+        if (config('database.default') !== 'testbench') {
             DB::statement('ALTER TABLE webchat_settings MODIFY COLUMN value VARCHAR(8192)');
-        });
+        }
     }
 
     /**
@@ -25,8 +25,8 @@ class IncreaseValueColumnSizeForWebchatSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::table('webchat_settings', function (Blueprint $table) {
+        if (config('database.default') !== 'testbench') {
             DB::statement('ALTER TABLE webchat_settings MODIFY COLUMN value VARCHAR(255)');
-        });
+        }
     }
 }
