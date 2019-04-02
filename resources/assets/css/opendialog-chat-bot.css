@@ -25,6 +25,9 @@ iframe#opendialog-chatwindow {
     border: none;
     width: 400px;
     box-shadow: #AAA 0 0 10px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    background-color: #fff;
 }
 iframe#opendialog-chatwindow.expanded {
     width: 490px;
