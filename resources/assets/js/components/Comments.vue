@@ -110,7 +110,7 @@ export default {
       messageList: [],
       messageListReady: false,
       participants: {},
-      placeholder: 'Write a comment',
+      placeholder: 'Type a message',
       showLongTextInput: false,
       showMessages: true,
       showTypingIndicator: false,

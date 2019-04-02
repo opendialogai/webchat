@@ -614,12 +614,14 @@ export default {
 }
 .nav .nav-item a.nav-link {
   color: var(--header-background-color);
+  font-size: 17px;
 }
 .nav .nav-item.active {
   background-color: var(--header-background-color);
 }
 .nav .nav-item.active a.nav-link {
   color: var(--header-text-color);
+  font-weight: 600;
 }
 .comment-section-selector-wrapper {
   border-bottom: 1px solid var(--header-background-color);
