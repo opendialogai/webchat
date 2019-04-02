@@ -2,7 +2,12 @@
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 
+body {
+  background: none;
+}
+
 .sc-chat-window {
+  font-family: 'Proxima Nova', Georgia, sans-serif !important;
   border-radius: 0 !important;
   width: 100% !important;
   max-height: 100% !important;
@@ -71,9 +76,10 @@
         .sc-message--image,
         .sc-typing-indicator {
           max-width: calc(100% - 40px);
-          border-radius: 15px;
+          border-radius: 14px;
           border-bottom-right-radius: 0;
           box-shadow: #CFCFCF 1px 1px 1px;
+          background-color: #505050 !important;
         }
       }
       &.received {
@@ -93,10 +99,11 @@
         .sc-message--image,
         .sc-typing-indicator {
           max-width: calc(100% - 40px);
-          border-radius: 15px;
+          border-radius: 14px;
           border-bottom-left-radius: 0;
           box-shadow: #CFCFCF -1px 1px 1px;
           margin-right: 10px;
+          background-color: #f2f2f2 !important;
         }
       }
     }
@@ -154,8 +161,14 @@
     }
 
     .sc-message--text {
-      font-size: 14px;
+      font-size: 15px;
       padding: 7px 15px;
+      color: #2d2d2d !important;
+      border-radius: 14px;
+      border-bottom-left-radius: 0;
+    }
+    .sc-message--content.sent .sc-message--text {
+      color: #ffffff !important;
     }
 
     .sc-message--button-response {

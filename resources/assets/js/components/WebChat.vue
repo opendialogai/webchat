@@ -113,7 +113,7 @@ export default {
       loading: true,
       maxInputCharacters: 0,
       messageList: [],
-      placeholder: 'Write a reply',
+      placeholder: 'Type a message',
       showLongTextInput: false,
       showMessages: true,
       showTypingIndicator: false,

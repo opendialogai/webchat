@@ -17,6 +17,9 @@
         var pusherAppKey  = "{{ config('broadcasting.connections.pusher.key', '') }}"
         var pusherCluster = "{{ config('broadcasting.connections.pusher.options.cluster', '') }}"
     </script>
+
+    <!-- Fonts -->
+    <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.min.css" />
 </head>
 
 <body>
