@@ -103,6 +103,7 @@
         :user="user"
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
+        :user-external-id="userExternalId"
         @expandChat="expandChat"
         @toggleChatOpen="toggleChatOpen"
       />

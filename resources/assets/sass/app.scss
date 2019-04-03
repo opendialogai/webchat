@@ -103,15 +103,44 @@ body {
           border-bottom-left-radius: 0;
           box-shadow: #CFCFCF -1px 1px 1px;
           margin-right: 10px;
-          background-color: #f2f2f2 !important;
+          background-color: #F2F2F2 !important;
         }
       }
     }
 
     .sc-message--time-read {
       color: #8E8E92;
-      margin-top: 8px;
-      margin-bottom: 4px;
+      margin: 8px 45px 4px 45px;
+    }
+
+    .sc-message--author {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: -10px;
+      img.avatar {
+        width: 35px;
+        height: 35px;
+        margin-right: 10px;
+      }
+      span.avatar {
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+        line-height: 35px;
+        border-radius: 18px;
+        width: 35px;
+        height: 35px;
+        margin-right: 10px;
+        background: #2D2D2D;
+        color: #FFFFFF;
+      }
+    }
+    .sc-message--content.sent .sc-message--author {
+      img.avatar,
+      span.avatar {
+        margin-right: 0;
+        margin-left: 10px;
+      }
     }
 
     .sc-message {
@@ -163,12 +192,13 @@ body {
     .sc-message--text {
       font-size: 15px;
       padding: 7px 15px;
-      color: #2d2d2d !important;
+      color: #2D2D2D !important;
       border-radius: 14px;
       border-bottom-left-radius: 0;
+      margin: 0 45px;
     }
     .sc-message--content.sent .sc-message--text {
-      color: #ffffff !important;
+      color: #FFFFFF !important;
     }
 
     .sc-message--button-response {
