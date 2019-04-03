@@ -33,24 +33,12 @@ class WebchatSettings
         // Build the config array.
         foreach ($settings as $setting) {
             if (!in_array($setting->id, $parentIds) && !is_null($setting->value)) {
-                $value = $setting->value;
-                if ($setting->type === 'number') {
-                    $value = (int) $value;
-                }
-                if ($setting->type === 'boolean') {
-                    $value = boolval($value);
-                }
+                $value = $this->castValue($setting->type, $setting->value);
                 $config[$setting->name] = $value;
             } else {
                 foreach ($childSettings as $idx => $childSetting) {
                     if (($childSetting->parent_id == $setting->id) && !is_null($childSetting->value)) {
-                        $value = $childSetting->value;
-                        if ($childSetting->type === 'number') {
-                            $value = (int) $value;
-                        }
-                        if ($childSetting->type === 'boolean') {
-                            $value = boolval($value);
-                        }
+                        $value = $this->castValue($childSetting->type, $childSetting->value);
                         $config[$setting->name][$childSetting->name] = $value;
                         unset($childSettings[$idx]);
                     }
@@ -60,5 +48,31 @@ class WebchatSettings
 
         // Return the config as JSON.
         return json_encode($config, JSON_FORCE_OBJECT);
+    }
+
+    /**
+     * Handle the incoming request.
+     *
+     * @param string $type
+     * @param string $value
+     * @return mixed
+     */
+    private function castValue($type, $value)
+    {
+        switch ($type) {
+            case 'number':
+                $value = (int) $value;
+                break;
+            case 'boolean':
+                $value = boolval($value);
+                break;
+            case 'object':
+                $value = json_decode($value);
+                break;
+            default:
+                break;
+        }
+
+        return $value;
     }
 }

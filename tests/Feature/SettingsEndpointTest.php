@@ -69,6 +69,13 @@ class SettingsEndpointTest extends TestCase
         $setting9->type = 'number';
         $setting9->save();
 
+        $setting9 = new WebchatSetting();
+        $setting9->name = 'testObject';
+        $setting9->value = '{"foo":"bar","bee":"baz"}';
+        $setting9->type = 'object';
+        $setting9->save();
+
+
         $response = $this->json('GET', '/webchat-config');
         $response
             ->assertStatus(200)
@@ -84,6 +91,10 @@ class SettingsEndpointTest extends TestCase
                     'commentsEnabled' => false,
                 ],
                 'messageDelay' => 1000,
+                'testObject' => [
+                    'foo' => 'bar',
+                    'bee' => 'baz',
+                ],
             ], TRUE);
     }
 }
