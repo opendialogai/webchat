@@ -96,6 +96,10 @@ export default {
       type: String,
       required: true,
     },
+    userExternalId: {
+      type: String,
+      required: true,
+    },
     userUuid: {
       type: String,
       required: true,
@@ -118,6 +122,7 @@ export default {
       showMessages: true,
       showTypingIndicator: false,
       users: [],
+      userName: '',
       uuid: this.userUuid,
     };
   },
@@ -169,6 +174,11 @@ export default {
       }
     }
 
+    this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
+      const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
+      this.userName = author.attributes.name;
+    });
+
     this.initChat();
     this.setUpListeners();
 
@@ -210,6 +220,22 @@ export default {
       }
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
+        const avatarName = this.userName
+          .split(' ').map(n => n[0]).join('').toUpperCase();
+
+        const authorMsg = {
+          type: 'author',
+          author: 'me',
+          data: {
+            author: 'me',
+            text: this.userName,
+            avatar: `<span class="avatar">${avatarName}</span>`,
+            date: newMsg.data.date,
+            time: newMsg.data.time,
+          },
+        };
+        this.messageList.push(authorMsg);
+
         this.buttonText = 'Submit';
         this.headerText = '';
         this.maxInputCharacters = 0;
@@ -254,6 +280,18 @@ export default {
                 this.showTypingIndicator = true;
                 setTimeout(() => {
                   this.showTypingIndicator = false;
+
+                  if (i === 0) {
+                    const authorMsg = {
+                      type: 'author',
+                      data: {
+                        text: 'LISA',
+                        avatar: '<img class="avatar" src="/vendor/webchat/images/lisa.png" />',
+                        date: message.data.date,
+                      },
+                    };
+                    this.messageList.push(authorMsg);
+                  }
 
                   this.messageList.push(message);
 
@@ -583,6 +621,18 @@ export default {
 
             if (i < messages.length - 1) {
               this.dateTimezoneFormat(currentMessage);
+            }
+
+            if (currentMessage.author === 'them') {
+              const authorMsg = {
+                type: 'author',
+                data: {
+                  text: 'LISA',
+                  avatar: '<img class="avatar" src="/vendor/webchat/images/lisa.png" />',
+                  date: currentMessage.data.date,
+                },
+              };
+              this.messageList.push(authorMsg);
             }
 
             this.messageList.push(currentMessage);

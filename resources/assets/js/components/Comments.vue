@@ -206,12 +206,17 @@ export default {
 
         // Add a new author message if necessary.
         if (!lastMessage || (lastMessage && lastMessage.author !== 'me')) {
+          const avatarName = this.participants[this.userExternalId].name
+            .split(' ').map(n => n[0]).join('').toUpperCase();
+
           const authorMsg = {
             type: 'author',
             author: 'me',
             data: {
+              author: 'me',
               authorId: this.userExternalId,
               text: this.participants[this.userExternalId].name,
+              avatar: `<span class="avatar">${avatarName}</span>`,
             },
           };
           this.messageList.push(authorMsg);
@@ -268,6 +273,11 @@ export default {
                 if (msg.type === 'author' && msg.data.authorId === authorId) {
                   const newMsg = msg;
                   newMsg.data.text = author.attributes[this.authorNameMapping];
+
+                  const avatarName = newMsg.data.text
+                    .split(' ').map(n => n[0]).join('').toUpperCase();
+                  newMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+
                   this.$set(this.messageList, msgIdx, newMsg);
                 }
               });
@@ -277,15 +287,20 @@ export default {
           if (cmntIdx === 0 || (message.author !== this.comments[cmntIdx - 1]
             .relationships[this.authorMapping].data.id
           )) {
+            const avatarName = this.participants[authorId].name
+              .split(' ').map(n => n[0]).join('').toUpperCase();
+
             const authorMsg = {
               type: 'author',
               data: {
                 authorId,
                 text: this.participants[authorId].name,
+                avatar: `<span class="avatar">${avatarName}</span>`,
               },
             };
             if (comment.relationships[this.authorMapping].data.id === this.userExternalId) {
               authorMsg.author = 'me';
+              authorMsg.data.author = 'me';
             }
             this.messageList.push(authorMsg);
           }
