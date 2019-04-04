@@ -286,7 +286,7 @@ export default {
                       type: 'author',
                       data: {
                         text: 'LISA',
-                        avatar: '<img class="avatar" src="/vendor/webchat/images/lisa.png" />',
+                        avatar: '<img class="avatar" src="/images/vendor/webchat/images/lisa.png" />',
                         date: message.data.date,
                       },
                     };
@@ -628,7 +628,7 @@ export default {
                 type: 'author',
                 data: {
                   text: 'LISA',
-                  avatar: '<img class="avatar" src="/vendor/webchat/images/lisa.png" />',
+                  avatar: '<img class="avatar" src="/images/vendor/webchat/images/lisa.png" />',
                   date: currentMessage.data.date,
                 },
               };
