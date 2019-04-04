@@ -26,12 +26,12 @@
         "lodash": "^4.17.11",
         "popper.js": "^1.14.7",
         "resolve-url-loader": "2.3.1",
-        "sass": "^1.17.3",
+        "sass": "^1.17.4",
         "sass-loader": "7.*",
         "vue": "^2.6.10"
     },
     "dependencies": {
-        "@babel/core": "^7.4.0",
+        "@babel/core": "^7.4.3",
         "@reststate/vuex": "0.0.9",
         "bootstrap-vue": "^2.0.0-rc.15",
         "detect-browser": "^4.2.0",
