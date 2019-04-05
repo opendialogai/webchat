@@ -1,5 +1,5 @@
 <template>
-  <div :class="[ isMobile ? 'mobile' : '', canCloseChat ? '' : 'no-close' ]">
+  <div :class="[ isMobile ? 'mobile' : '', canCloseChat ? '' : 'no-close' ]" :id="id">
     <template v-if="loading">
       <div class="loading">
         <div class="loading-message">
@@ -112,6 +112,7 @@ export default {
       contentEditable: false,
       headerHeight: 0,
       headerText: '',
+      id: '',
       initialText: null,
       isOpen: this.chatIsOpen,
       loading: true,
@@ -156,7 +157,7 @@ export default {
     loading(isLoading) {
       if (!isLoading) {
         setTimeout(() => {
-          const header = document.querySelector('.sc-header');
+          const header = document.querySelector(`#${this.id} .sc-header`);
           if (header) {
             this.headerHeight = header.offsetHeight;
           }
@@ -165,6 +166,8 @@ export default {
     },
   },
   created() {
+    this.id = `webchat-${this.$uuid.v4()}`;
+
     const urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.has('mobile')) {
