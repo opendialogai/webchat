@@ -330,6 +330,11 @@ export default {
           Object.keys(event.data).forEach((key) => {
             customConfig[key] = event.data[key];
           });
+
+          // Handle path changes.
+          if (event.data.newPathname) {
+            this.handleHistoryChange(event.data.newPathname);
+          }
         }
       });
 
