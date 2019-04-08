@@ -377,6 +377,8 @@ export default {
           sections = this.$store.getters[getter]({ filter });
         }
 
+        this.sectionOptions = [];
+
         sections.sort((a, b) => {
           const numberA = a.attributes.number;
           const numberB = b.attributes.number;
