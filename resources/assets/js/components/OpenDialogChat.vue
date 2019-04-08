@@ -547,7 +547,7 @@ export default {
         if (this.comments.commentsSectionEntityName) {
           // Set up convenience mappings.
           this.sectionFilterQuery = this.comments.commentsSectionFilterQuery
-            ? this.comments.commentSectionFilterQuery : '';
+            ? this.comments.commentsSectionFilterQuery : '';
           this.sectionFilterPathPattern = this.comments.commentsSectionFilterPathPattern
             ? this.comments.commentsSectionFilterPathPattern : '';
         }

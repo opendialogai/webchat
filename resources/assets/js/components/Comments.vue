@@ -111,6 +111,8 @@ export default {
       messageListReady: false,
       participants: {},
       placeholder: 'Type a message',
+      sectionMapping: '',
+      sectionType: '',
       showLongTextInput: false,
       showMessages: true,
       showTypingIndicator: false,

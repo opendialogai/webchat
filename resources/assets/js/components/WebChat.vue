@@ -1,5 +1,8 @@
 <template>
-  <div :class="[ isMobile ? 'mobile' : '', canCloseChat ? '' : 'no-close' ]" :id="id">
+  <div
+    :id="id"
+    :class="[ isMobile ? 'mobile' : '', canCloseChat ? '' : 'no-close' ]"
+  >
     <template v-if="loading">
       <div class="loading">
         <div class="loading-message">
