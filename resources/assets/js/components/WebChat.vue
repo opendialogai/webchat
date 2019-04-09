@@ -189,6 +189,22 @@ export default {
     this.setUpListeners();
 
     this.fetchMessages(this.user);
+
+    window.addEventListener('message', (event) => {
+      if (event.data
+          && event.data.triggerConversation && event.data.triggerConversation.callback_id) {
+        const data = { callback_id: event.data.triggerConversation.callback_id };
+        if (event.data.triggerConversation.value) {
+          data.value = event.data.triggerConversation.value;
+        }
+
+        this.sendMessage({
+          type: 'trigger',
+          author: 'me',
+          data,
+        });
+      }
+    });
   },
   methods: {
     dateTimezoneFormat(message) {
