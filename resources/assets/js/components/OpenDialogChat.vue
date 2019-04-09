@@ -101,6 +101,7 @@
         :parent-url="parentUrl"
         :show-expand-button="false"
         :user="user"
+        :user-info="userInfo"
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
         :user-external-id="userExternalId"
@@ -303,7 +304,7 @@ export default {
           const browser = `${browserInfo.name} ${browserInfo.version}`;
           const timezone = jstz.determine().name();
 
-          this.user = {
+          this.userInfo = {
             ipAddress,
             country,
             browserLanguage,
@@ -495,6 +496,7 @@ export default {
 
       if (config.user && !window._.isEmpty(config.user)) {
         this.userUuid = config.user.email;
+        this.user = config.user;
 
         if (config.user.first_name) {
           this.userFirstName = config.user.first_name;
