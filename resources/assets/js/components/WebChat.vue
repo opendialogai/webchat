@@ -95,6 +95,10 @@ export default {
       type: Object,
       required: true,
     },
+    userInfo: {
+      type: Object,
+      required: true,
+    },
     userTimezone: {
       type: String,
       required: true,
@@ -188,7 +192,7 @@ export default {
     this.initChat();
     this.setUpListeners();
 
-    this.fetchMessages(this.user);
+    this.fetchMessages(this.userInfo);
 
     window.addEventListener('message', (event) => {
       if (event.data
