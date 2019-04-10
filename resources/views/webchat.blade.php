@@ -12,12 +12,6 @@
         <link rel="stylesheet" type="text/css" href="{{ env('CUSTOM_CSS_PATH') }}">
     @endif
 
-    <script>
-        var appName       = "{{ config('app.name', '') }}"
-        var pusherAppKey  = "{{ config('broadcasting.connections.pusher.key', '') }}"
-        var pusherCluster = "{{ config('broadcasting.connections.pusher.options.cluster', '') }}"
-    </script>
-
     <!-- Fonts -->
     <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.min.css" />
 </head>
