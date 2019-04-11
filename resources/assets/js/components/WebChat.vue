@@ -44,8 +44,6 @@
         :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
-        @vbc-user-typing="sendTypingIndicatorOn"
-        @vbc-user-not-typing="sendTypingIndicatorOff"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
       />
@@ -190,7 +188,6 @@ export default {
     });
 
     this.initChat();
-    this.setUpListeners();
 
     this.fetchMessages(this.userInfo);
 
@@ -295,12 +292,6 @@ export default {
         // Need to add error handling here
         axios.post('/incoming/webchat', webchatMessage).then(
           (response) => {
-            // Register presence after getting a response from the
-            // chat open so that we know a user exists.
-            if (newMsg.type === 'chat_open') {
-              this.registerPresence();
-            }
-
             if (response.data instanceof Array) {
               response.data.forEach((message, i) => {
                 this.showTypingIndicator = true;
@@ -428,40 +419,6 @@ export default {
         user_id: this.uuid, // UUID of the webchat end user.
         author: this.uuid, // UUID of the webchat end user.
         message_id: newMessage.id, // Unique id for this message.
-      };
-
-      axios.post('/incoming/webchat', pusherMsg).then(() => {});
-    },
-    sendTypingIndicatorOn() {
-      const messageId = this.$uuid.v4();
-
-      // Create the message object to send to our pusher endpoint.
-      const pusherMsg = {
-        notification: 'typing_on', // Is mapped to the broadcast event type.
-        user_id: this.uuid, // UUID of the webchat end user.
-        author: this.uuid, // UUID of the webchat end user.
-        message_id: messageId, // Unique id for this message.
-        content: {
-          author: this.uuid,
-          id: messageId,
-        },
-      };
-
-      axios.post('/incoming/webchat', pusherMsg).then(() => {});
-    },
-    sendTypingIndicatorOff() {
-      const messageId = this.$uuid.v4();
-
-      // Create the message object to send to our pusher endpoint.
-      const pusherMsg = {
-        notification: 'typing_off', // Is mapped to the broadcast event type.
-        user_id: this.uuid, // UUID of the webchat end user.
-        author: this.uuid, // UUID of the webchat end user.
-        message_id: messageId, // Unique id for this message.
-        content: {
-          author: this.uuid,
-          id: messageId,
-        },
       };
 
       axios.post('/incoming/webchat', pusherMsg).then(() => {});
@@ -679,41 +636,6 @@ export default {
         }
       }
     },
-    registerPresence() {
-      // Only try to join the presence channel if Echo is defined.
-      if (typeof window.Echo !== 'undefined') {
-        window.Echo.join(`${this.uuid}`)
-          .here((users) => {
-            this.users = users;
-          })
-          .joining((user) => {
-            this.users.push(user);
-
-            const joinMsg = {
-              id: this.$uuid.v4(),
-              author: 'them',
-              type: 'system',
-              data: {
-                text: `${window.appName} team member ${user.name} has joined the chat.`,
-              },
-            };
-            this.messageList.push(joinMsg);
-          })
-          .leaving((user) => {
-            this.users = this.users.filter(u => (u.id !== user.id));
-
-            const leaveMsg = {
-              id: this.$uuid.v4(),
-              author: 'them',
-              type: 'system',
-              data: {
-                text: `${window.appName} team member ${user.name} has left the chat.`,
-              },
-            };
-            this.messageList.push(leaveMsg);
-          });
-      }
-    },
     createUuid() {
       const uuid = this.$uuid.v4();
       this.uuid = uuid;
@@ -729,70 +651,6 @@ export default {
         }
       }
     },
-    setUpListeners() {
-      if (typeof window.Echo !== 'undefined') {
-        window.Echo.channel(`webchat-${this.uuid}`)
-        // Listen for regular messages.
-          .listen('BroadcastMessage', (e) => {
-            // Only add the message received from pusher if we don't already have it.
-            if (window._.findIndex(this.messageList, { id: e.messageData.id }) === -1) {
-              const newMessage = {
-                user_id: e.userId,
-                id: e.messageData.id,
-                author: 'them', // If it came in from pusher and we didn't send it, we're not the author. QED.
-                type: e.messageData.type,
-                data: e.messageData.data,
-                user: e.messageData.user,
-              };
-              this.messageList.push(newMessage);
-              this.sendReadReceipt(newMessage);
-            }
-          })
-        // Listen for typing indicator on events.
-          .listen('BroadcastTypingIndicatorOn', (e) => {
-            // Don't turn on the typing indicator when we are typing!
-            if (e.userId === e.author) return;
-
-            // Only show the indicator if there is not one already.
-            if (window._.findIndex(this.messageList, { type: 'typing' }) === -1) {
-              const typingMessage = {
-                user_id: e.userId,
-                id: this.$uuid.v4(),
-                author: 'them',
-                type: 'typing',
-              };
-              this.messageList.push(typingMessage);
-            }
-          })
-        // Listen for typing indicator off events.
-          .listen('BroadcastTypingIndicatorOff', (e) => {
-            // Don't turn on the typing indicator when we are typing!
-            if (e.userId === e.author) return;
-
-            // Remove any existing typing indicators.
-            const typingIndicatorIndexes = window._.keys(window._.pickBy(this.messageList, { type: 'typing' }));
-            typingIndicatorIndexes.forEach((typingIndicatorIndex) => {
-              this.$delete(this.messageList, typingIndicatorIndex);
-            });
-          })
-        // Listen for read receipts.
-          .listen('BroadcastMessageRead', (e) => {
-            if (e.author !== this.uuid) {
-              for (let i = 0; i < this.messageList.length; i += 1) {
-                // Iterate the current message list.
-                if (this.messageList[i].id === e.messageId) {
-                  // If this message ID matches the one sent, add the 'read' property.
-                  const msg = this.messageList[i];
-                  msg.read = true;
-                  this.$set(this.messageList, i, msg);
-                  break;
-                }
-              }
-            }
-          });
-      }
-    },
-
   },
 };
 
