@@ -70,7 +70,6 @@
         :comments-api-config="comments"
         :is-expand="isExpand"
         :is-mobile="isMobile"
-        :load-history="loadHistory"
         :message-delay="messageDelay"
         :new-message-icon="newMessageIcon"
         :parent-url="parentUrl"
@@ -95,7 +94,8 @@
         :is-expand="isExpand"
         :is-mobile="isMobile"
         :chat-is-open="isOpen"
-        :load-history="loadHistory"
+        :show-history="showHistory"
+        :number-of-messages="numberOfMessages"
         :message-delay="messageDelay"
         :new-message-icon="newMessageIcon"
         :parent-url="parentUrl"
@@ -168,7 +168,8 @@ export default {
       isMinimized: false,
       isMobile: false,
       isOpen: true,
-      loadHistory: true,
+      showHistory: false,
+      numberOfMessages: 10,
       messageDelay: 1000,
       newMessageIcon: '',
       parentUrl: '',
@@ -568,9 +569,14 @@ export default {
         });
       }
 
-      if (config.loadHistory !== undefined) {
-        this.loadHistory = config.loadHistory;
-        this.loading = config.loadHistory;
+      if (config.webchatHistory !== undefined) {
+        if (config.webchatHistory.showHistory !== undefined) {
+          this.showHistory = config.webchatHistory.showHistory;
+          this.loading = this.showHistory;
+          if (config.webchatHistory.numberOfMessages !== undefined) {
+            this.numberOfMessages = config.webchatHistory.numberOfMessages;
+          }
+        }
       }
 
       if (config.newPathname !== undefined) {
