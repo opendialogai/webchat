@@ -114,6 +114,7 @@ body {
     }
 
     .sc-message--author {
+      font-family: proxima_nova_ltsemibold;
       font-size: 15px;
       font-weight: 600;
       margin-bottom: -5px;
@@ -193,6 +194,8 @@ body {
       color: #2D2D2D !important;
       border-radius: 14px;
       border-bottom-left-radius: 0;
+      box-shadow: #CFCFCF -1px 1px 1px;
+      background-color: #F2F2F2 !important;
     }
     .sc-message--content.sent .sc-message--text {
       color: #FFFFFF !important;
