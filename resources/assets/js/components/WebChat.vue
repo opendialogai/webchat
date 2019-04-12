@@ -320,6 +320,7 @@ export default {
                       data: {
                         text: 'LISA',
                         date: message.data.date,
+                        time: message.data.time,
                       },
                     };
 
@@ -350,6 +351,21 @@ export default {
             } else if (response.data) {
               if (newMsg.type === 'chat_open') {
                 if (response.data && response.data.data) {
+                  const authorMsg = {
+                    type: 'author',
+                    data: {
+                      text: 'LISA',
+                      date: response.data.data.date,
+                      time: response.data.data.time,
+                    },
+                  };
+
+                  if (this.useAvatars) {
+                    authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+                  }
+
+                  this.messageList.push(authorMsg);
+
                   this.messageList.push(response.data);
                   this.contentEditable = !response.data.data.disable_text;
                 } else {
@@ -368,6 +384,7 @@ export default {
                       data: {
                         text: 'LISA',
                         date: response.data.data.date,
+                        time: response.data.data.time,
                       },
                     };
 
@@ -646,6 +663,7 @@ export default {
                 data: {
                   text: 'LISA',
                   date: currentMessage.data.date,
+                  time: currentMessage.data.time,
                 },
               };
 
