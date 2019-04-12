@@ -58,7 +58,7 @@ class WebchatSettings extends Command
                             'updated_at' => now(),
                         ]);
 
-                        Log::info("Created webchat setting '$type' of type '" . WebchatSetting::OBJECT . "'");
+                        $this->log("Created webchat setting '$type' of type '" . WebchatSetting::OBJECT . "'");
                     } else {
                         $configItemId = $configItem->id;
                     }
@@ -79,7 +79,7 @@ class WebchatSettings extends Command
                                 'parent_id' => $configItemId,
                             ]);
 
-                            Log::info("Created webchat setting '$subValue' of type '$subType'");
+                            $this->log("Created webchat setting '$subValue' of type '$subType'");
                         }
 
                         $configNames[] = $subValue;
@@ -97,7 +97,7 @@ class WebchatSettings extends Command
                             'updated_at' => now(),
                         ]);
 
-                        Log::info("Created webchat setting '$value' of type '$type'");
+                        $this->log("Created webchat setting '$value' of type '$type'");
                     } elseif ($item->type != $type) {
                         DB::table('webchat_settings')
                             ->where('name', $value)
@@ -105,7 +105,7 @@ class WebchatSettings extends Command
                                 'type' => $type,
                             ]);
 
-                        Log::info("Updated webchat setting '$value' from type '$item->type' to '$type'");
+                        $this->log("Updated webchat setting '$value' from type '$item->type' to '$type'");
                     }
 
                     $configNames[] = $value;
@@ -118,9 +118,20 @@ class WebchatSettings extends Command
                 DB::table('webchat_settings')
                     ->where('id', $item->id)
                     ->delete();
-
-                Log::info("Removed webchat setting '$item->name' of type '$item->type'");
+                $this->log("Removed webchat setting '$item->name' of type '$item->type'");
             }
         }
     }
+
+    /**
+     * Logs to the log file and the console output
+     *
+     * @param $message
+     */
+    private function log($message)
+    {
+        Log::info($message);
+        $this->info($message);
+    }
+
 }
