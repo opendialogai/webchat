@@ -20,6 +20,7 @@ class WebchatSettingsTableSeeder extends Seeder
                 WebchatSetting::URL,
                 WebchatSetting::TEAM_NAME,
                 WebchatSetting::CUSTOM_CSS_PATH,
+                WebchatSetting::CHATBOT_AVATAR_PATH,
             ],
             WebchatSetting::NUMBER => [
                 WebchatSetting::MESSAGE_DELAY,
@@ -73,6 +74,7 @@ class WebchatSettingsTableSeeder extends Seeder
                 WebchatSetting::HIDE_OPEN_CLOSE_ICONS,
                 WebchatSetting::DISABLE_CLOSE_CHAT,
                 WebchatSetting::START_MINIMIZED,
+                WebchatSetting::USE_AVATARS,
             ],
             WebchatSetting::WEBCHAT_HISTORY => [
                 WebchatSetting::BOOLEAN => [
