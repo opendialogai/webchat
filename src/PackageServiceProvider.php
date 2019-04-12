@@ -4,6 +4,7 @@ namespace OpenDialogAi\Webchat;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use OpenDialogAi\Webchat\Console\Commands\WebchatSettings;
 use OpenDialogAi\Webchat\Helpers\LoggingHelper;
 
 class PackageServiceProvider extends ServiceProvider
@@ -35,6 +36,12 @@ class PackageServiceProvider extends ServiceProvider
         Log::pushProcessor(LoggingHelper::getLogUserIdProcessor());
 
         $this->loadWebchatConfig();
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                WebchatSettings::class,
+            ]);
+        }
     }
 
     /**

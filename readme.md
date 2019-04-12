@@ -51,9 +51,9 @@ Change the value for BROADCAST_DRIVER from whatever it is currently to 'pusher',
 The webchat configuration can be found in the `webchat_settings` table. Before running, the config table should be seeded
 by running:
 
-```php artisan db:seed --class="OpenDialogAi\Webchat\Database\Seed\WebchatSettingsTableSeeder"```
+```php artisan webchat:settings```
 
-This will load a row for each available setting. If new settings are added, they should be added in a separate seeder file.
+This will load a row for each available setting.
 
 Config items can still be overwritten in the `openDialogSettings` javascript variable that is added to the parent web page.
 
