@@ -348,6 +348,20 @@ export default {
                 setTimeout(() => {
                   // Only add a message to the list if it is a message object
                   if (typeof response.data === 'object' && response.data !== null) {
+                    const authorMsg = {
+                      type: 'author',
+                      data: {
+                        text: 'LISA',
+                        date: response.data.data.date,
+                      },
+                    };
+
+                    if (this.useAvatars) {
+                      authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+                    }
+
+                    this.messageList.push(authorMsg);
+
                     this.messageList.push(response.data);
                   }
 
