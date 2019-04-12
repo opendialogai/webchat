@@ -70,12 +70,12 @@
         :comments-api-config="comments"
         :is-expand="isExpand"
         :is-mobile="isMobile"
-        :load-history="loadHistory"
         :message-delay="messageDelay"
         :new-message-icon="newMessageIcon"
         :parent-url="parentUrl"
         :section-id="sectionId"
         :show-expand-button="false"
+        :use-avatars="useAvatars"
         :user="user"
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
@@ -91,16 +91,20 @@
         :agent-profile="agentProfile"
         :callback-map="callbackMap"
         :can-close-chat="canCloseChat"
+        :chatbot-avatar-path="chatbotAvatarPath"
         :colours="colours"
         :is-expand="isExpand"
         :is-mobile="isMobile"
         :chat-is-open="isOpen"
-        :load-history="loadHistory"
+        :show-history="showHistory"
+        :number-of-messages="numberOfMessages"
         :message-delay="messageDelay"
         :new-message-icon="newMessageIcon"
         :parent-url="parentUrl"
         :show-expand-button="false"
+        :use-avatars="useAvatars"
         :user="user"
+        :user-info="userInfo"
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
         :user-external-id="userExternalId"
@@ -135,6 +139,7 @@ export default {
       },
       callbackMap: [],
       canCloseChat: true,
+      chatbotAvatarPath: '',
       colours: {
         header: {
           bg: '#4e8cff',
@@ -167,7 +172,8 @@ export default {
       isMinimized: false,
       isMobile: false,
       isOpen: true,
-      loadHistory: true,
+      showHistory: false,
+      numberOfMessages: 10,
       messageDelay: 1000,
       newMessageIcon: '',
       parentUrl: '',
@@ -181,6 +187,7 @@ export default {
       showExpandButton: true,
       showTabs: false,
       timezoneInitialised: false,
+      useAvatars: false,
       user: {},
       userTimezone: '',
       userFirstName: '',
@@ -303,7 +310,7 @@ export default {
           const browser = `${browserInfo.name} ${browserInfo.version}`;
           const timezone = jstz.determine().name();
 
-          this.user = {
+          this.userInfo = {
             ipAddress,
             country,
             browserLanguage,
@@ -493,8 +500,17 @@ export default {
         this.messageDelay = config.messageDelay;
       }
 
+      if (config.useAvatars) {
+        this.useAvatars = config.useAvatars;
+      }
+
+      if (config.chatbotAvatarPath) {
+        this.chatbotAvatarPath = config.chatbotAvatarPath;
+      }
+
       if (config.user && !window._.isEmpty(config.user)) {
         this.userUuid = config.user.email;
+        this.user = config.user;
 
         if (config.user.first_name) {
           this.userFirstName = config.user.first_name;
@@ -566,9 +582,14 @@ export default {
         });
       }
 
-      if (config.loadHistory !== undefined) {
-        this.loadHistory = config.loadHistory;
-        this.loading = config.loadHistory;
+      if (config.webchatHistory !== undefined) {
+        if (config.webchatHistory.showHistory !== undefined) {
+          this.showHistory = config.webchatHistory.showHistory;
+          this.loading = this.showHistory;
+          if (config.webchatHistory.numberOfMessages !== undefined) {
+            this.numberOfMessages = config.webchatHistory.numberOfMessages;
+          }
+        }
       }
 
       if (config.newPathname !== undefined) {

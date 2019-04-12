@@ -1,18 +1,5 @@
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
-
-import Echo from 'laravel-echo';
-
-
-window.$ = window.jQuery ? window.jQuery : require('jquery');
 window._ = require('lodash');
-window.axios = require('axios');
 window.Popper = require('popper.js').default;
-window.Pusher = require('pusher-js');
-require('bootstrap');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -20,12 +7,16 @@ require('bootstrap');
  * code may be modified to fit the specific needs of your application.
  */
 
+window.$ = window.jQuery ? window.jQuery : require('jquery');
+require('bootstrap');
+
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
+window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -42,18 +33,4 @@ if (token) {
 } else {
   // eslint-disable-next-line no-console
   console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-}
-
-if (typeof pusherAppKey !== 'undefined') {
-  // Uncomment for more Pusher debug info.
-  // window.Pusher.logToConsole = true;
-
-  window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: window.pusherAppKey,
-    authEndpoint: '/webchat/auth',
-    cluster: window.pusherCluster,
-    namespace: 'Webchat.Events',
-    encrypted: true,
-  });
 }

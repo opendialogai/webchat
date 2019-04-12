@@ -24,6 +24,8 @@ class WebchatSetting extends Model
     const CALLBACK_MAP          = 'callbackMap';
     const DISABLE_CLOSE_CHAT    = 'disableCloseChat';
     const START_MINIMIZED       = 'startMinimized';
+    const CHATBOT_AVATAR_PATH   = 'chatbotAvatarPath';
+    const USE_AVATARS           = 'useAvatars';
 
     // Colours
     const COLOURS                     = 'colours';
@@ -58,6 +60,11 @@ class WebchatSetting extends Model
     const COMMENTS_SECTION_FILTER_PATH_PATTERN = 'commentsSectionFilterPathPattern';
     const COMMENTS_SECTION_FILTER_QUERY        = 'commentsSectionFilterQuery';
     const COMMENTS_SECTION_PATH_PATTERN        = 'commentsSectionPathPattern';
+
+    // Colours
+    const WEBCHAT_HISTORY    = 'webchatHistory';
+    const SHOW_HISTORY       = 'showHistory';
+    const NUMBER_OF_MESSAGES = 'numberOfMessages';
 
     // Types
     const STRING  = 'string';
