@@ -75,7 +75,15 @@ class WebchatSettingsTableSeeder extends Seeder
                 WebchatSetting::DISABLE_CLOSE_CHAT,
                 WebchatSetting::START_MINIMIZED,
                 WebchatSetting::USE_AVATARS,
-            ]
+            ],
+            WebchatSetting::WEBCHAT_HISTORY => [
+                WebchatSetting::BOOLEAN => [
+                    WebchatSetting::SHOW_HISTORY,
+                ],
+                WebchatSetting::NUMBER => [
+                    WebchatSetting::NUMBER_OF_MESSAGES,
+                ],
+            ],
         ];
 
         $createdItems = [];

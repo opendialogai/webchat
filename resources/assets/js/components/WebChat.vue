@@ -83,7 +83,11 @@ export default {
     },
     isExpand: Boolean,
     isMobile: Boolean,
-    loadHistory: Boolean,
+    showHistory: Boolean,
+    numberOfMessages: {
+      type: Number,
+      required: true,
+    },
     messageDelay: {
       type: Number,
       required: true,
@@ -568,7 +572,7 @@ export default {
       return string.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
     },
     async fetchMessages(user) {
-      if (this.loadHistory) {
+      if (this.showHistory) {
         await this.getChatHistory();
       } else {
         this.loading = false;
@@ -590,7 +594,7 @@ export default {
 
       const userId = (this.user && this.user.email) ? this.user.email : this.uuid;
 
-      return axios.get(`/chat-init/${userId}`)
+      return axios.get(`/chat-init/webchat/${userId}/${this.numberOfMessages}`)
         .then((response) => {
           response.data.reverse().forEach((message, i, messages) => {
             // Ignore 'url_click' messages.

@@ -61,6 +61,11 @@ class WebchatSetting extends Model
     const COMMENTS_SECTION_FILTER_QUERY        = 'commentsSectionFilterQuery';
     const COMMENTS_SECTION_PATH_PATTERN        = 'commentsSectionPathPattern';
 
+    // Colours
+    const WEBCHAT_HISTORY    = 'webchatHistory';
+    const SHOW_HISTORY       = 'showHistory';
+    const NUMBER_OF_MESSAGES = 'numberOfMessages';
+
     // Types
     const STRING  = 'string';
     const NUMBER  = 'number';
