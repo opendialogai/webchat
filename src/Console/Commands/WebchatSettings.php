@@ -133,5 +133,4 @@ class WebchatSettings extends Command
         Log::info($message);
         $this->info($message);
     }
-
 }
