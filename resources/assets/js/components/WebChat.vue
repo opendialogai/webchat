@@ -1,7 +1,11 @@
 <template>
   <div
     :id="id"
-    :class="[ isMobile ? 'mobile' : '', canCloseChat ? '' : 'no-close' ]"
+    :class="[
+      isMobile ? 'mobile' : '',
+      canCloseChat ? '' : 'no-close',
+      useAvatars ? 'show-avatars' : ''
+    ]"
   >
     <template v-if="loading">
       <div class="loading">
@@ -68,6 +72,10 @@ export default {
       required: true,
     },
     canCloseChat: Boolean,
+    chatbotAvatarPath: {
+      type: String,
+      default: '',
+    },
     chatIsOpen: Boolean,
     colours: {
       type: Object,
@@ -89,6 +97,7 @@ export default {
       required: true,
     },
     showExpandButton: Boolean,
+    useAvatars: Boolean,
     user: {
       type: Object,
       required: true,
@@ -243,20 +252,23 @@ export default {
       }
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
-        const avatarName = this.userName
-          .split(' ').map(n => n[0]).join('').toUpperCase();
-
         const authorMsg = {
           type: 'author',
           author: 'me',
           data: {
             author: 'me',
             text: this.userName,
-            avatar: `<span class="avatar">${avatarName}</span>`,
             date: newMsg.data.date,
             time: newMsg.data.time,
           },
         };
+
+        if (this.useAvatars) {
+          const avatarName = this.userName
+            .split(' ').map(n => n[0]).join('').toUpperCase();
+          authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+        }
+
         this.messageList.push(authorMsg);
 
         this.buttonText = 'Submit';
@@ -303,10 +315,14 @@ export default {
                       type: 'author',
                       data: {
                         text: 'LISA',
-                        avatar: '<img class="avatar" src="/images/vendor/webchat/images/lisa.png" />',
                         date: message.data.date,
                       },
                     };
+
+                    if (this.useAvatars) {
+                      authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+                    }
+
                     this.messageList.push(authorMsg);
                   }
 
@@ -343,6 +359,20 @@ export default {
                 setTimeout(() => {
                   // Only add a message to the list if it is a message object
                   if (typeof response.data === 'object' && response.data !== null) {
+                    const authorMsg = {
+                      type: 'author',
+                      data: {
+                        text: 'LISA',
+                        date: response.data.data.date,
+                      },
+                    };
+
+                    if (this.useAvatars) {
+                      authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+                    }
+
+                    this.messageList.push(authorMsg);
+
                     this.messageList.push(response.data);
                   }
 
@@ -611,10 +641,14 @@ export default {
                 type: 'author',
                 data: {
                   text: 'LISA',
-                  avatar: '<img class="avatar" src="/images/vendor/webchat/images/lisa.png" />',
                   date: currentMessage.data.date,
                 },
               };
+
+              if (this.useAvatars) {
+                authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+              }
+
               this.messageList.push(authorMsg);
             }
 

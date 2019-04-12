@@ -1,5 +1,11 @@
 <template>
-  <div :class="[ isMobile ? 'mobile' : '', canCloseChat ? '' : 'no-close' ]">
+  <div
+    :class="[
+      isMobile ? 'mobile' : '',
+      canCloseChat ? '' : 'no-close',
+      useAvatars ? 'show-avatars' : ''
+    ]"
+  >
     <template>
       <beautiful-chat
         v-if="messageListReady"
@@ -77,6 +83,7 @@ export default {
       default: '',
     },
     showExpandButton: Boolean,
+    useAvatars: Boolean,
     user: {
       type: Object,
       required: true,
@@ -100,6 +107,7 @@ export default {
       authorNameMapping: '',
       authorType: '',
       buttonText: 'Add Comment',
+      chatbotAvatarPath: '',
       commentDateMapping: '',
       comments: [],
       commentTextMapping: '',
@@ -208,9 +216,6 @@ export default {
 
         // Add a new author message if necessary.
         if (!lastMessage || (lastMessage && lastMessage.author !== 'me')) {
-          const avatarName = this.participants[this.userExternalId].name
-            .split(' ').map(n => n[0]).join('').toUpperCase();
-
           const authorMsg = {
             type: 'author',
             author: 'me',
@@ -218,9 +223,16 @@ export default {
               author: 'me',
               authorId: this.userExternalId,
               text: this.participants[this.userExternalId].name,
-              avatar: `<span class="avatar">${avatarName}</span>`,
             },
           };
+
+          if (this.useAvatars) {
+            const avatarName = this.participants[this.userExternalId].name
+              .split(' ').map(n => n[0]).join('').toUpperCase();
+
+            authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+          }
+
           this.messageList.push(authorMsg);
         }
 
@@ -276,9 +288,11 @@ export default {
                   const newMsg = msg;
                   newMsg.data.text = author.attributes[this.authorNameMapping];
 
-                  const avatarName = newMsg.data.text
-                    .split(' ').map(n => n[0]).join('').toUpperCase();
-                  newMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+                  if (this.useAvatars) {
+                    const avatarName = newMsg.data.text
+                      .split(' ').map(n => n[0]).join('').toUpperCase();
+                    newMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+                  }
 
                   this.$set(this.messageList, msgIdx, newMsg);
                 }
@@ -289,21 +303,24 @@ export default {
           if (cmntIdx === 0 || (message.author !== this.comments[cmntIdx - 1]
             .relationships[this.authorMapping].data.id
           )) {
-            const avatarName = this.participants[authorId].name
-              .split(' ').map(n => n[0]).join('').toUpperCase();
-
             const authorMsg = {
               type: 'author',
               data: {
                 authorId,
                 text: this.participants[authorId].name,
-                avatar: `<span class="avatar">${avatarName}</span>`,
               },
             };
             if (comment.relationships[this.authorMapping].data.id === this.userExternalId) {
               authorMsg.author = 'me';
               authorMsg.data.author = 'me';
             }
+
+            if (this.useAvatars) {
+              const avatarName = this.participants[authorId].name
+                .split(' ').map(n => n[0]).join('').toUpperCase();
+              authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+            }
+
             this.messageList.push(authorMsg);
           }
           this.messageList.push(message);

@@ -76,6 +76,7 @@
         :parent-url="parentUrl"
         :section-id="sectionId"
         :show-expand-button="false"
+        :use-avatars="useAvatars"
         :user="user"
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
@@ -91,6 +92,7 @@
         :agent-profile="agentProfile"
         :callback-map="callbackMap"
         :can-close-chat="canCloseChat"
+        :chatbot-avatar-path="chatbotAvatarPath"
         :colours="colours"
         :is-expand="isExpand"
         :is-mobile="isMobile"
@@ -100,6 +102,7 @@
         :new-message-icon="newMessageIcon"
         :parent-url="parentUrl"
         :show-expand-button="false"
+        :use-avatars="useAvatars"
         :user="user"
         :user-info="userInfo"
         :user-timezone="userTimezone"
@@ -136,6 +139,7 @@ export default {
       },
       callbackMap: [],
       canCloseChat: true,
+      chatbotAvatarPath: '',
       colours: {
         header: {
           bg: '#4e8cff',
@@ -182,6 +186,7 @@ export default {
       showExpandButton: true,
       showTabs: false,
       timezoneInitialised: false,
+      useAvatars: false,
       user: {},
       userTimezone: '',
       userFirstName: '',
@@ -492,6 +497,14 @@ export default {
 
       if (config.messageDelay) {
         this.messageDelay = config.messageDelay;
+      }
+
+      if (config.useAvatars) {
+        this.useAvatars = config.useAvatars;
+      }
+
+      if (config.chatbotAvatarPath) {
+        this.chatbotAvatarPath = config.chatbotAvatarPath;
       }
 
       if (config.user && !window._.isEmpty(config.user)) {
