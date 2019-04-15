@@ -291,6 +291,9 @@ export default {
       if (this.$refs.opendialogWidgetSectionSelector) {
         headerHeight += this.$refs.opendialogWidgetSectionSelector.clientHeight;
       }
+      if (this.isMinimized) {
+        headerHeight = 50;
+      }
       cssVars['--header-height'] = `${headerHeight}px`;
 
       // Show the tabs, now that we've got the correct CSS.
@@ -606,6 +609,7 @@ export default {
     toggleChatOpen(headerHeight = 0) {
       if (this.canCloseChat) {
         this.isOpen = !this.isOpen;
+        this.isMinimized = !this.isOpen;
 
         if (!this.isOpen) {
           this.$root.$emit('scroll-down-message-list');
@@ -632,10 +636,12 @@ export default {
     },
     minimizeChat() {
       this.isMinimized = true;
-      window.parent.postMessage({ height: '40px' }, '*');
+      this.isOpen = false;
+      window.parent.postMessage({ height: '50px' }, '*');
     },
     maximizeChat() {
       this.isMinimized = false;
+      this.isOpen = true;
       window.parent.postMessage({ height: 'auto' }, '*');
     },
   },
@@ -682,7 +688,7 @@ export default {
 
 .minimized-header {
   cursor: pointer;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   text-align: center;
   background-color: var(--header-background-color);
   color: var(--header-text-color);
