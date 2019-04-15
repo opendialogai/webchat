@@ -402,10 +402,8 @@ export default {
           });
         });
 
-        // Default to the first section if one is not selected.
-        if (!this.sectionId) {
-          this.sectionId = this.sectionOptions[0].value;
-        }
+        // Default to the first section.
+        this.sectionId = (this.sectionOptions.length > 0) ? this.sectionOptions[0].value : '';
 
         this.cssProps = this.getCssProps();
       });
