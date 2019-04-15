@@ -405,6 +405,11 @@ export default {
         // Default to the first section.
         this.sectionId = (this.sectionOptions.length > 0) ? this.sectionOptions[0].value : '';
 
+        // Force comments reload.
+        if (this.commentsKey > 0) {
+          this.commentsKey += 1;
+        }
+
         this.cssProps = this.getCssProps();
       });
     },

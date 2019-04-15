@@ -144,6 +144,7 @@ export default {
     if (this.sectionId) {
       filter = {
         [this.sectionMapping]: this.sectionId,
+        _: Math.random(),
       };
       action = 'comments/loadWhere';
       getter = 'comments/where';
