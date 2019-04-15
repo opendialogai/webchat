@@ -448,6 +448,10 @@ export default {
         }
       }
 
+      if (this.commentsEnabled === false) {
+        this.activeTab = 'webchat';
+      }
+
       this.pathInitialised = true;
     },
     setConfig(config) {
