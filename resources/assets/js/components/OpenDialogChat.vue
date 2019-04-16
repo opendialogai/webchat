@@ -390,8 +390,8 @@ export default {
         this.sectionOptions = [];
 
         sections.sort((a, b) => {
-          const numberA = a.attributes.number;
-          const numberB = b.attributes.number;
+          const numberA = parseInt(a.attributes.number, 10);
+          const numberB = parseInt(b.attributes.number, 10);
 
           if (numberA > numberB) return 1;
           if (numberA < numberB) return -1;
