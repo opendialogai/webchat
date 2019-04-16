@@ -205,18 +205,31 @@ export default {
     this.fetchMessages(this.userInfo);
 
     window.addEventListener('message', (event) => {
-      if (event.data
-          && event.data.triggerConversation && event.data.triggerConversation.callback_id) {
-        const data = { callback_id: event.data.triggerConversation.callback_id };
-        if (event.data.triggerConversation.value) {
-          data.value = event.data.triggerConversation.value;
+      if (event.data) {
+        if (event.data.triggerConversation && event.data.triggerConversation.callback_id) {
+          const data = { callback_id: event.data.triggerConversation.callback_id };
+          if (event.data.triggerConversation.value) {
+            data.value = event.data.triggerConversation.value;
+          }
+
+          this.sendMessage({
+            type: 'trigger',
+            author: 'me',
+            data,
+          });
         }
 
-        this.sendMessage({
-          type: 'trigger',
-          author: 'me',
-          data,
-        });
+        if (event.data.expandChat) {
+          if (!this.isExpand || !this.isOpen) {
+            this.expandChat(true);
+          }
+        }
+
+        if (event.data.collapseChat) {
+          if (this.isExpand) {
+            this.expandChat();
+          }
+        }
       }
     });
   },
