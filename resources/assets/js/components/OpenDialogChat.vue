@@ -451,6 +451,7 @@ export default {
         const matches = e.match(this.comments.commentsSectionPathPattern);
         if (matches && matches.length > 1) {
           this.updateSectionSelection(matches[1]);
+          this.activeTab = 'comments';
         }
       }
 
