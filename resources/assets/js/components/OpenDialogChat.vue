@@ -291,6 +291,9 @@ export default {
       if (this.$refs.opendialogWidgetSectionSelector) {
         headerHeight += this.$refs.opendialogWidgetSectionSelector.clientHeight;
       }
+      if (this.isMinimized) {
+        headerHeight = 50;
+      }
       cssVars['--header-height'] = `${headerHeight}px`;
 
       // Show the tabs, now that we've got the correct CSS.
@@ -387,8 +390,8 @@ export default {
         this.sectionOptions = [];
 
         sections.sort((a, b) => {
-          const numberA = a.attributes.number;
-          const numberB = b.attributes.number;
+          const numberA = parseInt(a.attributes.number, 10);
+          const numberB = parseInt(b.attributes.number, 10);
 
           if (numberA > numberB) return 1;
           if (numberA < numberB) return -1;
@@ -402,9 +405,12 @@ export default {
           });
         });
 
-        // Default to the first section if one is not selected.
-        if (!this.sectionId) {
-          this.sectionId = this.sectionOptions[0].value;
+        // Default to the first section.
+        this.sectionId = (this.sectionOptions.length > 0) ? this.sectionOptions[0].value : '';
+
+        // Force comments reload.
+        if (this.commentsKey > 0) {
+          this.commentsKey += 1;
         }
 
         this.cssProps = this.getCssProps();
@@ -446,6 +452,10 @@ export default {
         if (matches && matches.length > 1) {
           this.updateSectionSelection(matches[1]);
         }
+      }
+
+      if (this.commentsEnabled === false) {
+        this.activeTab = 'webchat';
       }
 
       this.pathInitialised = true;
@@ -599,6 +609,7 @@ export default {
     toggleChatOpen(headerHeight = 0) {
       if (this.canCloseChat) {
         this.isOpen = !this.isOpen;
+        this.isMinimized = !this.isOpen;
 
         if (!this.isOpen) {
           this.$root.$emit('scroll-down-message-list');
@@ -625,10 +636,12 @@ export default {
     },
     minimizeChat() {
       this.isMinimized = true;
-      window.parent.postMessage({ height: '40px' }, '*');
+      this.isOpen = false;
+      window.parent.postMessage({ height: '50px' }, '*');
     },
     maximizeChat() {
       this.isMinimized = false;
+      this.isOpen = true;
       window.parent.postMessage({ height: 'auto' }, '*');
     },
   },
@@ -675,7 +688,7 @@ export default {
 
 .minimized-header {
   cursor: pointer;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   text-align: center;
   background-color: var(--header-background-color);
   color: var(--header-text-color);
