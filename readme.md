@@ -37,14 +37,19 @@ in GitHub personal access token for an account that has access to this repo.
 + This should move a script named `update-web-chat.sh` to your project root. Run it every time there is an update to OpenDialog webchat by running:
 ```bash update-web-chat.sh``` 
 
-## Pusher Setup
+## Git Hooks
 
-Change the value for BROADCAST_DRIVER from whatever it is currently to 'pusher', and define the following variables in your .env file:
+To set up the included git pre-commit hook, first make sure the pre-commit script is executable by running
 
-+ PUSHER_APP_ID
-+ PUSHER_APP_KEY
-+ PUSHER_APP_SECRET
-+ PUSHER_CLUSTER
+```chmod +x .githooks/pre-commit```
+
+Then configure your local git to use this directory for git hooks by running:
+
+```git config core.hooksPath .githooks/```
+
+Now every commit you make will trigger php codesniffer to run. If there is a problem with the formatting
+of the code, the script will echo the output of php codesniffer. If there are no issues, the commit will
+go into git.
 
 # Configuration 
 
@@ -116,4 +121,4 @@ window.openDialogSettings = {
 
 ## Running Code Sniffer
 To run code sniffer, run the following command
-```./vendor/bin/phpcs --standard=psr12 src/```
+```./vendor/bin/phpcs --standard=od-cs-ruleset.xml src/ --ignore=*/migrations/*,*/tests/*```
