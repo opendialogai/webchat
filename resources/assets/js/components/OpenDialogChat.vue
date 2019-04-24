@@ -349,6 +349,13 @@ export default {
           if (event.data.newPathname) {
             this.handleHistoryChange(event.data.newPathname);
           }
+
+          if (event.data.customUserSettings) {
+            Object.keys(event.data.customUserSettings).forEach((key) => {
+              if (this.user.custom === undefined) this.user.custom = {};
+              this.user.custom[key] = event.data.customUserSettings[key];
+            });
+          }
         }
       });
 
