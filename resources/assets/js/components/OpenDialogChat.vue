@@ -110,6 +110,7 @@
         :user-external-id="userExternalId"
         @expandChat="expandChat"
         @toggleChatOpen="toggleChatOpen"
+        @newMessage="newWebChatMessage"
       />
     </div>
   </div>
@@ -238,6 +239,9 @@ export default {
     this.initSettings();
   },
   methods: {
+    newWebChatMessage() {
+      this.activateTab('webchat');
+    },
     activateTab(tabName) {
       this.activeTab = tabName;
 
