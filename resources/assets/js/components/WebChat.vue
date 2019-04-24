@@ -344,6 +344,8 @@ export default {
                     this.messageList.push(authorMsg);
                   }
 
+                  this.$emit('newMessage', message);
+
                   this.messageList.push(message);
 
                   if (message.data) {
@@ -379,6 +381,8 @@ export default {
 
                   this.messageList.push(authorMsg);
 
+                  this.$emit('newMessage', response.data);
+
                   this.messageList.push(response.data);
                   this.contentEditable = !response.data.data.disable_text;
                 } else {
@@ -406,6 +410,8 @@ export default {
                     }
 
                     this.messageList.push(authorMsg);
+
+                    this.$emit('newMessage', response.data);
 
                     this.messageList.push(response.data);
                   }
