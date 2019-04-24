@@ -196,6 +196,11 @@ body {
       border-bottom-left-radius: 0;
       box-shadow: #CFCFCF -1px 1px 1px;
       background-color: #F2F2F2 !important;
+
+      a {
+        color: #2D2D2D !important;
+        text-decoration: underline;
+      }
     }
     .sc-message--content.sent .sc-message--text {
       color: #FFFFFF !important;
