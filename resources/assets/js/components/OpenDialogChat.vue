@@ -220,7 +220,7 @@ export default {
     },
     // Refresh comments when the section is changed.
     sectionId(newId, oldId) {
-      if (newId !== oldId) {
+      if (oldId !== '' && newId !== oldId) {
         this.commentsKey += 1;
       }
     },
