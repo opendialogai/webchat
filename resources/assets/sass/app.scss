@@ -245,6 +245,8 @@ body {
 
 .show-avatars {
   .sc-message-list {
+    .sc-message--button,
+    .sc-message--button-response,
     .sc-message--time-read,
     .sc-message--text {
       margin-left: 45px;
