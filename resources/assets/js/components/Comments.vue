@@ -6,7 +6,7 @@
       useAvatars ? 'show-avatars' : ''
     ]"
   >
-    <template>
+    <template v-if="sectionId != '' || commentsApiConfig.commentsSectionIdFieldName == ''">
       <beautiful-chat
         v-if="messageListReady"
         :agent-profile="agentProfile"

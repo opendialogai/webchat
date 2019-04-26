@@ -53,7 +53,7 @@
         class="comment-section-selector-wrapper"
       >
         <b-form-select
-          v-if="sectionOptions"
+          v-if="sectionOptions.length"
           v-model="sectionId"
           :options="sectionOptions"
           class="comment-section-selector"
@@ -409,7 +409,7 @@ export default {
           return 0;
         }).forEach((section) => {
           this.sectionOptions.push({
-            value: section.id,
+            value: section[this.comments.commentsSectionIdFieldName],
             text: section.attributes[
               this.comments.commentsSectionNameFieldName
             ],
