@@ -506,6 +506,11 @@ export default {
     openChat() {
     },
     onButtonClick(button, msg) {
+      if (button.tab_switch) {
+        this.$emit('switchToCommentsTab');
+        return;
+      }
+
       if (msg.data.clear_after_interaction) {
         this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
       }

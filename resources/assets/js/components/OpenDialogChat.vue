@@ -111,6 +111,7 @@
         @expandChat="expandChat"
         @toggleChatOpen="toggleChatOpen"
         @newMessage="newWebChatMessage"
+        @switchToCommentsTab="switchToCommentsTab"
       />
     </div>
   </div>
@@ -241,6 +242,11 @@ export default {
   methods: {
     newWebChatMessage() {
       this.activateTab('webchat');
+    },
+    switchToCommentsTab() {
+      if (this.commentsEnabled) {
+        this.activateTab('comments');
+      }
     },
     activateTab(tabName) {
       this.activeTab = tabName;
