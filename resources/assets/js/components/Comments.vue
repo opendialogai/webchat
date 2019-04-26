@@ -257,7 +257,9 @@ export default {
 
       this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
         const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
-        this.participants[this.userExternalId].name = author.attributes[this.authorNameMapping];
+        if (author !== undefined) {
+          this.participants[this.userExternalId].name = author.attributes[this.authorNameMapping];
+        }
       }).then(() => {
         this.comments.forEach((comment, cmntIdx) => {
           const authorId = comment.relationships[this.authorMapping].data.id;
