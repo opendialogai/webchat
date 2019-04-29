@@ -248,9 +248,11 @@ body {
     .sc-message--button,
     .sc-message--button-response,
     .sc-message--time-read,
+    .sc-message--button,
+    .sc-message--image,
     .sc-message--text {
-      margin-left: 45px;
-      margin-right: 45px;
+      margin-left: 45px !important;
+      margin-right: 45px !important;
     }
     .sc-message--author {
       margin-bottom: -10px;
