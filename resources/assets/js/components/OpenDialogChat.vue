@@ -22,7 +22,7 @@
       {{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}
     </div>
     <b-nav
-      v-show="commentsEnabled && !isMinimized"
+      v-show="ready && commentsEnabled && !isMinimized"
       ref="opendialogWidgetTabs"
       fill
       pills
@@ -516,8 +516,6 @@ export default {
         if (colours.userInputText) {
           this.colours.userInput.text = colours.userInputText;
         }
-
-        this.cssProps = this.getCssProps();
       }
 
       if (config.teamName) {
@@ -623,6 +621,10 @@ export default {
       if (config.newPathname !== undefined) {
         this.handleHistoryChange(config.newPathname);
       }
+
+      setTimeout(() => {
+        this.cssProps = this.getCssProps();
+      }, 1000);
     },
     toggleChatOpen(headerHeight = 0) {
       if (this.canCloseChat) {

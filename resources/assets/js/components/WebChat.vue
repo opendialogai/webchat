@@ -197,7 +197,9 @@ export default {
 
     this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
       const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
-      this.userName = author.attributes.name;
+      if (author !== undefined) {
+        this.userName = author.attributes.name;
+      }
     });
 
     this.initChat();
