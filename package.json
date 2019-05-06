@@ -37,7 +37,7 @@
         "detect-browser": "^4.2.0",
         "jstz": "^2.1.1",
         "moment-timezone": "^0.5.23",
-        "vue-beautiful-chat": "git+https://7793e538466954b1f6953051ed45f18ce3d90fc1:x-oauth-basic@github.com/GreenShootLabs/vue-beautiful-chat.git#develop",
+        "vue-beautiful-chat": "git://github.com/GreenShootLabs/vue-beautiful-chat.git#develop",
         "vue-js-cookie": "^2.1.0",
         "vue-template-compiler": "^2.6.10",
         "vue-uuid": "^1.1.1",
