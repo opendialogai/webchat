@@ -12,19 +12,7 @@ Require as a dependency in your composer.json file
                  "type": "git",
                  "url": "https://github.com/GreenShootLabs/OpenDialog-Webchat.git"
              }
-             
-+ As this is hosted in a private Repo at the moment, you will need credentials to be able to pull it in. Generate a key\
-in GitHub personal access token for an account that has access to this repo.
-
-+ Create a file named `auth.json` in the root of your project that looks like this and includes the token generated
-
-      {
-        "http-basic": {},
-        "github-oauth": {
-          "api.github.com": "{token}"
-        }
-      }
-      
+                   
 + Install the composer dependencies with `composer update`
 
 ## Front end set up
