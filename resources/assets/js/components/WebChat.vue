@@ -204,7 +204,7 @@ export default {
 
     this.initChat();
 
-    this.fetchMessages(this.userInfo);
+    this.fetchMessages();
 
     window.addEventListener('message', (event) => {
       if (event.data) {
@@ -268,6 +268,12 @@ export default {
         if (!newMsg.user.name && newMsg.user.first_name && newMsg.user.last_name) {
           newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
         }
+      }
+
+      if (newMsg.type === 'chat_open' && this.userInfo) {
+        Object.keys(this.userInfo).forEach((key) => {
+          newMsg.user[key] = this.userInfo[key];
+        });
       }
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
@@ -614,7 +620,7 @@ export default {
     regExpEscape(string) {
       return string.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
     },
-    async fetchMessages(user) {
+    async fetchMessages() {
       if (this.showHistory) {
         await this.getChatHistory();
       } else {
@@ -625,7 +631,6 @@ export default {
       const message = {
         type: 'chat_open',
         data: {
-          user,
           callback_id: this.workoutCallback(),
         },
       };
