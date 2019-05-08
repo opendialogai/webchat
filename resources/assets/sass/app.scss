@@ -204,6 +204,10 @@ body {
     }
     .sc-message--content.sent .sc-message--text {
       color: #FFFFFF !important;
+
+      a {
+        color: #FFFFFF !important;
+      }
     }
 
     .sc-message--button-response {
