@@ -83,8 +83,10 @@ function openChatWindow(div = null) {
   });
 
   // Listen for back/forward button presses in SPAs.
-  window.onpopstate = () => {
-    ifrm.contentWindow.postMessage({ newPathname: window.location.pathname }, '*');
+  window.onpopstate = (e) => {
+    if (e.state !== null) {
+      ifrm.contentWindow.postMessage({ newPathname: window.location.pathname }, '*');
+    }
   };
 
   // Handle navigation events. SPAs must broadcast this event for
