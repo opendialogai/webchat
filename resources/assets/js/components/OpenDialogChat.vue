@@ -143,7 +143,7 @@ export default {
       callbackMap: [],
       canCloseChat: true,
       chatbotAvatarPath: '',
-      chatbotName: '',
+      chatbotName: 'OD Bot',
       colours: {
         header: {
           bg: '#4e8cff',
