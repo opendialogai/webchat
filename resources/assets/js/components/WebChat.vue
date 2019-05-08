@@ -76,6 +76,10 @@ export default {
       type: String,
       default: '',
     },
+    chatbotName: {
+      type: String,
+      default: '',
+    },
     chatIsOpen: Boolean,
     colours: {
       type: Object,
@@ -341,7 +345,7 @@ export default {
                     const authorMsg = {
                       type: 'author',
                       data: {
-                        text: 'LISA',
+                        text: this.chatbotName,
                         date: message.data.date,
                         time: message.data.time,
                       },
@@ -379,7 +383,7 @@ export default {
                   const authorMsg = {
                     type: 'author',
                     data: {
-                      text: 'LISA',
+                      text: this.chatbotName,
                       date: response.data.data.date,
                       time: response.data.data.time,
                     },
@@ -409,7 +413,7 @@ export default {
                     const authorMsg = {
                       type: 'author',
                       data: {
-                        text: 'LISA',
+                        text: this.chatbotName,
                         date: response.data.data.date,
                         time: response.data.data.time,
                       },
@@ -694,7 +698,7 @@ export default {
               const authorMsg = {
                 type: 'author',
                 data: {
-                  text: 'LISA',
+                  text: this.chatbotName,
                   date: currentMessage.data.date,
                   time: currentMessage.data.time,
                 },
