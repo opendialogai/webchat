@@ -195,12 +195,14 @@ export default {
       }
     }
 
-    this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
-      const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
-      if (author !== undefined) {
-        this.userName = author.attributes.name;
-      }
-    });
+    if (Object.prototype.hasOwnProperty.call(this.$store._mutations, 'authors/loadById')) {
+      this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
+        const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
+        if (author !== undefined) {
+          this.userName = author.attributes.name;
+        }
+      });
+    }
 
     this.initChat();
 
