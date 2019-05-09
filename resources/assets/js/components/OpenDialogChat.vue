@@ -469,6 +469,10 @@ export default {
         if (matches && matches.length > 1) {
           this.updateSectionSelection(matches[1]);
           this.activeTab = 'comments';
+
+          setTimeout(() => {
+            this.cssProps = this.getCssProps();
+          }, 100);
         }
       }
 
