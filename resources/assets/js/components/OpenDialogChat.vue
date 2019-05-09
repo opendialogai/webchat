@@ -207,8 +207,13 @@ export default {
     },
   },
   watch: {
+    settingsInitialised(settingsAreInitialised) {
+      if (settingsAreInitialised && this.apiReady && this.pathInitialised && this.commentsEnabled) {
+        this.getCommentSections();
+      }
+    },
     apiReady(apiIsReady) {
-      if (apiIsReady && this.pathInitialised && this.commentsEnabled) {
+      if (apiIsReady && this.pathInitialised && this.commentsEnabled && this.settingsInitialised) {
         this.getCommentSections();
       }
     },
