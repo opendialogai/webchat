@@ -92,6 +92,7 @@
         :callback-map="callbackMap"
         :can-close-chat="canCloseChat"
         :chatbot-avatar-path="chatbotAvatarPath"
+        :chatbot-name="chatbotName"
         :colours="colours"
         :is-expand="isExpand"
         :is-mobile="isMobile"
@@ -142,6 +143,7 @@ export default {
       callbackMap: [],
       canCloseChat: true,
       chatbotAvatarPath: '',
+      chatbotName: 'OD Bot',
       colours: {
         header: {
           bg: '#4e8cff',
@@ -536,6 +538,10 @@ export default {
 
       if (config.chatbotAvatarPath) {
         this.chatbotAvatarPath = config.chatbotAvatarPath;
+      }
+
+      if (config.chatbotName) {
+        this.chatbotName = config.chatbotName;
       }
 
       if (config.user && !window._.isEmpty(config.user)) {

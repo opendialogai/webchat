@@ -24,6 +24,7 @@ class WebchatSetting extends Model
     const CALLBACK_MAP          = 'callbackMap';
     const DISABLE_CLOSE_CHAT    = 'disableCloseChat';
     const START_MINIMIZED       = 'startMinimized';
+    const CHATBOT_NAME          = 'chatbotName';
     const CHATBOT_AVATAR_PATH   = 'chatbotAvatarPath';
     const USE_AVATARS           = 'useAvatars';
 
@@ -97,6 +98,7 @@ class WebchatSetting extends Model
                 WebchatSetting::URL,
                 WebchatSetting::TEAM_NAME,
                 WebchatSetting::CUSTOM_CSS_PATH,
+                WebchatSetting::CHATBOT_NAME,
                 WebchatSetting::CHATBOT_AVATAR_PATH,
             ],
             WebchatSetting::NUMBER => [
