@@ -338,45 +338,49 @@ export default {
           (response) => {
             if (response.data instanceof Array) {
               response.data.forEach((message, i) => {
-                this.showTypingIndicator = true;
-                setTimeout(() => {
-                  this.showTypingIndicator = false;
+                if (!message) {
+                  this.contentEditable = true;
+                } else {
+                  this.showTypingIndicator = true;
+                  setTimeout(() => {
+                    this.showTypingIndicator = false;
 
-                  if (i === 0) {
-                    const authorMsg = {
-                      type: 'author',
-                      data: {
-                        text: this.chatbotName,
-                        date: message.data.date,
-                        time: message.data.time,
-                      },
-                    };
+                    if (i === 0) {
+                      const authorMsg = {
+                        type: 'author',
+                        data: {
+                          text: this.chatbotName,
+                          date: message.data.date,
+                          time: message.data.time,
+                        },
+                      };
 
-                    if (this.useAvatars) {
-                      authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+                      if (this.useAvatars) {
+                        authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+                      }
+
+                      this.messageList.push(authorMsg);
                     }
 
-                    this.messageList.push(authorMsg);
-                  }
+                    this.$emit('newMessage', message);
 
-                  this.$emit('newMessage', message);
+                    this.messageList.push(message);
 
-                  this.messageList.push(message);
+                    if (message.data) {
+                      this.contentEditable = !message.data.disable_text;
+                    }
 
-                  if (message.data) {
-                    this.contentEditable = !message.data.disable_text;
-                  }
-
-                  if (i < (response.data.length - 1)) {
-                    this.$nextTick(() => {
+                    if (i < (response.data.length - 1)) {
                       this.$nextTick(() => {
-                        this.showTypingIndicator = true;
+                        this.$nextTick(() => {
+                          this.showTypingIndicator = true;
+                        });
                       });
-                    });
-                  }
-                }, (i + 1) * this.messageDelay);
+                    }
+                  }, (i + 1) * this.messageDelay);
 
-                window.parent.postMessage({ dataLayerEvent: 'message_received_from_chatbot' }, '*');
+                  window.parent.postMessage({ dataLayerEvent: 'message_received_from_chatbot' }, '*');
+                }
               });
             } else if (response.data) {
               if (newMsg.type === 'chat_open') {
