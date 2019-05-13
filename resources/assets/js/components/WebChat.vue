@@ -199,7 +199,8 @@ export default {
       }
     }
 
-    if (Object.prototype.hasOwnProperty.call(this.$store._mutations, 'authors/loadById')) {
+    // eslint-disable-next-line no-underscore-dangle
+    if (Object.prototype.hasOwnProperty.call(this.$store._actions, 'authors/loadById')) {
       this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
         const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
         if (author !== undefined) {
