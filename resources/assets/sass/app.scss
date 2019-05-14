@@ -189,7 +189,7 @@ body {
     }
 
     .sc-message--text {
-      font-size: 15px;
+      font-size: 15px !important;
       padding: 7px 15px;
       color: #2D2D2D !important;
       border-radius: 14px;
@@ -202,6 +202,18 @@ body {
         text-decoration: underline;
       }
     }
+
+    .sc-message--button--text,
+    .sc-message--button {
+      font-size: 15px !important;
+      color: #2D2D2D !important;
+
+      a {
+        color: #2D2D2D !important;
+        text-decoration: underline;
+      }
+    }
+
     .sc-message--content.sent .sc-message--text {
       color: #FFFFFF !important;
 
