@@ -119,11 +119,11 @@
 </template>
 
 <script>
-  import {mapState} from 'vuex';
-  import Comments from '@/components/Comments';
-  import WebChat from '@/components/WebChat';
+import { mapState } from 'vuex';
+import Comments from '@/components/Comments';
+import WebChat from '@/components/WebChat';
 
-  const { detect } = require('detect-browser');
+const { detect } = require('detect-browser');
 const jstz = require('jstz');
 
 export default {
@@ -327,14 +327,14 @@ export default {
       const browser = `${browserInfo.name} ${browserInfo.version}`;
       const timezone = jstz.determine().name();
 
-          this.userInfo = {
-            ipAddress,
-            country,
-            browserLanguage,
-            os,
-            browser,
-            timezone,
-          };
+      this.userInfo = {
+        ipAddress,
+        country,
+        browserLanguage,
+        os,
+        browser,
+        timezone,
+      };
 
       this.timezoneInitialised = true;
 
