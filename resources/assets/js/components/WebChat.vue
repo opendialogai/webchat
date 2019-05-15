@@ -718,6 +718,27 @@ export default {
               }
             }
 
+            if (currentMessage.author === 'me') {
+              const authorMsg = {
+                type: 'author',
+                author: 'me',
+                data: {
+                  author: 'me',
+                  text: this.userName,
+                  date: currentMessage.data.date,
+                  time: currentMessage.data.time,
+                },
+              };
+
+              if (this.useAvatars) {
+                const avatarName = this.userName
+                  .split(' ').map(n => n[0]).join('').toUpperCase();
+                authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+              }
+
+              this.messageList.push(authorMsg);
+            }
+
             this.messageList.push(currentMessage);
           });
 
