@@ -119,6 +119,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapState } from 'vuex';
 import Comments from '@/components/Comments';
 import WebChat from '@/components/WebChat';
@@ -143,6 +144,7 @@ export default {
       canCloseChat: true,
       chatbotAvatarPath: '',
       chatbotName: 'OD Bot',
+      collectUserIp: true,
       colours: {
         header: {
           bg: '#4e8cff',
@@ -209,6 +211,10 @@ export default {
     settingsInitialised(settingsAreInitialised) {
       if (settingsAreInitialised && this.apiReady && this.pathInitialised && this.commentsEnabled) {
         this.getCommentSections();
+      }
+
+      if (this.collectUserIp) {
+        this.getUserIp();
       }
     },
     apiReady(apiIsReady) {
@@ -338,37 +344,6 @@ export default {
 
       this.timezoneInitialised = true;
 
-
-      // axios.get('https://ipinfo.io/').then(
-      //   (response) => {
-      //     const browserInfo = detect();
-      //
-      //     const ipAddress = response.data.ip;
-      //     const { country } = response.data;
-      //     const browserLanguage = navigator.language || navigator.userLanguage;
-      //     const { os } = browserInfo;
-      //     const browser = `${browserInfo.name} ${browserInfo.version}`;
-      //     const timezone = jstz.determine().name();
-      //
-      //     this.userInfo = {
-      //       ipAddress,
-      //       country,
-      //       browserLanguage,
-      //       os,
-      //       browser,
-      //       timezone,
-      //     };
-      //
-      //     this.userTimezone = timezone;
-      //
-      //     this.timezoneInitialised = true;
-      //   },
-      //   () => {
-      //     // This is axios' error handler.
-      //     this.timezoneInitialised = true;
-      //   },
-      // );
-
       // Add event listener for custom open dialog settings.
       const customConfig = {};
       window.addEventListener('message', (event) => {
@@ -406,6 +381,37 @@ export default {
           }
         }, 200);
       });
+    },
+    getUserIp() {
+      axios.get('https://ipinfo.io/').then(
+        (response) => {
+          const browserInfo = detect();
+
+          const ipAddress = response.data.ip;
+          const { country } = response.data;
+          const browserLanguage = navigator.language || navigator.userLanguage;
+          const { os } = browserInfo;
+          const browser = `${browserInfo.name} ${browserInfo.version}`;
+          const timezone = jstz.determine().name();
+
+          this.userInfo = {
+            ipAddress,
+            country,
+            browserLanguage,
+            os,
+            browser,
+            timezone,
+          };
+
+          this.userTimezone = timezone;
+
+          this.timezoneInitialised = true;
+        },
+        () => {
+          // This is axios' error handler.
+          this.timezoneInitialised = true;
+        },
+      );
     },
     getCommentSections() {
       let action = '';
@@ -559,6 +565,10 @@ export default {
 
       if (config.useAvatars) {
         this.useAvatars = config.useAvatars;
+      }
+
+      if (Object.prototype.hasOwnProperty.call(config, 'collectUserIp')) {
+        this.collectUserIp = config.collectUserIp;
       }
 
       if (config.chatbotAvatarPath) {
