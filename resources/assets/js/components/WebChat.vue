@@ -699,21 +699,23 @@ export default {
               this.dateTimezoneFormat(currentMessage);
             }
 
-            if (currentMessage.author === 'them') {
-              const authorMsg = {
-                type: 'author',
-                data: {
-                  text: this.chatbotName,
-                  date: currentMessage.data.date,
-                  time: currentMessage.data.time,
-                },
-              };
+            if (!currentMessage.data.internal) {
+              if (currentMessage.author === 'them') {
+                const authorMsg = {
+                  type: 'author',
+                  data: {
+                    text: this.chatbotName,
+                    date: currentMessage.data.date,
+                    time: currentMessage.data.time,
+                  },
+                };
 
-              if (this.useAvatars) {
-                authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+                if (this.useAvatars) {
+                  authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+                }
+
+                this.messageList.push(authorMsg);
               }
-
-              this.messageList.push(authorMsg);
             }
 
             this.messageList.push(currentMessage);
