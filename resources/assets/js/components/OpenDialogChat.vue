@@ -119,12 +119,11 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { mapState } from 'vuex';
-import Comments from '@/components/Comments';
-import WebChat from '@/components/WebChat';
+  import {mapState} from 'vuex';
+  import Comments from '@/components/Comments';
+  import WebChat from '@/components/WebChat';
 
-const { detect } = require('detect-browser');
+  const { detect } = require('detect-browser');
 const jstz = require('jstz');
 
 export default {
@@ -319,16 +318,14 @@ export default {
       return cssVars;
     },
     initSettings() {
-      axios.get('https://ipinfo.io/').then(
-        (response) => {
-          const browserInfo = detect();
-
-          const ipAddress = response.data.ip;
-          const { country } = response.data;
-          const browserLanguage = navigator.language || navigator.userLanguage;
-          const { os } = browserInfo;
-          const browser = `${browserInfo.name} ${browserInfo.version}`;
-          const timezone = jstz.determine().name();
+      this.userTimezone = jstz.determine().name();
+      const browserInfo = detect();
+      const ipAddress = 'n/a';
+      const { country } = 'n/a';
+      const browserLanguage = navigator.language || navigator.userLanguage;
+      const { os } = browserInfo;
+      const browser = `${browserInfo.name} ${browserInfo.version}`;
+      const timezone = jstz.determine().name();
 
           this.userInfo = {
             ipAddress,
@@ -339,15 +336,38 @@ export default {
             timezone,
           };
 
-          this.userTimezone = timezone;
+      this.timezoneInitialised = true;
 
-          this.timezoneInitialised = true;
-        },
-        () => {
-          // This is axios' error handler.
-          this.timezoneInitialised = true;
-        },
-      );
+
+      // axios.get('https://ipinfo.io/').then(
+      //   (response) => {
+      //     const browserInfo = detect();
+      //
+      //     const ipAddress = response.data.ip;
+      //     const { country } = response.data;
+      //     const browserLanguage = navigator.language || navigator.userLanguage;
+      //     const { os } = browserInfo;
+      //     const browser = `${browserInfo.name} ${browserInfo.version}`;
+      //     const timezone = jstz.determine().name();
+      //
+      //     this.userInfo = {
+      //       ipAddress,
+      //       country,
+      //       browserLanguage,
+      //       os,
+      //       browser,
+      //       timezone,
+      //     };
+      //
+      //     this.userTimezone = timezone;
+      //
+      //     this.timezoneInitialised = true;
+      //   },
+      //   () => {
+      //     // This is axios' error handler.
+      //     this.timezoneInitialised = true;
+      //   },
+      // );
 
       // Add event listener for custom open dialog settings.
       const customConfig = {};
