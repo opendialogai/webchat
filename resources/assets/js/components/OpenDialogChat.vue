@@ -144,6 +144,7 @@ export default {
       canCloseChat: true,
       chatbotAvatarPath: '',
       chatbotName: 'OD Bot',
+      collectUserIp: true,
       colours: {
         header: {
           bg: '#4e8cff',
@@ -210,6 +211,10 @@ export default {
     settingsInitialised(settingsAreInitialised) {
       if (settingsAreInitialised && this.apiReady && this.pathInitialised && this.commentsEnabled) {
         this.getCommentSections();
+      }
+
+      if (this.collectUserIp) {
+        this.getUserIp();
       }
     },
     apiReady(apiIsReady) {
@@ -319,35 +324,25 @@ export default {
       return cssVars;
     },
     initSettings() {
-      axios.get('https://ipinfo.io/').then(
-        (response) => {
-          const browserInfo = detect();
+      this.userTimezone = jstz.determine().name();
+      const browserInfo = detect();
+      const ipAddress = 'n/a';
+      const { country } = 'n/a';
+      const browserLanguage = navigator.language || navigator.userLanguage;
+      const { os } = browserInfo;
+      const browser = `${browserInfo.name} ${browserInfo.version}`;
+      const timezone = jstz.determine().name();
 
-          const ipAddress = response.data.ip;
-          const { country } = response.data;
-          const browserLanguage = navigator.language || navigator.userLanguage;
-          const { os } = browserInfo;
-          const browser = `${browserInfo.name} ${browserInfo.version}`;
-          const timezone = jstz.determine().name();
+      this.userInfo = {
+        ipAddress,
+        country,
+        browserLanguage,
+        os,
+        browser,
+        timezone,
+      };
 
-          this.userInfo = {
-            ipAddress,
-            country,
-            browserLanguage,
-            os,
-            browser,
-            timezone,
-          };
-
-          this.userTimezone = timezone;
-
-          this.timezoneInitialised = true;
-        },
-        () => {
-          // This is axios' error handler.
-          this.timezoneInitialised = true;
-        },
-      );
+      this.timezoneInitialised = true;
 
       // Add event listener for custom open dialog settings.
       const customConfig = {};
@@ -386,6 +381,14 @@ export default {
           }
         }, 200);
       });
+    },
+    getUserIp() {
+      axios.get('https://ipinfo.io/').then(
+        (response) => {
+          this.userInfo.ipAddress = response.data.ip;
+          this.userInfo.country = response.data.country;
+        },
+      );
     },
     getCommentSections() {
       let action = '';
@@ -541,6 +544,10 @@ export default {
 
       if (config.useAvatars) {
         this.useAvatars = config.useAvatars;
+      }
+
+      if (Object.prototype.hasOwnProperty.call(config, 'collectUserIp')) {
+        this.collectUserIp = config.collectUserIp;
       }
 
       if (config.chatbotAvatarPath) {

@@ -27,6 +27,7 @@ class WebchatSetting extends Model
     const CHATBOT_NAME          = 'chatbotName';
     const CHATBOT_AVATAR_PATH   = 'chatbotAvatarPath';
     const USE_AVATARS           = 'useAvatars';
+    const COLLECT_USER_IP       = 'collectUserIp';
 
     // Colours
     const COLOURS                     = 'colours';
@@ -154,6 +155,7 @@ class WebchatSetting extends Model
                 WebchatSetting::DISABLE_CLOSE_CHAT,
                 WebchatSetting::START_MINIMIZED,
                 WebchatSetting::USE_AVATARS,
+                WebchatSetting::COLLECT_USER_IP,
             ],
             WebchatSetting::WEBCHAT_HISTORY => [
                 WebchatSetting::BOOLEAN => [
