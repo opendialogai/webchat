@@ -1,6 +1,6 @@
 import 'promise-polyfill/src/polyfill';
 import 'whatwg-fetch';
-import '@/url-search-params-polyfill';
+import 'url-search-params-polyfill';
 
 let query = 'open=true';
 let url = '';

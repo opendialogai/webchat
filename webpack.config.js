@@ -12,6 +12,15 @@ module.exports = {
                 loader: 'eslint-loader',
                 test: /\.(js|vue)?$/
             },
+            {
+                test: /\.js$/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                }
+            },
         ]
     },
     output: {
