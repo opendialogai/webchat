@@ -151,12 +151,18 @@ export default {
   },
   watch: {
     messageList() {
-      const previousMessage = this.messageList[this.messageList.length - 2];
+      let spliceIndex = 1;
+      let previousMessage = this.messageList[this.messageList.length - 2];
       const lastMessage = this.messageList[this.messageList.length - 1];
+
+      if (previousMessage.type === 'author') {
+        spliceIndex = 2;
+        previousMessage = this.messageList[this.messageList.length - 3];
+      }
 
       if (!previousMessage || previousMessage.type !== 'datetime') {
         if (!previousMessage || previousMessage.data.date !== lastMessage.data.date) {
-          this.messageList.splice(this.messageList.length - 1, 0, {
+          this.messageList.splice(this.messageList.length - spliceIndex, 0, {
             type: 'datetime',
             datetime: lastMessage.data.date,
           });
