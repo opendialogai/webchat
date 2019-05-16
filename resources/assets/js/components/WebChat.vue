@@ -284,22 +284,7 @@ export default {
       }
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
-        const authorMsg = {
-          type: 'author',
-          author: 'me',
-          data: {
-            author: 'me',
-            text: this.userName,
-            date: newMsg.data.date,
-            time: newMsg.data.time,
-          },
-        };
-
-        if (this.useAvatars) {
-          const avatarName = this.userName
-            .split(' ').map(n => n[0]).join('').toUpperCase();
-          authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
-        }
+        const authorMsg = this.newAuthorMessage(newMsg);
 
         this.messageList.push(authorMsg);
 
@@ -346,18 +331,7 @@ export default {
                     this.showTypingIndicator = false;
 
                     if (i === 0) {
-                      const authorMsg = {
-                        type: 'author',
-                        data: {
-                          text: this.chatbotName,
-                          date: message.data.date,
-                          time: message.data.time,
-                        },
-                      };
-
-                      if (this.useAvatars) {
-                        authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
-                      }
+                      const authorMsg = this.newAuthorMessage(message);
 
                       this.messageList.push(authorMsg);
                     }
@@ -385,18 +359,7 @@ export default {
             } else if (response.data) {
               if (newMsg.type === 'chat_open') {
                 if (response.data && response.data.data) {
-                  const authorMsg = {
-                    type: 'author',
-                    data: {
-                      text: this.chatbotName,
-                      date: response.data.data.date,
-                      time: response.data.data.time,
-                    },
-                  };
-
-                  if (this.useAvatars) {
-                    authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
-                  }
+                  const authorMsg = this.newAuthorMessage(response.data);
 
                   this.messageList.push(authorMsg);
 
@@ -415,18 +378,7 @@ export default {
                 setTimeout(() => {
                   // Only add a message to the list if it is a message object
                   if (typeof response.data === 'object' && response.data !== null) {
-                    const authorMsg = {
-                      type: 'author',
-                      data: {
-                        text: this.chatbotName,
-                        date: response.data.data.date,
-                        time: response.data.data.time,
-                      },
-                    };
-
-                    if (this.useAvatars) {
-                      authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
-                    }
+                    const authorMsg = this.newAuthorMessage(response.data);
 
                     this.messageList.push(authorMsg);
 
@@ -481,13 +433,20 @@ export default {
           // Axios error handler.
           () => {
             setTimeout(() => {
-              this.messageList.push({
+              const message = {
                 type: 'text',
                 author: 'them',
                 data: {
+                  date: moment().tz('UTC').format('ddd D MMM'),
+                  time: moment().tz('UTC').format('hh:mm A'),
                   text: "We're sorry, that didn't work, please try again",
                 },
-              });
+              };
+              const authorMsg = this.newAuthorMessage(message);
+
+              this.messageList.push(authorMsg);
+              this.messageList.push(message);
+
               this.showTypingIndicator = false;
             }, this.messageDelay);
           },
@@ -699,42 +658,9 @@ export default {
               this.dateTimezoneFormat(currentMessage);
             }
 
-            if (!currentMessage.data.internal) {
-              if (currentMessage.author === 'them') {
-                const authorMsg = {
-                  type: 'author',
-                  data: {
-                    text: this.chatbotName,
-                    date: currentMessage.data.date,
-                    time: currentMessage.data.time,
-                  },
-                };
-
-                if (this.useAvatars) {
-                  authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
-                }
-
-                this.messageList.push(authorMsg);
-              }
-            }
-
-            if (currentMessage.author === 'me') {
-              const authorMsg = {
-                type: 'author',
-                author: 'me',
-                data: {
-                  author: 'me',
-                  text: this.userName,
-                  date: currentMessage.data.date,
-                  time: currentMessage.data.time,
-                },
-              };
-
-              if (this.useAvatars) {
-                const avatarName = this.userName
-                  .split(' ').map(n => n[0]).join('').toUpperCase();
-                authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
-              }
+            if (currentMessage.author === 'me'
+                || (currentMessage.author === 'them' && !currentMessage.data.internal)) {
+              const authorMsg = this.newAuthorMessage(currentMessage);
 
               this.messageList.push(authorMsg);
             }
@@ -745,6 +671,43 @@ export default {
           this.loading = false;
           this.checkHideChat();
         });
+    },
+    newAuthorMessage(message) {
+      if (message.author === 'them') {
+        const authorMsg = {
+          type: 'author',
+          data: {
+            text: this.chatbotName,
+            date: message.data.date,
+            time: message.data.time,
+          },
+        };
+
+        if (this.useAvatars) {
+          authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+        }
+
+        return authorMsg;
+      }
+
+      const authorMsg = {
+        type: 'author',
+        author: 'me',
+        data: {
+          author: 'me',
+          text: this.userName,
+          date: message.data.date,
+          time: message.data.time,
+        },
+      };
+
+      if (this.useAvatars) {
+        const avatarName = this.userName
+          .split(' ').map(n => n[0]).join('').toUpperCase();
+        authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+      }
+
+      return authorMsg;
     },
     checkHideChat() {
       const urlParams = new URLSearchParams(window.location.search);
