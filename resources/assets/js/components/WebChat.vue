@@ -211,7 +211,10 @@ export default {
 
     this.initChat();
 
-    this.fetchMessages();
+    this.loadUser()
+      .then(() => {
+        this.fetchMessages();
+      });
 
     window.addEventListener('message', (event) => {
       if (event.data) {
@@ -589,6 +592,23 @@ export default {
     },
     regExpEscape(string) {
       return string.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
+    },
+    loadUser() {
+      return new Promise((resolve) => {
+        // eslint-disable-next-line no-underscore-dangle
+        if (Object.prototype.hasOwnProperty.call(this.$store._actions, 'authors/loadById')) {
+          this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
+            const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
+            if (author !== undefined) {
+              this.userName = author.attributes.name;
+            }
+
+            resolve();
+          });
+        } else {
+          resolve();
+        }
+      });
     },
     async fetchMessages() {
       if (this.showHistory) {
