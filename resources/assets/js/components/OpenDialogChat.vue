@@ -567,7 +567,7 @@ export default {
         this.useAvatars = config.useAvatars;
       }
 
-      if (Object.prototype.hasOwnProperty.call(config, 'collectUserIp')) {
+      if (config.collectUserIp) {
         this.collectUserIp = config.collectUserIp;
       }
 
