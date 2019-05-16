@@ -385,31 +385,8 @@ export default {
     getUserIp() {
       axios.get('https://ipinfo.io/').then(
         (response) => {
-          const browserInfo = detect();
-
-          const ipAddress = response.data.ip;
-          const { country } = response.data;
-          const browserLanguage = navigator.language || navigator.userLanguage;
-          const { os } = browserInfo;
-          const browser = `${browserInfo.name} ${browserInfo.version}`;
-          const timezone = jstz.determine().name();
-
-          this.userInfo = {
-            ipAddress,
-            country,
-            browserLanguage,
-            os,
-            browser,
-            timezone,
-          };
-
-          this.userTimezone = timezone;
-
-          this.timezoneInitialised = true;
-        },
-        () => {
-          // This is axios' error handler.
-          this.timezoneInitialised = true;
+          this.userInfo.ipAddress = response.data.ip;
+          this.userInfo.country = response.data.country;
         },
       );
     },
@@ -567,7 +544,7 @@ export default {
         this.useAvatars = config.useAvatars;
       }
 
-      if (config.collectUserIp) {
+      if (Object.prototype.hasOwnProperty.call(config, 'collectUserIp')) {
         this.collectUserIp = config.collectUserIp;
       }
 
