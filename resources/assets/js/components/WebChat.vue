@@ -1,5 +1,12 @@
 <template>
-  <div :class="[ isMobile ? 'mobile' : '', canCloseChat ? '' : 'no-close' ]">
+  <div
+    :id="id"
+    :class="[
+      isMobile ? 'mobile' : '',
+      canCloseChat ? '' : 'no-close',
+      useAvatars ? 'show-avatars' : ''
+    ]"
+  >
     <template v-if="loading">
       <div class="loading">
         <div class="loading-message">
@@ -41,8 +48,6 @@
         :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
-        @vbc-user-typing="sendTypingIndicatorOn"
-        @vbc-user-not-typing="sendTypingIndicatorOff"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
       />
@@ -67,14 +72,26 @@ export default {
       required: true,
     },
     canCloseChat: Boolean,
+    chatbotAvatarPath: {
+      type: String,
+      default: '',
+    },
+    chatbotName: {
+      type: String,
+      default: '',
+    },
+    chatIsOpen: Boolean,
     colours: {
       type: Object,
       required: true,
     },
     isExpand: Boolean,
     isMobile: Boolean,
-    isOpen: Boolean,
-    loadHistory: Boolean,
+    showHistory: Boolean,
+    numberOfMessages: {
+      type: Number,
+      required: true,
+    },
     messageDelay: {
       type: Number,
       required: true,
@@ -88,11 +105,20 @@ export default {
       required: true,
     },
     showExpandButton: Boolean,
+    useAvatars: Boolean,
     user: {
       type: Object,
       required: true,
     },
+    userInfo: {
+      type: Object,
+      required: true,
+    },
     userTimezone: {
+      type: String,
+      required: true,
+    },
+    userExternalId: {
       type: String,
       required: true,
     },
@@ -106,27 +132,37 @@ export default {
       buttonText: 'Submit',
       confirmationMessage: null,
       contentEditable: false,
+      headerHeight: 0,
       headerText: '',
+      id: '',
       initialText: null,
+      isOpen: this.chatIsOpen,
       loading: true,
       maxInputCharacters: 0,
       messageList: [],
-      placeholder: 'Write a reply',
+      placeholder: 'Type a message',
       showLongTextInput: false,
       showMessages: true,
       showTypingIndicator: false,
       users: [],
+      userName: '',
       uuid: this.userUuid,
     };
   },
   watch: {
     messageList() {
-      const previousMessage = this.messageList[this.messageList.length - 2];
+      let spliceIndex = 1;
+      let previousMessage = this.messageList[this.messageList.length - 2];
       const lastMessage = this.messageList[this.messageList.length - 1];
+
+      if (previousMessage.type === 'author') {
+        spliceIndex = 2;
+        previousMessage = this.messageList[this.messageList.length - 3];
+      }
 
       if (!previousMessage || previousMessage.type !== 'datetime') {
         if (!previousMessage || previousMessage.data.date !== lastMessage.data.date) {
-          this.messageList.splice(this.messageList.length - 1, 0, {
+          this.messageList.splice(this.messageList.length - spliceIndex, 0, {
             type: 'datetime',
             datetime: lastMessage.data.date,
           });
@@ -146,8 +182,20 @@ export default {
         this.agentProfile.imageUrl = null;
       }
     },
+    loading(isLoading) {
+      if (!isLoading) {
+        setTimeout(() => {
+          const header = document.querySelector(`#${this.id} .sc-header`);
+          if (header) {
+            this.headerHeight = header.offsetHeight;
+          }
+        }, 1000);
+      }
+    },
   },
   created() {
+    this.id = `webchat-${this.$uuid.v4()}`;
+
     const urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.has('mobile')) {
@@ -157,10 +205,51 @@ export default {
       }
     }
 
-    this.initChat();
-    this.setUpListeners();
+    // eslint-disable-next-line no-underscore-dangle
+    if (Object.prototype.hasOwnProperty.call(this.$store._actions, 'authors/loadById')) {
+      this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
+        const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
+        if (author !== undefined) {
+          this.userName = author.attributes.name;
+        }
+      });
+    }
 
-    this.fetchMessages(this.user);
+    this.initChat();
+
+    this.loadUser()
+      .then(() => {
+        this.fetchMessages();
+      });
+
+    window.addEventListener('message', (event) => {
+      if (event.data) {
+        if (event.data.triggerConversation && event.data.triggerConversation.callback_id) {
+          const data = { callback_id: event.data.triggerConversation.callback_id };
+          if (event.data.triggerConversation.value) {
+            data.value = event.data.triggerConversation.value;
+          }
+
+          this.sendMessage({
+            type: 'trigger',
+            author: 'me',
+            data,
+          });
+        }
+
+        if (event.data.expandChat) {
+          if (!this.isExpand || !this.isOpen) {
+            this.expandChat(true);
+          }
+        }
+
+        if (event.data.collapseChat) {
+          if (this.isExpand) {
+            this.expandChat();
+          }
+        }
+      }
+    });
   },
   methods: {
     dateTimezoneFormat(message) {
@@ -190,14 +279,24 @@ export default {
       newMsg.id = this.$uuid.v4();
 
       // Add the user information.
-      if (window.greenshootSettings && window.greenshootSettings.user) {
-        newMsg.user = window.greenshootSettings.user;
+      if (window.openDialogSettings && window.openDialogSettings.user) {
+        newMsg.user = window.openDialogSettings.user;
         if (!newMsg.user.name && newMsg.user.first_name && newMsg.user.last_name) {
           newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
         }
       }
 
+      if (newMsg.type === 'chat_open' && this.userInfo) {
+        Object.keys(this.userInfo).forEach((key) => {
+          newMsg.user[key] = this.userInfo[key];
+        });
+      }
+
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
+        const authorMsg = this.newAuthorMessage(newMsg);
+
+        this.messageList.push(authorMsg);
+
         this.buttonText = 'Submit';
         this.headerText = '';
         this.maxInputCharacters = 0;
@@ -231,38 +330,50 @@ export default {
         // Need to add error handling here
         axios.post('/incoming/webchat', webchatMessage).then(
           (response) => {
-            // Register presence after getting a response from the
-            // chat open so that we know a user exists.
-            if (newMsg.type === 'chat_open') {
-              this.registerPresence();
-            }
-
             if (response.data instanceof Array) {
               response.data.forEach((message, i) => {
-                this.showTypingIndicator = true;
-                setTimeout(() => {
-                  this.showTypingIndicator = false;
+                if (!message) {
+                  this.contentEditable = true;
+                } else {
+                  this.showTypingIndicator = true;
+                  setTimeout(() => {
+                    this.showTypingIndicator = false;
 
-                  this.messageList.push(message);
+                    if (i === 0) {
+                      const authorMsg = this.newAuthorMessage(message);
 
-                  if (message.data) {
-                    this.contentEditable = !message.data.disable_text;
-                  }
+                      this.messageList.push(authorMsg);
+                    }
 
-                  if (i < (response.data.length - 1)) {
-                    this.$nextTick(() => {
+                    this.$emit('newMessage', message);
+
+                    this.messageList.push(message);
+
+                    if (message.data) {
+                      this.contentEditable = !message.data.disable_text;
+                    }
+
+                    if (i < (response.data.length - 1)) {
                       this.$nextTick(() => {
-                        this.showTypingIndicator = true;
+                        this.$nextTick(() => {
+                          this.showTypingIndicator = true;
+                        });
                       });
-                    });
-                  }
-                }, (i + 1) * this.messageDelay);
+                    }
+                  }, (i + 1) * this.messageDelay);
 
-                window.parent.postMessage({ dataLayerEvent: 'message_received_from_chatbot' }, '*');
+                  window.parent.postMessage({ dataLayerEvent: 'message_received_from_chatbot' }, '*');
+                }
               });
             } else if (response.data) {
               if (newMsg.type === 'chat_open') {
                 if (response.data && response.data.data) {
+                  const authorMsg = this.newAuthorMessage(response.data);
+
+                  this.messageList.push(authorMsg);
+
+                  this.$emit('newMessage', response.data);
+
                   this.messageList.push(response.data);
                   this.contentEditable = !response.data.data.disable_text;
                 } else {
@@ -276,6 +387,12 @@ export default {
                 setTimeout(() => {
                   // Only add a message to the list if it is a message object
                   if (typeof response.data === 'object' && response.data !== null) {
+                    const authorMsg = this.newAuthorMessage(response.data);
+
+                    this.messageList.push(authorMsg);
+
+                    this.$emit('newMessage', response.data);
+
                     this.messageList.push(response.data);
                   }
 
@@ -325,13 +442,20 @@ export default {
           // Axios error handler.
           () => {
             setTimeout(() => {
-              this.messageList.push({
+              const message = {
                 type: 'text',
                 author: 'them',
                 data: {
+                  date: moment().tz('UTC').format('ddd D MMM'),
+                  time: moment().tz('UTC').format('hh:mm A'),
                   text: "We're sorry, that didn't work, please try again",
                 },
-              });
+              };
+              const authorMsg = this.newAuthorMessage(message);
+
+              this.messageList.push(authorMsg);
+              this.messageList.push(message);
+
               this.showTypingIndicator = false;
             }, this.messageDelay);
           },
@@ -340,7 +464,7 @@ export default {
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {
-        this.expandChat();
+        this.$emit('expandChat');
       }
     },
     userInputBlur() {
@@ -356,40 +480,6 @@ export default {
 
       axios.post('/incoming/webchat', pusherMsg).then(() => {});
     },
-    sendTypingIndicatorOn() {
-      const messageId = this.$uuid.v4();
-
-      // Create the message object to send to our pusher endpoint.
-      const pusherMsg = {
-        notification: 'typing_on', // Is mapped to the broadcast event type.
-        user_id: this.uuid, // UUID of the webchat end user.
-        author: this.uuid, // UUID of the webchat end user.
-        message_id: messageId, // Unique id for this message.
-        content: {
-          author: this.uuid,
-          id: messageId,
-        },
-      };
-
-      axios.post('/incoming/webchat', pusherMsg).then(() => {});
-    },
-    sendTypingIndicatorOff() {
-      const messageId = this.$uuid.v4();
-
-      // Create the message object to send to our pusher endpoint.
-      const pusherMsg = {
-        notification: 'typing_off', // Is mapped to the broadcast event type.
-        user_id: this.uuid, // UUID of the webchat end user.
-        author: this.uuid, // UUID of the webchat end user.
-        message_id: messageId, // Unique id for this message.
-        content: {
-          author: this.uuid,
-          id: messageId,
-        },
-      };
-
-      axios.post('/incoming/webchat', pusherMsg).then(() => {});
-    },
     onMessageWasSent(msg) {
       const msgToSend = msg;
       if (this.messageList.length && this.messageList[this.messageList.length - 1].type === 'longtext') {
@@ -400,60 +490,20 @@ export default {
       this.sendMessage(msgToSend);
       this.placeholder = 'Write a reply';
     },
-    openChat() {},
-    toggleChatOpen() {
-      if (this.canCloseChat) {
-        this.isOpen = !this.isOpen;
-
-        if (!this.isOpen) {
-          this.$root.$emit('scroll-down-message-list');
-        }
-
-        if (window.self !== window.top) {
-          if (!this.isOpen) {
-            const height = document.querySelector('.sc-header').offsetHeight;
-            window.parent.postMessage({ height: `${height}px` }, '*');
-          } else {
-            window.parent.postMessage({ height: 'auto' }, '*');
-          }
-        }
-      }
+    openChat() {
     },
-    expandChat(forceExpand = false) {
-      if (!this.showExpandButton && !forceExpand) {
+    onButtonClick(button, msg) {
+      if (button.tab_switch) {
+        this.$emit('switchToCommentsTab');
         return;
       }
 
-      this.isExpand = !this.isExpand;
-
-      if (this.isExpand) {
-        window.parent.postMessage({ dataLayerEvent: 'chatbot_maximized' }, '*');
-      } else {
-        window.parent.postMessage({ dataLayerEvent: 'chatbot_minimized' }, '*');
-      }
-
-      if (!this.isOpen) {
-        this.toggleChatOpen();
-      }
-
-      // Only add the expanded class on non-mobile devices
-      if (window.self !== window.top && !this.isMobile) {
-        if (!this.isExpand) {
-          window.parent.postMessage({ removeClass: 'expanded' }, '*');
-          this.$root.$emit('scroll-down-message-list');
-        } else {
-          window.parent.postMessage({ addClass: 'expanded' }, '*');
-          this.$root.$emit('scroll-down-message-list');
-        }
-      }
-    },
-    onButtonClick(button, msg) {
       if (msg.data.clear_after_interaction) {
         this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
       }
 
       if (!this.isExpand) {
-        this.expandChat();
+        this.$emit('expandChat');
       }
 
       this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
@@ -518,6 +568,13 @@ export default {
         },
       });
     },
+    expandChat() {
+      this.$emit('expandChat');
+    },
+    toggleChatOpen() {
+      this.isOpen = !this.isOpen;
+      this.$emit('toggleChatOpen', this.headerHeight);
+    },
     workoutCallback() {
       // Default
       let callbackId = 'WELCOME';
@@ -542,8 +599,25 @@ export default {
     regExpEscape(string) {
       return string.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
     },
-    async fetchMessages(user) {
-      if (this.loadHistory) {
+    loadUser() {
+      return new Promise((resolve) => {
+        // eslint-disable-next-line no-underscore-dangle
+        if (Object.prototype.hasOwnProperty.call(this.$store._actions, 'authors/loadById')) {
+          this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
+            const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
+            if (author !== undefined) {
+              this.userName = author.attributes.name;
+            }
+
+            resolve();
+          });
+        } else {
+          resolve();
+        }
+      });
+    },
+    async fetchMessages() {
+      if (this.showHistory) {
         await this.getChatHistory();
       } else {
         this.loading = false;
@@ -553,7 +627,6 @@ export default {
       const message = {
         type: 'chat_open',
         data: {
-          user,
           callback_id: this.workoutCallback(),
         },
       };
@@ -563,9 +636,9 @@ export default {
     getChatHistory() {
       this.loading = true;
 
-      const userId = (this.user) ? this.user.email : this.uuid;
+      const userId = (this.user && this.user.email) ? this.user.email : this.uuid;
 
-      return axios.get(`/chat-init/${userId}`)
+      return axios.get(`/chat-init/webchat/${userId}/${this.numberOfMessages}`)
         .then((response) => {
           response.data.reverse().forEach((message, i, messages) => {
             // Ignore 'url_click' messages.
@@ -611,6 +684,13 @@ export default {
               this.dateTimezoneFormat(currentMessage);
             }
 
+            if (currentMessage.author === 'me'
+                || (currentMessage.author === 'them' && !currentMessage.data.internal)) {
+              const authorMsg = this.newAuthorMessage(currentMessage);
+
+              this.messageList.push(authorMsg);
+            }
+
             this.messageList.push(currentMessage);
           });
 
@@ -618,50 +698,52 @@ export default {
           this.checkHideChat();
         });
     },
+    newAuthorMessage(message) {
+      if (message.author === 'them') {
+        const authorMsg = {
+          type: 'author',
+          data: {
+            text: this.chatbotName,
+            date: message.data.date,
+            time: message.data.time,
+          },
+        };
+
+        if (this.useAvatars) {
+          authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+        }
+
+        return authorMsg;
+      }
+
+      const authorMsg = {
+        type: 'author',
+        author: 'me',
+        data: {
+          author: 'me',
+          text: this.userName,
+          date: message.data.date,
+          time: message.data.time,
+        },
+      };
+
+      if (this.useAvatars) {
+        const avatarName = this.userName
+          .split(' ').map(n => n[0]).join('').toUpperCase();
+        authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+      }
+
+      return authorMsg;
+    },
     checkHideChat() {
       const urlParams = new URLSearchParams(window.location.search);
 
       if (urlParams.has('hide')) {
         if (urlParams.get('hide')) {
           this.$nextTick(() => {
-            this.toggleChatOpen();
+            this.$emit('toggleChatOpen');
           });
         }
-      }
-    },
-    registerPresence() {
-      // Only try to join the presence channel if Echo is defined.
-      if (typeof window.Echo !== 'undefined') {
-        window.Echo.join(`${this.uuid}`)
-          .here((users) => {
-            this.users = users;
-          })
-          .joining((user) => {
-            this.users.push(user);
-
-            const joinMsg = {
-              id: this.$uuid.v4(),
-              author: 'them',
-              type: 'system',
-              data: {
-                text: `${window.appName} team member ${user.name} has joined the chat.`,
-              },
-            };
-            this.messageList.push(joinMsg);
-          })
-          .leaving((user) => {
-            this.users = this.users.filter(u => (u.id !== user.id));
-
-            const leaveMsg = {
-              id: this.$uuid.v4(),
-              author: 'them',
-              type: 'system',
-              data: {
-                text: `${window.appName} team member ${user.name} has left the chat.`,
-              },
-            };
-            this.messageList.push(leaveMsg);
-          });
       }
     },
     createUuid() {
@@ -679,70 +761,6 @@ export default {
         }
       }
     },
-    setUpListeners() {
-      if (typeof window.Echo !== 'undefined') {
-        window.Echo.channel(`webchat-${this.uuid}`)
-        // Listen for regular messages.
-          .listen('BroadcastMessage', (e) => {
-            // Only add the message received from pusher if we don't already have it.
-            if (window._.findIndex(this.messageList, { id: e.messageData.id }) === -1) {
-              const newMessage = {
-                user_id: e.userId,
-                id: e.messageData.id,
-                author: 'them', // If it came in from pusher and we didn't send it, we're not the author. QED.
-                type: e.messageData.type,
-                data: e.messageData.data,
-                user: e.messageData.user,
-              };
-              this.messageList.push(newMessage);
-              this.sendReadReceipt(newMessage);
-            }
-          })
-        // Listen for typing indicator on events.
-          .listen('BroadcastTypingIndicatorOn', (e) => {
-            // Don't turn on the typing indicator when we are typing!
-            if (e.userId === e.author) return;
-
-            // Only show the indicator if there is not one already.
-            if (window._.findIndex(this.messageList, { type: 'typing' }) === -1) {
-              const typingMessage = {
-                user_id: e.userId,
-                id: this.$uuid.v4(),
-                author: 'them',
-                type: 'typing',
-              };
-              this.messageList.push(typingMessage);
-            }
-          })
-        // Listen for typing indicator off events.
-          .listen('BroadcastTypingIndicatorOff', (e) => {
-            // Don't turn on the typing indicator when we are typing!
-            if (e.userId === e.author) return;
-
-            // Remove any existing typing indicators.
-            const typingIndicatorIndexes = window._.keys(window._.pickBy(this.messageList, { type: 'typing' }));
-            typingIndicatorIndexes.forEach((typingIndicatorIndex) => {
-              this.$delete(this.messageList, typingIndicatorIndex);
-            });
-          })
-        // Listen for read receipts.
-          .listen('BroadcastMessageRead', (e) => {
-            if (e.author !== this.uuid) {
-              for (let i = 0; i < this.messageList.length; i += 1) {
-                // Iterate the current message list.
-                if (this.messageList[i].id === e.messageId) {
-                  // If this message ID matches the one sent, add the 'read' property.
-                  const msg = this.messageList[i];
-                  msg.read = true;
-                  this.$set(this.messageList, i, msg);
-                  break;
-                }
-              }
-            }
-          });
-      }
-    },
-
   },
 };
 
@@ -804,7 +822,7 @@ export default {
 </style>
 
 <style>
-    .sc-header {
+    .comments-enabled .sc-header {
         display: none !important;
     }
 </style>

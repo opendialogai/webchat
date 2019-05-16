@@ -4,6 +4,7 @@ namespace OpenDialogAi\Webchat;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use OpenDialogAi\Webchat\Console\Commands\WebchatSettings;
 use OpenDialogAi\Webchat\Helpers\LoggingHelper;
 
 class PackageServiceProvider extends ServiceProvider
@@ -16,9 +17,10 @@ class PackageServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../public' => public_path('vendor/webchat'),
-            __DIR__ . '/../images/vendor/' => public_path('images/vendor'),
+            __DIR__ . '/../images/vendor' => public_path('images/vendor'),
             __DIR__ . '/../resources/images' => public_path('images/vendor/webchat/images'),
             __DIR__ . '/../resources/assets/css' => public_path('vendor/webchat/css'),
+            __DIR__ . '/../resources/fonts' => public_path('vendor/webchat/fonts'),
         ], 'public');
 
         $this->publishes([
@@ -34,6 +36,12 @@ class PackageServiceProvider extends ServiceProvider
         Log::pushProcessor(LoggingHelper::getLogUserIdProcessor());
 
         $this->loadWebchatConfig();
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                WebchatSettings::class,
+            ]);
+        }
     }
 
     /**

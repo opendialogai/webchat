@@ -1,6 +1,12 @@
 <template>
-  <div :class="[ isMobile ? 'mobile' : '', canCloseChat ? '' : 'no-close' ]">
-    <template>
+  <div
+    :class="[
+      isMobile ? 'mobile' : '',
+      canCloseChat ? '' : 'no-close',
+      useAvatars ? 'show-avatars' : ''
+    ]"
+  >
+    <template v-if="sectionId != '' || commentsApiConfig.commentsSectionIdFieldName == ''">
       <beautiful-chat
         v-if="messageListReady"
         :agent-profile="agentProfile"
@@ -77,11 +83,16 @@ export default {
       default: '',
     },
     showExpandButton: Boolean,
+    useAvatars: Boolean,
     user: {
       type: Object,
       required: true,
     },
     userTimezone: {
+      type: String,
+      required: true,
+    },
+    userExternalId: {
       type: String,
       required: true,
     },
@@ -96,18 +107,20 @@ export default {
       authorNameMapping: '',
       authorType: '',
       buttonText: 'Add Comment',
+      chatbotAvatarPath: '',
       commentDateMapping: '',
       comments: [],
       commentTextMapping: '',
       confirmationMessage: null,
       headerText: '',
       initialText: null,
-      loggedInUserId: '',
       maxInputCharacters: 0,
       messageList: [],
       messageListReady: false,
       participants: {},
-      placeholder: 'Write a comment',
+      placeholder: 'Type a message',
+      sectionMapping: '',
+      sectionType: '',
       showLongTextInput: false,
       showMessages: true,
       showTypingIndicator: false,
@@ -116,14 +129,13 @@ export default {
   },
   created() {
     // Some convenience mappings.
-    this.authorMapping = this.commentsApiConfig.author.relationshipName;
-    this.authorNameMapping = this.commentsApiConfig.author.fieldMapping.nameField;
-    this.authorType = this.commentsApiConfig.author.entityName;
-    this.commentDateMapping = this.commentsApiConfig.comment.fieldMapping.createdField;
-    this.commentTextMapping = this.commentsApiConfig.comment.fieldMapping.textField;
-    this.loggedInUserId = this.commentsApiConfig.loggedInUserId;
-    this.sectionMapping = this.commentsApiConfig.section.relationshipName;
-    this.sectionType = this.commentsApiConfig.section.entityName;
+    this.authorMapping = this.commentsApiConfig.commentsAuthorRelationshipName;
+    this.authorNameMapping = this.commentsApiConfig.commentsAuthorNameFieldName;
+    this.authorType = this.commentsApiConfig.commentsAuthorEntityName;
+    this.commentDateMapping = this.commentsApiConfig.commentsCreatedFieldName;
+    this.commentTextMapping = this.commentsApiConfig.commentsTextFieldName;
+    this.sectionMapping = this.commentsApiConfig.commentsSectionRelationshipName;
+    this.sectionType = this.commentsApiConfig.commentsSectionEntityName;
   },
   mounted() {
     let action = '';
@@ -132,6 +144,7 @@ export default {
     if (this.sectionId) {
       filter = {
         [this.sectionMapping]: this.sectionId,
+        _: Math.random(),
       };
       action = 'comments/loadWhere';
       getter = 'comments/where';
@@ -164,7 +177,9 @@ export default {
       message.data.time = date.format('hh:mm A');
       /* eslint-enable no-param-reassign */
     },
-    expandChat() {},
+    expandChat() {
+      this.$emit('expandChat');
+    },
     onButtonClick() {},
     onFormButtonClick() {},
     onListButtonClick() {},
@@ -179,7 +194,7 @@ export default {
         relationships: {
           [this.authorMapping]: {
             data: {
-              id: this.loggedInUserId,
+              id: this.userExternalId,
               type: this.authorType,
             },
           },
@@ -206,10 +221,19 @@ export default {
             type: 'author',
             author: 'me',
             data: {
-              authorId: this.loggedInUserId,
-              text: this.participants[this.loggedInUserId].name,
+              author: 'me',
+              authorId: this.userExternalId,
+              text: this.participants[this.userExternalId].name,
             },
           };
+
+          if (this.useAvatars) {
+            const avatarName = this.participants[this.userExternalId].name
+              .split(' ').map(n => n[0]).join('').toUpperCase();
+
+            authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+          }
+
           this.messageList.push(authorMsg);
         }
 
@@ -229,11 +253,13 @@ export default {
     openComments() {},
     processComments() {
       // Fetch info for the current user.
-      this.$set(this.participants, this.loggedInUserId, { name: '' });
+      this.$set(this.participants, this.userExternalId, { name: '' });
 
-      this.$store.dispatch('authors/loadById', { id: this.loggedInUserId }).then(() => {
-        const author = this.$store.getters['authors/byId']({ id: this.loggedInUserId });
-        this.participants[this.loggedInUserId].name = author.attributes[this.authorNameMapping];
+      this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
+        const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
+        if (author !== undefined) {
+          this.participants[this.userExternalId].name = author.attributes[this.authorNameMapping];
+        }
       }).then(() => {
         this.comments.forEach((comment, cmntIdx) => {
           const authorId = comment.relationships[this.authorMapping].data.id;
@@ -247,7 +273,7 @@ export default {
           };
           this.dateTimezoneFormat(message);
 
-          if (comment.relationships[this.authorMapping].data.id === this.loggedInUserId) {
+          if (comment.relationships[this.authorMapping].data.id === this.userExternalId) {
             message.author = 'me';
           }
 
@@ -264,6 +290,13 @@ export default {
                 if (msg.type === 'author' && msg.data.authorId === authorId) {
                   const newMsg = msg;
                   newMsg.data.text = author.attributes[this.authorNameMapping];
+
+                  if (this.useAvatars) {
+                    const avatarName = newMsg.data.text
+                      .split(' ').map(n => n[0]).join('').toUpperCase();
+                    newMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+                  }
+
                   this.$set(this.messageList, msgIdx, newMsg);
                 }
               });
@@ -280,9 +313,17 @@ export default {
                 text: this.participants[authorId].name,
               },
             };
-            if (comment.relationships[this.authorMapping].data.id === this.loggedInUserId) {
+            if (comment.relationships[this.authorMapping].data.id === this.userExternalId) {
               authorMsg.author = 'me';
+              authorMsg.data.author = 'me';
             }
+
+            if (this.useAvatars) {
+              const avatarName = this.participants[authorId].name
+                .split(' ').map(n => n[0]).join('').toUpperCase();
+              authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+            }
+
             this.messageList.push(authorMsg);
           }
           this.messageList.push(message);
@@ -351,7 +392,7 @@ export default {
 </style>
 
 <style>
-    .sc-header {
+    .comments-container .sc-header {
         display: none !important;
     }
 </style>

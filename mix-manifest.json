@@ -1,5 +1,5 @@
 {
-    "/app.js": "/app.js",
-    "/../../public/css/app.css": "/../../public/css/app.css",
-    "/opendialog-bot.js": "/opendialog-bot.js"
+    "/public/js/app.js": "/public/js/app.js",
+    "/public/css/app.css": "/public/css/app.css",
+    "/public/js/opendialog-bot.js": "/public/js/opendialog-bot.js"
 }

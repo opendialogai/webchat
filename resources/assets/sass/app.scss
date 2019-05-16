@@ -2,7 +2,12 @@
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 
+body {
+  background: none;
+}
+
 .sc-chat-window {
+  font-family: 'Proxima Nova', Georgia, sans-serif !important;
   border-radius: 0 !important;
   width: 100% !important;
   max-height: 100% !important;
@@ -71,9 +76,10 @@
         .sc-message--image,
         .sc-typing-indicator {
           max-width: calc(100% - 40px);
-          border-radius: 15px;
+          border-radius: 14px;
           border-bottom-right-radius: 0;
           box-shadow: #CFCFCF 1px 1px 1px;
+          background-color: #505050 !important;
         }
       }
       &.received {
@@ -93,18 +99,47 @@
         .sc-message--image,
         .sc-typing-indicator {
           max-width: calc(100% - 40px);
-          border-radius: 15px;
+          border-radius: 14px;
           border-bottom-left-radius: 0;
           box-shadow: #CFCFCF -1px 1px 1px;
           margin-right: 10px;
+          background-color: #F2F2F2 !important;
         }
       }
     }
 
     .sc-message--time-read {
       color: #8E8E92;
-      margin-top: 8px;
-      margin-bottom: 4px;
+      margin: 8px 0 4px 0;
+    }
+
+    .sc-message--author {
+      font-family: proxima_nova_ltsemibold;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: -5px;
+      span.avatar,
+      img.avatar {
+        width: 35px;
+        height: 35px;
+        margin-right: 10px;
+        border-radius: 18px;
+      }
+      span.avatar {
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+        line-height: 35px;
+        background: #2D2D2D;
+        color: #FFFFFF;
+      }
+    }
+    .sc-message--content.sent .sc-message--author {
+      img.avatar,
+      span.avatar {
+        margin-right: 0;
+        margin-left: 10px;
+      }
     }
 
     .sc-message {
@@ -154,8 +189,37 @@
     }
 
     .sc-message--text {
-      font-size: 14px;
+      font-size: 15px !important;
       padding: 7px 15px;
+      color: #2D2D2D !important;
+      border-radius: 14px;
+      border-bottom-left-radius: 0;
+      box-shadow: #CFCFCF -1px 1px 1px;
+      background-color: #F2F2F2 !important;
+
+      a {
+        color: #2D2D2D !important;
+        text-decoration: underline;
+      }
+    }
+
+    .sc-message--button--text,
+    .sc-message--button {
+      font-size: 15px !important;
+      color: #2D2D2D !important;
+
+      a {
+        color: #2D2D2D !important;
+        text-decoration: underline;
+      }
+    }
+
+    .sc-message--content.sent .sc-message--text {
+      color: #FFFFFF !important;
+
+      a {
+        color: #FFFFFF !important;
+      }
     }
 
     .sc-message--button-response {
@@ -195,6 +259,23 @@
   }
 }
 
+.show-avatars {
+  .sc-message-list {
+    .sc-message--button,
+    .sc-message--button-response,
+    .sc-message--time-read,
+    .sc-message--button,
+    .sc-message--image,
+    .sc-message--text {
+      margin-left: 45px !important;
+      margin-right: 45px !important;
+    }
+    .sc-message--author {
+      margin-bottom: -10px;
+    }
+  }
+}
+
 .no-close {
   .sc-header {
     cursor: default;
@@ -208,4 +289,14 @@
   .sc-message {
     width: calc(100% - 22px);
   }
+}
+
+.minimize-button {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: url('/images/vendor/webchat/images/min.svg') center center no-repeat;
+  width: 40px;
+  height: 40px;
 }
