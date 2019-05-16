@@ -4,6 +4,10 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+import '@babel/polyfill';
+import 'whatwg-fetch';
+import 'url-search-params-polyfill';
+
 import Chat from 'vue-beautiful-chat';
 import UUID from 'vue-uuid';
 import BootstrapVue from 'bootstrap-vue';

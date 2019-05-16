@@ -32,15 +32,20 @@
     },
     "dependencies": {
         "@babel/core": "^7.4.3",
+        "@babel/polyfill": "^7.4.4",
+        "@babel/preset-env": "^7.4.4",
         "@reststate/vuex": "0.0.9",
         "bootstrap-vue": "^2.0.0-rc.16",
         "detect-browser": "^4.2.0",
         "jstz": "^2.1.1",
         "moment-timezone": "^0.5.23",
+        "promise-polyfill": "^8.1.0",
+        "url-search-params-polyfill": "^6.0.0",
         "vue-beautiful-chat": "git://github.com/opendialogai/vue-beautiful-chat.git#develop",
         "vue-js-cookie": "^2.1.0",
         "vue-template-compiler": "^2.6.10",
         "vue-uuid": "^1.1.1",
-        "vuex": "^3.1.0"
+        "vuex": "^3.1.0",
+        "whatwg-fetch": "^3.0.0"
     }
 }
