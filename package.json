@@ -36,6 +36,7 @@
         "@babel/preset-env": "^7.4.4",
         "@reststate/vuex": "0.0.9",
         "bootstrap-vue": "^2.0.0-rc.16",
+        "css-vars-ponyfill": "^2.0.2",
         "detect-browser": "^4.2.0",
         "jstz": "^2.1.1",
         "moment-timezone": "^0.5.23",

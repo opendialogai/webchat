@@ -124,6 +124,8 @@ import { mapState } from 'vuex';
 import Comments from '@/components/Comments';
 import WebChat from '@/components/WebChat';
 
+import cssVars from 'css-vars-ponyfill';
+
 const { detect } = require('detect-browser');
 const jstz = require('jstz');
 
@@ -296,13 +298,13 @@ export default {
       }
     },
     getCssProps() {
-      const cssVars = {};
+      const cssVariables = {};
 
       if (this.colours.header && this.colours.header.bg) {
-        cssVars['--header-background-color'] = this.colours.header.bg;
+        cssVariables['--header-background-color'] = this.colours.header.bg;
       }
       if (this.colours.header && this.colours.header.text) {
-        cssVars['--header-text-color'] = this.colours.header.text;
+        cssVariables['--header-text-color'] = this.colours.header.text;
       }
 
       // Starting height of 2px accounts for the bottom border.
@@ -316,12 +318,17 @@ export default {
       if (this.isMinimized) {
         headerHeight = 50;
       }
-      cssVars['--header-height'] = `${headerHeight}px`;
+      cssVariables['--header-height'] = `${headerHeight}px`;
+
+      cssVars({
+        onlyLegacy: true,
+        variables: cssVariables,
+      });
 
       // Show the tabs, now that we've got the correct CSS.
       this.showTabs = true;
 
-      return cssVars;
+      return cssVariables;
     },
     initSettings() {
       this.userTimezone = jstz.determine().name();
