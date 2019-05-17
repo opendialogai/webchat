@@ -638,7 +638,9 @@ export default {
 
       const userId = (this.user && this.user.email) ? this.user.email : this.uuid;
 
-      return axios.get(`/chat-init/webchat/${userId}/${this.numberOfMessages}`)
+      const ignoreTypes = 'chat_open,trigger';
+
+      return axios.get(`/chat-init/webchat/${userId}/${this.numberOfMessages}?ignore=${ignoreTypes}`)
         .then((response) => {
           response.data.reverse().forEach((message, i, messages) => {
             // Ignore 'url_click' messages.
