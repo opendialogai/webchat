@@ -205,22 +205,9 @@ export default {
       }
     }
 
-    // eslint-disable-next-line no-underscore-dangle
-    if (Object.prototype.hasOwnProperty.call(this.$store._actions, 'authors/loadById')) {
-      this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
-        const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
-        if (author !== undefined) {
-          this.userName = author.attributes.name;
-        }
-      });
-    }
-
     this.initChat();
-
-    this.loadUser()
-      .then(() => {
-        this.fetchMessages();
-      });
+    this.userName = `${this.user.first_name} ${this.user.last_name}`;
+    this.fetchMessages();
 
     window.addEventListener('message', (event) => {
       if (event.data) {
@@ -270,6 +257,10 @@ export default {
       if (this.user) {
         newMsg.user_id = this.user.email;
         newMsg.user = this.user;
+
+        if (!newMsg.user.name && newMsg.user.first_name && newMsg.user.last_name) {
+          newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
+        }
       } else {
         // Add the uuid to the message sent
         newMsg.user_id = this.uuid;
@@ -277,14 +268,6 @@ export default {
 
       // Give the message an id.
       newMsg.id = this.$uuid.v4();
-
-      // Add the user information.
-      if (window.openDialogSettings && window.openDialogSettings.user) {
-        newMsg.user = window.openDialogSettings.user;
-        if (!newMsg.user.name && newMsg.user.first_name && newMsg.user.last_name) {
-          newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
-        }
-      }
 
       if (newMsg.type === 'chat_open' && this.userInfo) {
         Object.keys(this.userInfo).forEach((key) => {
@@ -598,23 +581,6 @@ export default {
     },
     regExpEscape(string) {
       return string.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
-    },
-    loadUser() {
-      return new Promise((resolve) => {
-        // eslint-disable-next-line no-underscore-dangle
-        if (Object.prototype.hasOwnProperty.call(this.$store._actions, 'authors/loadById')) {
-          this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
-            const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
-            if (author !== undefined) {
-              this.userName = author.attributes.name;
-            }
-
-            resolve();
-          });
-        } else {
-          resolve();
-        }
-      });
     },
     async fetchMessages() {
       if (this.showHistory) {
