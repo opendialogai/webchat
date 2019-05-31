@@ -55,6 +55,7 @@ class WebchatSetting extends Model
     const COMMENTS_AUTHOR_RELATIONSHIP_NAME    = 'commentsAuthorRelationshipName';
     const COMMENTS_AUTHOR_ID_FIELDNAME         = 'commentsAuthorIdFieldName';
     const COMMENTS_AUTHOR_NAME_FIELDNAME       = 'commentsAuthorNameFieldName';
+    const COMMENTS_READ_FIELDNAME              = 'commentsReadFieldName';
     const COMMENTS_SECTION_ENTITY_NAME         = 'commentsSectionEntityName';
     const COMMENTS_SECTION_RELATIONSHIP_NAME   = 'commentsSectionRelationshipName';
     const COMMENTS_SECTION_ID_FIELDNAME        = 'commentsSectionIdFieldName';
@@ -133,6 +134,7 @@ class WebchatSetting extends Model
                     WebchatSetting::COMMENTS_AUTHOR_RELATIONSHIP_NAME,
                     WebchatSetting::COMMENTS_AUTHOR_ID_FIELDNAME,
                     WebchatSetting::COMMENTS_AUTHOR_NAME_FIELDNAME,
+                    WebchatSetting::COMMENTS_READ_FIELDNAME,
                     WebchatSetting::COMMENTS_SECTION_ENTITY_NAME,
                     WebchatSetting::COMMENTS_SECTION_RELATIONSHIP_NAME,
                     WebchatSetting::COMMENTS_SECTION_ID_FIELDNAME,

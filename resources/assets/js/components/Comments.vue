@@ -111,6 +111,7 @@ export default {
       commentDateMapping: '',
       comments: [],
       commentTextMapping: '',
+      commentReadMapping: '',
       confirmationMessage: null,
       headerText: '',
       initialText: null,
@@ -133,6 +134,7 @@ export default {
     this.authorType = this.commentsApiConfig.commentsAuthorEntityName;
     this.commentDateMapping = this.commentsApiConfig.commentsCreatedFieldName;
     this.commentTextMapping = this.commentsApiConfig.commentsTextFieldName;
+    this.commentReadMapping = this.commentsApiConfig.commentsReadFieldName;
     this.sectionMapping = this.commentsApiConfig.commentsSectionRelationshipName;
     this.sectionType = this.commentsApiConfig.commentsSectionEntityName;
   },
@@ -260,6 +262,7 @@ export default {
             date: comment.attributes[this.commentDateMapping],
             text: comment.attributes[this.commentTextMapping],
           },
+          read: comment.attributes[this.commentReadMapping],
         };
         this.dateTimezoneFormat(message);
 
