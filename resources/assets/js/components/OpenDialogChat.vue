@@ -352,13 +352,13 @@ export default {
       this.timezoneInitialised = true;
 
       // Add event listener for custom open dialog settings.
-      const customConfig = {};
       window.addEventListener('message', (event) => {
         if (event.data) {
-          // Add config items to our custom config object.
-          Object.keys(event.data).forEach((key) => {
-            customConfig[key] = event.data[key];
-          });
+          if (event.data.openDialogSettings) {
+            const customConfig = event.data.openDialogSettings;
+            customConfig.newPathname = event.data.newPathname;
+            this.initialiseSettings(customConfig);
+          }
 
           // Handle path changes.
           if (event.data.newPathname) {
@@ -373,20 +373,19 @@ export default {
           }
         }
       });
-
+    },
+    initialiseSettings(customConfig) {
       // Get default settings from the config endpoint.
       this.getWebchatConfig().then((config) => {
         this.setConfig(config);
         return true;
       }).then(() => {
-        setTimeout(() => {
-          // Over-ride default config with any custom settings.
-          this.setConfig(customConfig);
+        // Over-ride default config with any custom settings.
+        this.setConfig(customConfig);
 
-          if (!this.settingsInitialised) {
-            this.settingsInitialised = true;
-          }
-        }, 200);
+        if (!this.settingsInitialised) {
+          this.settingsInitialised = true;
+        }
       });
     },
     getUserIp() {

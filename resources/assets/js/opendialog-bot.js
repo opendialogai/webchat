@@ -46,10 +46,11 @@ function openChatWindow(div = null) {
   document.body.classList.add('chatbot-no-scroll');
 
   ifrm.addEventListener('load', () => {
-    ifrm.contentWindow.postMessage(window.openDialogSettings, '*');
-
-    // Send initial path to the chat widget.
-    ifrm.contentWindow.postMessage({ newPathname: window.location.pathname }, '*');
+    // Send settings and initial path to the chat widget.
+    ifrm.contentWindow.postMessage({
+      openDialogSettings: window.openDialogSettings,
+      newPathname: window.location.pathname
+    }, '*');
   });
 
   window.addEventListener('message', (event) => {
