@@ -85,6 +85,7 @@ body {
       &.received {
         &.internal {
           margin-top: -17px;
+          .sc-message--rich,
           .sc-message--carousel-list,
           .sc-message--text,
           .sc-message--list,
@@ -93,6 +94,7 @@ body {
             border-top-left-radius: 0;
           }
         }
+        .sc-message--rich,
         .sc-message--carousel-list,
         .sc-message--long-text,
         .sc-message--text,
@@ -237,6 +239,7 @@ body {
     }
 
     .sc-message--carousel-list {
+      .sc-message--rich,
       .sc-message--button,
       .sc-message--image,
       .sc-message--text {
@@ -275,6 +278,7 @@ body {
 
 .show-avatars {
   .sc-message-list {
+    .sc-message--rich,
     .sc-message--carousel-list,
     .sc-message--button,
     .sc-message--button-response,
