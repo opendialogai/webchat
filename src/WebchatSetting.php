@@ -47,7 +47,8 @@ class WebchatSetting extends Model
     const COMMENTS_ENABLED                     = 'commentsEnabled';
     const COMMENTS_NAME                        = 'commentsName';
     const COMMENTS_ENABLED_PATH_PATTERN        = 'commentsEnabledPathPattern';
-    const COMMENTS_AXIOS_CONFIG                = 'commentsAxiosConfig';
+    const COMMENTS_ENDPOINT                    = 'commentsEndpoint';
+    const COMMENTS_AUTH_TOKEN                  = 'commentsAuthToken';
     const COMMENTS_ENTITY_NAME                 = 'commentsEntityName';
     const COMMENTS_CREATED_FIELDNAME           = 'commentsCreatedFieldName';
     const COMMENTS_TEXT_FIELDNAME              = 'commentsTextFieldName';
@@ -129,6 +130,8 @@ class WebchatSetting extends Model
                     WebchatSetting::COMMENTS_ENTITY_NAME,
                     WebchatSetting::COMMENTS_CREATED_FIELDNAME,
                     WebchatSetting::COMMENTS_TEXT_FIELDNAME,
+                    WebchatSetting::COMMENTS_ENDPOINT,
+                    WebchatSetting::COMMENTS_AUTH_TOKEN,
                     WebchatSetting::COMMENTS_AUTHOR_ENTITY_NAME,
                     WebchatSetting::COMMENTS_AUTHOR_RELATIONSHIP_NAME,
                     WebchatSetting::COMMENTS_AUTHOR_ID_FIELDNAME,
@@ -140,9 +143,6 @@ class WebchatSetting extends Model
                     WebchatSetting::COMMENTS_SECTION_FILTER_PATH_PATTERN,
                     WebchatSetting::COMMENTS_SECTION_FILTER_QUERY,
                     WebchatSetting::COMMENTS_SECTION_PATH_PATTERN,
-                ],
-                WebchatSetting::OBJECT => [
-                    WebchatSetting::COMMENTS_AXIOS_CONFIG
                 ],
             ],
             WebchatSetting::MAP => [
