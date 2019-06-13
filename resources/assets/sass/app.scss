@@ -192,6 +192,14 @@ body {
       }
     }
 
+    .sc-message--rich {
+      padding: 7px 15px;
+
+      .sc-message--rich--title {
+        font-weight: bold;
+      }
+    }
+
     .sc-message--text {
       font-size: 15px !important;
       padding: 7px 15px;
