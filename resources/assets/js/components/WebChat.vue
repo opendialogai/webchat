@@ -254,16 +254,11 @@ export default {
       newMsg.data.date = moment().tz('UTC').format('ddd D MMM');
       newMsg.data.time = moment().tz('UTC').format('hh:mm A');
 
-      if (this.user) {
-        newMsg.user_id = this.user.email;
-        newMsg.user = this.user;
+      newMsg.user_id = (this.user.email) ? this.user.email : this.uuid;
+      newMsg.user = this.user;
 
-        if (!newMsg.user.name && newMsg.user.first_name && newMsg.user.last_name) {
-          newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
-        }
-      } else {
-        // Add the uuid to the message sent
-        newMsg.user_id = this.uuid;
+      if (!newMsg.user.name && newMsg.user.first_name && newMsg.user.last_name) {
+        newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
       }
 
       // Give the message an id.
