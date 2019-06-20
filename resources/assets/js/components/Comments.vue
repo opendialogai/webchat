@@ -38,9 +38,9 @@
 </template>
 
 <script>
-  import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 
-  const moment = require('moment-timezone');
+const moment = require('moment-timezone');
 
 export default {
   name: 'Comments',
