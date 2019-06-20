@@ -476,6 +476,15 @@ export default {
         return;
       }
 
+      if (button.link) {
+        if (button.link_new_tab) {
+          window.open(button.link, '_blank');
+        } else {
+          window.open(button.link, '_parent');
+        }
+        return;
+      }
+
       if (msg.data.clear_after_interaction) {
         this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
       }
