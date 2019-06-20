@@ -173,7 +173,7 @@ export default {
       },
       comments: {},
       commentsKey: 0,
-      commentsEnabled: false,
+      commentsEnabled: true,
       cssProps: {},
       isExpand: false,
       isMinimized: false,
@@ -217,6 +217,11 @@ export default {
 
       if (this.collectUserIp) {
         this.getUserIp();
+      }
+    },
+    commentsEnabled(commentsAreEnabled) {
+      if (commentsAreEnabled && this.pathInitialised && this.apiReady) {
+        this.getCommentSections();
       }
     },
     apiReady(apiIsReady) {
