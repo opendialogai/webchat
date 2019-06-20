@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+  import {mapActions} from 'vuex';
 
-const moment = require('moment-timezone');
+  const moment = require('moment-timezone');
 
 export default {
   name: 'Comments',
@@ -81,6 +81,7 @@ export default {
     sectionId: {
       type: String,
       default: '',
+      required: true,
     },
     showExpandButton: Boolean,
     useAvatars: Boolean,
@@ -140,17 +141,14 @@ export default {
     let action = '';
     let getter = '';
     let filter = {};
-    if (this.sectionId) {
-      filter = {
-        [this.sectionMapping]: this.sectionId,
-        _: Math.random(),
-      };
-      action = 'comments/loadWhere';
-      getter = 'comments/where';
-    } else {
-      action = 'comments/loadAll';
-      getter = 'comments/all';
-    }
+
+    filter = {
+      [this.sectionMapping]: this.sectionId,
+      _: Math.random(),
+    };
+    action = 'comments/loadWhere';
+    getter = 'comments/where';
+
 
     this.$store.dispatch(action, { filter }).then(() => {
       let comments = [];

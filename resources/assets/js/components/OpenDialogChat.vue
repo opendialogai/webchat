@@ -62,7 +62,7 @@
       </div>
 
       <Comments
-        v-if="ready && apiReady"
+        v-if="ready && apiReady && sectionId"
         :key="commentsKey"
         :agent-profile="agentProfile"
         :callback-map="callbackMap"
@@ -119,14 +119,14 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { mapState } from 'vuex';
-import Comments from '@/components/Comments';
-import WebChat from '@/components/WebChat';
+  import axios from 'axios';
+  import {mapState} from 'vuex';
+  import Comments from '@/components/Comments';
+  import WebChat from '@/components/WebChat';
 
-import cssVars from 'css-vars-ponyfill';
+  import cssVars from 'css-vars-ponyfill';
 
-const { detect } = require('detect-browser');
+  const { detect } = require('detect-browser');
 const jstz = require('jstz');
 
 export default {
@@ -221,11 +221,6 @@ export default {
     },
     apiReady(apiIsReady) {
       if (apiIsReady && this.pathInitialised && this.commentsEnabled && this.settingsInitialised) {
-        this.getCommentSections();
-      }
-    },
-    commentsEnabled(commentsAreEnabled) {
-      if (commentsAreEnabled && this.pathInitialised && this.apiReady) {
         this.getCommentSections();
       }
     },
