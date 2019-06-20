@@ -62,7 +62,7 @@
       </div>
 
       <Comments
-        v-if="ready && apiReady"
+        v-if="ready && apiReady && sectionId"
         :key="commentsKey"
         :agent-profile="agentProfile"
         :callback-map="callbackMap"
@@ -173,7 +173,7 @@ export default {
       },
       comments: {},
       commentsKey: 0,
-      commentsEnabled: false,
+      commentsEnabled: true,
       cssProps: {},
       isExpand: false,
       isMinimized: false,
@@ -219,13 +219,13 @@ export default {
         this.getUserIp();
       }
     },
-    apiReady(apiIsReady) {
-      if (apiIsReady && this.pathInitialised && this.commentsEnabled && this.settingsInitialised) {
+    commentsEnabled(commentsAreEnabled) {
+      if (commentsAreEnabled && this.pathInitialised && this.apiReady) {
         this.getCommentSections();
       }
     },
-    commentsEnabled(commentsAreEnabled) {
-      if (commentsAreEnabled && this.pathInitialised && this.apiReady) {
+    apiReady(apiIsReady) {
+      if (apiIsReady && this.pathInitialised && this.commentsEnabled && this.settingsInitialised) {
         this.getCommentSections();
       }
     },
