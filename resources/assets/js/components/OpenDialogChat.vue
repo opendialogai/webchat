@@ -121,10 +121,11 @@
 <script>
 import axios from 'axios';
 import { mapState } from 'vuex';
-import Comments from '@/components/Comments';
-import WebChat from '@/components/WebChat';
 
 import cssVars from 'css-vars-ponyfill';
+
+import Comments from '@/components/Comments';
+import WebChat from '@/components/WebChat';
 
 const { detect } = require('detect-browser');
 const jstz = require('jstz');
