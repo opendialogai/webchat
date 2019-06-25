@@ -258,6 +258,11 @@ body {
         border-radius: 0 !important;
         margin: 0 !important;
       }
+      .sc-message--rich {
+        .sc-message--rich--buttons {
+          text-align: center;
+        }
+      }
     }
   }
 
