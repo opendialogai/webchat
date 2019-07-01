@@ -47,7 +47,7 @@ class WebchatSettings
         }
 
         // Return the config as JSON.
-        return json_encode($config, JSON_FORCE_OBJECT);
+        return json_encode($config);
     }
 
     /**
@@ -66,6 +66,7 @@ class WebchatSettings
             case 'boolean':
                 $value = boolval($value);
                 break;
+            case 'map':
             case 'object':
                 $value = json_decode($value);
                 break;
