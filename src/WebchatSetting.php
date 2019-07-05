@@ -77,7 +77,7 @@ class WebchatSetting extends Model
     const BOOLEAN = 'boolean';
     const OBJECT  = 'object';
 
-    protected $fillable = ['name', 'value'];
+    protected $fillable = ['name', 'type', 'value'];
 
     /**
      * Define parent relationship.
