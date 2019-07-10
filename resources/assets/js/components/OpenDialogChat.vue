@@ -633,9 +633,8 @@ export default {
         this.sendMessage({
           type: 'trigger',
           author: this.userUuid,
-          data: {
-            callback_id: config.triggerConversation.callback_id,
-          },
+          callback_id: config.triggerConversation.callback_id,
+          data: {},
         });
       }
 

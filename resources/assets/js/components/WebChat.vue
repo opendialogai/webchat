@@ -212,7 +212,7 @@ export default {
     window.addEventListener('message', (event) => {
       if (event.data) {
         if (event.data.triggerConversation && event.data.triggerConversation.callback_id) {
-          const data = { callback_id: event.data.triggerConversation.callback_id };
+          const data = {};
           if (event.data.triggerConversation.value) {
             data.value = event.data.triggerConversation.value;
           }
@@ -220,6 +220,7 @@ export default {
           this.sendMessage({
             type: 'trigger',
             author: 'me',
+            callback_id: event.data.triggerConversation.callback_id,
             data,
           });
         }
@@ -462,7 +463,7 @@ export default {
       const msgToSend = msg;
       if (this.messageList.length && this.messageList[this.messageList.length - 1].type === 'longtext') {
         msgToSend.type = 'longtext_response';
-        msgToSend.data.callback_id = this.messageList[this.messageList.length - 1].data.callback_id;
+        msgToSend.callback_id = this.messageList[this.messageList.length - 1].data.callback_id;
       }
 
       this.sendMessage(msgToSend);
@@ -498,9 +499,9 @@ export default {
       this.sendMessage({
         type: 'button_response',
         author: 'me',
+        callback_id: button.callback_id,
         data: {
           text: button.text,
-          callback_id: button.callback_id,
           value: button.value,
         },
       });
@@ -596,9 +597,8 @@ export default {
 
       const message = {
         type: 'chat_open',
-        data: {
-          callback_id: this.workoutCallback(),
-        },
+        callback_id: this.workoutCallback(),
+        data: {},
       };
 
       this.sendMessage(message);
