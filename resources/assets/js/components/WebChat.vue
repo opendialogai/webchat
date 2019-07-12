@@ -545,15 +545,20 @@ export default {
         data: responseData,
       });
 
-      this.messageList.push({
+      const message = {
         type: 'text',
-        author: this.uuid,
+        author: 'me',
         data: {
           date: moment().tz('UTC').format('ddd D MMM'),
           time: moment().tz('UTC').format('hh:mm A'),
           text: newMessageText.join('\n'),
         },
-      });
+      };
+
+      const authorMsg = this.newAuthorMessage(message);
+      this.messageList.push(authorMsg);
+
+      this.messageList.push(message);
     },
     expandChat() {
       this.$emit('expandChat');
