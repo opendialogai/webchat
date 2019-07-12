@@ -538,6 +538,8 @@ export default {
         }
       });
 
+      responseData.text = newMessageText.join('\n');
+
       this.sendMessage({
         type: 'webchat_form_response',
         author: this.uuid,
