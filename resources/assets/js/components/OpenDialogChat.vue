@@ -566,8 +566,11 @@ export default {
       }
 
       if (config.user && !window._.isEmpty(config.user)) {
-        this.userUuid = config.user.email;
         this.user = config.user;
+
+        if (config.user.email) {
+          this.userUuid = config.user.email;
+        }
 
         if (config.user.first_name) {
           this.userFirstName = config.user.first_name;
