@@ -80,6 +80,13 @@ class WebchatSettings extends Command
                             ]);
 
                             $this->log("Created webchat setting '$subValue' of type '$subType'");
+                        } elseif ($item->parent_id != $configItemId) {
+                            DB::table('webchat_settings')
+                                ->where('name', $subValue)
+                                ->update([
+                                    'parent_id' => $configItemId,
+                                ]);
+                            $this->log("Updated webchat setting '$subValue' of type '$subType'");
                         }
 
                         $configNames[] = $subValue;

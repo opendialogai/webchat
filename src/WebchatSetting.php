@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class WebchatSetting extends Model
 {
+    // General
+    const GENERAL               = 'general';
     const URL                   = 'url';
     const TEAM_NAME             = 'teamName';
     const VALID_PATH            = 'validPath';
@@ -64,7 +66,7 @@ class WebchatSetting extends Model
     const COMMENTS_SECTION_FILTER_QUERY        = 'commentsSectionFilterQuery';
     const COMMENTS_SECTION_PATH_PATTERN        = 'commentsSectionPathPattern';
 
-    // Colours
+    // History
     const WEBCHAT_HISTORY    = 'webchatHistory';
     const SHOW_HISTORY       = 'showHistory';
     const NUMBER_OF_MESSAGES = 'numberOfMessages';
@@ -98,15 +100,29 @@ class WebchatSetting extends Model
     public static function getSettings()
     {
         $settings = [
-            WebchatSetting::STRING => [
-                WebchatSetting::URL,
-                WebchatSetting::TEAM_NAME,
-                WebchatSetting::CUSTOM_CSS_PATH,
-                WebchatSetting::CHATBOT_NAME,
-                WebchatSetting::CHATBOT_AVATAR_PATH,
-            ],
-            WebchatSetting::NUMBER => [
-                WebchatSetting::MESSAGE_DELAY,
+            WebchatSetting::GENERAL => [
+                WebchatSetting::STRING => [
+                    WebchatSetting::URL,
+                    WebchatSetting::TEAM_NAME,
+                    WebchatSetting::CUSTOM_CSS_PATH,
+                    WebchatSetting::CHATBOT_NAME,
+                    WebchatSetting::CHATBOT_AVATAR_PATH,
+                ],
+                WebchatSetting::NUMBER => [
+                    WebchatSetting::MESSAGE_DELAY,
+                ],
+                WebchatSetting::BOOLEAN => [
+                    WebchatSetting::OPEN,
+                    WebchatSetting::HIDE_OPEN_CLOSE_ICONS,
+                    WebchatSetting::DISABLE_CLOSE_CHAT,
+                    WebchatSetting::START_MINIMIZED,
+                    WebchatSetting::USE_AVATARS,
+                    WebchatSetting::COLLECT_USER_IP,
+                ],
+                WebchatSetting::MAP => [
+                    WebchatSetting::VALID_PATH,
+                    WebchatSetting::CALLBACK_MAP,
+                ],
             ],
             WebchatSetting::COLOURS => [
                 WebchatSetting::COLOUR => [
@@ -146,18 +162,6 @@ class WebchatSetting extends Model
                     WebchatSetting::COMMENTS_SECTION_FILTER_QUERY,
                     WebchatSetting::COMMENTS_SECTION_PATH_PATTERN,
                 ],
-            ],
-            WebchatSetting::MAP => [
-                WebchatSetting::VALID_PATH,
-                WebchatSetting::CALLBACK_MAP,
-            ],
-            WebchatSetting::BOOLEAN => [
-                WebchatSetting::OPEN,
-                WebchatSetting::HIDE_OPEN_CLOSE_ICONS,
-                WebchatSetting::DISABLE_CLOSE_CHAT,
-                WebchatSetting::START_MINIMIZED,
-                WebchatSetting::USE_AVATARS,
-                WebchatSetting::COLLECT_USER_IP,
             ],
             WebchatSetting::WEBCHAT_HISTORY => [
                 WebchatSetting::BOOLEAN => [

@@ -204,12 +204,12 @@ if (window.openDialogSettings) {
 
       if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {
         openChatWindow();
-      } else if (window.innerWidth <= mobileWidth || settings.startMinimized) {
+      } else if (window.innerWidth <= mobileWidth || settings.general.startMinimized) {
         query = `${query}&hide=true`;
         openChatWindow();
 
         document.body.classList.remove('chatbot-no-scroll');
-      } else if (settings.open) {
+      } else if (settings.general.open) {
         openChatWindow();
       }
     }
