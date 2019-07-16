@@ -598,8 +598,11 @@ export default {
       }
 
       if (config.user && !window._.isEmpty(config.user)) {
-        this.userUuid = config.user.email;
         this.user = config.user;
+
+        if (config.user.email) {
+          this.userUuid = config.user.email;
+        }
 
         if (config.user.first_name) {
           this.userFirstName = config.user.first_name;
@@ -637,9 +640,8 @@ export default {
         this.sendMessage({
           type: 'trigger',
           author: this.userUuid,
-          data: {
-            callback_id: config.triggerConversation.callback_id,
-          },
+          callback_id: config.triggerConversation.callback_id,
+          data: {},
         });
       }
 

@@ -85,6 +85,7 @@ body {
       &.received {
         &.internal {
           margin-top: -17px;
+          .sc-message--form,
           .sc-message--rich,
           .sc-message--carousel-list,
           .sc-message--text,
@@ -94,6 +95,7 @@ body {
             border-top-left-radius: 0;
           }
         }
+        .sc-message--form,
         .sc-message--rich,
         .sc-message--carousel-list,
         .sc-message--long-text,
@@ -234,6 +236,18 @@ body {
       }
     }
 
+    .sc-message--form {
+      font-size: 15px;
+      padding: 7px 15px;
+      button {
+        font-size: 14px;
+        padding: 7px 17px;
+        width: 100%;
+        border-radius: 12px;
+        margin-bottom: 5px;
+      }
+    }
+
     .sc-message--button-response {
       padding: 7px 15px;
       .button {
@@ -292,6 +306,7 @@ body {
 
 .show-avatars {
   .sc-message-list {
+    .sc-message--form,
     .sc-message--rich,
     .sc-message--carousel-list,
     .sc-message--button,
