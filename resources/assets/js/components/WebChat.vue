@@ -291,7 +291,7 @@ export default {
         window.parent.postMessage({ dataLayerEvent: 'user_clicked_button_in_chatbot' }, '*');
       }
 
-      if (newMsg.type === 'chat_open' || newMsg.type === 'url_click' || newMsg.type === 'trigger' || newMsg.type === 'webchat_form_response' || newMsg.type === 'webchat_list_response' || newMsg.data.text.length > 0) {
+      if (newMsg.type === 'chat_open' || newMsg.type === 'url_click' || newMsg.type === 'trigger' || newMsg.type === 'form_response' || newMsg.type === 'webchat_list_response' || newMsg.data.text.length > 0) {
         // Make a copy of the message to send to the backend.
         // This is needed so that the author change will not affect this.messageList.
         const msgCopy = Object.assign({}, newMsg);
@@ -542,7 +542,7 @@ export default {
       responseData.text = newMessageText.join('\n');
 
       this.sendMessage({
-        type: 'webchat_form_response',
+        type: 'form_response',
         author: this.uuid,
         callback_id: msg.data.callback_id,
         data: responseData,
