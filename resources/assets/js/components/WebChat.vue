@@ -638,9 +638,7 @@ export default {
             }
 
             // Convert to the right message type for display
-            if (currentMessage.type === 'action') {
-              currentMessage.type = (currentMessage.author === 'me') ? 'text' : 'button';
-            } else if (currentMessage.type === 'long_text' || currentMessage.type === 'form') {
+            if (currentMessage.type === 'button' || currentMessage.type === 'long_text' || currentMessage.type === 'form') {
               currentMessage.type = 'text';
             }
 
