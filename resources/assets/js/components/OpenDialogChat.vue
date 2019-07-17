@@ -75,7 +75,8 @@
         :parent-url="parentUrl"
         :section-id="sectionId"
         :show-expand-button="false"
-        :use-avatars="useAvatars"
+        :use-bot-avatar="useBotAvatar"
+        :use-human-avatar="useHumanAvatar"
         :user="user"
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
@@ -103,7 +104,8 @@
         :new-message-icon="newMessageIcon"
         :parent-url="parentUrl"
         :show-expand-button="false"
-        :use-avatars="useAvatars"
+        :use-bot-avatar="useBotAvatar"
+        :use-human-avatar="useHumanAvatar"
         :user="user"
         :user-info="userInfo"
         :user-timezone="userTimezone"
@@ -195,7 +197,8 @@ export default {
       showExpandButton: true,
       showTabs: false,
       timezoneInitialised: false,
-      useAvatars: false,
+      useBotAvatar: false,
+      useHumanAvatar: false,
       user: {},
       userTimezone: '',
       userFirstName: '',
@@ -549,8 +552,12 @@ export default {
         this.messageDelay = config.messageDelay;
       }
 
-      if (config.useAvatars) {
-        this.useAvatars = config.useAvatars;
+      if (config.useBotAvatar) {
+        this.useBotAvatar = config.useBotAvatar;
+      }
+
+      if (config.useHumanAvatar) {
+        this.useHumanAvatar = config.useHumanAvatar;
       }
 
       if (Object.prototype.hasOwnProperty.call(config, 'collectUserIp')) {
