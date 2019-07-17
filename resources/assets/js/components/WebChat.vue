@@ -545,25 +545,10 @@ export default {
 
       this.sendMessage({
         type: 'form_response',
-        author: this.uuid,
+        author: 'me',
         callback_id: msg.data.callback_id,
         data: responseData,
       });
-
-      const message = {
-        type: 'text',
-        author: 'me',
-        data: {
-          date: moment().tz('UTC').format('ddd D MMM'),
-          time: moment().tz('UTC').format('hh:mm A'),
-          text: newMessageText.join('\n'),
-        },
-      };
-
-      const authorMsg = this.newAuthorMessage(message);
-      this.messageList.push(authorMsg);
-
-      this.messageList.push(message);
     },
     expandChat() {
       this.$emit('expandChat');
