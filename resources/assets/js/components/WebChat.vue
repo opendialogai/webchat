@@ -4,7 +4,8 @@
     :class="[
       isMobile ? 'mobile' : '',
       canCloseChat ? '' : 'no-close',
-      useAvatars ? 'show-avatars' : ''
+      useBotAvatar ? 'show-bot-avatar' : '',
+      useHumanAvatar ? 'show-human-avatar' : ''
     ]"
   >
     <template v-if="loading">
@@ -105,7 +106,8 @@ export default {
       required: true,
     },
     showExpandButton: Boolean,
-    useAvatars: Boolean,
+    useBotAvatar: Boolean,
+    useHumanAvatar: Boolean,
     user: {
       type: Object,
       required: true,
@@ -686,7 +688,7 @@ export default {
           },
         };
 
-        if (this.useAvatars) {
+        if (this.useBotAvatar) {
           authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
         }
 
@@ -704,7 +706,7 @@ export default {
         },
       };
 
-      if (this.useAvatars) {
+      if (this.useHumanAvatar) {
         const avatarName = this.userName
           .split(' ').map(n => n[0]).join('').toUpperCase();
         authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
