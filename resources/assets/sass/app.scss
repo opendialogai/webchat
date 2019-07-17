@@ -69,6 +69,7 @@ body {
             border-top-right-radius: 0;
           }
         }
+        .sc-message--form-response,
         .sc-message--text,
         .sc-message--list,
         .sc-message--button,
@@ -217,6 +218,15 @@ body {
       }
     }
 
+    .sc-message--form-response {
+      font-size: 15px !important;
+      padding: 7px 15px;
+      color: #2D2D2D !important;
+      border-radius: 14px;
+      border-bottom-left-radius: 0;
+      box-shadow: #CFCFCF -1px 1px 1px;
+    }
+
     .sc-message--button--text,
     .sc-message--button {
       font-size: 15px !important;
@@ -228,11 +238,14 @@ body {
       }
     }
 
-    .sc-message--content.sent .sc-message--text {
-      color: #FFFFFF !important;
-
-      a {
+    .sc-message--content.sent {
+      .sc-message--form-response,
+      .sc-message--text {
         color: #FFFFFF !important;
+
+        a {
+          color: #FFFFFF !important;
+        }
       }
     }
 
@@ -310,6 +323,7 @@ body {
     .sc-message--rich,
     .sc-message--carousel-list,
     .sc-message--button,
+    .sc-message--form-response,
     .sc-message--button-response,
     .sc-message--time-read,
     .sc-message--button,
