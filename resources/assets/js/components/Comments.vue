@@ -3,7 +3,8 @@
     :class="[
       isMobile ? 'mobile' : '',
       canCloseChat ? '' : 'no-close',
-      useAvatars ? 'show-avatars' : ''
+      useBotAvatar ? 'show-bot-avatar' : '',
+      useHumanAvatar ? 'show-human-avatar' : ''
     ]"
   >
     <template v-if="sectionId != '' || commentsApiConfig.commentsSectionIdFieldName == ''">
@@ -84,7 +85,8 @@ export default {
       required: true,
     },
     showExpandButton: Boolean,
-    useAvatars: Boolean,
+    useBotAvatar: Boolean,
+    useHumanAvatar: Boolean,
     user: {
       type: Object,
       required: true,
@@ -224,7 +226,7 @@ export default {
             },
           };
 
-          if (this.useAvatars) {
+          if (this.useHumanAvatar) {
             const avatarName = newComment.relationships[this.authorMapping].meta.name
               .split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -281,7 +283,7 @@ export default {
             authorMsg.data.author = 'me';
           }
 
-          if (this.useAvatars) {
+          if (this.useBotAvatar) {
             const avatarName = comment.relationships[this.authorMapping].meta.name
               .split(' ').map(n => n[0]).join('').toUpperCase();
             authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
