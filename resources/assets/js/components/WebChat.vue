@@ -108,6 +108,8 @@ export default {
     showExpandButton: Boolean,
     useBotAvatar: Boolean,
     useHumanAvatar: Boolean,
+    useBotName: Boolean,
+    useHumanName: Boolean,
     user: {
       type: Object,
       required: true,
@@ -157,7 +159,7 @@ export default {
       let previousMessage = this.messageList[this.messageList.length - 2];
       const lastMessage = this.messageList[this.messageList.length - 1];
 
-      if (previousMessage.type === 'author') {
+      if (previousMessage && previousMessage.type === 'author') {
         spliceIndex = 2;
         previousMessage = this.messageList[this.messageList.length - 3];
       }
@@ -274,9 +276,11 @@ export default {
       }
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
-        const authorMsg = this.newAuthorMessage(newMsg);
+        if (this.useHumanName) {
+          const authorMsg = this.newAuthorMessage(newMsg);
 
-        this.messageList.push(authorMsg);
+          this.messageList.push(authorMsg);
+        }
 
         this.buttonText = 'Submit';
         this.headerText = '';
@@ -321,9 +325,11 @@ export default {
                     this.showTypingIndicator = false;
 
                     if (i === 0) {
-                      const authorMsg = this.newAuthorMessage(message);
+                      if (this.useBotName) {
+                        const authorMsg = this.newAuthorMessage(message);
 
-                      this.messageList.push(authorMsg);
+                        this.messageList.push(authorMsg);
+                      }
                     }
 
                     this.$emit('newMessage', message);
@@ -349,9 +355,11 @@ export default {
             } else if (response.data) {
               if (newMsg.type === 'chat_open') {
                 if (response.data && response.data.data) {
-                  const authorMsg = this.newAuthorMessage(response.data);
+                  if (this.useBotName) {
+                    const authorMsg = this.newAuthorMessage(response.data);
 
-                  this.messageList.push(authorMsg);
+                    this.messageList.push(authorMsg);
+                  }
 
                   this.$emit('newMessage', response.data);
 
@@ -368,9 +376,11 @@ export default {
                 setTimeout(() => {
                   // Only add a message to the list if it is a message object
                   if (typeof response.data === 'object' && response.data !== null) {
-                    const authorMsg = this.newAuthorMessage(response.data);
+                    if (this.useBotName) {
+                      const authorMsg = this.newAuthorMessage(response.data);
 
-                    this.messageList.push(authorMsg);
+                      this.messageList.push(authorMsg);
+                    }
 
                     this.$emit('newMessage', response.data);
 
@@ -432,9 +442,12 @@ export default {
                   text: "We're sorry, that didn't work, please try again",
                 },
               };
-              const authorMsg = this.newAuthorMessage(message);
 
-              this.messageList.push(authorMsg);
+              if (this.useBotName) {
+                const authorMsg = this.newAuthorMessage(message);
+                this.messageList.push(authorMsg);
+              }
+
               this.messageList.push(message);
 
               this.showTypingIndicator = false;
@@ -648,8 +661,8 @@ export default {
               this.dateTimezoneFormat(currentMessage);
             }
 
-            if (currentMessage.author === 'me'
-                || (currentMessage.author === 'them' && !currentMessage.data.internal)) {
+            if ((currentMessage.author === 'me' && this.useHumanName)
+                || (currentMessage.author === 'them' && !currentMessage.data.internal && this.useBotName)) {
               const authorMsg = this.newAuthorMessage(currentMessage);
 
               this.messageList.push(authorMsg);

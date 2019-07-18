@@ -106,6 +106,8 @@
         :show-expand-button="false"
         :use-bot-avatar="useBotAvatar"
         :use-human-avatar="useHumanAvatar"
+        :use-bot-name="useBotName"
+        :use-human-name="useHumanName"
         :user="user"
         :user-info="userInfo"
         :user-timezone="userTimezone"
@@ -199,6 +201,8 @@ export default {
       timezoneInitialised: false,
       useBotAvatar: false,
       useHumanAvatar: false,
+      useBotName: false,
+      useHumanName: false,
       user: {},
       userTimezone: '',
       userFirstName: '',
@@ -558,6 +562,14 @@ export default {
 
       if (config.useHumanAvatar) {
         this.useHumanAvatar = config.useHumanAvatar;
+      }
+
+      if (config.useBotName) {
+        this.useBotName = config.useBotName;
+      }
+
+      if (config.useHumanName) {
+        this.useHumanName = config.useHumanName;
       }
 
       if (Object.prototype.hasOwnProperty.call(config, 'collectUserIp')) {
