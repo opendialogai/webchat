@@ -105,6 +105,13 @@ class WebchatSetting extends Model
         $settings = [
             WebchatSetting::GENERAL => [
                 WebchatSetting::STRING => [
+                    WebchatSetting::URL,
+                    WebchatSetting::TEAM_NAME,
+                    WebchatSetting::CUSTOM_CSS_PATH,
+                    WebchatSetting::CHATBOT_NAME,
+                    WebchatSetting::CHATBOT_AVATAR_PATH,
+                ],
+                WebchatSetting::BOOLEAN => [
                     WebchatSetting::OPEN,
                     WebchatSetting::HIDE_OPEN_CLOSE_ICONS,
                     WebchatSetting::DISABLE_CLOSE_CHAT,
@@ -117,13 +124,6 @@ class WebchatSetting extends Model
                 ],
                 WebchatSetting::NUMBER => [
                     WebchatSetting::MESSAGE_DELAY,
-                ],
-                WebchatSetting::BOOLEAN => [
-                    WebchatSetting::OPEN,
-                    WebchatSetting::HIDE_OPEN_CLOSE_ICONS,
-                    WebchatSetting::DISABLE_CLOSE_CHAT,
-                    WebchatSetting::START_MINIMIZED,
-                    WebchatSetting::COLLECT_USER_IP,
                 ],
                 WebchatSetting::MAP => [
                     WebchatSetting::VALID_PATH,
