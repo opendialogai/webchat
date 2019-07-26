@@ -182,6 +182,13 @@ body {
       padding: 0 15px;
       .sc-message--button--text {
         margin-top: 7px;
+        font-size: 15px !important;
+        color: #2D2D2D !important;
+
+        a {
+          color: #2D2D2D !important;
+          text-decoration: underline;
+        }
       }
       .sc-message--button--buttons {
         padding-bottom: 10px;
@@ -225,17 +232,6 @@ body {
       border-radius: 14px;
       border-bottom-left-radius: 0;
       box-shadow: #CFCFCF -1px 1px 1px;
-    }
-
-    .sc-message--button--text,
-    .sc-message--button {
-      font-size: 15px !important;
-      color: #2D2D2D !important;
-
-      a {
-        color: #2D2D2D !important;
-        text-decoration: underline;
-      }
     }
 
     .sc-message--content.sent {
