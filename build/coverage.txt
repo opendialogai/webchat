@@ -1,0 +1,18 @@
+
+
+Code Coverage Report:     
+  2019-06-14 11:04:18     
+                          
+ Summary:                 
+  Classes: 20.00% (1/5)   
+  Methods: 33.33% (4/12)  
+  Lines:   43.88% (61/139)
+
+\OpenDialogAi\Webchat::OpenDialogAi\Webchat\PackageServiceProvider
+  Methods:  50.00% ( 1/ 2)   Lines:  68.57% ( 24/ 35)
+\OpenDialogAi\Webchat\Console\Commands::OpenDialogAi\Webchat\Console\Commands\WebchatSettings
+  Methods:  33.33% ( 1/ 3)   Lines:   3.57% (  2/ 56)
+\OpenDialogAi\Webchat\Helpers::OpenDialogAi\Webchat\Helpers\LoggingHelper
+  Methods:   0.00% ( 0/ 2)   Lines:  40.00% (  6/ 15)
+\OpenDialogAi\Webchat\Http\Controllers::OpenDialogAi\Webchat\Http\Controllers\WebchatSettings
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 29/ 29)
