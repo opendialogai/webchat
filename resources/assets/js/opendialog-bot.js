@@ -148,7 +148,7 @@ async function getSettings(url) {
  * @returns {boolean}
  */
 function isValidPath() {
-  const { validPath } = window.openDialogSettings;
+§§  const { validPath } = window.openDialogSettings.general;
 
   if (typeof validPath === 'undefined') {
     return true;
@@ -170,7 +170,7 @@ function isValidPath() {
 }
 
 if (window.openDialogSettings) {
-  url = window.openDialogSettings.url;
+  url = window.openDialogSettings.general.url;
 
   getSettings(url).then((settings) => {
     mergeSettings(settings);
@@ -194,12 +194,12 @@ if (window.openDialogSettings) {
     if (isValidPath()) {
       addCssToPage(`${url}/vendor/webchat/css/opendialog-chat-bot.css`);
 
-      if (window.openDialogSettings.hideOpenCloseIcons === 'false' || !window.openDialogSettings.hideOpenCloseIcons) {
+      if (window.openDialogSettings.general.hideOpenCloseIcons === 'false' || !window.openDialogSettings.general.hideOpenCloseIcons) {
         drawOpenCloseIcons();
       }
 
-      if (window.openDialogSettings.customCssPath) {
-        addCssToPage(window.openDialogSettings.customCssPath);
+      if (window.openDialogSettings.general.customCssPath) {
+        addCssToPage(window.openDialogSettings.general.customCssPath);
       }
 
       if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {
