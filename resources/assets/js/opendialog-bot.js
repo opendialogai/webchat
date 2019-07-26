@@ -170,7 +170,7 @@ function isValidPath() {
 }
 
 if (window.openDialogSettings) {
-  url = window.openDialogSettings.general.url;
+  url = window.openDialogSettings.url;
 
   getSettings(url).then((settings) => {
     mergeSettings(settings);
