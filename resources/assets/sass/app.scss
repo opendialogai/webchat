@@ -69,6 +69,7 @@ body {
             border-top-right-radius: 0;
           }
         }
+        .sc-message--form-response,
         .sc-message--text,
         .sc-message--list,
         .sc-message--button,
@@ -217,6 +218,15 @@ body {
       }
     }
 
+    .sc-message--form-response {
+      font-size: 15px !important;
+      padding: 7px 15px;
+      color: #2D2D2D !important;
+      border-radius: 14px;
+      border-bottom-left-radius: 0;
+      box-shadow: #CFCFCF -1px 1px 1px;
+    }
+
     .sc-message--button--text,
     .sc-message--button {
       font-size: 15px !important;
@@ -228,18 +238,21 @@ body {
       }
     }
 
-    .sc-message--content.sent .sc-message--text {
-      color: #FFFFFF !important;
-
-      a {
+    .sc-message--content.sent {
+      .sc-message--form-response,
+      .sc-message--text {
         color: #FFFFFF !important;
+
+        a {
+          color: #FFFFFF !important;
+        }
       }
     }
 
     .sc-message--form {
       font-size: 15px;
       padding: 7px 15px;
-      button {
+      .submit-button {
         font-size: 14px;
         padding: 7px 17px;
         width: 100%;
@@ -304,24 +317,29 @@ body {
   }
 }
 
-.show-avatars {
-  .sc-message-list {
-    .sc-message--form,
-    .sc-message--rich,
-    .sc-message--carousel-list,
-    .sc-message--button,
-    .sc-message--button-response,
-    .sc-message--time-read,
-    .sc-message--button,
-    .sc-message--image,
-    .sc-message--text {
-      margin-left: 45px !important;
-      margin-right: 45px !important;
-    }
-    .sc-message--author {
-      margin-bottom: -10px;
-    }
+.show-human-avatar .sc-message-list .sent,
+.show-bot-avatar .sc-message-list .received {
+  .sc-message--form,
+  .sc-message--rich,
+  .sc-message--carousel-list,
+  .sc-message--button,
+  .sc-message--button-response,
+  .sc-message--button,
+  .sc-message--image,
+  .sc-message--form-response,
+  .sc-message--text {
+    margin-left: 45px !important;
+    margin-right: 45px !important;
   }
+  .sc-message--author {
+    margin-bottom: -10px;
+  }
+}
+
+.show-human-avatar .sc-message-list .sent + .sc-message--time-read,
+.show-bot-avatar .sc-message-list .received + .sc-message--time-read {
+  margin-left: 45px !important;
+  margin-right: 45px !important;
 }
 
 .no-close {

@@ -28,7 +28,10 @@ class WebchatSetting extends Model
     const START_MINIMIZED       = 'startMinimized';
     const CHATBOT_NAME          = 'chatbotName';
     const CHATBOT_AVATAR_PATH   = 'chatbotAvatarPath';
-    const USE_AVATARS           = 'useAvatars';
+    const USE_BOT_AVATAR        = 'useBotAvatar';
+    const USE_HUMAN_AVATAR      = 'useHumanAvatar';
+    const USE_BOT_NAME          = 'useBotName';
+    const USE_HUMAN_NAME        = 'useHumanName';
     const COLLECT_USER_IP       = 'collectUserIp';
 
     // Colours
@@ -102,11 +105,15 @@ class WebchatSetting extends Model
         $settings = [
             WebchatSetting::GENERAL => [
                 WebchatSetting::STRING => [
-                    WebchatSetting::URL,
-                    WebchatSetting::TEAM_NAME,
-                    WebchatSetting::CUSTOM_CSS_PATH,
-                    WebchatSetting::CHATBOT_NAME,
-                    WebchatSetting::CHATBOT_AVATAR_PATH,
+                    WebchatSetting::OPEN,
+                    WebchatSetting::HIDE_OPEN_CLOSE_ICONS,
+                    WebchatSetting::DISABLE_CLOSE_CHAT,
+                    WebchatSetting::START_MINIMIZED,
+                    WebchatSetting::USE_BOT_AVATAR,
+                    WebchatSetting::USE_HUMAN_AVATAR,
+                    WebchatSetting::USE_BOT_NAME,
+                    WebchatSetting::USE_HUMAN_NAME,
+                    WebchatSetting::COLLECT_USER_IP,
                 ],
                 WebchatSetting::NUMBER => [
                     WebchatSetting::MESSAGE_DELAY,
@@ -116,7 +123,6 @@ class WebchatSetting extends Model
                     WebchatSetting::HIDE_OPEN_CLOSE_ICONS,
                     WebchatSetting::DISABLE_CLOSE_CHAT,
                     WebchatSetting::START_MINIMIZED,
-                    WebchatSetting::USE_AVATARS,
                     WebchatSetting::COLLECT_USER_IP,
                 ],
                 WebchatSetting::MAP => [

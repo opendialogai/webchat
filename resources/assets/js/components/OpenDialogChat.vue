@@ -75,7 +75,8 @@
         :parent-url="parentUrl"
         :section-id="sectionId"
         :show-expand-button="false"
-        :use-avatars="useAvatars"
+        :use-bot-avatar="useBotAvatar"
+        :use-human-avatar="useHumanAvatar"
         :user="user"
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
@@ -103,7 +104,10 @@
         :new-message-icon="newMessageIcon"
         :parent-url="parentUrl"
         :show-expand-button="false"
-        :use-avatars="useAvatars"
+        :use-bot-avatar="useBotAvatar"
+        :use-human-avatar="useHumanAvatar"
+        :use-bot-name="useBotName"
+        :use-human-name="useHumanName"
         :user="user"
         :user-info="userInfo"
         :user-timezone="userTimezone"
@@ -195,7 +199,10 @@ export default {
       showExpandButton: true,
       showTabs: false,
       timezoneInitialised: false,
-      useAvatars: false,
+      useBotAvatar: false,
+      useHumanAvatar: false,
+      useBotName: false,
+      useHumanName: false,
       user: {},
       userTimezone: '',
       userFirstName: '',
@@ -533,8 +540,20 @@ export default {
           this.messageDelay = general.messageDelay;
         }
 
-        if (general.useAvatars) {
-          this.useAvatars = general.useAvatars;
+        if (general.useBotAvatar) {
+          this.useBotAvatar = general.useBotAvatar;
+        }
+
+        if (general.useHumanAvatar) {
+          this.useHumanAvatar = general.useHumanAvatar;
+        }
+
+        if (general.useBotName) {
+          this.useBotName = general.useBotName;
+        }
+
+        if (general.useHumanName) {
+          this.useHumanName = general.useHumanName;
         }
 
         if (Object.prototype.hasOwnProperty.call(general, 'collectUserIp')) {
