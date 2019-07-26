@@ -513,6 +513,74 @@ export default {
         this.parentUrl = config.parentUrl;
       }
 
+      if (config.expandChat) {
+        if (!this.isExpand || !this.isOpen) {
+          this.expandChat(true);
+        }
+      }
+
+      if (config.collapseChat) {
+        if (this.isExpand) {
+          this.expandChat();
+        }
+      }
+
+      if (config.newMessageIcon) {
+        this.newMessageIcon = config.newMessageIcon;
+      }
+
+      if (config.general) {
+        const { general } = config;
+
+        if (general.teamName) {
+          this.agentProfile.teamName = general.teamName;
+        }
+
+        if (general.messageDelay) {
+          this.messageDelay = general.messageDelay;
+        }
+
+        if (general.useBotAvatar) {
+          this.useBotAvatar = general.useBotAvatar;
+        }
+
+        if (general.useHumanAvatar) {
+          this.useHumanAvatar = general.useHumanAvatar;
+        }
+
+        if (general.useBotName) {
+          this.useBotName = general.useBotName;
+        }
+
+        if (general.useHumanName) {
+          this.useHumanName = general.useHumanName;
+        }
+
+        if (Object.prototype.hasOwnProperty.call(general, 'collectUserIp')) {
+          this.collectUserIp = general.collectUserIp;
+        }
+
+        if (general.chatbotAvatarPath) {
+          this.chatbotAvatarPath = general.chatbotAvatarPath;
+        }
+
+        if (general.chatbotName) {
+          this.chatbotName = general.chatbotName;
+        }
+
+        if (general.callbackMap) {
+          this.callbackMap = general.callbackMap;
+        }
+
+        if (general.disableCloseChat) {
+          this.canCloseChat = false;
+        }
+
+        if (config.disableExpandChat) {
+          this.showExpandButton = false;
+        }
+      }
+
       if (config.colours) {
         const { colours } = config;
 
@@ -548,42 +616,6 @@ export default {
         }
       }
 
-      if (config.teamName) {
-        this.agentProfile.teamName = config.teamName;
-      }
-
-      if (config.messageDelay) {
-        this.messageDelay = config.messageDelay;
-      }
-
-      if (config.useBotAvatar) {
-        this.useBotAvatar = config.useBotAvatar;
-      }
-
-      if (config.useHumanAvatar) {
-        this.useHumanAvatar = config.useHumanAvatar;
-      }
-
-      if (config.useBotName) {
-        this.useBotName = config.useBotName;
-      }
-
-      if (config.useHumanName) {
-        this.useHumanName = config.useHumanName;
-      }
-
-      if (Object.prototype.hasOwnProperty.call(config, 'collectUserIp')) {
-        this.collectUserIp = config.collectUserIp;
-      }
-
-      if (config.chatbotAvatarPath) {
-        this.chatbotAvatarPath = config.chatbotAvatarPath;
-      }
-
-      if (config.chatbotName) {
-        this.chatbotName = config.chatbotName;
-      }
-
       if (config.user && !window._.isEmpty(config.user)) {
         this.user = config.user;
 
@@ -601,34 +633,6 @@ export default {
 
         if (config.user.external_id) {
           this.userExternalId = config.user.external_id;
-        }
-      }
-
-      if (config.newMessageIcon) {
-        this.newMessageIcon = config.newMessageIcon;
-      }
-
-      if (config.callbackMap) {
-        this.callbackMap = config.callbackMap;
-      }
-
-      if (config.disableCloseChat) {
-        this.canCloseChat = false;
-      }
-
-      if (config.expandChat) {
-        if (!this.isExpand || !this.isOpen) {
-          this.expandChat(true);
-        }
-      }
-
-      if (config.disableExpandChat) {
-        this.showExpandButton = false;
-      }
-
-      if (config.collapseChat) {
-        if (this.isExpand) {
-          this.expandChat();
         }
       }
 
