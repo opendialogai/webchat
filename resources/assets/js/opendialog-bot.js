@@ -148,7 +148,7 @@ async function getSettings(url) {
  * @returns {boolean}
  */
 function isValidPath() {
-§§  const { validPath } = window.openDialogSettings.general;
+  const { validPath } = window.openDialogSettings.general;
 
   if (typeof validPath === 'undefined') {
     return true;
