@@ -488,7 +488,10 @@ export default {
     },
     onButtonClick(button, msg) {
       if (button.phone_number) {
-        window.open(`tel:${button.phone_number}`);
+        const telephone = `tel:${button.phone_number}`;
+
+        this.onLinkClick(telephone);
+        window.open(telephone);
         return;
       }
 
