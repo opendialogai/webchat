@@ -493,6 +493,8 @@ export default {
       }
 
       if (button.link) {
+        this.onLinkClick(button.link);
+
         if (button.link_new_tab) {
           window.open(button.link, '_blank');
         } else {
