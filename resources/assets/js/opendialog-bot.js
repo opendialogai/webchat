@@ -111,11 +111,11 @@ function drawOpenCloseIcons() {
 
   const openIcon = document.createElement('img');
   openIcon.classList.add('sc-closed-icon');
-  openIcon.setAttribute('src', '/images/vendor/webchat/images/logo-no-bg.svg');
+  openIcon.setAttribute('src', `${url}/images/vendor/webchat/images/logo-no-bg.svg`);
 
   const closeIcon = document.createElement('img');
   closeIcon.classList.add('sc-open-icon');
-  closeIcon.setAttribute('src', '/images/vendor/webchat/images/close-icon.png');
+  closeIcon.setAttribute('src', `${url}/images/vendor/webchat/images/close-icon.png`);
 
   div.addEventListener('click', () => {
     const element = document.getElementById('opendialog-chatwindow');
