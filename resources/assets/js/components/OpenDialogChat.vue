@@ -180,6 +180,7 @@ export default {
       commentsKey: 0,
       commentsEnabled: true,
       cssProps: {},
+      ipAddressInitialised: false,
       isExpand: false,
       isMinimized: false,
       isMobile: false,
@@ -214,7 +215,7 @@ export default {
   computed: {
     ...mapState(['apiReady']),
     ready() {
-      return this.settingsInitialised && this.timezoneInitialised;
+      return this.settingsInitialised && this.timezoneInitialised && this.ipAddressInitialised;
     },
   },
   watch: {
@@ -225,6 +226,8 @@ export default {
 
       if (this.collectUserIp) {
         this.getUserIp();
+      } else {
+        this.ipAddressInitialised = true;
       }
     },
     commentsEnabled(commentsAreEnabled) {
@@ -342,7 +345,7 @@ export default {
       this.userTimezone = jstz.determine().name();
       const browserInfo = detect();
       const ipAddress = 'n/a';
-      const { country } = 'n/a';
+      const country = 'n/a';
       const browserLanguage = navigator.language || navigator.userLanguage;
       const { os } = browserInfo;
       const browser = `${browserInfo.name} ${browserInfo.version}`;
@@ -397,12 +400,15 @@ export default {
       });
     },
     getUserIp() {
-      axios.get('https://ipinfo.io/').then(
-        (response) => {
+      axios.get('https://ipinfo.io/')
+        .then((response) => {
           this.userInfo.ipAddress = response.data.ip;
           this.userInfo.country = response.data.country;
-        },
-      );
+          this.ipAddressInitialised = true;
+        })
+        .catch(() => {
+          this.ipAddressInitialised = true;
+        });
     },
     getCommentSections() {
       let action = '';
