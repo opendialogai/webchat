@@ -128,6 +128,16 @@ function drawOpenCloseIcons() {
     }
   }, false);
 
+  if (window.openDialogSettings.colours.iconBackground) {
+    div.style.background = window.openDialogSettings.colours.iconBackground;
+  }
+
+  if (window.openDialogSettings.colours.iconHoverBackground) {
+    const style = document.createElement('style');
+    style.innerHTML = '#opendialog-bot:hover { background: ' + window.openDialogSettings.colours.iconHoverBackground + ' !important }';
+    div.appendChild(style);
+  }
+
   div.appendChild(openIcon);
   div.appendChild(closeIcon);
 }
