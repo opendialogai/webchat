@@ -487,6 +487,14 @@ export default {
     openChat() {
     },
     onButtonClick(button, msg) {
+      if (button.phone_number) {
+        const telephone = `tel:${button.phone_number}`;
+
+        this.onLinkClick(telephone);
+        window.open(telephone);
+        return;
+      }
+
       if (button.tab_switch) {
         this.$emit('switchToCommentsTab');
         return;
