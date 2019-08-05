@@ -24,6 +24,12 @@ function mergeSettings(webchatSettings) {
   for (const [key, value] of Object.entries(webchatSettings)) {
     if (!window.openDialogSettings[key]) {
       window.openDialogSettings[key] = value;
+    } else if (typeof value === 'object') {
+      for (const [key2, value2] of Object.entries(value)) {
+        if (!window.openDialogSettings[key][key2]) {
+          window.openDialogSettings[key][key2] = value2;
+        }
+      }
     }
   }
 }
