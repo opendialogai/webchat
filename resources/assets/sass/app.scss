@@ -327,8 +327,13 @@ body {
     margin-left: 45px !important;
     margin-right: 45px !important;
   }
-  .sc-message--author {
-    margin-bottom: -10px;
+}
+.show-human-avatar,
+.show-bot-avatar {
+  .sc-message-list {
+    .sc-message--author {
+      margin-bottom: -10px;
+    }
   }
 }
 
