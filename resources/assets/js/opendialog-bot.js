@@ -58,6 +58,14 @@ function openChatWindow(div = null) {
       openDialogSettings: window.openDialogSettings,
       newPathname: window.location.pathname
     }, '*');
+
+    if (window.openDialogSettings.general.chatbotCssPath) {
+      const link = document.createElement('link');
+      link.setAttribute('rel', 'stylesheet');
+      link.setAttribute('type', 'text/css');
+      link.setAttribute('href', window.openDialogSettings.general.chatbotCssPath);
+      ifrm.contentWindow.document.getElementsByTagName('head')[0].appendChild(link);
+    }
   });
 
   window.addEventListener('message', (event) => {
@@ -205,8 +213,8 @@ if (window.openDialogSettings) {
         drawOpenCloseIcons();
       }
 
-      if (window.openDialogSettings.general.customCssPath) {
-        addCssToPage(window.openDialogSettings.general.customCssPath);
+      if (window.openDialogSettings.general.pageCssPath) {
+        addCssToPage(window.openDialogSettings.general.pageCssPath);
       }
 
       if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {

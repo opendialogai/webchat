@@ -8,10 +8,6 @@
         <meta name="cookie-expire" content="{{ env('COOKIE_EXPIRE') }}">
     @endif
 
-    @if (env('CUSTOM_CSS_PATH'))
-        <link rel="stylesheet" type="text/css" href="{{ env('CUSTOM_CSS_PATH') }}">
-    @endif
-
     <!-- Fonts -->
     <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.min.css" />
 </head>

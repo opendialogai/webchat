@@ -21,7 +21,8 @@ class WebchatSetting extends Model
     const VALID_PATH            = 'validPath';
     const MESSAGE_DELAY         = 'messageDelay';
     const OPEN                  = 'open';
-    const CUSTOM_CSS_PATH       = 'customCssPath';
+    const CHATBOT_CSS_PATH      = 'chatbotCssPath';
+    const PAGE_CSS_PATH         = 'pageCssPath';
     const HIDE_OPEN_CLOSE_ICONS = 'hideOpenCloseIcons';
     const CALLBACK_MAP          = 'callbackMap';
     const DISABLE_CLOSE_CHAT    = 'disableCloseChat';
@@ -107,7 +108,8 @@ class WebchatSetting extends Model
                 WebchatSetting::STRING => [
                     WebchatSetting::URL,
                     WebchatSetting::TEAM_NAME,
-                    WebchatSetting::CUSTOM_CSS_PATH,
+                    WebchatSetting::CHATBOT_CSS_PATH,
+                    WebchatSetting::PAGE_CSS_PATH,
                     WebchatSetting::CHATBOT_NAME,
                     WebchatSetting::CHATBOT_AVATAR_PATH,
                 ],
