@@ -26,7 +26,7 @@ function mergeSettings(webchatSettings) {
       window.openDialogSettings[key] = value;
     } else if (typeof value === 'object') {
       for (const [key2, value2] of Object.entries(value)) {
-        if (typeof window.openDialogSettings[key][key2] !== 'undefined') {
+        if (typeof window.openDialogSettings[key][key2] === 'undefined') {
           window.openDialogSettings[key][key2] = value2;
         }
       }
@@ -216,7 +216,7 @@ if (window.openDialogSettings) {
         openChatWindow();
 
         document.body.classList.remove('chatbot-no-scroll');
-      } else if (settings.general.open) {
+      } else if (window.openDialogSettings.general.open) {
         openChatWindow();
       }
     }
