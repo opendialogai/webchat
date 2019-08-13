@@ -131,6 +131,7 @@ function drawOpenCloseIcons() {
     } else {
       element.parentNode.removeChild(element);
       div.classList.remove('opened');
+      document.body.classList.remove('chatbot-no-scroll');
     }
   }, false);
 
