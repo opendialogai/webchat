@@ -211,7 +211,7 @@ if (window.openDialogSettings) {
 
       if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {
         openChatWindow();
-      } else if ((!window.openDialogSettings.general.open && window.innerWidth <= mobileWidth) || settings.general.startMinimized) {
+      } else if ((window.openDialogSettings.general.open && window.innerWidth <= mobileWidth) || settings.general.startMinimized) {
         query = `${query}&hide=true`;
         openChatWindow();
 
