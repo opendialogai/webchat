@@ -166,7 +166,7 @@ async function getSettings(url) {
  * @returns {boolean}
  */
 function isValidPath() {
-  const { validPath } = window.openDialogSettings.general;
+  const {validPath} = window.openDialogSettings.general;
 
   if (typeof validPath === 'undefined') {
     return true;
@@ -176,15 +176,27 @@ function isValidPath() {
 
   if (Array.isArray(validPath)) {
     validPath.forEach((key) => {
-      if (window.location.href.indexOf(key) >= 0) {
+      if(checkValidPath(key)) {
         retVal = true;
       }
     });
-  } else if (window.location.href.indexOf(validPath) >= 0) {
-    retVal = true;
+  } else {
+    retVal = checkValidPath(validPath);
   }
 
   return retVal;
+}
+
+function checkValidPath(testPath) {
+  let currentUrl = window.location.href;
+  if (testPath.endsWith("$")) {
+    testPath = testPath.replace("$", "");
+    return currentUrl.endsWith(testPath);
+  } else if (currentUrl.indexOf(testPath) >= 0) {
+    return true;
+  }
+
+  return false;
 }
 
 if (window.openDialogSettings) {
