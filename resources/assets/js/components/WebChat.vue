@@ -4,7 +4,8 @@
     :class="[
       isMobile ? 'mobile' : '',
       canCloseChat ? '' : 'no-close',
-      useAvatars ? 'show-avatars' : ''
+      useBotAvatar ? 'show-bot-avatar' : '',
+      useHumanAvatar ? 'show-human-avatar' : ''
     ]"
   >
     <template v-if="loading">
@@ -105,7 +106,10 @@ export default {
       required: true,
     },
     showExpandButton: Boolean,
-    useAvatars: Boolean,
+    useBotAvatar: Boolean,
+    useHumanAvatar: Boolean,
+    useBotName: Boolean,
+    useHumanName: Boolean,
     user: {
       type: Object,
       required: true,
@@ -155,7 +159,7 @@ export default {
       let previousMessage = this.messageList[this.messageList.length - 2];
       const lastMessage = this.messageList[this.messageList.length - 1];
 
-      if (previousMessage.type === 'author') {
+      if (previousMessage && previousMessage.type === 'author') {
         spliceIndex = 2;
         previousMessage = this.messageList[this.messageList.length - 3];
       }
@@ -205,27 +209,14 @@ export default {
       }
     }
 
-    // eslint-disable-next-line no-underscore-dangle
-    if (Object.prototype.hasOwnProperty.call(this.$store._actions, 'authors/loadById')) {
-      this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
-        const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
-        if (author !== undefined) {
-          this.userName = author.attributes.name;
-        }
-      });
-    }
-
     this.initChat();
-
-    this.loadUser()
-      .then(() => {
-        this.fetchMessages();
-      });
+    this.userName = `${this.user.first_name} ${this.user.last_name}`;
+    this.fetchMessages();
 
     window.addEventListener('message', (event) => {
       if (event.data) {
         if (event.data.triggerConversation && event.data.triggerConversation.callback_id) {
-          const data = { callback_id: event.data.triggerConversation.callback_id };
+          const data = {};
           if (event.data.triggerConversation.value) {
             data.value = event.data.triggerConversation.value;
           }
@@ -233,6 +224,7 @@ export default {
           this.sendMessage({
             type: 'trigger',
             author: 'me',
+            callback_id: event.data.triggerConversation.callback_id,
             data,
           });
         }
@@ -267,24 +259,15 @@ export default {
       newMsg.data.date = moment().tz('UTC').format('ddd D MMM');
       newMsg.data.time = moment().tz('UTC').format('hh:mm A');
 
-      if (this.user) {
-        newMsg.user_id = this.user.email;
-        newMsg.user = this.user;
-      } else {
-        // Add the uuid to the message sent
-        newMsg.user_id = this.uuid;
+      newMsg.user_id = (this.user.email) ? this.user.email : this.uuid;
+      newMsg.user = this.user;
+
+      if (!newMsg.user.name && newMsg.user.first_name && newMsg.user.last_name) {
+        newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
       }
 
       // Give the message an id.
       newMsg.id = this.$uuid.v4();
-
-      // Add the user information.
-      if (window.openDialogSettings && window.openDialogSettings.user) {
-        newMsg.user = window.openDialogSettings.user;
-        if (!newMsg.user.name && newMsg.user.first_name && newMsg.user.last_name) {
-          newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
-        }
-      }
 
       if (newMsg.type === 'chat_open' && this.userInfo) {
         Object.keys(this.userInfo).forEach((key) => {
@@ -293,9 +276,11 @@ export default {
       }
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
-        const authorMsg = this.newAuthorMessage(newMsg);
+        if (this.useHumanName) {
+          const authorMsg = this.newAuthorMessage(newMsg);
 
-        this.messageList.push(authorMsg);
+          this.messageList.push(authorMsg);
+        }
 
         this.buttonText = 'Submit';
         this.headerText = '';
@@ -312,7 +297,7 @@ export default {
         window.parent.postMessage({ dataLayerEvent: 'user_clicked_button_in_chatbot' }, '*');
       }
 
-      if (newMsg.type === 'chat_open' || newMsg.type === 'url_click' || newMsg.type === 'trigger' || newMsg.type === 'webchat_form_response' || newMsg.type === 'webchat_list_response' || newMsg.data.text.length > 0) {
+      if (newMsg.type === 'chat_open' || newMsg.type === 'url_click' || newMsg.type === 'trigger' || newMsg.type === 'form_response' || newMsg.type === 'webchat_list_response' || newMsg.data.text.length > 0) {
         // Make a copy of the message to send to the backend.
         // This is needed so that the author change will not affect this.messageList.
         const msgCopy = Object.assign({}, newMsg);
@@ -340,9 +325,11 @@ export default {
                     this.showTypingIndicator = false;
 
                     if (i === 0) {
-                      const authorMsg = this.newAuthorMessage(message);
+                      if (this.useBotName) {
+                        const authorMsg = this.newAuthorMessage(message);
 
-                      this.messageList.push(authorMsg);
+                        this.messageList.push(authorMsg);
+                      }
                     }
 
                     this.$emit('newMessage', message);
@@ -368,9 +355,11 @@ export default {
             } else if (response.data) {
               if (newMsg.type === 'chat_open') {
                 if (response.data && response.data.data) {
-                  const authorMsg = this.newAuthorMessage(response.data);
+                  if (this.useBotName) {
+                    const authorMsg = this.newAuthorMessage(response.data);
 
-                  this.messageList.push(authorMsg);
+                    this.messageList.push(authorMsg);
+                  }
 
                   this.$emit('newMessage', response.data);
 
@@ -387,9 +376,11 @@ export default {
                 setTimeout(() => {
                   // Only add a message to the list if it is a message object
                   if (typeof response.data === 'object' && response.data !== null) {
-                    const authorMsg = this.newAuthorMessage(response.data);
+                    if (this.useBotName) {
+                      const authorMsg = this.newAuthorMessage(response.data);
 
-                    this.messageList.push(authorMsg);
+                      this.messageList.push(authorMsg);
+                    }
 
                     this.$emit('newMessage', response.data);
 
@@ -451,9 +442,12 @@ export default {
                   text: "We're sorry, that didn't work, please try again",
                 },
               };
-              const authorMsg = this.newAuthorMessage(message);
 
-              this.messageList.push(authorMsg);
+              if (this.useBotName) {
+                const authorMsg = this.newAuthorMessage(message);
+                this.messageList.push(authorMsg);
+              }
+
               this.messageList.push(message);
 
               this.showTypingIndicator = false;
@@ -484,7 +478,7 @@ export default {
       const msgToSend = msg;
       if (this.messageList.length && this.messageList[this.messageList.length - 1].type === 'longtext') {
         msgToSend.type = 'longtext_response';
-        msgToSend.data.callback_id = this.messageList[this.messageList.length - 1].data.callback_id;
+        msgToSend.callback_id = this.messageList[this.messageList.length - 1].data.callback_id;
       }
 
       this.sendMessage(msgToSend);
@@ -493,8 +487,27 @@ export default {
     openChat() {
     },
     onButtonClick(button, msg) {
+      if (button.phone_number) {
+        const telephone = `tel:${button.phone_number}`;
+
+        this.onLinkClick(telephone);
+        window.open(telephone);
+        return;
+      }
+
       if (button.tab_switch) {
         this.$emit('switchToCommentsTab');
+        return;
+      }
+
+      if (button.link) {
+        this.onLinkClick(button.link);
+
+        if (button.link_new_tab) {
+          window.open(button.link, '_blank');
+        } else {
+          window.open(button.link, '_parent');
+        }
         return;
       }
 
@@ -511,9 +524,9 @@ export default {
       this.sendMessage({
         type: 'button_response',
         author: 'me',
+        callback_id: button.callback_id,
         data: {
           text: button.text,
-          callback_id: button.callback_id,
           value: button.value,
         },
       });
@@ -551,21 +564,13 @@ export default {
         }
       });
 
+      responseData.text = newMessageText.join('\n');
+
       this.sendMessage({
-        type: 'webchat_form_response',
-        author: this.uuid,
+        type: 'form_response',
+        author: 'me',
         callback_id: msg.data.callback_id,
         data: responseData,
-      });
-
-      this.messageList.push({
-        type: 'text',
-        author: this.uuid,
-        data: {
-          date: moment().tz('UTC').format('ddd D MMM'),
-          time: moment().tz('UTC').format('hh:mm A'),
-          text: newMessageText.join('\n'),
-        },
       });
     },
     expandChat() {
@@ -599,23 +604,6 @@ export default {
     regExpEscape(string) {
       return string.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
     },
-    loadUser() {
-      return new Promise((resolve) => {
-        // eslint-disable-next-line no-underscore-dangle
-        if (Object.prototype.hasOwnProperty.call(this.$store._actions, 'authors/loadById')) {
-          this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
-            const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
-            if (author !== undefined) {
-              this.userName = author.attributes.name;
-            }
-
-            resolve();
-          });
-        } else {
-          resolve();
-        }
-      });
-    },
     async fetchMessages() {
       if (this.showHistory) {
         await this.getChatHistory();
@@ -626,9 +614,8 @@ export default {
 
       const message = {
         type: 'chat_open',
-        data: {
-          callback_id: this.workoutCallback(),
-        },
+        callback_id: this.workoutCallback(),
+        data: {},
       };
 
       this.sendMessage(message);
@@ -640,7 +627,7 @@ export default {
 
       const ignoreTypes = 'chat_open,trigger';
 
-      return axios.get(`/chat-init/webchat/${userId}/${this.numberOfMessages}?ignore=${ignoreTypes}`)
+      return axios.get(`/user/${userId}/history?limit=${this.numberOfMessages}&ignore=${ignoreTypes}`)
         .then((response) => {
           response.data.reverse().forEach((message, i, messages) => {
             // Ignore 'url_click' messages.
@@ -663,9 +650,7 @@ export default {
             }
 
             // Convert to the right message type for display
-            if (currentMessage.type === 'action') {
-              currentMessage.type = (currentMessage.author === 'me') ? 'text' : 'button';
-            } else if (currentMessage.type === 'long_text' || currentMessage.type === 'form') {
+            if (currentMessage.type === 'button' || currentMessage.type === 'long_text' || currentMessage.type === 'form') {
               currentMessage.type = 'text';
             }
 
@@ -686,8 +671,8 @@ export default {
               this.dateTimezoneFormat(currentMessage);
             }
 
-            if (currentMessage.author === 'me'
-                || (currentMessage.author === 'them' && !currentMessage.data.internal)) {
+            if ((currentMessage.author === 'me' && this.useHumanName)
+                || (currentMessage.author === 'them' && !currentMessage.data.internal && this.useBotName)) {
               const authorMsg = this.newAuthorMessage(currentMessage);
 
               this.messageList.push(authorMsg);
@@ -711,7 +696,7 @@ export default {
           },
         };
 
-        if (this.useAvatars) {
+        if (this.useBotAvatar) {
           authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
         }
 
@@ -729,7 +714,7 @@ export default {
         },
       };
 
-      if (this.useAvatars) {
+      if (this.useHumanAvatar) {
         const avatarName = this.userName
           .split(' ').map(n => n[0]).join('').toUpperCase();
         authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;

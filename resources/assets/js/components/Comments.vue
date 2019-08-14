@@ -3,7 +3,8 @@
     :class="[
       isMobile ? 'mobile' : '',
       canCloseChat ? '' : 'no-close',
-      useAvatars ? 'show-avatars' : ''
+      useBotAvatar ? 'show-bot-avatar' : '',
+      useHumanAvatar ? 'show-human-avatar' : ''
     ]"
   >
     <template v-if="sectionId != '' || commentsApiConfig.commentsSectionIdFieldName == ''">
@@ -81,9 +82,11 @@ export default {
     sectionId: {
       type: String,
       default: '',
+      required: true,
     },
     showExpandButton: Boolean,
-    useAvatars: Boolean,
+    useBotAvatar: Boolean,
+    useHumanAvatar: Boolean,
     user: {
       type: Object,
       required: true,
@@ -117,7 +120,6 @@ export default {
       maxInputCharacters: 0,
       messageList: [],
       messageListReady: false,
-      participants: {},
       placeholder: 'Type a message',
       sectionMapping: '',
       sectionType: '',
@@ -141,17 +143,14 @@ export default {
     let action = '';
     let getter = '';
     let filter = {};
-    if (this.sectionId) {
-      filter = {
-        [this.sectionMapping]: this.sectionId,
-        _: Math.random(),
-      };
-      action = 'comments/loadWhere';
-      getter = 'comments/where';
-    } else {
-      action = 'comments/loadAll';
-      getter = 'comments/all';
-    }
+
+    filter = {
+      [this.sectionMapping]: this.sectionId,
+      _: Math.random(),
+    };
+    action = 'comments/loadWhere';
+    getter = 'comments/where';
+
 
     this.$store.dispatch(action, { filter }).then(() => {
       let comments = [];
@@ -223,12 +222,12 @@ export default {
             data: {
               author: 'me',
               authorId: this.userExternalId,
-              text: this.participants[this.userExternalId].name,
+              text: newComment.relationships[this.authorMapping].meta.name,
             },
           };
 
-          if (this.useAvatars) {
-            const avatarName = this.participants[this.userExternalId].name
+          if (this.useHumanAvatar) {
+            const avatarName = newComment.relationships[this.authorMapping].meta.name
               .split(' ').map(n => n[0]).join('').toUpperCase();
 
             authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
@@ -252,85 +251,50 @@ export default {
     },
     openComments() {},
     processComments() {
-      // Fetch info for the current user.
-      this.$set(this.participants, this.userExternalId, { name: '' });
+      this.comments.forEach((comment) => {
+        const authorId = comment.relationships[this.authorMapping].data.id;
+        const message = {
+          type: 'text',
+          author: authorId,
+          data: {
+            date: comment.attributes[this.commentDateMapping],
+            text: comment.attributes[this.commentTextMapping],
+          },
+        };
+        this.dateTimezoneFormat(message);
 
-      this.$store.dispatch('authors/loadById', { id: this.userExternalId }).then(() => {
-        const author = this.$store.getters['authors/byId']({ id: this.userExternalId });
-        if (author !== undefined) {
-          this.participants[this.userExternalId].name = author.attributes[this.authorNameMapping];
+        if (comment.relationships[this.authorMapping].data.id === this.userExternalId) {
+          message.author = 'me';
         }
-      }).then(() => {
-        this.comments.forEach((comment, cmntIdx) => {
-          const authorId = comment.relationships[this.authorMapping].data.id;
-          const message = {
-            type: 'text',
-            author: authorId,
+
+        const lastMessage = this.messageList[this.messageList.length - 1];
+
+        // Add a new author message if necessary.
+        if (!lastMessage || (lastMessage && lastMessage.author !== message.author)) {
+          const authorMsg = {
+            type: 'author',
             data: {
-              date: comment.attributes[this.commentDateMapping],
-              text: comment.attributes[this.commentTextMapping],
+              authorId,
+              text: comment.relationships[this.authorMapping].meta.name,
             },
           };
-          this.dateTimezoneFormat(message);
-
           if (comment.relationships[this.authorMapping].data.id === this.userExternalId) {
-            message.author = 'me';
+            authorMsg.author = 'me';
+            authorMsg.data.author = 'me';
           }
 
-          // Get the author name and add it to participants if we haven't already.
-          if (!this.participants[authorId]) {
-            this.$set(this.participants, authorId, { name: '' });
-
-            this.$store.dispatch('authors/loadById', { id: authorId }).then(() => {
-              const author = this.$store.getters['authors/byId']({ id: authorId });
-              this.participants[authorId].name = author.attributes[this.authorNameMapping];
-
-              // Update name for any author messages that have already been created.
-              this.messageList.forEach((msg, msgIdx) => {
-                if (msg.type === 'author' && msg.data.authorId === authorId) {
-                  const newMsg = msg;
-                  newMsg.data.text = author.attributes[this.authorNameMapping];
-
-                  if (this.useAvatars) {
-                    const avatarName = newMsg.data.text
-                      .split(' ').map(n => n[0]).join('').toUpperCase();
-                    newMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
-                  }
-
-                  this.$set(this.messageList, msgIdx, newMsg);
-                }
-              });
-            });
+          if (this.useBotAvatar) {
+            const avatarName = comment.relationships[this.authorMapping].meta.name
+              .split(' ').map(n => n[0]).join('').toUpperCase();
+            authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
           }
 
-          if (cmntIdx === 0 || (message.author !== this.comments[cmntIdx - 1]
-            .relationships[this.authorMapping].data.id
-          )) {
-            const authorMsg = {
-              type: 'author',
-              data: {
-                authorId,
-                text: this.participants[authorId].name,
-              },
-            };
-            if (comment.relationships[this.authorMapping].data.id === this.userExternalId) {
-              authorMsg.author = 'me';
-              authorMsg.data.author = 'me';
-            }
-
-            if (this.useAvatars) {
-              const avatarName = this.participants[authorId].name
-                .split(' ').map(n => n[0]).join('').toUpperCase();
-              authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
-            }
-
-            this.messageList.push(authorMsg);
-          }
-          this.messageList.push(message);
-        });
-
-        this.messageListReady = true;
+          this.messageList.push(authorMsg);
+        }
+        this.messageList.push(message);
       });
+
+      this.messageListReady = true;
     },
   },
 };

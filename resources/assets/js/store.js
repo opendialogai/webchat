@@ -66,12 +66,20 @@ getWebchatConfig().then((config) => {
     // Over-ride default config with any custom settings.
     setConfig(customConfig);
 
-    if (commentConfig && commentConfig.commentsEnabled && commentConfig.commentsAxiosConfig) {
-      if (!commentConfig.commentsAxiosConfig.headers['X-Requested-For-OD-User-ID']
-        && userConfig.external_id) {
-        commentConfig.commentsAxiosConfig.headers['X-Requested-For-OD-User-ID'] = userConfig.external_id;
+    if (commentConfig && commentConfig.commentsEnabled
+        && commentConfig.commentsEndpoint && commentConfig.commentsAuthToken) {
+      const commentsAxiosConfig = {
+        baseURL: commentConfig.commentsEndpoint,
+        headers: {
+          Authorization: commentConfig.commentsAuthToken,
+          'Content-Type': 'application/vnd.api+json',
+        },
+      };
+
+      if (userConfig.external_id) {
+        commentsAxiosConfig.headers['X-Requested-For-OD-User-ID'] = userConfig.external_id;
       }
-      const httpClient = axios.create(commentConfig.commentsAxiosConfig);
+      const httpClient = axios.create(commentsAxiosConfig);
 
       // Add the json:api modules.
       store.registerModule('comments', resourceModule({ name: commentConfig.commentsEntityName, httpClient }));

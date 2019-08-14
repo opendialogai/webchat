@@ -1,6 +1,7 @@
 import 'promise-polyfill/src/polyfill';
 import 'whatwg-fetch';
 import 'url-search-params-polyfill';
+import 'core-js/es7/object';
 
 let query = 'open=true';
 let url = '';
@@ -23,6 +24,12 @@ function mergeSettings(webchatSettings) {
   for (const [key, value] of Object.entries(webchatSettings)) {
     if (!window.openDialogSettings[key]) {
       window.openDialogSettings[key] = value;
+    } else if (typeof value === 'object') {
+      for (const [key2, value2] of Object.entries(value)) {
+        if (typeof window.openDialogSettings[key][key2] === 'undefined') {
+          window.openDialogSettings[key][key2] = value2;
+        }
+      }
     }
   }
 }
@@ -46,10 +53,11 @@ function openChatWindow(div = null) {
   document.body.classList.add('chatbot-no-scroll');
 
   ifrm.addEventListener('load', () => {
-    ifrm.contentWindow.postMessage(window.openDialogSettings, '*');
-
-    // Send initial path to the chat widget.
-    ifrm.contentWindow.postMessage({ newPathname: window.location.pathname }, '*');
+    // Send settings and initial path to the chat widget.
+    ifrm.contentWindow.postMessage({
+      openDialogSettings: window.openDialogSettings,
+      newPathname: window.location.pathname
+    }, '*');
   });
 
   window.addEventListener('message', (event) => {
@@ -110,11 +118,11 @@ function drawOpenCloseIcons() {
 
   const openIcon = document.createElement('img');
   openIcon.classList.add('sc-closed-icon');
-  openIcon.setAttribute('src', '/images/vendor/webchat/images/logo-no-bg.svg');
+  openIcon.setAttribute('src', `${url}/images/vendor/webchat/images/logo-no-bg.svg`);
 
   const closeIcon = document.createElement('img');
   closeIcon.classList.add('sc-open-icon');
-  closeIcon.setAttribute('src', '/images/vendor/webchat/images/close-icon.png');
+  closeIcon.setAttribute('src', `${url}/images/vendor/webchat/images/close-icon.png`);
 
   div.addEventListener('click', () => {
     const element = document.getElementById('opendialog-chatwindow');
@@ -123,8 +131,19 @@ function drawOpenCloseIcons() {
     } else {
       element.parentNode.removeChild(element);
       div.classList.remove('opened');
+      document.body.classList.remove('chatbot-no-scroll');
     }
   }, false);
+
+  if (window.openDialogSettings.colours.iconBackground) {
+    div.style.background = window.openDialogSettings.colours.iconBackground;
+  }
+
+  if (window.openDialogSettings.colours.iconHoverBackground) {
+    const style = document.createElement('style');
+    style.innerHTML = '#opendialog-bot:hover { background: ' + window.openDialogSettings.colours.iconHoverBackground + ' !important }';
+    div.appendChild(style);
+  }
 
   div.appendChild(openIcon);
   div.appendChild(closeIcon);
@@ -147,7 +166,7 @@ async function getSettings(url) {
  * @returns {boolean}
  */
 function isValidPath() {
-  const { validPath } = window.openDialogSettings;
+  const { validPath } = window.openDialogSettings.general;
 
   if (typeof validPath === 'undefined') {
     return true;
@@ -193,22 +212,22 @@ if (window.openDialogSettings) {
     if (isValidPath()) {
       addCssToPage(`${url}/vendor/webchat/css/opendialog-chat-bot.css`);
 
-      if (window.openDialogSettings.hideOpenCloseIcons === 'false' || !window.openDialogSettings.hideOpenCloseIcons) {
+      if (window.openDialogSettings.general.hideOpenCloseIcons === 'false' || !window.openDialogSettings.general.hideOpenCloseIcons) {
         drawOpenCloseIcons();
       }
 
-      if (window.openDialogSettings.customCssPath) {
-        addCssToPage(window.openDialogSettings.customCssPath);
+      if (window.openDialogSettings.general.customCssPath) {
+        addCssToPage(window.openDialogSettings.general.customCssPath);
       }
 
       if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {
         openChatWindow();
-      } else if (window.innerWidth <= mobileWidth || settings.startMinimized) {
+      } else if ((window.openDialogSettings.general.open && window.innerWidth <= mobileWidth) || settings.general.startMinimized) {
         query = `${query}&hide=true`;
         openChatWindow();
 
         document.body.classList.remove('chatbot-no-scroll');
-      } else if (settings.open) {
+      } else if (window.openDialogSettings.general.open) {
         openChatWindow();
       }
     }

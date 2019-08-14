@@ -25,6 +25,16 @@ Require as a dependency in your composer.json file
 + This should move a script named `update-web-chat.sh` to your project root. Run it every time there is an update to OpenDialog webchat by running:
 ```bash update-web-chat.sh``` 
 
+### Running the script
+
+To run the update script, run ```bash update-web-chat.sh```. The following options are available:
+
++ `-h` Get help
++ `-p` Set if this is to be run in the production environment
++ `-l` Set if you are using Lando for local development. Will run the commands from within Lando
++ `-i` Set if you need to install the node dependencies. This defaults to false, so you should always set this for the fist run
++ `-f` Whether to force updating by deleting local dependencies. If set, will remove the vue-beautiful-chat node module before reinstalling 
+
 ## Git Hooks
 
 To set up the included git pre-commit hook, first make sure the pre-commit script is executable by running

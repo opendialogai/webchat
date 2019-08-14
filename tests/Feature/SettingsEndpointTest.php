@@ -2,10 +2,8 @@
 
 namespace OpenDialogAi\Webchat\Tests\Feature;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use OpenDialogAi\Webchat\Tests\TestCase;
 use OpenDialogAi\Webchat\WebchatSetting;
-use OpenDialogAi\Webchat\Http\Controllers\WebchatSettings;
 
 class SettingsEndpointTest extends TestCase
 {

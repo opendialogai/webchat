@@ -62,7 +62,7 @@
       </div>
 
       <Comments
-        v-if="ready && apiReady"
+        v-if="ready && apiReady && sectionId"
         :key="commentsKey"
         :agent-profile="agentProfile"
         :callback-map="callbackMap"
@@ -75,7 +75,8 @@
         :parent-url="parentUrl"
         :section-id="sectionId"
         :show-expand-button="false"
-        :use-avatars="useAvatars"
+        :use-bot-avatar="useBotAvatar"
+        :use-human-avatar="useHumanAvatar"
         :user="user"
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
@@ -103,7 +104,10 @@
         :new-message-icon="newMessageIcon"
         :parent-url="parentUrl"
         :show-expand-button="false"
-        :use-avatars="useAvatars"
+        :use-bot-avatar="useBotAvatar"
+        :use-human-avatar="useHumanAvatar"
+        :use-bot-name="useBotName"
+        :use-human-name="useHumanName"
         :user="user"
         :user-info="userInfo"
         :user-timezone="userTimezone"
@@ -121,10 +125,11 @@
 <script>
 import axios from 'axios';
 import { mapState } from 'vuex';
-import Comments from '@/components/Comments';
-import WebChat from '@/components/WebChat';
 
 import cssVars from 'css-vars-ponyfill';
+
+import Comments from '@/components/Comments';
+import WebChat from '@/components/WebChat';
 
 const { detect } = require('detect-browser');
 const jstz = require('jstz');
@@ -173,8 +178,9 @@ export default {
       },
       comments: {},
       commentsKey: 0,
-      commentsEnabled: false,
+      commentsEnabled: true,
       cssProps: {},
+      ipAddressInitialised: false,
       isExpand: false,
       isMinimized: false,
       isMobile: false,
@@ -194,7 +200,10 @@ export default {
       showExpandButton: true,
       showTabs: false,
       timezoneInitialised: false,
-      useAvatars: false,
+      useBotAvatar: false,
+      useHumanAvatar: false,
+      useBotName: false,
+      useHumanName: false,
       user: {},
       userTimezone: '',
       userFirstName: '',
@@ -206,7 +215,7 @@ export default {
   computed: {
     ...mapState(['apiReady']),
     ready() {
-      return this.settingsInitialised && this.timezoneInitialised;
+      return this.settingsInitialised && this.timezoneInitialised && this.ipAddressInitialised;
     },
   },
   watch: {
@@ -217,15 +226,17 @@ export default {
 
       if (this.collectUserIp) {
         this.getUserIp();
-      }
-    },
-    apiReady(apiIsReady) {
-      if (apiIsReady && this.pathInitialised && this.commentsEnabled && this.settingsInitialised) {
-        this.getCommentSections();
+      } else {
+        this.ipAddressInitialised = true;
       }
     },
     commentsEnabled(commentsAreEnabled) {
       if (commentsAreEnabled && this.pathInitialised && this.apiReady) {
+        this.getCommentSections();
+      }
+    },
+    apiReady(apiIsReady) {
+      if (apiIsReady && this.pathInitialised && this.commentsEnabled && this.settingsInitialised) {
         this.getCommentSections();
       }
     },
@@ -334,7 +345,7 @@ export default {
       this.userTimezone = jstz.determine().name();
       const browserInfo = detect();
       const ipAddress = 'n/a';
-      const { country } = 'n/a';
+      const country = 'n/a';
       const browserLanguage = navigator.language || navigator.userLanguage;
       const { os } = browserInfo;
       const browser = `${browserInfo.name} ${browserInfo.version}`;
@@ -352,13 +363,13 @@ export default {
       this.timezoneInitialised = true;
 
       // Add event listener for custom open dialog settings.
-      const customConfig = {};
       window.addEventListener('message', (event) => {
         if (event.data) {
-          // Add config items to our custom config object.
-          Object.keys(event.data).forEach((key) => {
-            customConfig[key] = event.data[key];
-          });
+          if (event.data.openDialogSettings) {
+            const customConfig = event.data.openDialogSettings;
+            customConfig.newPathname = event.data.newPathname;
+            this.initialiseSettings(customConfig);
+          }
 
           // Handle path changes.
           if (event.data.newPathname) {
@@ -373,29 +384,31 @@ export default {
           }
         }
       });
-
+    },
+    initialiseSettings(customConfig) {
       // Get default settings from the config endpoint.
       this.getWebchatConfig().then((config) => {
         this.setConfig(config);
         return true;
       }).then(() => {
-        setTimeout(() => {
-          // Over-ride default config with any custom settings.
-          this.setConfig(customConfig);
+        // Over-ride default config with any custom settings.
+        this.setConfig(customConfig);
 
-          if (!this.settingsInitialised) {
-            this.settingsInitialised = true;
-          }
-        }, 200);
+        if (!this.settingsInitialised) {
+          this.settingsInitialised = true;
+        }
       });
     },
     getUserIp() {
-      axios.get('https://ipinfo.io/').then(
-        (response) => {
+      axios.get('https://ipinfo.io/')
+        .then((response) => {
           this.userInfo.ipAddress = response.data.ip;
           this.userInfo.country = response.data.country;
-        },
-      );
+          this.ipAddressInitialised = true;
+        })
+        .catch(() => {
+          this.ipAddressInitialised = true;
+        });
     },
     getCommentSections() {
       let action = '';
@@ -506,6 +519,74 @@ export default {
         this.parentUrl = config.parentUrl;
       }
 
+      if (config.expandChat) {
+        if (!this.isExpand || !this.isOpen) {
+          this.expandChat(true);
+        }
+      }
+
+      if (config.collapseChat) {
+        if (this.isExpand) {
+          this.expandChat();
+        }
+      }
+
+      if (config.newMessageIcon) {
+        this.newMessageIcon = config.newMessageIcon;
+      }
+
+      if (config.general) {
+        const { general } = config;
+
+        if (general.teamName) {
+          this.agentProfile.teamName = general.teamName;
+        }
+
+        if (general.messageDelay) {
+          this.messageDelay = general.messageDelay;
+        }
+
+        if (general.useBotAvatar) {
+          this.useBotAvatar = general.useBotAvatar;
+        }
+
+        if (general.useHumanAvatar) {
+          this.useHumanAvatar = general.useHumanAvatar;
+        }
+
+        if (general.useBotName) {
+          this.useBotName = general.useBotName;
+        }
+
+        if (general.useHumanName) {
+          this.useHumanName = general.useHumanName;
+        }
+
+        if (Object.prototype.hasOwnProperty.call(general, 'collectUserIp')) {
+          this.collectUserIp = general.collectUserIp;
+        }
+
+        if (general.chatbotAvatarPath) {
+          this.chatbotAvatarPath = general.chatbotAvatarPath;
+        }
+
+        if (general.chatbotName) {
+          this.chatbotName = general.chatbotName;
+        }
+
+        if (general.callbackMap) {
+          this.callbackMap = general.callbackMap;
+        }
+
+        if (general.disableCloseChat) {
+          this.canCloseChat = false;
+        }
+
+        if (config.disableExpandChat) {
+          this.showExpandButton = false;
+        }
+      }
+
       if (config.colours) {
         const { colours } = config;
 
@@ -541,33 +622,12 @@ export default {
         }
       }
 
-      if (config.teamName) {
-        this.agentProfile.teamName = config.teamName;
-      }
-
-      if (config.messageDelay) {
-        this.messageDelay = config.messageDelay;
-      }
-
-      if (config.useAvatars) {
-        this.useAvatars = config.useAvatars;
-      }
-
-      if (Object.prototype.hasOwnProperty.call(config, 'collectUserIp')) {
-        this.collectUserIp = config.collectUserIp;
-      }
-
-      if (config.chatbotAvatarPath) {
-        this.chatbotAvatarPath = config.chatbotAvatarPath;
-      }
-
-      if (config.chatbotName) {
-        this.chatbotName = config.chatbotName;
-      }
-
       if (config.user && !window._.isEmpty(config.user)) {
-        this.userUuid = config.user.email;
         this.user = config.user;
+
+        if (config.user.email) {
+          this.userUuid = config.user.email;
+        }
 
         if (config.user.first_name) {
           this.userFirstName = config.user.first_name;
@@ -579,34 +639,6 @@ export default {
 
         if (config.user.external_id) {
           this.userExternalId = config.user.external_id;
-        }
-      }
-
-      if (config.newMessageIcon) {
-        this.newMessageIcon = config.newMessageIcon;
-      }
-
-      if (config.callbackMap) {
-        this.callbackMap = config.callbackMap;
-      }
-
-      if (config.disableCloseChat) {
-        this.canCloseChat = false;
-      }
-
-      if (config.expandChat) {
-        if (!this.isExpand || !this.isOpen) {
-          this.expandChat(true);
-        }
-      }
-
-      if (config.disableExpandChat) {
-        this.showExpandButton = false;
-      }
-
-      if (config.collapseChat) {
-        if (this.isExpand) {
-          this.expandChat();
         }
       }
 
@@ -633,9 +665,8 @@ export default {
         this.sendMessage({
           type: 'trigger',
           author: this.userUuid,
-          data: {
-            callback_id: config.triggerConversation.callback_id,
-          },
+          callback_id: config.triggerConversation.callback_id,
+          data: {},
         });
       }
 

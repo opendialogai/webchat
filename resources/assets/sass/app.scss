@@ -69,6 +69,7 @@ body {
             border-top-right-radius: 0;
           }
         }
+        .sc-message--form-response,
         .sc-message--text,
         .sc-message--list,
         .sc-message--button,
@@ -85,6 +86,9 @@ body {
       &.received {
         &.internal {
           margin-top: -17px;
+          .sc-message--form,
+          .sc-message--rich,
+          .sc-message--carousel-list,
           .sc-message--text,
           .sc-message--list,
           .sc-message--button,
@@ -92,6 +96,9 @@ body {
             border-top-left-radius: 0;
           }
         }
+        .sc-message--form,
+        .sc-message--rich,
+        .sc-message--carousel-list,
         .sc-message--long-text,
         .sc-message--text,
         .sc-message--list,
@@ -175,6 +182,13 @@ body {
       padding: 0 15px;
       .sc-message--button--text {
         margin-top: 7px;
+        font-size: 15px !important;
+        color: #2D2D2D !important;
+
+        a {
+          color: #2D2D2D !important;
+          text-decoration: underline;
+        }
       }
       .sc-message--button--buttons {
         padding-bottom: 10px;
@@ -185,6 +199,14 @@ body {
           border-radius: 12px;
           margin-bottom: 5px;
         }
+      }
+    }
+
+    .sc-message--rich {
+      padding: 7px 15px;
+
+      .sc-message--rich--title {
+        font-weight: bold;
       }
     }
 
@@ -203,22 +225,35 @@ body {
       }
     }
 
-    .sc-message--button--text,
-    .sc-message--button {
+    .sc-message--form-response {
       font-size: 15px !important;
+      padding: 7px 15px;
       color: #2D2D2D !important;
+      border-radius: 14px;
+      border-bottom-left-radius: 0;
+      box-shadow: #CFCFCF -1px 1px 1px;
+    }
 
-      a {
-        color: #2D2D2D !important;
-        text-decoration: underline;
+    .sc-message--content.sent {
+      .sc-message--form-response,
+      .sc-message--text {
+        color: #FFFFFF !important;
+
+        a {
+          color: #FFFFFF !important;
+        }
       }
     }
 
-    .sc-message--content.sent .sc-message--text {
-      color: #FFFFFF !important;
-
-      a {
-        color: #FFFFFF !important;
+    .sc-message--form {
+      font-size: 15px;
+      padding: 7px 15px;
+      .submit-button {
+        font-size: 14px;
+        padding: 7px 17px;
+        width: 100%;
+        border-radius: 12px;
+        margin-bottom: 5px;
       }
     }
 
@@ -231,6 +266,25 @@ body {
         border-radius: 12px;
         text-align: center;
         margin: 0 -4px;
+      }
+    }
+
+    .sc-message--carousel-list {
+      width: calc(100% - 90px) !important;
+      .sc-message--rich,
+      .sc-message--button,
+      .sc-message--image,
+      .sc-message--text {
+        background: none !important;
+        max-width: 100% !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+      }
+      .sc-message--rich {
+        .sc-message--rich--buttons {
+          text-align: center;
+        }
       }
     }
   }
@@ -259,21 +313,34 @@ body {
   }
 }
 
-.show-avatars {
+.show-human-avatar .sc-message-list .sent,
+.show-bot-avatar .sc-message-list .received {
+  .sc-message--form,
+  .sc-message--rich,
+  .sc-message--carousel-list,
+  .sc-message--button,
+  .sc-message--button-response,
+  .sc-message--button,
+  .sc-message--image,
+  .sc-message--form-response,
+  .sc-message--text {
+    margin-left: 45px !important;
+    margin-right: 45px !important;
+  }
+}
+.show-human-avatar,
+.show-bot-avatar {
   .sc-message-list {
-    .sc-message--button,
-    .sc-message--button-response,
-    .sc-message--time-read,
-    .sc-message--button,
-    .sc-message--image,
-    .sc-message--text {
-      margin-left: 45px !important;
-      margin-right: 45px !important;
-    }
     .sc-message--author {
       margin-bottom: -10px;
     }
   }
+}
+
+.show-human-avatar .sc-message-list .sent + .sc-message--time-read,
+.show-bot-avatar .sc-message-list .received + .sc-message--time-read {
+  margin-left: 45px !important;
+  margin-right: 45px !important;
 }
 
 .no-close {
