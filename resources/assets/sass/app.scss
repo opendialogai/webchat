@@ -78,14 +78,14 @@ body {
         .sc-typing-indicator {
           max-width: calc(100% - 40px);
           border-radius: 14px;
-          border-bottom-right-radius: 0;
+          border-top-right-radius: 0;
           box-shadow: #CFCFCF 1px 1px 1px;
           background-color: #505050 !important;
         }
       }
       &.received {
         &.internal {
-          margin-top: -17px;
+          margin-bottom: -17px;
           .sc-message--form,
           .sc-message--rich,
           .sc-message--carousel-list,
@@ -93,7 +93,7 @@ body {
           .sc-message--list,
           .sc-message--button,
           .sc-message--image {
-            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
           }
         }
         .sc-message--form,
@@ -107,7 +107,7 @@ body {
         .sc-typing-indicator {
           max-width: calc(100% - 40px);
           border-radius: 14px;
-          border-bottom-left-radius: 0;
+          border-top-left-radius: 0;
           box-shadow: #CFCFCF -1px 1px 1px;
           margin-right: 10px;
           background-color: #F2F2F2 !important;
