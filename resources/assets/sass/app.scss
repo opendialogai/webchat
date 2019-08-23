@@ -14,17 +14,6 @@ body {
   bottom: 0 !important;
   right: 0 !important;
 
-  &.closed {
-    .sc-header--minimize-button {
-      background: url('/images/vendor/webchat/images/max.svg') center center no-repeat;
-    }
-  }
-  &.opened {
-    .sc-header--minimize-button {
-      background: url('/images/vendor/webchat/images/min.svg') center center no-repeat;
-    }
-  }
-
   .sc-header {
     border-radius: 0;
     box-shadow: none;
@@ -39,9 +28,6 @@ body {
     .sc-header--minimize-button {
       display: block;
       margin-right: 0;
-      img {
-        display: none;
-      }
     }
   }
 

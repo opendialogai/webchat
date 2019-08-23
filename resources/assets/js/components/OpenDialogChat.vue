@@ -175,6 +175,14 @@ export default {
           bg: '#f4f7f9',
           text: '#565867',
         },
+        button: {
+          bg: '#4e8cff',
+          hoverbg: '#0000ff',
+          text: '#ffffff',
+        },
+        minimizeButton: {
+          bg: '#000000',
+        },
       },
       comments: {},
       commentsKey: 0,
@@ -619,6 +627,18 @@ export default {
         }
         if (colours.userInputText) {
           this.colours.userInput.text = colours.userInputText;
+        }
+        if (colours.buttonBackground) {
+          this.colours.button.bg = colours.buttonBackground;
+        }
+        if (colours.buttonHoverBackground) {
+          this.colours.button.hoverbg = colours.buttonHoverBackground;
+        }
+        if (colours.buttonText) {
+          this.colours.button.text = colours.buttonText;
+        }
+        if (colours.minimizeButtonBackground) {
+          this.colours.minimizeButton.bg = colours.minimizeButtonBackground;
         }
       }
 
