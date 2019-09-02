@@ -276,7 +276,7 @@ export default {
       }
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
-        if (this.useHumanName) {
+        if (this.useHumanName || this.useHumanAvatar) {
           const authorMsg = this.newAuthorMessage(newMsg);
 
           this.messageList.push(authorMsg);
@@ -325,7 +325,7 @@ export default {
                     this.showTypingIndicator = false;
 
                     if (i === 0) {
-                      if (this.useBotName) {
+                      if (this.useBotName || this.useBotAvatar) {
                         const authorMsg = this.newAuthorMessage(message);
 
                         this.messageList.push(authorMsg);
@@ -355,7 +355,7 @@ export default {
             } else if (response.data) {
               if (newMsg.type === 'chat_open') {
                 if (response.data && response.data.data) {
-                  if (this.useBotName) {
+                  if (this.useBotName || this.useBotAvatar) {
                     const authorMsg = this.newAuthorMessage(response.data);
 
                     this.messageList.push(authorMsg);
@@ -376,7 +376,7 @@ export default {
                 setTimeout(() => {
                   // Only add a message to the list if it is a message object
                   if (typeof response.data === 'object' && response.data !== null) {
-                    if (this.useBotName) {
+                    if (this.useBotName || this.useBotAvatar) {
                       const authorMsg = this.newAuthorMessage(response.data);
 
                       this.messageList.push(authorMsg);
@@ -443,7 +443,7 @@ export default {
                 },
               };
 
-              if (this.useBotName) {
+              if (this.useBotName || this.useBotAvatar) {
                 const authorMsg = this.newAuthorMessage(message);
                 this.messageList.push(authorMsg);
               }
@@ -671,8 +671,8 @@ export default {
               this.dateTimezoneFormat(currentMessage);
             }
 
-            if ((currentMessage.author === 'me' && this.useHumanName)
-                || (currentMessage.author === 'them' && !currentMessage.data.internal && this.useBotName)) {
+            if ((currentMessage.author === 'me' && (this.useHumanName || this.useHumanAvatar))
+                || (currentMessage.author === 'them' && !currentMessage.data.internal && (this.useBotName || this.useBotAvatar))) {
               const authorMsg = this.newAuthorMessage(currentMessage);
 
               this.messageList.push(authorMsg);
@@ -690,7 +690,7 @@ export default {
         const authorMsg = {
           type: 'author',
           data: {
-            text: this.chatbotName,
+            text: (this.useBotName) ? this.chatbotName : '',
             date: message.data.date,
             time: message.data.time,
           },
@@ -708,7 +708,7 @@ export default {
         author: 'me',
         data: {
           author: 'me',
-          text: this.userName,
+          text: (this.useHumanName) ? this.userName : '',
           date: message.data.date,
           time: message.data.time,
         },
