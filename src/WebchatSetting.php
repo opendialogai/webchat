@@ -48,6 +48,10 @@ class WebchatSetting extends Model
     const USER_INPUT_TEXT             = 'userInputText';
     const ICON_BACKGROUND             = 'iconBackground';
     const ICON_HOVER_BACKGROUND       = 'iconHoverBackground';
+    const BUTTON_BACKGROUND           = 'buttonBackground';
+    const BUTTON_HOVER_BACKGROUND     = 'buttonHoverBackground';
+    const BUTTON_TEXT                 = 'buttonText';
+    const MINIMIZE_BUTTON_BACKGROUND  = 'minimizeButtonBackground';
 
     // Comments
     const COMMENTS                             = 'comments';
@@ -146,6 +150,10 @@ class WebchatSetting extends Model
                     WebchatSetting::USER_INPUT_TEXT,
                     WebchatSetting::ICON_BACKGROUND,
                     WebchatSetting::ICON_HOVER_BACKGROUND,
+                    WebchatSetting::BUTTON_BACKGROUND,
+                    WebchatSetting::BUTTON_HOVER_BACKGROUND,
+                    WebchatSetting::BUTTON_TEXT,
+                    WebchatSetting::MINIMIZE_BUTTON_BACKGROUND,
                 ],
             ],
             WebchatSetting::COMMENTS => [
