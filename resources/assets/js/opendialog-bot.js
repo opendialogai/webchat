@@ -1,7 +1,7 @@
 import 'promise-polyfill/src/polyfill';
 import 'whatwg-fetch';
 import 'url-search-params-polyfill';
-import 'core-js/es7/object';
+import 'core-js/es/object';
 
 let query = 'open=true';
 let url = '';
