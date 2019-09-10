@@ -4,16 +4,9 @@
 
 ## Composer set up
 
-Require as a dependency in your composer.json file
+To install using [Composer](https://getcomposer.org/) run the following command:
 
-+ Add the repository to the repositories section:
-
-             {
-                 "type": "git",
-                 "url": "https://github.com/GreenShootLabs/OpenDialog-Webchat.git"
-             }
-                   
-+ Install the composer dependencies with `composer update`
+`composer require opendialogai/webchat`
 
 ## Front end set up
 
