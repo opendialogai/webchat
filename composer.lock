@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "935788512a90a92cf0cc70c39fd115fe",
+    "content-hash": "cbceac56034b904eb016910201e4871f",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -295,21 +295,21 @@
         },
         {
             "name": "genealabs/laravel-caffeine",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GeneaLabs/laravel-caffeine.git",
-                "reference": "a367512f5b3208fb6914ae43860e13350b0c20b7"
+                "reference": "2c85135d839af775d859ee643cb2fd297435aaf8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GeneaLabs/laravel-caffeine/zipball/a367512f5b3208fb6914ae43860e13350b0c20b7",
-                "reference": "a367512f5b3208fb6914ae43860e13350b0c20b7",
+                "url": "https://api.github.com/repos/GeneaLabs/laravel-caffeine/zipball/2c85135d839af775d859ee643cb2fd297435aaf8",
+                "reference": "2c85135d839af775d859ee643cb2fd297435aaf8",
                 "shasum": ""
             },
             "require": {
-                "illuminate/routing": "6.0",
-                "illuminate/support": "6.0",
+                "illuminate/routing": "^6.0",
+                "illuminate/support": "^6.0",
                 "jenssegers/model": "^1.2.1"
             },
             "require-dev": {
@@ -347,7 +347,7 @@
                 }
             ],
             "description": "Keeping Your Laravel Forms Awake",
-            "time": "2019-09-05T22:39:48+00:00"
+            "time": "2019-09-09T12:27:17+00:00"
         },
         {
             "name": "jenssegers/model",
@@ -398,16 +398,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v6.0.0",
+            "version": "v6.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "89c81d4dc37714d82521d05dc003b26b2a86defc"
+                "reference": "56789e9dec750e0fbe8e9e6ae90a01a4e6887902"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/89c81d4dc37714d82521d05dc003b26b2a86defc",
-                "reference": "89c81d4dc37714d82521d05dc003b26b2a86defc",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/56789e9dec750e0fbe8e9e6ae90a01a4e6887902",
+                "reference": "56789e9dec750e0fbe8e9e6ae90a01a4e6887902",
                 "shasum": ""
             },
             "require": {
@@ -504,8 +504,8 @@
                 "moontoast/math": "Required to use ordered UUIDs (^1.1).",
                 "pda/pheanstalk": "Required to use the beanstalk queue driver (^4.0).",
                 "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (^3.0).",
-                "symfony/cache": "Required to PSR-6 cache bridge (^4.3).",
-                "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^1.1).",
+                "symfony/cache": "Required to PSR-6 cache bridge (^4.3.4).",
+                "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^1.2).",
                 "wildbit/swiftmailer-postmark": "Required to use Postmark mail driver (^3.0)."
             },
             "type": "library",
@@ -539,7 +539,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2019-09-03T13:09:57+00:00"
+            "time": "2019-09-10T18:46:24+00:00"
         },
         {
             "name": "league/flysystem",
@@ -2576,16 +2576,16 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v3.5.0",
+            "version": "v3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "95cb0fa6c025f7f0db7fc60f81e9fb231eb2d222"
+                "reference": "1bdf24f065975594f6a117f0f1f6cabf1333b156"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/95cb0fa6c025f7f0db7fc60f81e9fb231eb2d222",
-                "reference": "95cb0fa6c025f7f0db7fc60f81e9fb231eb2d222",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/1bdf24f065975594f6a117f0f1f6cabf1333b156",
+                "reference": "1bdf24f065975594f6a117f0f1f6cabf1333b156",
                 "shasum": ""
             },
             "require": {
@@ -2594,12 +2594,12 @@
                 "symfony/polyfill-ctype": "^1.9"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.0 || ^6.0"
+                "phpunit/phpunit": "^4.8.35 || ^5.0 || ^6.0 || ^7.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.5-dev"
+                    "dev-master": "3.6-dev"
                 }
             },
             "autoload": {
@@ -2629,7 +2629,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2019-08-27T17:00:38+00:00"
+            "time": "2019-09-10T21:37:39+00:00"
         }
     ],
     "packages-dev": [
@@ -2952,16 +2952,16 @@
         },
         {
             "name": "orchestra/testbench-core",
-            "version": "v4.0.0",
+            "version": "v4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench-core.git",
-                "reference": "de4b741bdee89cc8aba5c03fa8dd0e485001a0d5"
+                "reference": "39aa19cb23fde3a156217587802acf37b1726d16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/de4b741bdee89cc8aba5c03fa8dd0e485001a0d5",
-                "reference": "de4b741bdee89cc8aba5c03fa8dd0e485001a0d5",
+                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/39aa19cb23fde3a156217587802acf37b1726d16",
+                "reference": "39aa19cb23fde3a156217587802acf37b1726d16",
                 "shasum": ""
             },
             "require": {
@@ -2971,15 +2971,15 @@
             "require-dev": {
                 "laravel/framework": "^6.0",
                 "laravel/laravel": "dev-master",
-                "mockery/mockery": "^1.0",
-                "phpunit/phpunit": "^8.0"
+                "mockery/mockery": "^1.2.3",
+                "phpunit/phpunit": "^8.3"
             },
             "suggest": {
                 "laravel/framework": "Required for testing (^6.0).",
-                "mockery/mockery": "Allow to use Mockery for testing (^1.0).",
+                "mockery/mockery": "Allow to use Mockery for testing (^1.2.3).",
                 "orchestra/testbench-browser-kit": "Allow to use legacy Laravel BrowserKit for testing (^4.0).",
                 "orchestra/testbench-dusk": "Allow to use Laravel Dusk for testing (^4.0).",
-                "phpunit/phpunit": "Allow to use PHPUnit for testing (^8.0)."
+                "phpunit/phpunit": "Allow to use PHPUnit for testing (^8.3)."
             },
             "type": "library",
             "extra": {
@@ -3013,7 +3013,7 @@
                 "orchestral",
                 "testing"
             ],
-            "time": "2019-09-03T20:00:44+00:00"
+            "time": "2019-09-11T07:31:59+00:00"
         },
         {
             "name": "phar-io/manifest",
