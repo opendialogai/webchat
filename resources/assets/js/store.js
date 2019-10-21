@@ -50,10 +50,12 @@ function setConfig(config) {
 const customConfig = {};
 window.addEventListener('message', (event) => {
   if (event.data) {
-    // Add config items to our custom config object.
-    Object.keys(event.data).forEach((key) => {
-      customConfig[key] = event.data[key];
-    });
+    if (event.data.openDialogSettings) {
+      Object.keys(event.data.openDialogSettings).forEach((key) => {
+        customConfig[key] = event.data.openDialogSettings[key];
+      });
+      customConfig.newPathname = event.data.newPathname;
+    }
   }
 });
 
