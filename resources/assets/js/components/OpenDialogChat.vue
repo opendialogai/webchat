@@ -199,6 +199,7 @@ export default {
       newMessageIcon: '',
       parentUrl: '',
       pathInitialised: false,
+      sectionCustomFilters: {},
       sectionFilterPathPattern: '',
       sectionFilterQuery: '',
       sectionId: '',
@@ -390,6 +391,14 @@ export default {
               this.user.custom[key] = event.data.customUserSettings[key];
             });
           }
+
+          if (event.data.sectionCustomFilters) {
+            this.sectionCustomFilters = event.data.sectionCustomFilters;
+          }
+
+          if (event.data.reloadCommentSections) {
+            this.getCommentSections();
+          }
         }
       });
     },
@@ -427,6 +436,9 @@ export default {
           [this.sectionFilterQuery]: this.sectionQueryString,
           enabled: '1',
         };
+        Object.keys(this.sectionCustomFilters).forEach((key) => {
+          filter[key] = this.sectionCustomFilters[key];
+        });
         action = 'sections/loadWhere';
         getter = 'sections/where';
       } else {
