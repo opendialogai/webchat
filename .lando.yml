@@ -1,0 +1,11 @@
+name: opendialog-webchat
+recipe: laravel
+config:
+  php: 7.3
+  via: nginx
+  xdebug: true
+  config:
+    php: config/php.ini
+services:
+  database:
+    portforward: 3307
