@@ -1,1 +1,0 @@
-C:37:"PHPUnit\Runner\DefaultTestResultCache":211:{a:2:{s:7:"defects";a:0:{}s:5:"times";a:2:{s:72:"OpenDialogAi\Webchat\Tests\Feature\SettingsEndpointTest::testSettingsApi";d:1.105;s:63:"OpenDialogAi\Webchat\Tests\Unit\SettingsTest::testSettingsTable";d:0.064;}}}
