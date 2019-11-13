@@ -29,6 +29,22 @@ jobs:
       - run: sudo apt install -y libsqlite3-dev
       - run: sudo composer self-update
 
+      - run: curl -o- -L https://yarnpkg.com/install.sh | bash
+
+      - restore_cache:
+          keys:
+            - v1-node-dependencies-{{ checksum "yarn.lock" }}
+            - v1-node-dependencies-
+            -
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: v1-node-dependencies-{{ checksum "yarn.lock" }}
+
+      - run: yarn run prod
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -42,6 +58,8 @@ jobs:
           paths:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.lock" }}
+
+      # Build
 
       # run tests!
       - run: ./vendor/bin/phpunit
