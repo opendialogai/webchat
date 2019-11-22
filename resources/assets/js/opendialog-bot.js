@@ -4,25 +4,24 @@ import 'url-search-params-polyfill';
 import 'core-js/es/object';
 
 let query = 'open=true';
-let url = '';
 
 // startsWith polyfill
 if (!String.prototype.startsWith) {
+  // eslint-disable-next-line no-extend-native
   Object.defineProperty(String.prototype, 'startsWith', {
-    value: function(search, pos) {
-      pos = !pos || pos < 0 ? 0 : +pos;
-      return this.substring(pos, pos + search.length) === search;
-    }
+    value: (search, pos) => {
+      const newPos = !pos || pos < 0 ? 0 : +pos;
+      return this.substring(newPos, newPos + search.length) === search;
+    },
   });
 }
 
 // endsWith polyfill
 if (!String.prototype.endsWith) {
-  String.prototype.endsWith = function(search, this_len) {
-    if (this_len === undefined || this_len > this.length) {
-      this_len = this.length;
-    }
-    return this.substring(this_len - search.length, this_len) === search;
+  // eslint-disable-next-line no-extend-native
+  String.prototype.endsWith = (search, thisLen) => {
+    const newThisLen = (thisLen === undefined || thisLen > this.length) ? this.length : thisLen;
+    return this.substring(newThisLen - search.length, newThisLen) === search;
   };
 }
 
@@ -41,10 +40,12 @@ function addCssToPage(href) {
  * @param webchatSettings
  */
 function mergeSettings(webchatSettings) {
+  // eslint-disable-next-line no-restricted-syntax
   for (const [key, value] of Object.entries(webchatSettings)) {
     if (!window.openDialogSettings[key]) {
       window.openDialogSettings[key] = value;
     } else if (typeof value === 'object') {
+      // eslint-disable-next-line no-restricted-syntax
       for (const [key2, value2] of Object.entries(value)) {
         if (typeof window.openDialogSettings[key][key2] === 'undefined') {
           window.openDialogSettings[key][key2] = value2;
@@ -57,10 +58,11 @@ function mergeSettings(webchatSettings) {
 /**
  * Creates the chat window iFrame on the parent page
  *
+ * @param url
  * @param div
  * @returns {HTMLIFrameElement}
  */
-function openChatWindow(div = null) {
+function openChatWindow(url, div = null) {
   if (div) {
     div.classList.add('opened');
   }
@@ -76,7 +78,7 @@ function openChatWindow(div = null) {
     // Send settings and initial path to the chat widget.
     ifrm.contentWindow.postMessage({
       openDialogSettings: window.openDialogSettings,
-      newPathname: window.location.pathname
+      newPathname: window.location.pathname,
     }, '*');
 
     if (window.openDialogSettings.general.chatbotCssPath) {
@@ -139,7 +141,7 @@ function openChatWindow(div = null) {
 /**
  * Draws the open/close icons on screen along with it's listener
  */
-function drawOpenCloseIcons() {
+function drawOpenCloseIcons(url) {
   const div = document.createElement('div');
   div.setAttribute('id', 'opendialog-bot');
   document.body.appendChild(div);
@@ -155,7 +157,7 @@ function drawOpenCloseIcons() {
   div.addEventListener('click', () => {
     const element = document.getElementById('opendialog-chatwindow');
     if (!element) {
-      openChatWindow(div);
+      openChatWindow(url, div);
     } else {
       element.parentNode.removeChild(element);
       div.classList.remove('opened');
@@ -169,7 +171,7 @@ function drawOpenCloseIcons() {
 
   if (window.openDialogSettings.colours.iconHoverBackground) {
     const style = document.createElement('style');
-    style.innerHTML = '#opendialog-bot:hover { background: ' + window.openDialogSettings.colours.iconHoverBackground + ' !important }';
+    style.innerHTML = `#opendialog-bot:hover { background: ${window.openDialogSettings.colours.iconHoverBackground} !important }`;
     div.appendChild(style);
   }
 
@@ -187,6 +189,18 @@ async function getSettings(url) {
   return json;
 }
 
+function checkValidPath(testPath) {
+  const currentUrl = window.location.href;
+  if (testPath.endsWith('$')) {
+    return currentUrl.endsWith(testPath.replace('$', ''));
+  }
+  if (currentUrl.indexOf(testPath) >= 0) {
+    return true;
+  }
+
+  return false;
+}
+
 /**
  * Checks whether the current page matches the validPath if set.
  * Returns true if no validPath parameter is set
@@ -194,7 +208,7 @@ async function getSettings(url) {
  * @returns {boolean}
  */
 function isValidPath() {
-  const {validPath} = window.openDialogSettings.general;
+  const { validPath } = window.openDialogSettings.general;
 
   if (typeof validPath === 'undefined') {
     return true;
@@ -204,7 +218,7 @@ function isValidPath() {
 
   if (Array.isArray(validPath)) {
     validPath.forEach((key) => {
-      if(checkValidPath(key)) {
+      if (checkValidPath(key)) {
         retVal = true;
       }
     });
@@ -215,20 +229,8 @@ function isValidPath() {
   return retVal;
 }
 
-function checkValidPath(testPath) {
-  let currentUrl = window.location.href;
-  if (testPath.endsWith("$")) {
-    testPath = testPath.replace("$", "");
-    return currentUrl.endsWith(testPath);
-  } else if (currentUrl.indexOf(testPath) >= 0) {
-    return true;
-  }
-
-  return false;
-}
-
 if (window.openDialogSettings) {
-  url = window.openDialogSettings.url;
+  const { url } = window.openDialogSettings;
 
   getSettings(url).then((settings) => {
     mergeSettings(settings);
@@ -253,7 +255,7 @@ if (window.openDialogSettings) {
       addCssToPage(`${url}/vendor/webchat/css/opendialog-chat-bot.css`);
 
       if (window.openDialogSettings.general.hideOpenCloseIcons === 'false' || !window.openDialogSettings.general.hideOpenCloseIcons) {
-        drawOpenCloseIcons();
+        drawOpenCloseIcons(url);
       }
 
       if (window.openDialogSettings.general.pageCssPath) {
@@ -261,14 +263,15 @@ if (window.openDialogSettings) {
       }
 
       if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {
-        openChatWindow();
-      } else if ((window.openDialogSettings.general.open && window.innerWidth <= mobileWidth) || settings.general.startMinimized) {
+        openChatWindow(url);
+      } else if ((window.openDialogSettings.general.open && window.innerWidth <= mobileWidth)
+          || settings.general.startMinimized) {
         query = `${query}&hide=true`;
-        openChatWindow();
+        openChatWindow(url);
 
         document.body.classList.remove('chatbot-no-scroll');
       } else if (window.openDialogSettings.general.open) {
-        openChatWindow();
+        openChatWindow(url);
       }
     }
   });
