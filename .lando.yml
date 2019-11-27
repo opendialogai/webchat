@@ -4,6 +4,8 @@ services:
     type: php:7.3
     via: cli
     xdebug: true
+  node:
+    type: node:10.14.2
 tooling:
   test:
     service: php-service
