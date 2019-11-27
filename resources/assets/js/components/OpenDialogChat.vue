@@ -103,7 +103,9 @@
         :message-delay="messageDelay"
         :new-message-icon="newMessageIcon"
         :parent-url="parentUrl"
+        :restart-button-callback="restartButtonCallback"
         :show-expand-button="false"
+        :show-restart-button="showRestartButton"
         :use-bot-avatar="useBotAvatar"
         :use-human-avatar="useHumanAvatar"
         :use-bot-name="useBotName"
@@ -199,6 +201,7 @@ export default {
       newMessageIcon: '',
       parentUrl: '',
       pathInitialised: false,
+      restartButtonCallback: '',
       sectionCustomFilters: {},
       sectionFilterPathPattern: '',
       sectionFilterQuery: '',
@@ -207,6 +210,7 @@ export default {
       sectionQueryString: '',
       settingsInitialised: false,
       showExpandButton: true,
+      showRestartButton: false,
       showTabs: false,
       timezoneInitialised: false,
       useBotAvatar: false,
@@ -600,6 +604,14 @@ export default {
 
         if (general.disableCloseChat) {
           this.canCloseChat = false;
+        }
+
+        if (general.showRestartButton) {
+          this.showRestartButton = general.showRestartButton;
+        }
+
+        if (general.restartButtonCallback) {
+          this.restartButtonCallback = general.restartButtonCallback;
         }
 
         if (config.disableExpandChat) {

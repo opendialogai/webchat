@@ -15,25 +15,27 @@ use Illuminate\Database\Eloquent\Model;
 class WebchatSetting extends Model
 {
     // General
-    const GENERAL               = 'general';
-    const URL                   = 'url';
-    const TEAM_NAME             = 'teamName';
-    const VALID_PATH            = 'validPath';
-    const MESSAGE_DELAY         = 'messageDelay';
-    const OPEN                  = 'open';
-    const CHATBOT_CSS_PATH      = 'chatbotCssPath';
-    const PAGE_CSS_PATH         = 'pageCssPath';
-    const HIDE_OPEN_CLOSE_ICONS = 'hideOpenCloseIcons';
-    const CALLBACK_MAP          = 'callbackMap';
-    const DISABLE_CLOSE_CHAT    = 'disableCloseChat';
-    const START_MINIMIZED       = 'startMinimized';
-    const CHATBOT_NAME          = 'chatbotName';
-    const CHATBOT_AVATAR_PATH   = 'chatbotAvatarPath';
-    const USE_BOT_AVATAR        = 'useBotAvatar';
-    const USE_HUMAN_AVATAR      = 'useHumanAvatar';
-    const USE_BOT_NAME          = 'useBotName';
-    const USE_HUMAN_NAME        = 'useHumanName';
-    const COLLECT_USER_IP       = 'collectUserIp';
+    const GENERAL                 = 'general';
+    const URL                     = 'url';
+    const TEAM_NAME               = 'teamName';
+    const VALID_PATH              = 'validPath';
+    const MESSAGE_DELAY           = 'messageDelay';
+    const OPEN                    = 'open';
+    const CHATBOT_CSS_PATH        = 'chatbotCssPath';
+    const PAGE_CSS_PATH           = 'pageCssPath';
+    const HIDE_OPEN_CLOSE_ICONS   = 'hideOpenCloseIcons';
+    const CALLBACK_MAP            = 'callbackMap';
+    const DISABLE_CLOSE_CHAT      = 'disableCloseChat';
+    const START_MINIMIZED         = 'startMinimized';
+    const CHATBOT_NAME            = 'chatbotName';
+    const CHATBOT_AVATAR_PATH     = 'chatbotAvatarPath';
+    const USE_BOT_AVATAR          = 'useBotAvatar';
+    const USE_HUMAN_AVATAR        = 'useHumanAvatar';
+    const USE_BOT_NAME            = 'useBotName';
+    const USE_HUMAN_NAME          = 'useHumanName';
+    const COLLECT_USER_IP         = 'collectUserIp';
+    const SHOW_RESTART_BUTTON     = 'showRestartButton';
+    const RESTART_BUTTON_CALLBACK = 'restartButtonCallback';
 
     // Colours
     const COLOURS                     = 'colours';
@@ -118,6 +120,7 @@ class WebchatSetting extends Model
                     WebchatSetting::PAGE_CSS_PATH,
                     WebchatSetting::CHATBOT_NAME,
                     WebchatSetting::CHATBOT_AVATAR_PATH,
+                    WebchatSetting::RESTART_BUTTON_CALLBACK,
                 ],
                 WebchatSetting::BOOLEAN => [
                     WebchatSetting::OPEN,
@@ -129,6 +132,7 @@ class WebchatSetting extends Model
                     WebchatSetting::USE_BOT_NAME,
                     WebchatSetting::USE_HUMAN_NAME,
                     WebchatSetting::COLLECT_USER_IP,
+                    WebchatSetting::SHOW_RESTART_BUTTON,
                 ],
                 WebchatSetting::NUMBER => [
                     WebchatSetting::MESSAGE_DELAY,
