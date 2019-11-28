@@ -69,7 +69,7 @@ function openChatWindow(url, div = null) {
 
   const ifrm = document.createElement('iframe');
   ifrm.setAttribute('id', 'opendialog-chatwindow');
-  ifrm.setAttribute('src', `${url}/web-chat?${query}`);
+  ifrm.setAttribute('src', `${url}/web-chat-iframe?${query}`);
   window.document.body.appendChild(ifrm);
 
   document.body.classList.add('chatbot-no-scroll');
