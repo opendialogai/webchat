@@ -67,7 +67,7 @@ cd vendor/opendialogai/webchat
 if (${refresh})
 then
     echo "Refreshing local dependencies"
-    rm -rf node_modules/vue-beautiful-chat
+    rm -rf node_modules/@opendialogai/vue-beautiful-chat
 fi
 
 
