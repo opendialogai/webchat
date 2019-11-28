@@ -11,3 +11,5 @@ tooling:
     service: php-service
     description: Runs all tests
     cmd: php /app/vendor/bin/phpunit
+  npm:
+    service: node
