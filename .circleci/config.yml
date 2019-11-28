@@ -29,6 +29,24 @@ jobs:
       - run: sudo apt install -y libsqlite3-dev
       - run: sudo composer self-update
 
+      - run: sudo apt-get install nodejs -y
+
+      - run: curl https://www.npmjs.com/install.sh | sudo sh
+
+      - restore_cache:
+          keys:
+            - v1-node-dependencies-{{ checksum "package-lock.json" }}
+            - v1-node-dependencies-
+            -
+      - run: npm install
+
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: v1-node-dependencies-{{ checksum "package-lock.json" }}
+
+      - run: npm run dev
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -42,6 +60,8 @@ jobs:
           paths:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.lock" }}
+
+      # Build
 
       # run tests!
       - run: ./vendor/bin/phpunit

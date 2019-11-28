@@ -1,0 +1,15 @@
+name: opendialog-webchat
+services:
+  php-service:
+    type: php:7.3
+    via: cli
+    xdebug: true
+  node:
+    type: node:10.14.2
+tooling:
+  test:
+    service: php-service
+    description: Runs all tests
+    cmd: php /app/vendor/bin/phpunit
+  npm:
+    service: node
