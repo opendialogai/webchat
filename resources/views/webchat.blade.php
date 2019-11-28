@@ -1,6 +1,11 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1">
+
+    <title>{{ env('APP_NAME') }}</title>
+
     @yield('scripts', '')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
