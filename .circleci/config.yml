@@ -45,7 +45,7 @@ jobs:
             - ./node_modules
           key: v1-node-dependencies-{{ checksum "package-lock.json" }}
 
-      - run: npm run prod
+      - run: npm run dev
 
       # Download and cache dependencies
       - restore_cache:
