@@ -275,7 +275,7 @@ export default {
         });
       }
 
-      if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
+      if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0 && !newMsg.data.trigger) {
         if (this.useHumanName || this.useHumanAvatar) {
           const authorMsg = this.newAuthorMessage(newMsg);
 
@@ -528,6 +528,7 @@ export default {
         data: {
           text: button.text,
           value: button.value,
+          trigger: button.trigger,
         },
       });
     },
