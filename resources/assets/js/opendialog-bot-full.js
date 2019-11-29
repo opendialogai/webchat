@@ -7,7 +7,7 @@ function addCssToPage(href) {
   link.setAttribute('rel', 'stylesheet');
   link.setAttribute('type', 'text/css');
   link.setAttribute('href', href);
-  document.getElementsByTagName('head')[0].appendChild(link);
+  document.getElementsByTagName('body')[0].appendChild(link);
 }
 
 /**
@@ -92,8 +92,8 @@ if (window.openDialogSettings) {
   getSettings(url).then((settings) => {
     mergeSettings(settings);
 
-    if (window.openDialogSettings.general.pageCssPath) {
-      addCssToPage(window.openDialogSettings.general.pageCssPath);
+    if (window.openDialogSettings.general.chatbotFullpageCssPath) {
+      addCssToPage(window.openDialogSettings.general.chatbotFullpageCssPath);
     }
 
     openChatWindow();

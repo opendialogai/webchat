@@ -25,10 +25,6 @@
 
 <link rel="stylesheet" type="text/css" href="/vendor/webchat/css/app.css?{{env("CSS_VERSION", "v1")}}">
 
-@if (env('CUSTOM_CSS_PATH'))
-    <link rel="stylesheet" type="text/css" href="{{ env('CUSTOM_CSS_PATH') }}">
-@endif
-
 <script>
     window.openDialogSettings = {
         url: "{{ env("APP_URL") }}",
