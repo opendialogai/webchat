@@ -33,10 +33,12 @@
           box-shadow: 0 0 19px 0 #bdbdbd !important;
           border-radius: 36px !important;
           border-bottom-left-radius: 0 !important;
+          margin-left: 80px !important;
 
           @media screen and (max-width: 375px) {
             border-radius: 16px !important;
             border-bottom-left-radius: 0 !important;
+            margin-left: 37px !important;
           }
         }
       }
@@ -49,6 +51,27 @@
         @media screen and (max-width: 375px) {
           padding: 5px 15px;
           font-size: 16px !important;
+        }
+      }
+    }
+
+    .sc-message--author {
+      background: none;
+      margin-bottom: -85px;
+      padding-top: 25px;
+
+      @media screen and (max-width: 375px) {
+        margin-bottom: -43px;
+        padding-top: 12px;
+      }
+
+      img.avatar {
+        width: 60px;
+        height: 60px;
+
+        @media screen and (max-width: 375px) {
+          width: 31px;
+          height: 31px;
         }
       }
     }
