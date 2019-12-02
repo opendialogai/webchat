@@ -180,6 +180,11 @@ export default {
           hoverbg: '#0000ff',
           text: '#ffffff',
         },
+        externalButton: {
+          bg: '#4e8cff',
+          hoverbg: '#0000ff',
+          text: '#ffffff',
+        },
         minimizeButton: {
           bg: '#000000',
         },
@@ -648,6 +653,15 @@ export default {
         }
         if (colours.buttonText) {
           this.colours.button.text = colours.buttonText;
+        }
+        if (colours.externalButtonBackground) {
+          this.colours.externalButton.bg = colours.externalButtonBackground;
+        }
+        if (colours.externalButtonHoverBackground) {
+          this.colours.externalButton.hoverbg = colours.externalButtonHoverBackground;
+        }
+        if (colours.externalEuttonText) {
+          this.colours.externalButton.text = colours.externalEuttonText;
         }
         if (colours.minimizeButtonBackground) {
           this.colours.minimizeButton.bg = colours.minimizeButtonBackground;

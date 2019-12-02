@@ -36,23 +36,26 @@ class WebchatSetting extends Model
     const COLLECT_USER_IP       = 'collectUserIp';
 
     // Colours
-    const COLOURS                     = 'colours';
-    const HEADER_BACKGROUND           = 'headerBackground';
-    const HEADER_TEXT                 = 'headerText';
-    const LAUNCHER_BACKGROUND         = 'launcherBackground';
-    const MESSAGE_LIST_BACKGROUND     = 'messageListBackground';
-    const SENT_MESSAGE_BACKGROUND     = 'sentMessageBackground';
-    const SENT_MESSAGE_TEXT           = 'sentMessageText';
-    const RECEIVED_MESSAGE_BACKGROUND = 'receivedMessageBackground';
-    const RECEIVED_MESSAGE_TEXT       = 'receivedMessageText';
-    const USER_INPUT_BACKGROUND       = 'userInputBackground';
-    const USER_INPUT_TEXT             = 'userInputText';
-    const ICON_BACKGROUND             = 'iconBackground';
-    const ICON_HOVER_BACKGROUND       = 'iconHoverBackground';
-    const BUTTON_BACKGROUND           = 'buttonBackground';
-    const BUTTON_HOVER_BACKGROUND     = 'buttonHoverBackground';
-    const BUTTON_TEXT                 = 'buttonText';
-    const MINIMIZE_BUTTON_BACKGROUND  = 'minimizeButtonBackground';
+    const COLOURS                          = 'colours';
+    const HEADER_BACKGROUND                = 'headerBackground';
+    const HEADER_TEXT                      = 'headerText';
+    const LAUNCHER_BACKGROUND              = 'launcherBackground';
+    const MESSAGE_LIST_BACKGROUND          = 'messageListBackground';
+    const SENT_MESSAGE_BACKGROUND          = 'sentMessageBackground';
+    const SENT_MESSAGE_TEXT                = 'sentMessageText';
+    const RECEIVED_MESSAGE_BACKGROUND      = 'receivedMessageBackground';
+    const RECEIVED_MESSAGE_TEXT            = 'receivedMessageText';
+    const USER_INPUT_BACKGROUND            = 'userInputBackground';
+    const USER_INPUT_TEXT                  = 'userInputText';
+    const ICON_BACKGROUND                  = 'iconBackground';
+    const ICON_HOVER_BACKGROUND            = 'iconHoverBackground';
+    const BUTTON_BACKGROUND                = 'buttonBackground';
+    const BUTTON_HOVER_BACKGROUND          = 'buttonHoverBackground';
+    const BUTTON_TEXT                      = 'buttonText';
+    const EXTERNAL_BUTTON_BACKGROUND       = 'externalButtonBackground';
+    const EXTERNAL_BUTTON_HOVER_BACKGROUND = 'externalButtonHoverBackground';
+    const EXTERNAL_BUTTON_TEXT             = 'externalButtonText';
+    const MINIMIZE_BUTTON_BACKGROUND       = 'minimizeButtonBackground';
 
     // Comments
     const COMMENTS                             = 'comments';
@@ -155,6 +158,9 @@ class WebchatSetting extends Model
                     WebchatSetting::BUTTON_BACKGROUND,
                     WebchatSetting::BUTTON_HOVER_BACKGROUND,
                     WebchatSetting::BUTTON_TEXT,
+                    WebchatSetting::EXTERNAL_BUTTON_BACKGROUND,
+                    WebchatSetting::EXTERNAL_BUTTON_HOVER_BACKGROUND,
+                    WebchatSetting::EXTERNAL_BUTTON_TEXT,
                     WebchatSetting::MINIMIZE_BUTTON_BACKGROUND,
                 ],
             ],
