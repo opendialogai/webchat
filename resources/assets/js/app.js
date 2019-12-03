@@ -9,7 +9,7 @@ import 'regenerator-runtime/runtime';
 import 'whatwg-fetch';
 import 'url-search-params-polyfill';
 
-import Chat from 'vue-beautiful-chat';
+import Chat from '@opendialogai/vue-beautiful-chat';
 import UUID from 'vue-uuid';
 import BootstrapVue from 'bootstrap-vue';
 import VueJsCookie from 'vue-js-cookie';

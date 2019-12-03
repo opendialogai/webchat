@@ -1,11 +1,6 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1">
-
-    <title>{{ env('APP_NAME') }}</title>
-
     @yield('scripts', '')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -25,21 +20,7 @@
 
 <link rel="stylesheet" type="text/css" href="/vendor/webchat/css/app.css?{{env("CSS_VERSION", "v1")}}">
 
-<script>
-    window.openDialogSettings = {
-        url: "{{ env("APP_URL") }}",
-        user: {
-            first_name: '{!! auth()->user() ? auth()->user()->name : '' !!}',
-            last_name: '',
-            email: '{!! auth()->user() ? auth()->user()->email : '' !!}',
-            external_id: '{!! auth()->user() ? auth()->user()->id : '' !!}',
-        },
-    };
-</script>
-
 <script src="/vendor/webchat/js/app.js?{{env("JS_VERSION", "v1")}}"></script>
-
-<script src="/vendor/webchat/js/opendialog-bot-full.js?{{env("JS_VERSION", "v1")}}"></script>
 
 </body>
 
