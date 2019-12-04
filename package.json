@@ -33,7 +33,7 @@
     "dependencies": {
         "@babel/core": "^7.7.2",
         "@babel/preset-env": "^7.7.1",
-        "@opendialogai/vue-beautiful-chat": "git://github.com/opendialogai/vue-beautiful-chat.git#feature/restart-button",
+        "@opendialogai/vue-beautiful-chat": "git://github.com/opendialogai/vue-beautiful-chat.git#develop",
         "@reststate/vuex": "0.1.1",
         "bootstrap-vue": "^2.1.0",
         "core-js": "^3.4.2",
