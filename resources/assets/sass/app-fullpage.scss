@@ -94,4 +94,23 @@
       }
     }
   }
+
+  .sc-external-buttons-row {
+    padding: 30px 10px;
+    .sc-external-buttons-element {
+      font-size: 22px;
+      padding: 5px 18px;
+      border-radius: 20px;
+      margin: 0 10px;
+      &:hover {
+        font-weight: bold;
+      }
+
+      @media screen and (max-width: 375px) {
+        font-size: 16px;
+        padding: 3px 15px;
+        margin: 0 5px;
+      }
+    }
+  }
 }
