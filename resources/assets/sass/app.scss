@@ -26,6 +26,7 @@ body {
     text-align: center;
     min-height: 48px;
     padding: 7px 10px;
+    flex: 1;
 
     .sc-header--expand-button {
       display: block;
@@ -34,6 +35,14 @@ body {
     .sc-header--minimize-button {
       display: block;
       margin-right: 0;
+    }
+
+    .sc-header--restart-button {
+      cursor: pointer;
+      align-self: center;
+      span {
+        display: none;
+      }
     }
   }
 
