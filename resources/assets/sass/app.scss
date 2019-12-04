@@ -28,6 +28,14 @@ body {
     padding: 7px 10px;
     flex: 1;
 
+    .sc-header--team-name {
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
     .sc-header--expand-button {
       display: block;
     }
