@@ -35,10 +35,12 @@
         :on-form-button-click="onFormButtonClick"
         :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
+        :on-restart-button-click="onRestartButtonClick"
         :content-editable="contentEditable"
         :show-emoji="false"
         :show-file="false"
         :show-expand-button="false"
+        :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
         :show-long-text-input="showLongTextInput"
         :show-messages="showMessages"
@@ -105,6 +107,11 @@ export default {
       type: String,
       required: true,
     },
+    restartButtonCallback: {
+      type: String,
+      default: '',
+    },
+    showRestartButton: Boolean,
     showExpandButton: Boolean,
     useBotAvatar: Boolean,
     useHumanAvatar: Boolean,
@@ -571,6 +578,14 @@ export default {
         author: 'me',
         callback_id: msg.data.callback_id,
         data: responseData,
+      });
+    },
+    onRestartButtonClick() {
+      this.sendMessage({
+        type: 'trigger',
+        author: 'me',
+        callback_id: this.restartButtonCallback,
+        data: {},
       });
     },
     expandChat() {

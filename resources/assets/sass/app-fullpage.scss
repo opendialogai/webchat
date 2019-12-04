@@ -93,5 +93,20 @@
         object-fit: contain;
       }
     }
+
+    .sc-header--restart-button {
+      cursor: pointer;
+      align-self: center;
+      img {
+        height: auto;
+      }
+      span {
+        font-size: 22px;
+        display: inline-block;
+        @media screen and (max-width: 375px) {
+          display: none;
+        }
+      }
+    }
   }
 }
