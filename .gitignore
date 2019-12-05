@@ -3,3 +3,4 @@
 /node_modules
 /public
 /images/vendor/
+.phpunit.result.cache

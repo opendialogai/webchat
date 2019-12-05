@@ -12,7 +12,7 @@
     "devDependencies": {
         "axios": "^0.19.0",
         "babel-eslint": "^10.0.3",
-        "bootstrap": "^4.3.1",
+        "bootstrap": "^4.4.1",
         "copy-webpack-plugin": "^5.0.5",
         "cross-env": "^5.2.1",
         "eslint": "^5.16.0",
@@ -31,12 +31,12 @@
         "vue": "^2.6.10"
     },
     "dependencies": {
-        "@babel/core": "^7.7.2",
-        "@babel/preset-env": "^7.7.1",
+        "@babel/core": "^7.7.4",
+        "@babel/preset-env": "^7.7.4",
         "@opendialogai/vue-beautiful-chat": "git://github.com/opendialogai/vue-beautiful-chat.git#develop",
         "@reststate/vuex": "0.1.1",
         "bootstrap-vue": "^2.1.0",
-        "core-js": "^3.4.2",
+        "core-js": "^3.4.5",
         "css-vars-ponyfill": "^2.1.2",
         "detect-browser": "^4.8.0",
         "jstz": "^2.1.1",

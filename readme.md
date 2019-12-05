@@ -1,6 +1,43 @@
 [![CircleCI](https://circleci.com/gh/opendialogai/webchat/tree/master.svg?style=svg&circle-token=ef6ed717ecefce0b6acabcd01a40dc913370412a)](https://circleci.com/gh/opendialogai/webchat/tree/master)
 
-# Steps to use this package
+This is the OpenDialog webchat package that contains the vue based webchat bot and APIs and database config for webchat settings.
+
+# Setting up for Local Development
+
+A `lando.yml` file is included for setting up a local development environment. This includes a php service and a node service.
+
+To start the containers, run 
+
+    lando start
+    
+To run the php test suite, run 
+
+    lando test
+    
+To perform npm commands, run
+
+    lando npm {command} 
+    
+## Running Code Sniffer
+
+To run code sniffer, run the following command
+```./vendor/bin/phpcs --standard=od-cs-ruleset.xml src/ --ignore=*/migrations/*,*/tests/*```
+
+## Git Hooks
+
+To set up the included git pre-commit hook, first make sure the pre-commit script is executable by running
+
+```chmod +x .githooks/pre-commit```
+
+Then configure your local git to use this directory for git hooks by running:
+
+```git config core.hooksPath .githooks/```
+
+Now every commit you make will trigger php codesniffer to run. If there is a problem with the formatting
+of the code, the script will echo the output of php codesniffer. If there are no issues, the commit will
+go into git.
+
+# Steps to use this package in an application
 
 ## Composer set up
 
@@ -27,20 +64,6 @@ To run the update script, run ```bash update-web-chat.sh```. The following optio
 + `-l` Set if you are using Lando for local development. Will run the commands from within Lando
 + `-i` Set if you need to install the node dependencies. This defaults to false, so you should always set this for the fist run
 + `-f` Whether to force updating by deleting local dependencies. If set, will remove the vue-beautiful-chat node module before reinstalling 
-
-## Git Hooks
-
-To set up the included git pre-commit hook, first make sure the pre-commit script is executable by running
-
-```chmod +x .githooks/pre-commit```
-
-Then configure your local git to use this directory for git hooks by running:
-
-```git config core.hooksPath .githooks/```
-
-Now every commit you make will trigger php codesniffer to run. If there is a problem with the formatting
-of the code, the script will echo the output of php codesniffer. If there are no issues, the commit will
-go into git.
 
 # Configuration 
 
@@ -109,7 +132,3 @@ window.openDialogSettings = {
     },
 };
 ```
-
-## Running Code Sniffer
-To run code sniffer, run the following command
-```./vendor/bin/phpcs --standard=od-cs-ruleset.xml src/ --ignore=*/migrations/*,*/tests/*```
