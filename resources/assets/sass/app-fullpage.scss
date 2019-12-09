@@ -99,6 +99,10 @@
       align-self: center;
       img {
         height: auto;
+        @media screen and (max-width: 375px) {
+          height: 19px;
+          margin-right: 10px;
+        }
       }
       span {
         font-size: 22px;
