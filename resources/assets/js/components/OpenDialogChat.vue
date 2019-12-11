@@ -703,6 +703,8 @@ export default {
       if (config.comments) {
         if (config.comments.commentsEnabled) {
           this.commentsEnabled = true;
+        } else {
+          this.commentsEnabled = false;
         }
 
         Object.keys(config.comments).forEach((commentConfigKey) => {

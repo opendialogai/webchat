@@ -133,3 +133,13 @@
     }
   }
 }
+
+.opendialog-chat-window {
+  .loading {
+    height: 100%;
+  }
+  .minimize-button,
+  .minimized-header {
+    display: none;
+  }
+}
