@@ -497,6 +497,7 @@ export default {
       if (msg.data.external) {
         this.$nextTick(() => {
           this.$root.$emit('scroll-down-message-list');
+          this.$root.$emit('disable-message-list-scroll');
 
           const messages = document.querySelectorAll('.sc-message');
           const lastMessageRect = messages[messages.length - 2].getBoundingClientRect();
@@ -523,6 +524,8 @@ export default {
                 value: button.value,
               },
             });
+
+            this.$root.$emit('enable-message-list-scroll');
           }, 2000);
         });
       } else {

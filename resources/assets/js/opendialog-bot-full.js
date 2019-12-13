@@ -33,8 +33,6 @@ function mergeSettings(webchatSettings) {
 }
 
 function openChatWindow() {
-  document.body.classList.add('chatbot-no-scroll');
-
   // Send settings to the chat widget.
   window.postMessage({
     openDialogSettings: window.openDialogSettings,
@@ -50,16 +48,6 @@ function openChatWindow() {
   }
 
   window.addEventListener('message', (event) => {
-    if (event.data && typeof event.data.height !== 'undefined') {
-      window.style.height = (event.data.height === 'auto') ? '' : event.data.height;
-
-      if (event.data.height === 'auto') {
-        document.body.classList.add('chatbot-no-scroll');
-      } else {
-        document.body.classList.remove('chatbot-no-scroll');
-      }
-    }
-
     if (event.data && typeof event.data.addClass !== 'undefined') {
       window.classList.add(event.data.addClass);
     }
