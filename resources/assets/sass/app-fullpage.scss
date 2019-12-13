@@ -114,21 +114,40 @@
     }
   }
 
-  .sc-external-buttons-row {
-    padding: 30px 10px;
-    .sc-external-buttons-element {
-      font-size: 22px;
-      padding: 5px 18px;
-      border-radius: 20px;
-      margin: 0 10px;
-      &:hover {
-        font-weight: bold;
+  .sc-user-input-wrapper {
+    z-index: 1;
+
+    .sc-external-buttons-row {
+      padding: 155px 10px 30px 10px;
+      height: 230px;
+
+      &.hide-overflow {
+        padding: 30px 10px;
+        height: 105px;
       }
 
-      @media screen and (max-width: 375px) {
-        font-size: 16px;
-        padding: 3px 15px;
-        margin: 0 5px;
+      .sc-external-buttons-element {
+        font-size: 22px;
+        padding: 5px 18px;
+        border-radius: 20px;
+        margin: 0 10px;
+        &:hover {
+          font-weight: bold;
+        }
+
+        &.button-clicked {
+          font-size: 25px;
+          border-radius: 36px;
+          border-bottom-right-radius: 0;
+          padding: 19px 25px;
+          box-shadow: 0 0 19px 0 rgba(106, 106, 106, 0.59) !important;
+        }
+
+        @media screen and (max-width: 375px) {
+          font-size: 16px;
+          padding: 3px 15px;
+          margin: 0 5px;
+        }
       }
     }
   }

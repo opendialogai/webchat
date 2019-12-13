@@ -494,49 +494,80 @@ export default {
     openChat() {
     },
     onButtonClick(button, msg) {
-      if (button.phone_number) {
-        const telephone = `tel:${button.phone_number}`;
+      if (msg.data.external) {
+        this.$nextTick(() => {
+          this.$root.$emit('scroll-down-message-list');
 
-        this.onLinkClick(telephone);
-        window.open(telephone);
-        return;
-      }
+          const messages = document.querySelectorAll('.sc-message');
+          const lastMessageRect = messages[messages.length - 2].getBoundingClientRect();
 
-      if (button.tab_switch) {
-        this.$emit('switchToCommentsTab');
-        return;
-      }
+          const buttonClicked = document.querySelector('.sc-external-buttons-element.button-clicked');
+          const buttonClickedRect = buttonClicked.getBoundingClientRect();
 
-      if (button.link) {
-        this.onLinkClick(button.link);
+          const translateLeft = lastMessageRect.left + lastMessageRect.width
+                                - buttonClickedRect.left - buttonClickedRect.width - 10;
+          const translateTop = buttonClickedRect.top - lastMessageRect.top
+                               - lastMessageRect.height;
 
-        if (button.link_new_tab) {
-          window.open(button.link, '_blank');
-        } else {
-          window.open(button.link, '_parent');
+          buttonClicked.style.transform = `translate(${translateLeft}px, -${translateTop}px)`;
+
+          setTimeout(() => {
+            this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
+
+            this.sendMessage({
+              type: 'button_response',
+              author: 'me',
+              callback_id: button.callback_id,
+              data: {
+                text: button.text,
+                value: button.value,
+              },
+            });
+          }, 2000);
+        });
+      } else {
+        if (button.phone_number) {
+          const telephone = `tel:${button.phone_number}`;
+
+          this.onLinkClick(telephone);
+          window.open(telephone);
+          return;
         }
-        return;
+
+        if (button.tab_switch) {
+          this.$emit('switchToCommentsTab');
+          return;
+        }
+
+        if (button.link) {
+          this.onLinkClick(button.link);
+
+          if (button.link_new_tab) {
+            window.open(button.link, '_blank');
+          } else {
+            window.open(button.link, '_parent');
+          }
+          return;
+        }
+
+        if (msg.data.clear_after_interaction) {
+          this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
+        }
+
+        if (!this.isExpand) {
+          this.$emit('expandChat');
+        }
+
+        this.sendMessage({
+          type: 'button_response',
+          author: 'me',
+          callback_id: button.callback_id,
+          data: {
+            text: button.text,
+            value: button.value,
+          },
+        });
       }
-
-      if (msg.data.clear_after_interaction) {
-        this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
-      }
-
-      if (!this.isExpand) {
-        this.$emit('expandChat');
-      }
-
-      this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
-
-      this.sendMessage({
-        type: 'button_response',
-        author: 'me',
-        callback_id: button.callback_id,
-        data: {
-          text: button.text,
-          value: button.value,
-        },
-      });
     },
     onListButtonClick(callback) {
       this.sendMessage({
