@@ -64,6 +64,12 @@ fi
 
 cd vendor/opendialogai/webchat
 
+if ${lando}
+then
+    echo "Deleting local Lando file"
+   rm -f .lando.yml
+fi
+
 if (${refresh})
 then
     echo "Refreshing local dependencies"
