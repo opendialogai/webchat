@@ -95,6 +95,7 @@
         :chatbot-avatar-path="chatbotAvatarPath"
         :chatbot-name="chatbotName"
         :colours="colours"
+        :hide-datetime-message="hideDatetimeMessage"
         :is-expand="isExpand"
         :is-mobile="isMobile"
         :chat-is-open="isOpen"
@@ -195,6 +196,7 @@ export default {
       commentsKey: 0,
       commentsEnabled: true,
       cssProps: {},
+      hideDatetimeMessage: false,
       ipAddressInitialised: false,
       isExpand: false,
       isMinimized: false,
@@ -617,6 +619,10 @@ export default {
 
         if (general.restartButtonCallback) {
           this.restartButtonCallback = general.restartButtonCallback;
+        }
+
+        if (general.hideDatetimeMessage) {
+          this.hideDatetimeMessage = general.hideDatetimeMessage;
         }
 
         if (config.disableExpandChat) {

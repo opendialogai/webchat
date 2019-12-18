@@ -88,6 +88,7 @@ export default {
       type: Object,
       required: true,
     },
+    hideDatetimeMessage: Boolean,
     isExpand: Boolean,
     isMobile: Boolean,
     showHistory: Boolean,
@@ -171,12 +172,14 @@ export default {
         previousMessage = this.messageList[this.messageList.length - 3];
       }
 
-      if (!previousMessage || previousMessage.type !== 'datetime') {
-        if (!previousMessage || previousMessage.data.date !== lastMessage.data.date) {
-          this.messageList.splice(this.messageList.length - spliceIndex, 0, {
-            type: 'datetime',
-            datetime: lastMessage.data.date,
-          });
+      if (!this.hideDatetimeMessage) {
+        if (!previousMessage || previousMessage.type !== 'datetime') {
+          if (!previousMessage || previousMessage.data.date !== lastMessage.data.date) {
+            this.messageList.splice(this.messageList.length - spliceIndex, 0, {
+              type: 'datetime',
+              datetime: lastMessage.data.date,
+            });
+          }
         }
       }
 
@@ -673,13 +676,15 @@ export default {
               delete currentMessage.data.internal;
             }
 
-            if ((i === 0 && currentMessage.data)
-              || this.messageList[this.messageList.length - 1].data.date
-              !== currentMessage.data.date) {
-              this.messageList.push({
-                type: 'datetime',
-                datetime: currentMessage.data.date,
-              });
+            if (!this.hideDatetimeMessage) {
+              if ((i === 0 && currentMessage.data)
+                || this.messageList[this.messageList.length - 1].data.date
+                !== currentMessage.data.date) {
+                this.messageList.push({
+                  type: 'datetime',
+                  datetime: currentMessage.data.date,
+                });
+              }
             }
 
             if (i < messages.length - 1) {
