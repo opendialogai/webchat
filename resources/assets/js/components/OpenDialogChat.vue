@@ -96,11 +96,13 @@
         :chatbot-name="chatbotName"
         :colours="colours"
         :hide-datetime-message="hideDatetimeMessage"
+        :hide-typing-indicator-on-internal-messages="hideTypingIndOnInternalMessages"
         :is-expand="isExpand"
         :is-mobile="isMobile"
         :chat-is-open="isOpen"
         :show-history="showHistory"
         :number-of-messages="numberOfMessages"
+        :message-animation="messageAnimation"
         :message-delay="messageDelay"
         :new-message-icon="newMessageIcon"
         :parent-url="parentUrl"
@@ -197,6 +199,7 @@ export default {
       commentsEnabled: true,
       cssProps: {},
       hideDatetimeMessage: false,
+      hideTypingIndOnInternalMessages: false,
       ipAddressInitialised: false,
       isExpand: false,
       isMinimized: false,
@@ -204,6 +207,7 @@ export default {
       isOpen: true,
       showHistory: false,
       numberOfMessages: 10,
+      messageAnimation: false,
       messageDelay: 1000,
       newMessageIcon: '',
       parentUrl: '',
@@ -623,6 +627,14 @@ export default {
 
         if (general.hideDatetimeMessage) {
           this.hideDatetimeMessage = general.hideDatetimeMessage;
+        }
+
+        if (general.hideTypingIndicatorOnInternalMessages) {
+          this.hideTypingIndOnInternalMessages = general.hideTypingIndicatorOnInternalMessages;
+        }
+
+        if (general.messageAnimation) {
+          this.messageAnimation = general.messageAnimation;
         }
 
         if (config.disableExpandChat) {

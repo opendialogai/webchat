@@ -38,6 +38,8 @@ class WebchatSetting extends Model
     public const COLLECT_USER_IP           = 'collectUserIp';
     public const SHOW_RESTART_BUTTON       = 'showRestartButton';
     public const RESTART_BUTTON_CALLBACK   = 'restartButtonCallback';
+    public const MESSAGE_ANIMATION         = 'messageAnimation';
+    public const HIDE_TYPING_INDICATOR_ON_INTERNAL_MESSAGES = 'hideTypingIndicatorOnInternalMessages';
 
     // Colours
     public const COLOURS                          = 'colours';
@@ -140,6 +142,8 @@ class WebchatSetting extends Model
                     WebchatSetting::USE_HUMAN_NAME,
                     WebchatSetting::COLLECT_USER_IP,
                     WebchatSetting::SHOW_RESTART_BUTTON,
+                    WebchatSetting::MESSAGE_ANIMATION,
+                    WebchatSetting::HIDE_TYPING_INDICATOR_ON_INTERNAL_MESSAGES,
                 ],
                 WebchatSetting::NUMBER => [
                     WebchatSetting::MESSAGE_DELAY,
