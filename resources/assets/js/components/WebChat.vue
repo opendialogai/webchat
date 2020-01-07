@@ -496,7 +496,11 @@ export default {
     },
     openChat() {
     },
-    onButtonClick(button, msg) {
+    async onButtonClick(button, msg) {
+      if (msg.data.external) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+
       if (button.phone_number) {
         const telephone = `tel:${button.phone_number}`;
 
