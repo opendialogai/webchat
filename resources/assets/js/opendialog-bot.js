@@ -26,12 +26,32 @@ if (!String.prototype.endsWith) {
   };
 }
 
+window.addEventListener('locationchange', () => {
+  if (isValidPath()) {
+    const openCloseIcons = document.getElementById('opendialog-bot');
+    const iframe = document.getElementById('opendialog-chatwindow');
+
+    if (!iframe && !openCloseIcons) {
+      addChatElements();
+    }
+  } else {
+    removeChatElements();
+  }
+});
+
+function cssFileExist(href) {
+  const links = document.querySelectorAll(`link[href="${href}"]`);
+  return (links.length) ? true : false;
+}
+
 function addCssToPage(href) {
-  const link = document.createElement('link');
-  link.setAttribute('rel', 'stylesheet');
-  link.setAttribute('type', 'text/css');
-  link.setAttribute('href', href);
-  document.getElementsByTagName('head')[0].appendChild(link);
+  if (!cssFileExist(href)) {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('type', 'text/css');
+    link.setAttribute('href', href);
+    document.getElementsByTagName('head')[0].appendChild(link);
+  }
 }
 
 /**
@@ -215,6 +235,54 @@ function isValidPath() {
   return retVal;
 }
 
+function addChatElements() {
+  const mobileWidth = (window.openDialogSettings.mobileWidth)
+    ? window.openDialogSettings.mobileWidth : 480;
+
+  const urlParams = new URLSearchParams(window.location.search);
+
+  if (urlParams.has('callback_id')) {
+    query = `${query}&callback_id=${urlParams.get('callback_id')}`;
+  }
+
+  if (window.innerWidth <= mobileWidth) {
+    query = `${query}&mobile=true`;
+  }
+
+  addCssToPage(`${url}/vendor/webchat/css/opendialog-chat-bot.css`);
+
+  if (window.openDialogSettings.general.hideOpenCloseIcons === 'false' || !window.openDialogSettings.general.hideOpenCloseIcons) {
+    drawOpenCloseIcons();
+  }
+
+  if (window.openDialogSettings.general.pageCssPath) {
+    addCssToPage(window.openDialogSettings.general.pageCssPath);
+  }
+
+  if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {
+    openChatWindow();
+  } else if ((window.openDialogSettings.general.open && window.innerWidth <= mobileWidth) || window.openDialogSettings.general.startMinimized) {
+    query = `${query}&hide=true`;
+    openChatWindow();
+
+    document.body.classList.remove('chatbot-no-scroll');
+  } else if (window.openDialogSettings.general.open) {
+    openChatWindow();
+  }
+}
+
+function removeChatElements() {
+  const openCloseIcons = document.getElementById('opendialog-bot');
+  const iframe = document.getElementById('opendialog-chatwindow');
+
+  if (openCloseIcons) {
+    openCloseIcons.remove();
+  }
+  if (iframe) {
+    iframe.remove();
+  }
+}
+
 function checkValidPath(testPath) {
   let currentUrl = window.location.href;
   if (testPath.endsWith("$")) {
@@ -233,43 +301,11 @@ if (window.openDialogSettings) {
   getSettings(url).then((settings) => {
     mergeSettings(settings);
 
-    const mobileWidth = (window.openDialogSettings.mobileWidth)
-      ? window.openDialogSettings.mobileWidth : 480;
-
     // Set the current url of the parent to pass into the iFrame
     window.openDialogSettings.parentUrl = window.location.pathname;
 
-    const urlParams = new URLSearchParams(window.location.search);
-
-    if (urlParams.has('callback_id')) {
-      query = `${query}&callback_id=${urlParams.get('callback_id')}`;
-    }
-
-    if (window.innerWidth <= mobileWidth) {
-      query = `${query}&mobile=true`;
-    }
-
     if (isValidPath()) {
-      addCssToPage(`${url}/vendor/webchat/css/opendialog-chat-bot.css`);
-
-      if (window.openDialogSettings.general.hideOpenCloseIcons === 'false' || !window.openDialogSettings.general.hideOpenCloseIcons) {
-        drawOpenCloseIcons();
-      }
-
-      if (window.openDialogSettings.general.pageCssPath) {
-        addCssToPage(window.openDialogSettings.general.pageCssPath);
-      }
-
-      if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {
-        openChatWindow();
-      } else if ((window.openDialogSettings.general.open && window.innerWidth <= mobileWidth) || settings.general.startMinimized) {
-        query = `${query}&hide=true`;
-        openChatWindow();
-
-        document.body.classList.remove('chatbot-no-scroll');
-      } else if (window.openDialogSettings.general.open) {
-        openChatWindow();
-      }
+      addChatElements();
     }
   });
 }
