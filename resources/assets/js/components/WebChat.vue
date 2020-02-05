@@ -352,13 +352,17 @@ export default {
                     /* eslint-disable no-param-reassign */
                     message.data.animate = this.messageAnimation;
 
-                    if (i === 0) {
+                    if (i === 0 || !this.hideTypingIndicatorOnInternalMessages) {
                       const lastMessage = this.messageList[this.messageList.length - 1];
                       lastMessage.type = message.type;
                       lastMessage.data = message.data;
 
                       if (response.data.length > 1) {
                         lastMessage.data.firstInternal = true;
+                      }
+
+                      if (i > 0 && (i === (response.data.length - 1))) {
+                        lastMessage.data.lastInternal = true;
                       }
 
                       this.$root.$emit('scroll-down-message-list');
