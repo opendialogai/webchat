@@ -352,7 +352,8 @@ export default {
                     /* eslint-disable no-param-reassign */
                     message.data.animate = this.messageAnimation;
 
-                    if (i === 0 || !this.hideTypingIndicatorOnInternalMessages) {
+                    if ((i === 0 || !this.hideTypingIndicatorOnInternalMessages)
+                        && (message.type !== 'rich')) {
                       const lastMessage = this.messageList[this.messageList.length - 1];
                       lastMessage.type = message.type;
                       lastMessage.data = message.data;
@@ -384,15 +385,17 @@ export default {
 
                     if (!this.hideTypingIndicatorOnInternalMessages) {
                       if (i < (response.data.length - 1)) {
-                        this.$nextTick(() => {
+                        if (response.data[i + 1].type !== 'rich') {
                           this.$nextTick(() => {
-                            this.messageList.push({
-                              author: 'them',
-                              type: 'typing',
-                              data: {},
+                            this.$nextTick(() => {
+                              this.messageList.push({
+                                author: 'them',
+                                type: 'typing',
+                                data: {},
+                              });
                             });
                           });
-                        });
+                        }
                       }
                     }
                   }, (i + 1) * this.messageDelay);
