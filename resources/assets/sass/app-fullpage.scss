@@ -1,53 +1,8 @@
 .sc-chat-window {
   .sc-message-list {
     .sc-message--content {
-      &.sent {
-        .sc-message--form-response,
-        .sc-message--text,
-        .sc-message--list,
-        .sc-message--button,
-        .sc-message--button-response,
-        .sc-message--image,
-        .sc-typing-indicator {
-          box-shadow: 0 0 19px 0 rgba(106, 106, 106, 0.59) !important;
-          border-radius: 36px !important;
-          border-bottom-right-radius: 0 !important;
-
-          @media screen and (max-width: 375px) {
-            border-radius: 16px !important;
-            border-bottom-right-radius: 0 !important;
-          }
-        }
-      }
-
-      &.received {
-        .sc-message--form,
-        .sc-message--rich,
-        .sc-message--carousel-list,
-        .sc-message--long-text,
-        .sc-message--text,
-        .sc-message--list,
-        .sc-message--button,
-        .sc-message--image,
-        .sc-typing-indicator {
-          box-shadow: 0 0 19px 0 #bdbdbd !important;
-          border-radius: 36px !important;
-          border-bottom-left-radius: 0 !important;
-          margin-left: 80px !important;
-
-          @media screen and (max-width: 375px) {
-            border-radius: 16px !important;
-            border-bottom-left-radius: 0 !important;
-            margin-left: 37px !important;
-          }
-        }
-      }
-
       .sc-message--form-response,
       .sc-message--text {
-        padding: 19px 25px;
-        font-size: 25px !important;
-
         @media screen and (max-width: 375px) {
           padding: 5px 15px;
           font-size: 16px !important;
@@ -78,12 +33,31 @@
   }
 
   .sc-header {
-    height: 93px;
-    min-height: 93px;
-    @media screen and (max-width: 768px) {
-      height: 50px;
-      min-height: 50px;
-    }
+    height: 120px;
+    min-height: 120px;
+      @media screen and (max-width: 1440px) {
+          padding-left: 100px;
+          padding-right: 100px;
+      }
+      @media screen and (max-width: 768px) {
+          padding-left: 50px;
+          padding-right: 50px;
+          height: 100px;
+          min-height: 100px;
+      }
+      @media screen and (max-width: 375px),
+      only screen and (device-width: 414px) and (device-height: 896px) {
+          padding-left: 25px;
+          padding-right: 25px;
+          height: 78px;
+          min-height: 78px;
+      }
+      @media only screen and (device-width: 414px) and (device-height: 896px) {
+          padding-left: 25px;
+          padding-right: 25px;
+          height: 78px;
+          min-height: 78px;
+      }
 
     .sc-header--team-name {
       padding: 0;
@@ -98,19 +72,21 @@
       cursor: pointer;
       align-self: center;
       img {
-        height: auto;
         @media screen and (max-width: 375px) {
           height: 19px;
           margin-right: 10px;
         }
       }
       span {
-        font-size: 22px;
         display: inline-block;
         @media screen and (max-width: 375px) {
           display: none;
         }
       }
+    }
+
+    .sc-header--minimize-button {
+        display: none;
     }
   }
 
