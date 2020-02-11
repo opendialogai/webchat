@@ -33,7 +33,7 @@
     "dependencies": {
         "@babel/core": "^7.7.4",
         "@babel/preset-env": "^7.7.4",
-        "@opendialogai/vue-beautiful-chat": "git://github.com/opendialogai/vue-beautiful-chat.git#feature/full-page-chat",
+        "@opendialogai/vue-beautiful-chat": "git://github.com/opendialogai/vue-beautiful-chat.git#0.5.2",
         "@reststate/vuex": "0.1.1",
         "bootstrap-vue": "^2.1.0",
         "core-js": "^3.4.5",
