@@ -29,7 +29,7 @@ module.exports = {
     },
     plugins: [
         new CopyWebpackPlugin([
-            { from : 'node_modules/vue-beautiful-chat/src/assets', to: 'images/vendor/vue-beautiful-chat' },
+            { from : 'node_modules/@opendialogai/vue-beautiful-chat/src/assets', to: 'images/vendor/vue-beautiful-chat' },
         ]),
     ],
     resolve: {

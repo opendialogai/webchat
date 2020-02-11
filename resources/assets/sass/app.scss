@@ -27,6 +27,15 @@ body {
     text-align: center;
     height: 48px;
     padding: 7px 10px;
+    flex: 1;
+
+    .sc-header--team-name {
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
 
     .sc-header--expand-button {
       display: block;
@@ -35,6 +44,14 @@ body {
     .sc-header--minimize-button {
       display: block;
       margin-right: 0;
+    }
+
+    .sc-header--restart-button {
+      cursor: pointer;
+      align-self: center;
+      span {
+        display: none;
+      }
     }
   }
 

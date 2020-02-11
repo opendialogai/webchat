@@ -95,15 +95,20 @@
         :chatbot-avatar-path="chatbotAvatarPath"
         :chatbot-name="chatbotName"
         :colours="colours"
+        :hide-datetime-message="hideDatetimeMessage"
+        :hide-typing-indicator-on-internal-messages="hideTypingIndOnInternalMessages"
         :is-expand="isExpand"
         :is-mobile="isMobile"
         :chat-is-open="isOpen"
         :show-history="showHistory"
         :number-of-messages="numberOfMessages"
+        :message-animation="messageAnimation"
         :message-delay="messageDelay"
         :new-message-icon="newMessageIcon"
         :parent-url="parentUrl"
+        :restart-button-callback="restartButtonCallback"
         :show-expand-button="false"
+        :show-restart-button="showRestartButton"
         :use-bot-avatar="useBotAvatar"
         :use-human-avatar="useHumanAvatar"
         :use-bot-name="useBotName"
@@ -180,6 +185,11 @@ export default {
           hoverbg: '#0000ff',
           text: '#ffffff',
         },
+        externalButton: {
+          bg: '#4e8cff',
+          hoverbg: '#0000ff',
+          text: '#ffffff',
+        },
         minimizeButton: {
           bg: '#000000',
         },
@@ -188,6 +198,8 @@ export default {
       commentsKey: 0,
       commentsEnabled: true,
       cssProps: {},
+      hideDatetimeMessage: false,
+      hideTypingIndOnInternalMessages: false,
       ipAddressInitialised: false,
       isExpand: false,
       isMinimized: false,
@@ -195,10 +207,12 @@ export default {
       isOpen: true,
       showHistory: false,
       numberOfMessages: 10,
+      messageAnimation: false,
       messageDelay: 1000,
       newMessageIcon: '',
       parentUrl: '',
       pathInitialised: false,
+      restartButtonCallback: '',
       sectionCustomFilters: {},
       sectionFilterPathPattern: '',
       sectionFilterQuery: '',
@@ -207,6 +221,7 @@ export default {
       sectionQueryString: '',
       settingsInitialised: false,
       showExpandButton: true,
+      showRestartButton: false,
       showTabs: false,
       timezoneInitialised: false,
       useBotAvatar: false,
@@ -602,6 +617,26 @@ export default {
           this.canCloseChat = false;
         }
 
+        if (general.showRestartButton) {
+          this.showRestartButton = general.showRestartButton;
+        }
+
+        if (general.restartButtonCallback) {
+          this.restartButtonCallback = general.restartButtonCallback;
+        }
+
+        if (general.hideDatetimeMessage) {
+          this.hideDatetimeMessage = general.hideDatetimeMessage;
+        }
+
+        if (general.hideTypingIndicatorOnInternalMessages) {
+          this.hideTypingIndOnInternalMessages = general.hideTypingIndicatorOnInternalMessages;
+        }
+
+        if (general.messageAnimation) {
+          this.messageAnimation = general.messageAnimation;
+        }
+
         if (config.disableExpandChat) {
           this.showExpandButton = false;
         }
@@ -649,6 +684,15 @@ export default {
         if (colours.buttonText) {
           this.colours.button.text = colours.buttonText;
         }
+        if (colours.externalButtonBackground) {
+          this.colours.externalButton.bg = colours.externalButtonBackground;
+        }
+        if (colours.externalButtonHoverBackground) {
+          this.colours.externalButton.hoverbg = colours.externalButtonHoverBackground;
+        }
+        if (colours.externalEuttonText) {
+          this.colours.externalButton.text = colours.externalEuttonText;
+        }
         if (colours.minimizeButtonBackground) {
           this.colours.minimizeButton.bg = colours.minimizeButtonBackground;
         }
@@ -677,6 +721,8 @@ export default {
       if (config.comments) {
         if (config.comments.commentsEnabled) {
           this.commentsEnabled = true;
+        } else {
+          this.commentsEnabled = false;
         }
 
         Object.keys(config.comments).forEach((commentConfigKey) => {

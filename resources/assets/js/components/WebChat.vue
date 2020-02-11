@@ -35,10 +35,12 @@
         :on-form-button-click="onFormButtonClick"
         :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
+        :on-restart-button-click="onRestartButtonClick"
         :content-editable="contentEditable"
         :show-emoji="false"
         :show-file="false"
         :show-expand-button="false"
+        :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
         :show-long-text-input="showLongTextInput"
         :show-messages="showMessages"
@@ -86,8 +88,11 @@ export default {
       type: Object,
       required: true,
     },
+    hideDatetimeMessage: Boolean,
+    hideTypingIndicatorOnInternalMessages: Boolean,
     isExpand: Boolean,
     isMobile: Boolean,
+    messageAnimation: Boolean,
     showHistory: Boolean,
     numberOfMessages: {
       type: Number,
@@ -105,6 +110,11 @@ export default {
       type: String,
       required: true,
     },
+    restartButtonCallback: {
+      type: String,
+      default: '',
+    },
+    showRestartButton: Boolean,
     showExpandButton: Boolean,
     useBotAvatar: Boolean,
     useHumanAvatar: Boolean,
@@ -164,12 +174,14 @@ export default {
         previousMessage = this.messageList[this.messageList.length - 3];
       }
 
-      if (!previousMessage || previousMessage.type !== 'datetime') {
-        if (!previousMessage || previousMessage.data.date !== lastMessage.data.date) {
-          this.messageList.splice(this.messageList.length - spliceIndex, 0, {
-            type: 'datetime',
-            datetime: lastMessage.data.date,
-          });
+      if (!this.hideDatetimeMessage) {
+        if (!previousMessage || previousMessage.type !== 'datetime') {
+          if (!previousMessage || previousMessage.data.date !== lastMessage.data.date) {
+            this.messageList.splice(this.messageList.length - spliceIndex, 0, {
+              type: 'datetime',
+              datetime: lastMessage.data.date,
+            });
+          }
         }
       }
 
@@ -320,32 +332,68 @@ export default {
                 if (!message) {
                   this.contentEditable = true;
                 } else {
-                  this.showTypingIndicator = true;
-                  setTimeout(() => {
-                    this.showTypingIndicator = false;
+                  if (i === 0) {
+                    if ((this.useBotName || this.useBotAvatar) && !message.data.hideavatar) {
+                      const authorMsg = this.newAuthorMessage(message);
 
-                    if (i === 0) {
-                      if (this.useBotName || this.useBotAvatar) {
-                        const authorMsg = this.newAuthorMessage(message);
-
-                        this.messageList.push(authorMsg);
-                      }
+                      this.messageList.push(authorMsg);
                     }
 
+                    this.messageList.push({
+                      author: 'them',
+                      type: 'typing',
+                      data: {},
+                    });
+                  }
+
+                  setTimeout(() => {
                     this.$emit('newMessage', message);
 
-                    this.messageList.push(message);
+                    /* eslint-disable no-param-reassign */
+                    message.data.animate = this.messageAnimation;
+
+                    if (i === 0 || !this.hideTypingIndicatorOnInternalMessages) {
+                      const lastMessage = this.messageList[this.messageList.length - 1];
+                      lastMessage.type = message.type;
+                      lastMessage.data = message.data;
+
+                      if (response.data.length > 1) {
+                        lastMessage.data.firstInternal = true;
+                      }
+
+                      if (i > 0 && (i === (response.data.length - 1))) {
+                        lastMessage.data.lastInternal = true;
+                      }
+
+                      this.$root.$emit('scroll-down-message-list');
+                      setTimeout(() => {
+                        this.$root.$emit('scroll-down-message-list');
+                      }, 50);
+                    } else {
+                      if (i > 0 && (i === (response.data.length - 1))) {
+                        /* eslint-disable no-param-reassign */
+                        message.data.lastInternal = true;
+                      }
+
+                      this.messageList.push(message);
+                    }
 
                     if (message.data) {
                       this.contentEditable = !message.data.disable_text;
                     }
 
-                    if (i < (response.data.length - 1)) {
-                      this.$nextTick(() => {
+                    if (!this.hideTypingIndicatorOnInternalMessages) {
+                      if (i < (response.data.length - 1)) {
                         this.$nextTick(() => {
-                          this.showTypingIndicator = true;
+                          this.$nextTick(() => {
+                            this.messageList.push({
+                              author: 'them',
+                              type: 'typing',
+                              data: {},
+                            });
+                          });
                         });
-                      });
+                      }
                     }
                   }, (i + 1) * this.messageDelay);
 
@@ -353,69 +401,99 @@ export default {
                 }
               });
             } else if (response.data) {
+              const message = response.data;
+
               if (newMsg.type === 'chat_open') {
-                if (response.data && response.data.data) {
-                  if (this.useBotName || this.useBotAvatar) {
-                    const authorMsg = this.newAuthorMessage(response.data);
+                if (message && message.data) {
+                  if ((this.useBotName || this.useBotAvatar) && !message.data.hideavatar) {
+                    const authorMsg = this.newAuthorMessage(message);
 
                     this.messageList.push(authorMsg);
                   }
 
-                  this.$emit('newMessage', response.data);
+                  this.messageList.push({
+                    author: 'them',
+                    type: 'typing',
+                    data: {},
+                  });
 
-                  this.messageList.push(response.data);
-                  this.contentEditable = !response.data.data.disable_text;
+                  setTimeout(() => {
+                    const lastMessage = this.messageList[this.messageList.length - 1];
+
+                    this.$emit('newMessage', message);
+
+                    message.data.animate = this.messageAnimation;
+
+                    lastMessage.type = message.type;
+                    lastMessage.data = message.data;
+
+                    this.contentEditable = !message.data.disable_text;
+                  }, this.messageDelay);
                 } else {
                   // If we don't get data about whether to disable the editor, turn it on
                   this.contentEditable = true;
                 }
               } else {
-                if (response.data.data) {
-                  this.showTypingIndicator = true;
+                if (message.data) {
+                  if ((this.useBotName || this.useBotAvatar) && !message.data.hideavatar) {
+                    const authorMsg = this.newAuthorMessage(message);
+
+                    this.messageList.push(authorMsg);
+                  }
+
+                  this.messageList.push({
+                    author: 'them',
+                    type: 'typing',
+                    data: {},
+                  });
                 }
                 setTimeout(() => {
                   // Only add a message to the list if it is a message object
-                  if (typeof response.data === 'object' && response.data !== null) {
-                    if (this.useBotName || this.useBotAvatar) {
-                      const authorMsg = this.newAuthorMessage(response.data);
+                  if (typeof message === 'object' && message !== null) {
+                    const lastMessage = this.messageList[this.messageList.length - 1];
 
-                      this.messageList.push(authorMsg);
-                    }
+                    this.$emit('newMessage', message);
 
-                    this.$emit('newMessage', response.data);
+                    message.data.animate = this.messageAnimation;
 
-                    this.messageList.push(response.data);
+                    lastMessage.type = message.type;
+                    lastMessage.data = message.data;
+
+                    this.$root.$emit('scroll-down-message-list');
+                    setTimeout(() => {
+                      this.$root.$emit('scroll-down-message-list');
+                    }, 50);
                   }
 
-                  if (response.data.data) {
-                    this.contentEditable = !response.data.data.disable_text;
+                  if (message.data) {
+                    this.contentEditable = !message.data.disable_text;
                   }
 
-                  if (response.data.type === 'longtext') {
-                    if (response.data.data.character_limit) {
-                      this.maxInputCharacters = response.data.data.character_limit;
+                  if (message.type === 'longtext') {
+                    if (message.data.character_limit) {
+                      this.maxInputCharacters = message.data.character_limit;
                     }
 
-                    if (response.data.data.submit_text) {
-                      this.buttonText = response.data.data.submit_text;
+                    if (message.data.submit_text) {
+                      this.buttonText = message.data.submit_text;
                     }
 
-                    if (response.data.data.text) {
-                      this.headerText = response.data.data.text;
+                    if (message.data.text) {
+                      this.headerText = message.data.text;
                     }
 
-                    if (response.data.data.placeholder) {
-                      this.placeholder = response.data.data.placeholder;
+                    if (message.data.placeholder) {
+                      this.placeholder = message.data.placeholder;
                     }
 
-                    if (response.data.data.initial_text) {
-                      this.initialText = response.data.data.initial_text;
+                    if (message.data.initial_text) {
+                      this.initialText = message.data.initial_text;
                     } else {
                       this.initialText = null;
                     }
 
-                    if (response.data.data.confirmation_text) {
-                      this.confirmationMessage = response.data.data.confirmation_text;
+                    if (message.data.confirmation_text) {
+                      this.confirmationMessage = message.data.confirmation_text;
                     } else {
                       this.confirmationMessage = null;
                     }
@@ -423,7 +501,6 @@ export default {
                     this.showLongTextInput = true;
                     this.showMessages = false;
                   }
-                  this.showTypingIndicator = false;
                 }, this.messageDelay);
 
                 window.parent.postMessage({ dataLayerEvent: 'message_received_from_chatbot' }, '*');
@@ -443,14 +520,17 @@ export default {
                 },
               };
 
+              const lastMessage = this.messageList[this.messageList.length - 1];
+
               if (this.useBotName || this.useBotAvatar) {
                 const authorMsg = this.newAuthorMessage(message);
                 this.messageList.push(authorMsg);
               }
 
-              this.messageList.push(message);
+              lastMessage.type = message.type;
+              lastMessage.data = message.data;
 
-              this.showTypingIndicator = false;
+              this.$root.$emit('scroll-down-message-list');
             }, this.messageDelay);
           },
         );
@@ -486,7 +566,11 @@ export default {
     },
     openChat() {
     },
-    onButtonClick(button, msg) {
+    async onButtonClick(button, msg) {
+      if (msg.data.external) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+
       if (button.phone_number) {
         const telephone = `tel:${button.phone_number}`;
 
@@ -571,6 +655,14 @@ export default {
         author: 'me',
         callback_id: msg.data.callback_id,
         data: responseData,
+      });
+    },
+    onRestartButtonClick() {
+      this.sendMessage({
+        type: 'trigger',
+        author: 'me',
+        callback_id: this.restartButtonCallback,
+        data: {},
       });
     },
     expandChat() {
@@ -658,13 +750,15 @@ export default {
               delete currentMessage.data.internal;
             }
 
-            if ((i === 0 && currentMessage.data)
-              || this.messageList[this.messageList.length - 1].data.date
-              !== currentMessage.data.date) {
-              this.messageList.push({
-                type: 'datetime',
-                datetime: currentMessage.data.date,
-              });
+            if (!this.hideDatetimeMessage) {
+              if ((i === 0 && currentMessage.data)
+                || this.messageList[this.messageList.length - 1].data.date
+                !== currentMessage.data.date) {
+                this.messageList.push({
+                  type: 'datetime',
+                  datetime: currentMessage.data.date,
+                });
+              }
             }
 
             if (i < messages.length - 1) {
@@ -672,7 +766,7 @@ export default {
             }
 
             if ((currentMessage.author === 'me' && (this.useHumanName || this.useHumanAvatar))
-                || (currentMessage.author === 'them' && !currentMessage.data.internal && (this.useBotName || this.useBotAvatar))) {
+                || (currentMessage.author === 'them' && !currentMessage.data.hideavatar && !currentMessage.data.internal && (this.useBotName || this.useBotAvatar))) {
               const authorMsg = this.newAuthorMessage(currentMessage);
 
               this.messageList.push(authorMsg);
