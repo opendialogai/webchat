@@ -2,11 +2,6 @@
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 
-@font-face {
-    font-family: 'Sofia Pro';
-    src: url('/fonts/sofiapro/sofiapro-light.otf') format('opentype');
-}
-
 @keyframes bob {
     10% {
         height: 10px;
@@ -962,7 +957,7 @@ body {
       right: 10px;
       width: auto;
       .sc-user-input--send-icon-wrapper {
-        background: url('/images/vendor/webchat/images/message.svg') center center no-repeat;
+        background: url('/vendor/webchat/images/message.svg') center center no-repeat;
         height: 16px;
         cursor: pointer;
         svg {
@@ -1023,7 +1018,7 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  background: url('/images/vendor/webchat/images/min.svg') center center no-repeat;
+  background: url('/vendor/webchat/images/min.svg') center center no-repeat;
   width: 40px;
   height: 40px;
 }

@@ -1,6 +1,7 @@
 {
     "/public/js/app.js": "/public/js/app.js",
     "/public/css/app.css": "/public/css/app.css",
+    "/public/css/app-iframe.css": "/public/css/app-iframe.css",
     "/public/css/app-fullpage.css": "/public/css/app-fullpage.css",
     "/public/js/opendialog-bot.js": "/public/js/opendialog-bot.js",
     "/public/js/opendialog-bot-full.js": "/public/js/opendialog-bot-full.js"

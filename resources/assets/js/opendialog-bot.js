@@ -32,7 +32,6 @@ function addCssToPage(href) {
   link.setAttribute('href', href);
   document.getElementsByTagName('head')[0].appendChild(link);
 }
-
 /**
  * Merges window.openDialogSettings with the settings from the database.
  * Anything set in window.openDialogSettings will take preference over anything from the database
@@ -252,7 +251,7 @@ if (window.openDialogSettings) {
     }
 
     if (isValidPath()) {
-      addCssToPage(`${url}/vendor/webchat/css/opendialog-chat-bot.css`);
+      addCssToPage(`${url}/vendor/webchat/css/app-iframe.css`);
 
       if (window.openDialogSettings.general.hideOpenCloseIcons === 'false' || !window.openDialogSettings.general.hideOpenCloseIcons) {
         drawOpenCloseIcons(url);
