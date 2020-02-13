@@ -35,29 +35,28 @@
   .sc-header {
     height: 120px;
     min-height: 120px;
-      @media screen and (max-width: 1440px) {
-          padding-left: 100px;
-          padding-right: 100px;
-      }
-      @media screen and (max-width: 768px) {
-          padding-left: 50px;
-          padding-right: 50px;
-          height: 100px;
-          min-height: 100px;
-      }
-      @media screen and (max-width: 375px),
-      only screen and (device-width: 414px) and (device-height: 896px) {
-          padding-left: 25px;
-          padding-right: 25px;
-          height: 78px;
-          min-height: 78px;
-      }
-      @media only screen and (device-width: 414px) and (device-height: 896px) {
-          padding-left: 25px;
-          padding-right: 25px;
-          height: 78px;
-          min-height: 78px;
-      }
+    @media screen and (max-width: 1440px) {
+      padding-left: 100px;
+      padding-right: 100px;
+    }
+    @media screen and (max-width: 768px) {
+      padding-left: 50px;
+      padding-right: 50px;
+      height: 100px;
+      min-height: 100px;
+    }
+    @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
+      padding-left: 25px;
+      padding-right: 25px;
+      height: 78px;
+      min-height: 78px;
+    }
+    @media only screen and (device-width: 414px) and (device-height: 896px) {
+      padding-left: 25px;
+      padding-right: 25px;
+      height: 78px;
+      min-height: 78px;
+    }
 
     .sc-header--team-name {
       padding: 0;
@@ -86,7 +85,7 @@
     }
 
     .sc-header--minimize-button {
-        display: none;
+      display: none;
     }
   }
 
