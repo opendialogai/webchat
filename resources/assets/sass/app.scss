@@ -399,7 +399,7 @@ body {
           background-color: #0000ff !important;
           border-radius: 30px !important;
           border-bottom-right-radius: 0 !important;
-
+          opacity: 1;
           @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
             border-bottom-right-radius: 0 !important;
           }
