@@ -56,20 +56,7 @@ body {
     box-shadow: none;
     text-align: center;
     height: 48px;
-    padding: 7px 10px;
     flex: 1;
-
-    &::after {
-      content: "";
-      position: absolute;
-      background: linear-gradient(#1b212a, rgba(27, 33, 42, 0));
-      height: 25px;
-      left: 0;
-      right: 0;
-      bottom: -25px;
-      z-index: 10;
-      opacity: 0.66;
-    }
 
     .sc-header-wrapper {
       max-width: 1000px;
@@ -124,18 +111,6 @@ body {
 
   .sc-user-input-wrapper {
     position: relative;
-
-    &::before {
-      content: "";
-      position: absolute;
-      background: linear-gradient(to top, #1b212a, rgba(27, 33, 42, 0));
-      height: 25px;
-      left: 0;
-      right: 0;
-      top: -25px;
-      z-index: 10;
-      opacity: 0.66;
-    }
   }
 
   .sc-external-buttons-row {
@@ -355,10 +330,10 @@ body {
   .sc-message-list {
     box-shadow: none;
     z-index: 1;
+
     .sc-message {
       max-width: 828px;
       padding-bottom: 0;
-
       width: calc(100% - 50px);
       @media screen and (min-width: 768px) {
         width: calc(100% - 200px);
@@ -424,7 +399,8 @@ body {
           border-radius: 14px;
           border-top-right-radius: 0;
           box-shadow: #cfcfcf 1px 1px 1px;
-          background-color: #505050 !important;
+          //   background-color: #505050 !important;
+          background-color: #0000ff;
         }
       }
       &.received {
@@ -650,32 +626,6 @@ body {
         }
       }
 
-      .sc-message--author {
-        margin-bottom: -75px;
-        padding-top: 0;
-        animation-name: fadeInUp;
-        animation-duration: 0.5s;
-
-        @media screen and (max-width: 768px) {
-          z-index: 1;
-          margin-bottom: -20px;
-          margin-left: 20px;
-        }
-
-        img.avatar {
-          border-radius: 0;
-          width: 80px;
-          height: 80px;
-          margin: -10px;
-
-          @media screen and (max-width: 768px) {
-            height: 53px;
-            width: 53px;
-            margin: 0;
-          }
-        }
-      }
-
       .sc-message--button-response {
         padding: 20px 30px;
 
@@ -738,8 +688,14 @@ body {
       .sc-message--form-response,
       .sc-message--text {
         padding: 20px 30px !important;
-        font-size: 16px !important;
-        line-height: 26px;
+        font-size: 15px !important;
+        line-height: 1.5;
+
+        @media (min-width: 767px) {
+          font-size: 16px !important;
+          line-height: 26px;
+          line-height: 1.6;
+        }
       }
 
       .sc-message--text {
@@ -756,8 +712,7 @@ body {
     }
 
     .sc-message--time-read {
-      color: #8e8e92;
-      margin: 8px 0 4px 0;
+      display: none;
     }
 
     .sc-message--author {
@@ -765,13 +720,19 @@ body {
       font-size: 15px;
       font-weight: 600;
       margin-bottom: -5px;
-      span.avatar,
+
       img.avatar {
-        width: 35px;
-        height: 35px;
-        margin-right: 10px;
-        border-radius: 18px;
+        height: 53px;
+        width: 53px;
+        margin: 0;
+        @media screen and (min-width: 768px) {
+          border-radius: 0;
+          width: 80px;
+          height: 80px;
+          margin: -10px;
+        }
       }
+
       span.avatar {
         display: inline-block;
         vertical-align: middle;
@@ -779,15 +740,44 @@ body {
         line-height: 35px;
         background: #2d2d2d;
         color: #ffffff;
+
+        width: 35px;
+        height: 35px;
+        margin-right: 10px;
+        border-radius: 18px;
       }
     }
+
+
+    .sc-message--author {
+      z-index: 1;
+      margin-bottom: -20px;
+      margin-left: 20px;
+
+      @media screen and (min-width: 768px) {
+        margin-bottom: -75px;
+        margin-left: 0;
+        animation-name: fadeInUp;
+        animation-duration: 0.5s;
+      }
+    }
+
+    //👨🏻‍💻 additional css for the sent(user) message
     .sc-message--content.sent .sc-message--author {
-      img.avatar,
-      span.avatar {
-        margin-right: 0;
-        margin-left: 10px;
+        img.avatar,
+        span.avatar {
+          margin-right: 0;
+          margin-left: 10px;
+
+        }
+        margin-bottom: -85px;
+        @media screen and (min-width: 768px) {
+            margin-bottom: -75px;
+            margin-left: 0;
+            animation-name: fadeInUp;
+            animation-duration: 0.5s;
+          }
       }
-    }
 
     .sc-message {
       .sc-message--button-response {
@@ -968,14 +958,7 @@ body {
     margin-right: 45px !important;
   }
 }
-.show-human-avatar,
-.show-bot-avatar {
-  .sc-message-list {
-    .sc-message--author {
-      margin-bottom: -10px;
-    }
-  }
-}
+
 
 .show-human-avatar .sc-message-list .sent + .sc-message--time-read,
 .show-bot-avatar .sc-message-list .received + .sc-message--time-read {
