@@ -208,9 +208,15 @@ export default {
   display: flex;
   background-color: #f4f7f9;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  width: calc(100% - 50px);
+  width: 100%;
   max-width: 828px;
   margin: 0 auto;
+}
+
+@media (min-width: 767px) {
+  .sc-user-input {
+    width: calc(100% - 50px);
+  }
 }
 
 .sc-user-input.disabled {
