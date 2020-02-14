@@ -18,6 +18,7 @@ class WebchatSetting extends Model
     public const GENERAL                   = 'general';
     public const URL                       = 'url';
     public const TEAM_NAME                 = 'teamName';
+    public const LOGO                      = 'logo';
     public const VALID_PATH                = 'validPath';
     public const MESSAGE_DELAY             = 'messageDelay';
     public const OPEN                      = 'open';
@@ -123,6 +124,7 @@ class WebchatSetting extends Model
                 WebchatSetting::STRING => [
                     WebchatSetting::URL,
                     WebchatSetting::TEAM_NAME,
+                    WebchatSetting::LOGO,
                     WebchatSetting::CHATBOT_CSS_PATH,
                     WebchatSetting::CHATBOT_FULLPAGE_CSS_PATH,
                     WebchatSetting::PAGE_CSS_PATH,

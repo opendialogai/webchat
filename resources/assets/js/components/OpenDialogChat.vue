@@ -577,6 +577,10 @@ export default {
           this.agentProfile.teamName = general.teamName;
         }
 
+        if (general.logo) {
+            this.agentProfile.imageUrl = general.logo;
+        }
+
         if (general.messageDelay) {
           this.messageDelay = general.messageDelay;
         }
