@@ -79,7 +79,9 @@ export default {
 </script>
 
 <style scoped>
-.sc-message--text {
+
+/* .sc-message--text {
+
   padding: 10px 12px;
   border-radius: 6px;
   font-weight: 400;
@@ -105,5 +107,5 @@ export default {
   margin-right: 40px;
   max-width: calc(100% - 40px);
   word-wrap: break-word;
-}
+} */
 </style>

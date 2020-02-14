@@ -147,6 +147,8 @@ export default {
   flex-direction: column;
   position: relative;
 }
+
+
 .sc-message.fadeUp-enter-active {
   animation-duration: 0s;
 }
@@ -174,11 +176,7 @@ export default {
   text-align: left;
 }
 
-.sc-message--time-read {
-  font-size: x-small;
-  margin-bottom: -5px;
-  color: gray;
-}
+
 .sc-message--content.sent + .sc-message--time-read {
   text-align: right;
 }

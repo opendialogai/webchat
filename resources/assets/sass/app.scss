@@ -355,10 +355,10 @@ body {
   .sc-message-list {
     box-shadow: none;
     z-index: 1;
+
     .sc-message {
       max-width: 828px;
       padding-bottom: 0;
-
       width: calc(100% - 50px);
       @media screen and (min-width: 768px) {
         width: calc(100% - 200px);
@@ -424,7 +424,8 @@ body {
           border-radius: 14px;
           border-top-right-radius: 0;
           box-shadow: #cfcfcf 1px 1px 1px;
-          background-color: #505050 !important;
+          //   background-color: #505050 !important;
+          background-color: #0000ff;
         }
       }
       &.received {
@@ -751,13 +752,19 @@ body {
         .sc-message--text--content {
           animation-duration: 0.3s;
           animation-delay: 0.6s;
+
+
         }
       }
     }
 
     .sc-message--time-read {
-      color: #8e8e92;
-      margin: 8px 0 4px 0;
+    //   color: #8e8e92;
+    //   margin: 8px 0 4px 0;
+    //   font-size: x-small;
+    //   margin-bottom: -5px;
+    //   color: gray;
+      display: none;
     }
 
     .sc-message--author {
