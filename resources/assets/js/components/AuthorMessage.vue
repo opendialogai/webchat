@@ -28,7 +28,7 @@ export default {
 <style scoped>
 .sc-message--author {
   color: #2d2d2d;
-  background-color: white;
+  background: none;
   padding: 0;
   border-radius: 6px;
   font-weight: 400;

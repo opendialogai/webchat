@@ -1,35 +1,27 @@
 <template>
-
   <div
     class="sc-header"
     @click="onClose"
     :style="{background: colors.header.bg, color: colors.header.text}"
   >
-
-
-
     <div class="sc-header-wrapper">
-
-
       <!-- <div v-if="showExpandButton" class="sc-header--expand-button">
         <img @click.stop="onExpand" src="./assets/pop_out.svg" />
-      </div> -->
-
-
+      </div>-->
       <!-- <div v-else class="sc-header--expand-button"></div> -->
 
+       <div v-if="teamName" class="sc-header--team-name">
+        <p v-html="teamName"></p>
+      </div>
 
-      <!-- <img v-if="imageUrl" class="sc-header--img" :src="imageUrl" alt /> -->
+      <img v-if="imageUrl" class="sc-header--img" :src="imageUrl" alt />
 
-      <div class="sc-header--team-name" v-html="teamName"></div>
 
 
       <div v-if="showRestartButton" @click="onRestartButtonClick" class="sc-header--restart-button">
         <img src="./assets/restart.svg" />
         <span>Restart</span>
       </div>
-
-
 
       <!-- <div class="sc-header--minimize-button">
         <svg width="18px" height="18px" viewBox="0 0 18 18" class="minimize">
@@ -75,10 +67,10 @@
             </g>
           </g>
         </svg>
-      </div> -->
-
-
+      </div>-->
     </div>
+
+    <div class="sc-header__btm-fade"></div>
   </div>
 </template>
 
@@ -124,59 +116,111 @@ export default {
   min-height: 56px;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
-  padding: 10px;
+  padding: 10px 0;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   position: relative;
-  box-sizing: border-box;
-  cursor: pointer;
+}
+
+.sc-header__btm-fade {
+  position: absolute;
+  bottom: -25px;
+  height: 25px;
+  width: 100%;
+  background: rgb(27, 33, 42);
+  background: linear-gradient(
+    180deg,
+    rgba(27, 33, 42, 1) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  z-index: 999;
 }
 
 .sc-header-wrapper {
+  width: calc(100% - 50px);
+  margin: 0 auto;
   display: flex;
   height: 100%;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+@media (min-width: 410px) {
+  .sc-header-wrapper {
+    cursor: unset;
+  }
+}
+@media (min-width: 992px) {
+}
+@media (min-width: 1200px) {
 }
 
 .sc-header--img {
   align-self: center;
-  padding: 10px;
+  width: 40%;
+  min-width: 175px;
+}
+
+@media (min-width: 768px) {
+  .sc-header--img {
+    width: 28%;
+  }
 }
 
 .sc-header--team-name {
-  align-self: center;
-  padding: 10px;
-  flex: 1;
   user-select: none;
+  width: 28%;
+  align-items: center;
+  justify-content: center;
+  display: none;
 }
 
-.sc-header--expand-button {
+@media (min-width: 992px) {
+  .sc-header--team-name {
+    display: flex;
+  }
+}
+
+.sc-header--team-name p {
+  margin: 0;
+  line-height: 1;
+}
+
+.sc-header--restart-button {
+  width: 28%;
+  margin: 0 !important;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.sc-header--restart-button img {
+  vertical-align: middle;
+}
+
+.sc-header--restart-button span {
+  vertical-align: middle;
+}
+
+/* .sc-header--expand-button {
   width: 40px;
   align-self: center;
   height: 40px;
   margin-right: 10px;
   box-sizing: border-box;
-}
+} */
 
-.sc-header--expand-button img {
+/* .sc-header--expand-button img {
   width: 100%;
   height: 100%;
   padding: 10px;
   box-sizing: border-box;
-}
-.sc-chat-window.expanded .sc-header--expand-button img {
+} */
+/* .sc-chat-window.expanded .sc-header--expand-button img {
   transform: rotate(180deg);
-}
+} */
 
-.sc-header--restart-button img {
-  vertical-align: middle;
-  height: 22px;
-  margin: 9px 0;
-}
-.sc-header--restart-button span {
-  vertical-align: middle;
-  margin: 9px 5px;
-}
-
-.sc-header--minimize-button {
+/* .sc-header--minimize-button {
   width: 40px;
   align-self: center;
   height: 40px;
@@ -189,7 +233,7 @@ export default {
   height: 100%;
   padding: 11px;
   box-sizing: border-box;
-}
+} */
 .sc-chat-window.opened .sc-header--minimize-button svg.maximize {
   display: none;
 }
