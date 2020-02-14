@@ -1,15 +1,31 @@
 <template>
-  <div>
-    <ExternalButtons :externalButtons="externalButtons" v-on:sendExternalButton="_submitExternalButton" :colors="colors"/>
-    <div v-if="file" class='file-container' :style="{backgroundColor: colors.userInput.text, color: colors.userInput.bg}">
-      <span class='icon-file-message'><img src="./assets/file.svg" alt='genericFileIcon' height="15" /></span>
+  <div class="sc-user-input-wrapper">
+    <ExternalButtons
+      :externalButtons="externalButtons"
+      v-on:sendExternalButton="_submitExternalButton"
+      :colors="colors"
+    />
+    <div
+      v-if="file"
+      class="file-container"
+      :style="{backgroundColor: colors.userInput.text, color: colors.userInput.bg}"
+    >
+      <span class="icon-file-message">
+        <img src="./assets/file.svg" alt="genericFileIcon" height="15" />
+      </span>
       {{file.name}}
-      <span class='delete-file-message' @click="cancelFile()" ><img src="./assets/close.svg" alt='close icon' height="10" title='Remove the file' /></span>
+      <span class="delete-file-message" @click="cancelFile()">
+        <img src="./assets/close.svg" alt="close icon" height="10" title="Remove the file" />
+      </span>
     </div>
-    <form class="sc-user-input" :class="{active: inputActive, disabled: !contentEditable}" :style="{background: colors.userInput.bg}">
+    <form
+      class="sc-user-input"
+      :class="{active: inputActive, disabled: !contentEditable}"
+      :style="{background: colors.userInput.bg}"
+    >
       <div
         role="button"
-        tabIndex="0"
+        tabindex="0"
         @focus="setInputActive(true)"
         @blur="setInputActive(false)"
         @keydown="handleKey"
@@ -19,8 +35,7 @@
         class="sc-user-input--text"
         ref="userInput"
         :style="{color: colors.userInput.text}"
-      >
-      </div>
+      ></div>
       <div class="sc-user-input--buttons">
         <div v-if="showEmoji" class="sc-user-input--button">
           <EmojiIcon :onEmojiPicked="_handleEmojiPicked" :color="colors.userInput.text" />
@@ -38,10 +53,10 @@
 
 
 <script>
-import EmojiIcon from './EmojiIcon.vue'
-import FileIcons from './FileIcons.vue'
-import SendIcon from './SendIcon.vue'
-import ExternalButtons from './ExternalButtons.vue'
+import EmojiIcon from "./EmojiIcon.vue";
+import FileIcons from "./FileIcons.vue";
+import SendIcon from "./SendIcon.vue";
+import ExternalButtons from "./ExternalButtons.vue";
 
 export default {
   components: {
@@ -77,7 +92,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: 'Write a reply'
+      default: "Write a reply"
     },
     lastMessage: {
       type: Object,
@@ -88,99 +103,103 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       file: null,
       inputActive: false,
-      textEntered: false,
-    }
+      textEntered: false
+    };
   },
   methods: {
-    cancelFile () {
-      this.file = null
+    cancelFile() {
+      this.file = null;
     },
-    setInputActive (onoff) {
+    setInputActive(onoff) {
       this.inputActive = onoff;
 
       if (onoff) {
-        this.$parent.$parent.$emit('vbc-user-input-focus');
+        this.$parent.$parent.$emit("vbc-user-input-focus");
       } else {
-        this.$parent.$parent.$emit('vbc-user-input-blur');
+        this.$parent.$parent.$emit("vbc-user-input-blur");
       }
     },
-    handleKey (event) {
+    handleKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
-        this._submitText(event)
-        this.$parent.$parent.$emit('vbc-user-not-typing');
+        this._submitText(event);
+        this.$parent.$parent.$emit("vbc-user-not-typing");
         this.textEntered = false;
-        event.preventDefault()
+        event.preventDefault();
       }
     },
     onTextChange(event) {
-      if (event.target.innerHTML === '' || event.target.innerHTML === '<br>') {
+      if (event.target.innerHTML === "" || event.target.innerHTML === "<br>") {
         // Input is empty, turn off the typing indicator.
         if (this.textEntered === true) {
-          this.$parent.$parent.$emit('vbc-user-not-typing');
+          this.$parent.$parent.$emit("vbc-user-not-typing");
           this.textEntered = false;
         }
       } else {
         // Input is not empty, turn on the typing indicator if
         // it's not already.
         if (this.textEntered === false) {
-          this.$parent.$parent.$emit('vbc-user-typing');
+          this.$parent.$parent.$emit("vbc-user-typing");
           this.textEntered = true;
         }
       }
     },
     _submitExternalButton(button) {
-      this.onButtonClick(button, this.lastMessage)
+      this.onButtonClick(button, this.lastMessage);
     },
-    _submitText (event) {
-      const text = this.$refs.userInput.textContent
-      const file = this.file
+    _submitText(event) {
+      const text = this.$refs.userInput.textContent;
+      const file = this.file;
       if (file) {
         if (text && text.length > 0) {
           this.onSubmit({
-            author: 'me',
-            type: 'file',
+            author: "me",
+            type: "file",
             data: { text, file }
-          })
-          this.file = null
-          this.$refs.userInput.innerHTML = ''
+          });
+          this.file = null;
+          this.$refs.userInput.innerHTML = "";
         } else {
           this.onSubmit({
-            author: 'me',
-            type: 'file',
+            author: "me",
+            type: "file",
             data: { file }
-          })
-          this.file = null
+          });
+          this.file = null;
         }
       } else {
         if (text && text.length > 0) {
           this.onSubmit({
-            author: 'me',
-            type: 'text',
+            author: "me",
+            type: "text",
             data: { text }
-          })
-          this.$refs.userInput.innerHTML = ''
+          });
+          this.$refs.userInput.innerHTML = "";
         }
       }
     },
-    _handleEmojiPicked (emoji) {
+    _handleEmojiPicked(emoji) {
       this.onSubmit({
-        author: 'me',
-        type: 'emoji',
+        author: "me",
+        type: "emoji",
         data: { emoji }
-      })
+      });
     },
-    _handleFileSubmit (file) {
-      this.file = file
+    _handleFileSubmit(file) {
+      this.file = file;
     }
   }
-}
+};
 </script>
 
 <style>
+.sc-user-input-wrapper {
+  background: #1b212a;
+}
+
 .sc-user-input {
   min-height: 55px;
   margin: 0px;
@@ -188,9 +207,16 @@ export default {
   bottom: 0;
   display: flex;
   background-color: #f4f7f9;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  transition: background-color .2s ease,box-shadow .2s ease;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  max-width: 828px;
+  margin: 0 auto;
+}
+
+@media (min-width: 767px) {
+  .sc-user-input {
+    width: calc(100% - 50px);
+  }
 }
 
 .sc-user-input.disabled {
@@ -300,5 +326,4 @@ export default {
 .icon-file-message {
   margin-right: 5px;
 }
-
 </style>

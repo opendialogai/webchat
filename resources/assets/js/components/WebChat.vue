@@ -193,11 +193,6 @@ export default {
         this.dateTimezoneFormat(lastMessage);
       }
     },
-    isOpen(isOpen) {
-      if (isOpen) {
-        this.agentProfile.imageUrl = null;
-      }
-    },
     loading(isLoading) {
       if (!isLoading) {
         setTimeout(() => {
