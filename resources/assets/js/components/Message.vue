@@ -146,6 +146,7 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
+
 }
 
 
@@ -162,6 +163,7 @@ export default {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+
 }
 
 .sc-message--content.sent {
@@ -203,6 +205,7 @@ export default {
   border-radius: 50%;
   align-self: center;
   margin-right: 15px;
+
 }
 
 .sc-message--meta {
@@ -215,18 +218,8 @@ export default {
 @media (max-width: 450px) {
   .sc-message {
     width: 80%;
+
   }
 }
 
-.sc-message--author {
-  color: white;
-  background-color: black;
-}
-
-.sc-message--author.sent {
-  color: black;
-  background-color: white;
-  max-width: calc(100% - 120px);
-  word-wrap: break-word;
-}
 </style>

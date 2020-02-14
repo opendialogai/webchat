@@ -26,17 +26,6 @@ export default {
 </script>
 
 <style scoped>
-.sc-message--author {
-  color: #2d2d2d;
-  background: none;
-  padding: 0;
-  border-radius: 6px;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 1.2;
-  white-space: pre-wrap;
-  -webkit-font-smoothing: subpixel-antialiased;
-}
 
 .sc-message--meta {
   font-size: xx-small;

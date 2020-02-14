@@ -10,26 +10,6 @@
       }
     }
 
-    .sc-message--author {
-      background: none;
-      margin-bottom: -85px;
-      padding-top: 25px;
-
-      @media screen and (max-width: 375px) {
-        margin-bottom: -43px;
-        padding-top: 12px;
-      }
-
-      img.avatar {
-        width: 60px;
-        height: 60px;
-
-        @media screen and (max-width: 375px) {
-          width: 31px;
-          height: 31px;
-        }
-      }
-    }
   }
 
   .sc-header {
