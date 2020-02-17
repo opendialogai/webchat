@@ -778,7 +778,9 @@ export default {
       if (message.author === 'them') {
         const authorMsg = {
           type: 'author',
+          author: 'them',
           data: {
+            author: 'them',
             text: (this.useBotName) ? this.chatbotName : '',
             date: message.data.date,
             time: message.data.time,

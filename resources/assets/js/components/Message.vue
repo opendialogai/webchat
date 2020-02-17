@@ -1,5 +1,11 @@
 <template>
-  <div class="sc-message fadeUp-enter-active" :class="'sc-message-' + message.type">
+  <div class="sc-message fadeUp-enter-active" :class="[
+    'sc-message-' + message.type,
+    {
+      sent: message.author === 'me',
+      received: message.author === 'them',
+    },
+  ]">
     <span v-if="message.author != 'me' && authorName" class="sc-message--name">{{ authorName }}</span>
     <div class="sc-message--content" :class="{
         internal: message.data && message.data.internal,
