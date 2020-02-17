@@ -337,7 +337,9 @@ export default {
                     this.messageList.push({
                       author: 'them',
                       type: 'typing',
-                      data: {},
+                      data: {
+                        animate: this.messageAnimation,
+                      },
                     });
                   }
 
@@ -384,7 +386,9 @@ export default {
                             this.messageList.push({
                               author: 'them',
                               type: 'typing',
-                              data: {},
+                              data: {
+                                animate: this.messageAnimation,
+                              },
                             });
                           });
                         });
@@ -409,7 +413,9 @@ export default {
                   this.messageList.push({
                     author: 'them',
                     type: 'typing',
-                    data: {},
+                    data: {
+                      animate: this.messageAnimation,
+                    },
                   });
 
                   setTimeout(() => {
@@ -439,7 +445,9 @@ export default {
                   this.messageList.push({
                     author: 'them',
                     type: 'typing',
-                    data: {},
+                    data: {
+                      animate: this.messageAnimation,
+                    },
                   });
                 }
                 setTimeout(() => {
@@ -779,6 +787,7 @@ export default {
         const authorMsg = {
           type: 'author',
           data: {
+            animate: this.messageAnimation,
             text: (this.useBotName) ? this.chatbotName : '',
             date: message.data.date,
             time: message.data.time,
@@ -796,6 +805,7 @@ export default {
         type: 'author',
         author: 'me',
         data: {
+          animate: this.messageAnimation,
           author: 'me',
           text: (this.useHumanName) ? this.userName : '',
           date: message.data.date,

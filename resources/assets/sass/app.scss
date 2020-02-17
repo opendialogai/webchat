@@ -351,8 +351,10 @@ body {
         }
       }
 
-      &.fadeUp-enter-active {
-        animation-duration: 0.5s;
+      &.animate {
+        &.fadeUp-enter-active {
+          animation-duration: 0.5s;
+        }
       }
 
       &.sc-message-author {
@@ -636,15 +638,21 @@ body {
       }
 
       .sc-message--button {
-        transition: width 0.3s linear, height 0.3s linear 0.3s;
         box-sizing: border-box;
-        opacity: 0;
         padding: 20px 30px;
         overflow: hidden;
 
+        &.animate {
+          transition: width 0.3s linear, height 0.3s linear 0.3s;
+          opacity: 0;
+
+          .sc-message--button--text {
+            animation-duration: 0.3s;
+            animation-delay: 0.6s;
+          }
+        }
+
         .sc-message--button--text {
-          animation-duration: 0.3s;
-          animation-delay: 0.6s;
           font-size: 16px !important;
           line-height: 26px;
         }
@@ -655,7 +663,6 @@ body {
       }
 
       .sc-typing-indicator {
-        animation-duration: 0.3s;
         padding: 16px 30px 20px 30px;
         font-size: 16px !important;
         line-height: 30px;
@@ -679,6 +686,10 @@ body {
           }
         }
 
+        &.animate {
+          animation-duration: 0.3s;
+        }
+
         &.v-leave-to {
           position: absolute;
           background: none !important;
@@ -699,14 +710,21 @@ body {
       }
 
       .sc-message--text {
-        transition: width 0.3s linear, height 0.3s linear 0.3s;
         box-sizing: border-box;
-        opacity: 0;
         overflow: hidden;
 
         .sc-message--text--content {
-          animation-duration: 0.3s;
-          animation-delay: 0.6s;
+          animation-duration: 0s;
+        }
+
+        &.animate {
+          transition: width 0.3s linear, height 0.3s linear 0.3s;
+          opacity: 0;
+
+          .sc-message--text--content {
+            animation-duration: 0.3s;
+            animation-delay: 0.6s;
+          }
         }
       }
     }
@@ -757,27 +775,33 @@ body {
       @media screen and (min-width: 768px) {
         margin-bottom: -75px;
         margin-left: 0;
-        animation-name: fadeInUp;
-        animation-duration: 0.5s;
+
+        &.animate {
+          animation-name: fadeInUp;
+          animation-duration: 0.5s;
+        }
       }
     }
 
     //👨🏻‍💻 additional css for the sent(user) message
     .sc-message--content.sent .sc-message--author {
-        img.avatar,
-        span.avatar {
-          margin-right: 0;
-          margin-left: 10px;
+      margin-bottom: -85px;
+      img.avatar,
+      span.avatar {
+        margin-right: 0;
+        margin-left: 10px;
 
-        }
-        margin-bottom: -85px;
-        @media screen and (min-width: 768px) {
-            margin-bottom: -75px;
-            margin-left: 0;
-            animation-name: fadeInUp;
-            animation-duration: 0.5s;
-          }
       }
+      @media screen and (min-width: 768px) {
+        margin-bottom: -75px;
+        margin-left: 0;
+
+        &.animate {
+          animation-name: fadeInUp;
+          animation-duration: 0.5s;
+        }
+      }
+    }
 
     .sc-message {
       .sc-message--button-response {

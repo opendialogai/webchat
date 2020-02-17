@@ -1,5 +1,10 @@
 <template>
-  <div class="sc-message fadeUp-enter-active" :class="'sc-message-' + message.type">
+  <div class="sc-message fadeUp-enter-active" :class="[
+    'sc-message-' + message.type,
+    {
+      animate: message.data.animate,
+    },
+  ]">
     <span v-if="message.author != 'me' && authorName" class="sc-message--name">{{ authorName }}</span>
     <div class="sc-message--content" :class="{
         internal: message.data && message.data.internal,
@@ -15,7 +20,7 @@
       <LongTextMessage v-else-if="message.type === 'longtext'" :data="message.data" :messageColors="determineMessageColors()" />
       <EmojiMessage v-else-if="message.type === 'emoji'" :data="message.data" />
       <FileMessage v-else-if="message.type === 'file'" :data="message.data" :messageColors="determineMessageColors()" />
-      <TypingMessage v-else-if="message.type === 'typing'" :messageColors="determineMessageColors()" />
+      <TypingMessage v-else-if="message.type === 'typing'" :data="message.data" :messageColors="determineMessageColors()" />
       <AuthorMessage v-else-if="message.type === 'author'" :data="message.data" />
       <SystemMessage v-else-if="message.type === 'system'" :data="message.data" :messageColors="determineMessageColors()" />
       <ButtonMessage v-else-if="message.type === 'button'" :message="message" :data="message.data" :messageColors="determineMessageColors()" :colors="colors" :onButtonClick="onButtonClick" />
