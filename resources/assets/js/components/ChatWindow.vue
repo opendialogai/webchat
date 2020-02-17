@@ -27,12 +27,10 @@
     <template v-if="!showLongTextInput">
       <UserInput
         :contentEditable="contentEditable"
-        :showEmoji="showEmoji"
         :onSubmit="onUserInputSubmit"
         :onButtonClick="onButtonClick"
         :externalButtons="externalButtons"
         :lastMessage="lastMessage"
-        :showFile="showFile"
         :placeholder="placeholder"
         :colors="colors" />
     </template>
@@ -69,14 +67,6 @@ export default {
       default: true
     },
     fullScreen: {
-      type: Boolean,
-      default: false
-    },
-    showEmoji: {
-      type: Boolean,
-      default: false
-    },
-    showFile: {
       type: Boolean,
       default: false
     },

@@ -37,8 +37,6 @@
         :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
         :content-editable="contentEditable"
-        :show-emoji="false"
-        :show-file="false"
         :show-expand-button="false"
         :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
