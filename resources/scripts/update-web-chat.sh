@@ -70,13 +70,6 @@ then
    rm -f .lando.yml
 fi
 
-if (${refresh})
-then
-    echo "Refreshing local dependencies"
-    rm -rf node_modules/@opendialogai/vue-beautiful-chat
-fi
-
-
 if (${install})
 then
     echo "Installing node dependencies"
