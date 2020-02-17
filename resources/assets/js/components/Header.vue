@@ -13,7 +13,7 @@
         <img v-if="imageUrl" :src="imageUrl" alt />
       </div>
 
-      <div @click="onRestartButtonClick" class="sc-header--restart-button">
+      <div @click.stop="onRestartButtonClick" class="sc-header--restart-button">
         <div v-if="showRestartButton">
           <img src="./assets/restart.svg" />
           <span>Restart</span>
