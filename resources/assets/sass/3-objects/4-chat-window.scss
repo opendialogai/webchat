@@ -1,46 +1,68 @@
-// Bootstrap-vue
-@import "node_modules/bootstrap/scss/bootstrap";
-@import "node_modules/bootstrap-vue/src/index.scss";
+// stuff from component style --- stuff from component style ---
+// stuff from component style --- stuff from component style ---
+// stuff from component style --- stuff from component style ---
 
-@keyframes bob {
-  10% {
-    height: 10px;
-  }
-  20% {
-    height: 20px;
-  }
-  30% {
-    height: 30px;
-  }
-  40% {
-    height: 20px;
-  }
-  50% {
-    height: 10px;
-  }
-  60% {
-    height: 6px;
-  }
+/* .sc-chat-window {
+  border: 10px dashed orange;
+  width: 370px;
+  height: calc(100% - 120px);
+  max-height: 590px;
+  position: fixed;
+  right: 25px;
+  bottom: 100px;
+  box-sizing: border-box;
+  box-shadow: 0px 7px 40px 2px rgba(148, 149, 150, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: 0.3s ease-in-out;
+  border-radius: 10px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-@keyframes spread {
-  50% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1);
-  }
+.sc-chat-window.expanded {
+  width: 490px;
 }
 
-.custom-select {
-  appearance: none;
-  -moz-appearance: none;
-  -webkit-appearance: none;
+.sc-chat-window.fullscreen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  bottom: 0;
+  right: 0;
 }
 
-body {
-  background: none;
+.sc-chat-window.closed {
+  height: 75px;
+  bottom: 90px;
+  overflow: hidden;
+  border-radius: 10px;
 }
+
+.sc-message--me {
+  text-align: right;
+}
+.sc-message--them {
+  text-align: left;
+}
+
+@media (max-width: 450px) {
+  .sc-chat-window {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    right: 0px;
+    bottom: 0px;
+    border-radius: 0px;
+  }
+  .sc-chat-window {
+    transition: 0.1s ease-in-out;
+  }
+  .sc-chat-window.closed {
+    bottom: 0px;
+  }
+} */
 
 .sc-chat-window {
   font-family: "Sofia Pro", "Proxima Nova", Georgia, sans-serif !important;
@@ -49,6 +71,7 @@ body {
   max-height: 100% !important;
   bottom: 0 !important;
   right: 0 !important;
+  border: 1px solid #ff0000;
 
   .sc-header {
     flex: 1;
@@ -748,7 +771,6 @@ body {
       }
     }
 
-
     .sc-message--author {
       z-index: 1;
       margin-bottom: -20px;
@@ -764,20 +786,19 @@ body {
 
     //👨🏻‍💻 additional css for the sent(user) message
     .sc-message--content.sent .sc-message--author {
-        img.avatar,
-        span.avatar {
-          margin-right: 0;
-          margin-left: 10px;
-
-        }
-        margin-bottom: -85px;
-        @media screen and (min-width: 768px) {
-            margin-bottom: -75px;
-            margin-left: 0;
-            animation-name: fadeInUp;
-            animation-duration: 0.5s;
-          }
+      img.avatar,
+      span.avatar {
+        margin-right: 0;
+        margin-left: 10px;
       }
+      margin-bottom: -85px;
+      @media screen and (min-width: 768px) {
+        margin-bottom: -75px;
+        margin-left: 0;
+        animation-name: fadeInUp;
+        animation-duration: 0.5s;
+      }
+    }
 
     .sc-message {
       .sc-message--button-response {
@@ -941,52 +962,4 @@ body {
       }
     }
   }
-}
-
-.show-human-avatar .sc-message-list .sent,
-.show-bot-avatar .sc-message-list .received {
-  .sc-message--form,
-  .sc-message--rich,
-  .sc-message--carousel-list,
-  .sc-message--button,
-  .sc-message--button-response,
-  .sc-message--button,
-  .sc-message--image,
-  .sc-message--form-response,
-  .sc-message--text {
-    margin-left: 45px !important;
-    margin-right: 45px !important;
-  }
-}
-
-
-.show-human-avatar .sc-message-list .sent + .sc-message--time-read,
-.show-bot-avatar .sc-message-list .received + .sc-message--time-read {
-  margin-left: 45px !important;
-  margin-right: 45px !important;
-}
-
-.no-close {
-  .sc-header {
-    cursor: default;
-    .sc-header--minimize-button {
-      background: none;
-    }
-  }
-}
-
-.mobile {
-  .sc-message {
-    width: calc(100% - 22px);
-  }
-}
-
-.minimize-button {
-  cursor: pointer;
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: url("/vendor/webchat/images/min.svg") center center no-repeat;
-  width: 40px;
-  height: 40px;
 }

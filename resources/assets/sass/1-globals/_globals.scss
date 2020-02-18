@@ -1,0 +1,35 @@
+html {
+    box-sizing: border-box;
+  }
+
+// animations --- animations --- animations ---
+
+  @keyframes bob {
+    10% {
+      height: 10px;
+    }
+    20% {
+      height: 20px;
+    }
+    30% {
+      height: 30px;
+    }
+    40% {
+      height: 20px;
+    }
+    50% {
+      height: 10px;
+    }
+    60% {
+      height: 6px;
+    }
+  }
+
+  @keyframes spread {
+    50% {
+      transform: scale(0.9);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
