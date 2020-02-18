@@ -1,5 +1,10 @@
 <template>
-  <div class="sc-message fadeUp-enter-active" :class="'sc-message-' + message.type">
+  <div class="sc-message fadeUp-enter-active" :class="[
+    'sc-message-' + message.type,
+    {
+      animate: message.data.animate,
+    },
+  ]">
     <span v-if="message.author != 'me' && authorName" class="sc-message--name">{{ authorName }}</span>
     <div class="sc-message--content" :class="{
         internal: message.data && message.data.internal,
@@ -12,7 +17,7 @@
       <CarouselListMessage v-if="message.type === 'list' && message.data.view_type" :message="message" :data="message.data" :messageColors="determineMessageColors()" :colors="colors" :onButtonClick="onButtonClick" :onLinkClick="onLinkClick" />
       <TextMessage v-else-if="message.type === 'text' || message.type === 'longtext_response'" :data="message.data" :messageColors="determineMessageColors()" :onLinkClick="onLinkClick" />
       <LongTextMessage v-else-if="message.type === 'longtext'" :data="message.data" :messageColors="determineMessageColors()" />
-      <TypingMessage v-else-if="message.type === 'typing'" :messageColors="determineMessageColors()" />
+      <TypingMessage v-else-if="message.type === 'typing'" :data="message.data" :messageColors="determineMessageColors()" />
       <AuthorMessage v-else-if="message.type === 'author'" :data="message.data" />
       <ButtonMessage v-else-if="message.type === 'button'" :message="message" :data="message.data" :messageColors="determineMessageColors()" :colors="colors" :onButtonClick="onButtonClick" />
       <ButtonResponseMessage v-else-if="message.type === 'button_response'" :data="message.data" :messageColors="determineMessageColors()" />

@@ -1,5 +1,10 @@
 <template>
-  <div ref="message" class="sc-message--button" :style="messageColors">
+  <div
+    ref="message"
+    class="sc-message--button"
+    :class="{ animate: this.data.animate }"
+    :style="messageColors"
+  >
     <div class="sc-message--button--text fade-enter-active" v-linkified>
       <span v-html="data.text"></span>
     </div>
