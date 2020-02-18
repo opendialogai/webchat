@@ -3,6 +3,7 @@
     ref="message"
     @click="_handleClick"
     class="sc-message--text"
+    :class="{ animate: this.data.animate }"
     :style="messageColors" v-linkified:options="{ format: function (value, type) { return '<span>' + value + '</span>'; } }"
   >
     <span class="sc-message--text--content fade-enter-active" v-html="data.text"></span>

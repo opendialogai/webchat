@@ -59,7 +59,6 @@ class WebchatSetting extends Model
     public const BUTTON_BACKGROUND                = 'buttonBackground';
     public const BUTTON_HOVER_BACKGROUND          = 'buttonHoverBackground';
     public const BUTTON_TEXT                      = 'buttonText';
-    public const MINIMIZE_BUTTON_BACKGROUND       = 'minimizeButtonBackground';
     public const EXTERNAL_BUTTON_BACKGROUND       = 'externalButtonBackground';
     public const EXTERNAL_BUTTON_HOVER_BACKGROUND = 'externalButtonHoverBackground';
     public const EXTERNAL_BUTTON_TEXT             = 'externalButtonText';
@@ -175,7 +174,6 @@ class WebchatSetting extends Model
                     WebchatSetting::EXTERNAL_BUTTON_BACKGROUND,
                     WebchatSetting::EXTERNAL_BUTTON_HOVER_BACKGROUND,
                     WebchatSetting::EXTERNAL_BUTTON_TEXT,
-                    WebchatSetting::MINIMIZE_BUTTON_BACKGROUND,
                 ],
             ],
             WebchatSetting::COMMENTS => [

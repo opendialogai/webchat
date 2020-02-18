@@ -31,10 +31,10 @@
     window.openDialogSettings = {
         url: "{{ env("APP_URL") }}",
         user: {
-            first_name: '{!! auth()->user() ? auth()->user()->name : '' !!}',
-            last_name: '',
-            email: '{!! auth()->user() ? auth()->user()->email : '' !!}',
-            external_id: '{!! auth()->user() ? auth()->user()->id : '' !!}',
+            first_name: '{!! app('request')->input('first_name') ? app('request')->input('first_name') : (auth()->user() ? auth()->user()->name : '') !!}',
+            last_name: '{!! app('request')->input('last_name') ? app('request')->input('last_name') : '' !!}',
+            email: '{!! app('request')->input('email') ? app('request')->input('email') : (auth()->user() ? auth()->user()->email : '') !!}',
+            external_id: '{!! app('request')->input('external_id') ? app('request')->input('external_id') : (auth()->user() ? auth()->user()->id : '') !!}',
         },
     };
 </script>

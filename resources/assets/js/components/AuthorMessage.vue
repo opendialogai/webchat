@@ -1,5 +1,5 @@
 chat.scss<template>
-  <div class="sc-message--author">
+  <div class="sc-message--author" :class="{ animate: this.data.animate }">
     <template v-if="data.author && data.author == 'me'">
       <span>{{data.text}}</span>
       <span v-if="data.avatar" v-html="data.avatar"></span>

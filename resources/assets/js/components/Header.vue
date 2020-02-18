@@ -13,7 +13,7 @@
         <img v-if="imageUrl" :src="imageUrl" alt />
       </div>
 
-      <div @click="onRestartButtonClick" class="sc-header--restart-button">
+      <div @click.stop="onRestartButtonClick" class="sc-header--restart-button">
         <div v-if="showRestartButton">
           <img src="./assets/restart.svg" />
           <span>Restart</span>
@@ -155,15 +155,5 @@ export default {
 
 .sc-header--restart-button span {
   vertical-align: middle;
-}
-
-.sc-chat-window.opened .sc-header--minimize-button svg.maximize {
-  display: none;
-}
-.sc-chat-window.closed .sc-header--minimize-button svg.minimize {
-  display: none;
-}
-.sc-chat-window.closed .sc-header--minimize-button svg.maximize {
-  display: block;
 }
 </style>

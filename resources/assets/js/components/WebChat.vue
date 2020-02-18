@@ -37,8 +37,6 @@
         :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
         :content-editable="contentEditable"
-        :show-emoji="false"
-        :show-file="false"
         :show-expand-button="false"
         :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
@@ -337,7 +335,9 @@ export default {
                     this.messageList.push({
                       author: 'them',
                       type: 'typing',
-                      data: {},
+                      data: {
+                        animate: this.messageAnimation,
+                      },
                     });
                   }
 
@@ -347,8 +347,7 @@ export default {
                     /* eslint-disable no-param-reassign */
                     message.data.animate = this.messageAnimation;
 
-                    if ((i === 0 || !this.hideTypingIndicatorOnInternalMessages)
-                        && (message.type !== 'rich')) {
+                    if (i === 0 || !this.hideTypingIndicatorOnInternalMessages) {
                       const lastMessage = this.messageList[this.messageList.length - 1];
                       lastMessage.type = message.type;
                       lastMessage.data = message.data;
@@ -380,17 +379,17 @@ export default {
 
                     if (!this.hideTypingIndicatorOnInternalMessages) {
                       if (i < (response.data.length - 1)) {
-                        if (response.data[i + 1].type !== 'rich') {
+                        this.$nextTick(() => {
                           this.$nextTick(() => {
-                            this.$nextTick(() => {
-                              this.messageList.push({
-                                author: 'them',
-                                type: 'typing',
-                                data: {},
-                              });
+                            this.messageList.push({
+                              author: 'them',
+                              type: 'typing',
+                              data: {
+                                animate: this.messageAnimation,
+                              },
                             });
                           });
-                        }
+                        });
                       }
                     }
                   }, (i + 1) * this.messageDelay);
@@ -412,7 +411,9 @@ export default {
                   this.messageList.push({
                     author: 'them',
                     type: 'typing',
-                    data: {},
+                    data: {
+                      animate: this.messageAnimation,
+                    },
                   });
 
                   setTimeout(() => {
@@ -442,7 +443,9 @@ export default {
                   this.messageList.push({
                     author: 'them',
                     type: 'typing',
-                    data: {},
+                    data: {
+                      animate: this.messageAnimation,
+                    },
                   });
                 }
                 setTimeout(() => {
@@ -782,6 +785,7 @@ export default {
         const authorMsg = {
           type: 'author',
           data: {
+            animate: this.messageAnimation,
             text: (this.useBotName) ? this.chatbotName : '',
             date: message.data.date,
             time: message.data.time,
@@ -799,6 +803,7 @@ export default {
         type: 'author',
         author: 'me',
         data: {
+          animate: this.messageAnimation,
           author: 'me',
           text: (this.useHumanName) ? this.userName : '',
           date: message.data.date,

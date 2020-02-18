@@ -2,7 +2,11 @@
   <transition
     leave-active-class="fadeOut"
   >
-    <div class="sc-typing-indicator" :style="messageColors">
+    <div
+      class="sc-typing-indicator"
+      :class="{ animate: this.data.animate }"
+      :style="messageColors"
+    >
       <span :style="{'background-color': messageColors.color}"></span>
       <span :style="{'background-color': messageColors.color}"></span>
       <span :style="{'background-color': messageColors.color}"></span>
@@ -12,6 +16,10 @@
 <script>
 export default {
   props: {
+    data: {
+      type: Object,
+      required: true
+    },
     messageColors: {
       type: Object,
       required: true

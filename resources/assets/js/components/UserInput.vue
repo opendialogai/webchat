@@ -37,12 +37,6 @@
         :style="{color: colors.userInput.text}"
       ></div>
       <div class="sc-user-input--buttons">
-        <div v-if="showEmoji" class="sc-user-input--button">
-          <EmojiIcon :onEmojiPicked="_handleEmojiPicked" :color="colors.userInput.text" />
-        </div>
-        <div v-if="showFile" class="sc-user-input--button">
-          <FileIcons :onChange="_handleFileSubmit" :color="colors.userInput.text" />
-        </div>
         <div class="sc-user-input--button">
           <SendIcon :onClick="_submitText" :color="colors.userInput.text" />
         </div>
@@ -53,15 +47,11 @@
 
 
 <script>
-import EmojiIcon from "./EmojiIcon.vue";
-import FileIcons from "./FileIcons.vue";
 import SendIcon from "./SendIcon.vue";
 import ExternalButtons from "./ExternalButtons.vue";
 
 export default {
   components: {
-    EmojiIcon,
-    FileIcons,
     SendIcon,
     ExternalButtons
   },
@@ -70,17 +60,9 @@ export default {
       type: Boolean,
       default: true
     },
-    showEmoji: {
-      type: Boolean,
-      default: false
-    },
     externalButtons: {
       type: Array,
       default: () => []
-    },
-    showFile: {
-      type: Boolean,
-      default: false
     },
     onSubmit: {
       type: Function,
@@ -180,13 +162,6 @@ export default {
           this.$refs.userInput.innerHTML = "";
         }
       }
-    },
-    _handleEmojiPicked(emoji) {
-      this.onSubmit({
-        author: "me",
-        type: "emoji",
-        data: { emoji }
-      });
     },
     _handleFileSubmit(file) {
       this.file = file;
