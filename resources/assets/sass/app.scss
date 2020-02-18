@@ -82,11 +82,6 @@ body {
       }
     }
 
-    .sc-header--minimize-button {
-      display: block;
-      margin-right: 0;
-    }
-
     .sc-header--restart-button {
       margin-right: 30px;
       @media screen and (max-width: 768px) {
@@ -969,9 +964,6 @@ body {
 .no-close {
   .sc-header {
     cursor: default;
-    .sc-header--minimize-button {
-      background: none;
-    }
   }
 }
 

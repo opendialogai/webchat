@@ -190,9 +190,6 @@ export default {
           hoverbg: '#0000ff',
           text: '#ffffff',
         },
-        minimizeButton: {
-          bg: '#000000',
-        },
       },
       comments: {},
       commentsKey: 0,
@@ -696,9 +693,6 @@ export default {
         }
         if (colours.externalEuttonText) {
           this.colours.externalButton.text = colours.externalEuttonText;
-        }
-        if (colours.minimizeButtonBackground) {
-          this.colours.minimizeButton.bg = colours.minimizeButtonBackground;
         }
       }
 

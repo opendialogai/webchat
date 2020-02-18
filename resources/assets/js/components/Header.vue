@@ -156,14 +156,4 @@ export default {
 .sc-header--restart-button span {
   vertical-align: middle;
 }
-
-.sc-chat-window.opened .sc-header--minimize-button svg.maximize {
-  display: none;
-}
-.sc-chat-window.closed .sc-header--minimize-button svg.minimize {
-  display: none;
-}
-.sc-chat-window.closed .sc-header--minimize-button svg.maximize {
-  display: block;
-}
 </style>
