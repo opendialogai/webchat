@@ -14,8 +14,6 @@
       :onRestartButtonClick="onRestartButtonClick"
       :onLinkClick="onLinkClick"
       :contentEditable="contentEditable"
-      :showEmoji="showEmoji"
-      :showFile="showFile"
       :showExpandButton="showExpandButton"
       :placeholder="placeholder"
       :showRestartButton="showRestartButton"
@@ -42,10 +40,6 @@ export default {
       type: Boolean,
       default: true
     },
-    showEmoji: {
-      type: Boolean,
-      default: false
-    },
     fullScreen: {
       type: Boolean,
       default: false
@@ -69,10 +63,6 @@ export default {
     expand: {
       type: Function,
       required: true
-    },
-    showFile: {
-      type: Boolean,
-      default: false
     },
     showExpandButton: {
       type: Boolean,
@@ -199,9 +189,6 @@ export default {
             bg: '#4e8cff',
             hoverbg: '#0000ff',
             text: '#ffffff'
-          },
-          minimizeButton: {
-            bg: '#000000'
           }
         }
       }
