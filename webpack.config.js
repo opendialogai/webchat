@@ -1,6 +1,5 @@
 // This is the webpack builder for the opendialog-bot.js file
 
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 module.exports = {
@@ -27,11 +26,6 @@ module.exports = {
         filename: '[name].js',
         path: path.resolve(__dirname, '.')
     },
-    plugins: [
-        new CopyWebpackPlugin([
-            { from : 'node_modules/@opendialogai/vue-beautiful-chat/src/assets', to: 'images/vendor/vue-beautiful-chat' },
-        ]),
-    ],
     resolve: {
         alias: {
             /**
