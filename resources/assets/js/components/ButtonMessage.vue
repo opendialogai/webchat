@@ -114,7 +114,7 @@ export default {
 }
 
 .mt-message-with-button__buttons-wrapper__button:active {
-  border: 2px solid var(--btn-bg);
+
 }
 
 .mt-message-with-button__buttons-wrapper__button:hover {

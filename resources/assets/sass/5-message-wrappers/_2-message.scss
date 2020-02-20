@@ -181,11 +181,14 @@
 .mt-text {
   // ? ? ? ? ? ?
 
-  transition: width 0.3s linear, height 0.3s linear 0.3s;
-  // opacity: 0
-  animation-duration: 0.3s;
-  animation-delay: 0.6s;
+  transition: width 0.3s linear, height 0.3s linear;
 
+//   animation: spread 0.3s ease-in-out;
+//   transition: width 0.3s linear, height 0.3s linear, opacity 0.9s linear;
+  // opacity: 0
+//   animation-duration: 0.3s;
+//   animation-delay: 0.6s;
+// opacity: 0;
   // ? ? ? ? ? ?
 }
 
@@ -194,122 +197,23 @@
   border-top-left-radius: 0;
 }
 
-.mt-text.emit {
+
+.fade-enter-active{
+    opacity: 1;
 }
 
-.mt-text.reap {
-}
 
-// THE REST --- THE REST --- THE REST --- THE REST ---
-// THE REST --- THE REST --- THE REST --- THE REST ---
-// THE REST --- THE REST --- THE REST --- THE REST ---
-
-.sc-message--content {
-  &.sent {
-    &.internal {
-      margin-top: -17px;
-      .sc-message--text,
-      .sc-message--list,
-      .sc-message--button,
-      .sc-message--image {
-        border-top-right-radius: 0;
-      }
-    }
-  }
-
-  // INTERNAL FIRST LAST --- INTERNAL FIRST LAST --- INTERNAL FIRST LAST ---
-  // INTERNAL FIRST LAST --- INTERNAL FIRST LAST --- INTERNAL FIRST LAST ---
-  // INTERNAL FIRST LAST --- INTERNAL FIRST LAST --- INTERNAL FIRST LAST ---
-
-  &.received {
-    &.internal {
-      .sc-message--text,
-      .sc-message--button {
-        border-top-left-radius: 0 !important;
-        border-bottom-left-radius: 0 !important;
-      }
-    }
-    &.first-internal-message {
-      .sc-message--text,
-      .sc-message--button {
-        border-top-left-radius: 30px !important;
-      }
-    }
-    &.last-internal-message {
-      .sc-message--text,
-      .sc-message--button {
-        border-top-left-radius: 0 !important;
-        border-bottom-left-radius: 30px !important;
-      }
-
-      .sc-message--button {
-        transition: width 0.3s linear 0.5s, height 0.3s linear 0.8s;
-
-        .sc-message--button--text {
-          animation-delay: 1.3s;
-        }
-      }
-    }
-  }
 
   // Typing indicator --- Typing indicator --- Typing indicator ---
   // Typing indicator --- Typing indicator --- Typing indicator ---
   // Typing indicator --- Typing indicator --- Typing indicator ---
 
-  .sc-typing-indicator {
-    animation-duration: 0.3s;
-    padding: 16px 30px 20px 30px;
-    font-size: 16px !important;
-    line-height: 30px;
 
-    span {
-      width: 6px;
-      height: 6px;
-      margin-right: 4;
-      border-radius: 3px;
-      vertical-align: bottom;
-      animation-delay: 0.1s !important;
-      animation: bob 1s infinite;
 
-      &:first-child {
-        animation-delay: 0s !important;
-      }
 
-      &:last-child {
-        animation-delay: 0.2s !important;
-        margin-right: 0;
-      }
-    }
-
-    &.v-leave-to {
-      position: absolute;
-      background: none !important;
-    }
-  }
-}
-
-// stuff for lower components
+// Time meta data hidden
 
 .sc-message--time-read {
   display: none;
 }
 
-.sc-message--list {
-  max-width: calc(100% - 10px);
-  .sc-message--list--element {
-    padding: 12px 15px;
-    width: calc(100% - 30px);
-    .sc-message--list--subtitle {
-      font-size: 14px;
-    }
-  }
-}
-
-.sc-message--list--button {
-  a,
-  button {
-    font-size: 14px;
-    padding: 7px 17px;
-    border-radius: 12px;
-  }
-}

@@ -1,8 +1,6 @@
 <template>
   <div class="mt sc-message--rich" :style="messageColors"  :class="[{
         animate: this.data.animate,
-        emit : this.author === 'me',
-        reap: this.author === 'them',
     }]">
     <div class="sc-message--rich--title">{{ data.title }}</div>
     <div class="sc-message--rich--subtitle">{{ data.subtitle }}</div>
@@ -38,10 +36,7 @@ export default {
       type: Object,
       required: true
     },
-    author: {
-      type: String,
-      required: true
-    },
+
     colors: {
       type: Object,
       required: true

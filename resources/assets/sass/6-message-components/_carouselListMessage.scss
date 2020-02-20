@@ -71,25 +71,24 @@
       div {
         width: 60px;
         height: 60px;
+        background-color: blue;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100%;
 
+        span{
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+        }
         &.sc-message--carousel-list--arrow-left {
-          border-radius: 100%;
-          background: #0000ff url("/images/left.svg") 22px center no-repeat;
-          background-size: 14px 23px;
 
-          img {
-            display: none;
-          }
         }
 
         &.sc-message--carousel-list--arrow-right {
-          border-radius: 100%;
-          background: #0000ff url("/images/right.svg") 25px center no-repeat;
-          background-size: 14px 23px;
 
-          img {
-            display: none;
-          }
+
         }
 
         @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {

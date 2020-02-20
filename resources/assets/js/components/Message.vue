@@ -31,6 +31,7 @@
       :colors="colors"
       :onButtonClick="onButtonClick"
       :onLinkClick="onLinkClick"
+      :author="message.author"
     />
 
     <LongTextMessage
@@ -43,6 +44,8 @@
       v-else-if="message.type === 'typing'"
       :data="message.data"
       :messageColors="determineMessageColors()"
+    :author="message.author"
+
     />
     <ButtonMessage
       v-else-if="message.type === 'button'"
@@ -71,6 +74,7 @@
       v-else-if="message.type === 'form_response'"
       :data="message.data"
       :messageColors="determineMessageColors()"
+      :author="message.author"
     />
     <ImageMessage
       v-else-if="message.type === 'image'"
@@ -93,7 +97,8 @@
       :messageColors="determineMessageColors()"
       :colors="colors"
       :onButtonClick="onButtonClick"
-      :author="message.author"
+
+
     />
     <DatetimeFakeMessage v-else-if="message.type === 'datetime'" :message="message" />
 

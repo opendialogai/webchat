@@ -1,31 +1,12 @@
-.sc-message--form-response {
-    font-size: 15px !important;
-    padding: 7px 15px;
-    color: #2d2d2d !important;
-    border-radius: 14px;
-    border-bottom-left-radius: 0;
-    box-shadow: #cfcfcf -1px 1px 1px;
-  }
 
-  .sc-message--content.sent {
-    .sc-message--form-response,
-    .sc-message--text {
-      color: #ffffff !important;
-
-      a {
-        color: #ffffff !important;
-      }
-    }
+.sc-message--form {
+  font-size: 15px;
+  padding: 7px 15px;
+  .submit-button {
+    font-size: 14px;
+    padding: 7px 17px;
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 5px;
   }
-
-  .sc-message--form {
-    font-size: 15px;
-    padding: 7px 15px;
-    .submit-button {
-      font-size: 14px;
-      padding: 7px 17px;
-      width: 100%;
-      border-radius: 12px;
-      margin-bottom: 5px;
-    }
-  }
+}
