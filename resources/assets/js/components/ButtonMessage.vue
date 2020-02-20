@@ -1,16 +1,21 @@
 <template>
   <div
     ref="message"
-    class="sc-message--button"
-    :class="{ animate: this.data.animate }"
+    class="mt mt-message-button"
+    :class="[{
+        animate: this.data.animate,
+        emit : this.author === 'me',
+        reap: this.author === 'them',
+    }]"
     :style="messageColors"
   >
-    <div class="sc-message--button--text fade-enter-active" v-linkified>
+    <div class="mt-message-button__text fade-enter-active" v-linkified>
       <span v-html="data.text"></span>
     </div>
 
     <template v-if="data.buttons.length && !data.external">
-      <div class="sc-message--button--buttons">
+
+      <div class="mt-message-button__buttons">
         <button v-for="(button, idx) in data.buttons" :key="idx" @click="_handleClick(button)" :style="{backgroundColor: colors.button.bg, color: colors.button.text, '--button-hover': colors.button.hoverbg}" v-html="button.text"></button>
       </div>
     </template>
@@ -22,6 +27,10 @@ export default {
   props: {
     data: {
       type: Object,
+      required: true
+    },
+    author: {
+      type: String,
       required: true
     },
     colors: {
@@ -92,41 +101,5 @@ export default {
 </script>
 
 <style scoped>
-.sc-message--button {
-  background: #eaeaea;
-  border-radius: 6px;
-  padding: 10px 12px;
-  max-width: calc(100% - 40px);
-}
 
-.sc-message--button .sc-message--button--buttons {
-  padding-top: 15px;
-}
-
-.sc-message--button button {
-  cursor: pointer;
-  border-radius: 30px;
-  border: none;
-  font-size: 14px;
-  padding: 12px 17px;
-  margin: 0 10px 10px 0;
-}
-
-.sc-message--button button:hover {
-  background-color: var(--button-hover) !important;
-}
-
-.sc-message--button button:last-child {
-  margin-right: 0;
-}
-
-.sc-message--button .sc-message--button--text {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  -webkit-font-smoothing: subpixel-antialiased;
-  animation-duration: 0s;
-}
 </style>

@@ -1,0 +1,69 @@
+.header {
+
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  @media (min-width: $media-sml) {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  display: flex;
+  justify-content: flex-start;
+
+}
+
+.header__btm-fade {
+    position: absolute;
+    bottom: -25px;
+    height: 25px;
+    width: 100%;
+    background: rgb(27, 33, 42);
+    background: linear-gradient(180deg, rgba(27, 33, 42, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    z-index: 999;
+}
+
+.header-nav {
+  max-width: 1000px;
+  width: calc(100% - 50px);
+  margin: 20px auto;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.header-nav__team-name {
+  width: 28%;
+  align-items: center;
+  justify-content: flex-start;
+  display: none;
+  @media (min-width: $media-med) {
+    display: flex;
+  }
+}
+
+.header-nav__logo {
+  align-self: center;
+  width: 40%;
+  min-width: 175px;
+  @media (min-width: $media-sml) {
+    width: 28%;
+  }
+}
+
+.header-nav__restart-button {
+  width: 28%;
+  margin: 0 !important;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  img {
+    vertical-align: middle;
+  }
+
+  span {
+    vertical-align: middle;
+  }
+}

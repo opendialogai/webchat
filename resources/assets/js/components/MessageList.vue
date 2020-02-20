@@ -1,5 +1,5 @@
 <template>
-  <div class="sc-message-list" ref="scrollList" :style="{backgroundColor: colors.messageList.bg}">
+  <div class="message-list" ref="scrollList" :style="{backgroundColor: colors.messageList.bg}">
     <Message
       v-for="(message, idx) in messages"
       :message="message"

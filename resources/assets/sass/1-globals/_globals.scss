@@ -1,6 +1,16 @@
-html {
-    box-sizing: border-box;
-  }
+$media-x-sml: 480px;
+$media-sml: 576px;
+$media-med: 768px;
+$media-lrg: 992px;
+$media-lrg-xl: 1200px;
+
+
+
+*{-moz-box-sizing: border-box;box-sizing: border-box;}
+
+// html {
+//     box-sizing: border-box;
+//   }
 
 // animations --- animations --- animations ---
 

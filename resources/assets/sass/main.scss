@@ -1,17 +1,20 @@
 // OpenDialog.vue
-//     ⬇️
+//     ⬇
 // WebChat.vue
-//     ⬇️
+//     ⬇
 // Launcher.vue
-//     ⬇️
+//     ⬇
 // ChatWindow.vue
-//     ⬇️
-// MessageList.vue
-//     ⬇️
-// Message.vue
-//     ⬇️
-// message type
+//     ⬇
+//  ---  Header.vue
+//
+//  --- MessageList.vue
+//              ⬇
+//      --- Message.vue
+//                  ⬇
+//          --- message type
 
+//  --- UserInput.vue
 
 
 @import './0-lib/reset';
@@ -20,38 +23,45 @@
 @import './1-globals/globals';
 @import './2-elements/elements';
 
-
-// @import './3-objects/sc-chat-window';
-// @import './3-objects/sc-message';
-// import these as objects in order
-
-
 @import './3-objects/1-open-dialog';
 @import './3-objects/2-webchat';
 @import './3-objects/3-launcher';
-@import './3-objects/4-chat-window';
-@import './3-objects/5-message-list';
-@import './3-objects/6-message';
 
 
-@import './4-components/carouselListMessage';
-@import './4-components/textMessage';
-@import './4-components/longTextMessage';
-@import './4-components/emojiMessage';
-@import './4-components/fileMessage';
-@import './4-components/typingMessage';
-@import './4-components/authorMessage';
-@import './4-components/systemMessage';
-@import './4-components/buttonMessage';
-@import './4-components/buttonResponseMessage';
-@import './4-components/formMessage';
-@import './4-components/formResponseMessage';
-@import './4-components/imageMessage';
-@import './4-components/listMessage';
-@import './4-components/richMessage';
-@import './4-components/datetimeFakeMessage';
+
+@import './4-page-components/1-header';
+@import './4-page-components/2-chat-window';
+@import './4-page-components/3-user-input';
 
 
-// @import './app.scss';
-// @import './app-fullpage.scss';
-// @import './app-iframe.scss';
+@import './5-message-wrappers/1-message-list';
+@import './5-message-wrappers/2-message';
+
+
+
+@import './6-message-components/authorMessage';
+@import './6-message-components/buttonMessage';
+@import './6-message-components/buttonResponseMessage';
+@import './6-message-components/carouselListMessage';
+@import './6-message-components/datetimeFakeMessage';
+@import "./6-message-components/external-button";
+@import './6-message-components/formMessage';
+@import './6-message-components/formResponseMessage';
+@import './6-message-components/imageMessage';
+@import './6-message-components/listMessage';
+@import './6-message-components/longTextMessage';
+@import './6-message-components/richMessage';
+@import './6-message-components/textMessage';
+@import './6-message-components/typingMessage';
+
+
+// @import './6-message-components/emojiMessage';
+// @import './6-message-components/fileMessage';
+// @import './6-message-components/systemMessage';
+
+
+
+
+
+
+

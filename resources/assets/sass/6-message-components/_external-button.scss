@@ -1,0 +1,255 @@
+// THE BUTTONS WRAPPER --- THE BUTTONS WRAPPER ---
+// THE BUTTONS WRAPPER --- THE BUTTONS WRAPPER ---
+// THE BUTTONS WRAPPER --- THE BUTTONS WRAPPER ---
+
+
+.sc-external-buttons-row {
+    text-align: center;
+    // padding: 10px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    // white-space: nowrap;
+  }
+  .sc-external-buttons-row-wrapper {
+    animation-duration: 0s;
+  }
+  .sc-external-buttons-element {
+    margin: 3px;
+    padding: 5px 10px 5px 10px;
+    border: 1px solid;
+    border-radius: 15px;
+    font-size: 14px;
+    background: inherit;
+    cursor: pointer;
+  }
+
+  .sc-external-buttons-element:hover {
+    background-color: var(--button-hover) !important;
+  }
+
+  .sc-external-buttons-element--top,
+  .sc-external-buttons-element--right,
+  .sc-external-buttons-element--bottom,
+  .sc-external-buttons-element--left,
+  .sc-external-buttons-element--background {
+    display: none;
+  }
+
+
+// THE-BUTTONS --- THE-BUTTONS --- THE-BUTTONS ---
+// THE-BUTTONS --- THE-BUTTONS --- THE-BUTTONS ---
+// THE-BUTTONS --- THE-BUTTONS --- THE-BUTTONS ---
+
+  .sc-external-buttons-row {
+    &.hide-overflow {
+      // height: auto !important;
+      overflow: hidden;
+      white-space: normal;
+    }
+
+    .sc-external-buttons-element {
+      border: none;
+      font-size: 16px !important;
+      line-height: 26px;
+      padding: 20px 30px !important;
+      border-radius: 33px !important;
+      margin: 5px 10px !important;
+      min-width: 60px;
+      position: relative;
+      outline: none;
+      background: none !important;
+
+      @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
+        padding: 20px !important;
+      }
+
+      u {
+        text-decoration: none;
+        transition: all 0.2s ease-in-out;
+        position: relative;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0;
+          height: 1px;
+          transition: all 0.2s ease-in-out;
+          transition-duration: 0.25s;
+          opacity: 0;
+          background-color: #f09ea0;
+        }
+      }
+
+      &:hover {
+        font-weight: normal !important;
+
+        u {
+          &::before,
+          &::after {
+            width: 100%;
+            opacity: 1;
+          }
+        }
+      }
+
+      &:before {
+        content: "";
+        position: absolute;
+        width: calc(100% - 62px);
+        background: white;
+        top: -10px;
+        left: 31px;
+        height: 20px;
+        z-index: 1;
+      }
+
+      &:after {
+        content: "";
+        position: absolute;
+        width: calc(100% - 62px);
+        background: white;
+        bottom: -10px;
+        left: 31px;
+        height: 20px;
+        z-index: 1;
+      }
+
+      .sc-external-buttons-element--top {
+        display: block;
+        position: absolute;
+        top: -2px;
+        left: 33px;
+        width: 0;
+        border-top: 1px dashed #1b212a;
+        z-index: 2;
+      }
+
+      .sc-external-buttons-element--bottom {
+        display: block;
+        position: absolute;
+        bottom: -2px;
+        right: 33px;
+        width: 0;
+        border-top: 1px dashed #1b212a;
+        z-index: 2;
+      }
+
+      .sc-external-buttons-element--left {
+        display: block;
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        height: 70px;
+        width: 35px;
+        border: 1px dashed #1b212a;
+        border-bottom-left-radius: 35px;
+        border-top-left-radius: 35px;
+
+        &:after {
+          content: "";
+          width: calc(100% + 2px);
+          height: calc(100% + 2px);
+          display: inline-block;
+          background: white;
+          position: absolute;
+          right: -1px;
+          top: -1px;
+          z-index: 1;
+        }
+      }
+
+      .sc-external-buttons-element--right {
+        display: block;
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        height: 70px;
+        width: 35px;
+        border: 1px dashed #1b212a;
+        border-bottom-right-radius: 35px;
+        border-top-right-radius: 35px;
+
+        &:after {
+          content: "";
+          width: calc(100% + 2px);
+          height: calc(100% + 2px);
+          display: inline-block;
+          background: white;
+          position: absolute;
+          left: -1px;
+          bottom: -1px;
+          z-index: 1;
+        }
+      }
+
+      .sc-external-buttons-element--background {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 33px;
+        background: #0000ff;
+        z-index: 9;
+      }
+
+      span {
+        z-index: 9;
+        position: relative;
+      }
+
+      &.sc-external-buttons-element--clicked {
+        .sc-external-buttons-element--background {
+          animation: spread 0.3s ease-in-out;
+        }
+      }
+
+      &:hover {
+        .sc-external-buttons-element--top {
+          transition: width 0.1s linear, top 0.05s linear 0.5s;
+          width: calc(100% - 66px);
+          top: -8px;
+        }
+
+        .sc-external-buttons-element--right {
+          transition: all 0.05s linear 0.5s;
+          right: -8px;
+          top: -8px;
+          height: 82px;
+          width: 41px;
+          border-bottom-right-radius: 41px;
+          border-top-right-radius: 41px;
+
+          &:after {
+            height: 0;
+            transition: height 0.15s ease-in-out 0.1s;
+          }
+        }
+
+        .sc-external-buttons-element--bottom {
+          transition: width 0.1s linear 0.25s, bottom 0.05s linear 0.5s;
+          width: calc(100% - 66px);
+          bottom: -8px;
+        }
+
+        .sc-external-buttons-element--left {
+          transition: all 0.05s linear 0.5s;
+          left: -8px;
+          top: -8px;
+          height: 82px;
+          width: 41px;
+          border-bottom-left-radius: 41px;
+          border-top-left-radius: 41px;
+
+          &:after {
+            height: 0;
+            transition: height 0.15s ease-in-out 0.35s;
+          }
+        }
+      }
+    }
+  }

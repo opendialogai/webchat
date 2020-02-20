@@ -1,5 +1,13 @@
 <template>
-  <div class="sc-message--button-response" :style="messageColors">
+  <div
+    class="mt mt-button-response"
+    :style="messageColors"
+    :class="[{
+        animate: this.data.animate,
+        emit : this.author === 'me',
+        reap: this.author === 'them',
+    }]"
+  >
     <div class="button" v-html="data.text"></div>
   </div>
 </template>
@@ -11,12 +19,16 @@ export default {
       type: Object,
       required: true
     },
+    author: {
+      type: String,
+      required: true
+    },
     messageColors: {
       type: Object,
       required: true
     }
   }
-}
+};
 </script>
 
 <style scoped>

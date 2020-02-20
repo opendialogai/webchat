@@ -1,0 +1,100 @@
+
+// .sc-message--carousel-list {
+//     width: calc(100% - 90px) !important;
+//     .sc-message--rich,
+//     .sc-message--button,
+//     .sc-message--image,
+//     .sc-message--text {
+//       background: none !important;
+//       max-width: 100% !important;
+//       box-shadow: none !important;
+//       border-radius: 0 !important;
+//       margin: 0 !important;
+//     }
+//     .sc-message--rich {
+//       .sc-message--rich--buttons {
+//         text-align: center;
+//       }
+//     }
+//   }
+
+
+
+.sc-message--carousel-list {
+    background: none !important;
+    box-shadow: none !important;
+    overflow: hidden;
+    border-radius: 0 !important;
+    width: auto !important;
+    max-width: none;
+    margin: -19px 0 !important;
+    padding-left: 86px;
+
+    @media screen and (max-width: 768px) {
+      padding-left: 50px;
+      margin: -19px -50px !important;
+    }
+    @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
+      padding-left: 25px;
+      margin: -19px -25px !important;
+    }
+
+    .slider {
+      overflow: visible;
+      padding: 19px 0;
+
+      .slider-wrap > div {
+        width: 316px;
+        margin-right: 25px;
+        overflow: visible;
+
+        @media screen and (max-width: 768px) {
+          width: 326px;
+          margin-right: 14px;
+        }
+
+        .sc-message--rich {
+          margin: 0 !important;
+        }
+      }
+
+      .slider-pagination {
+        display: none;
+      }
+    }
+
+    .sc-message--carousel-list--arrows {
+      top: calc(50% - 30px);
+      left: 0;
+      width: 100%;
+
+      div {
+        width: 60px;
+        height: 60px;
+
+        &.sc-message--carousel-list--arrow-left {
+          border-radius: 100%;
+          background: #0000ff url("/images/left.svg") 22px center no-repeat;
+          background-size: 14px 23px;
+
+          img {
+            display: none;
+          }
+        }
+
+        &.sc-message--carousel-list--arrow-right {
+          border-radius: 100%;
+          background: #0000ff url("/images/right.svg") 25px center no-repeat;
+          background-size: 14px 23px;
+
+          img {
+            display: none;
+          }
+        }
+
+        @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
+          display: none;
+        }
+      }
+    }
+  }

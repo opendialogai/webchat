@@ -1,0 +1,315 @@
+.sc-message {
+  width: 300px;
+  margin: 0 auto;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.sc-message.fadeUp-enter-active {
+  animation-duration: 0s;
+}
+
+.sc-chat-window.fullscreen .sc-message {
+  width: 100%;
+}
+
+.sc-message--content {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.sc-message--content.sent {
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.sc-message--name {
+  font-size: x-small;
+  margin-top: -5px;
+  color: gray;
+  text-align: left;
+}
+
+.sc-message--content.sent + .sc-message--time-read {
+  text-align: right;
+}
+
+.sc-message--content.system {
+  justify-content: center;
+}
+
+.sc-message--content.read {
+  justify-content: center;
+}
+
+.sc-message--content.sent .sc-message--avatar {
+  display: none;
+}
+
+.sc-message--avatar {
+  background-image: url(https://d13yacurqjgara.cloudfront.net/assets/avatar-default-aa2eab7684294781f93bc99ad394a0eb3249c5768c21390163c9f55ea8ef83a4.gif);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 50%;
+  align-self: center;
+  margin-right: 15px;
+}
+
+.sc-message--meta {
+  font-size: xx-small;
+  margin-bottom: -10px;
+  color: white;
+  text-align: center;
+}
+
+@media (max-width: 450px) {
+  .sc-message {
+    width: 80%;
+  }
+}
+
+// ######## FROM ORIG APP.JS --- ######## FROM ORIG APP.JS ---
+// ######## FROM ORIG APP.JS --- ######## FROM ORIG APP.JS ---
+// ######## FROM ORIG APP.JS --- ######## FROM ORIG APP.JS ---
+
+// .sc-message {
+//   max-width: 828px;
+//   padding-bottom: 0;
+//   width: calc(100% - 50px);
+//   @media screen and (min-width: 768px) {
+//     width: calc(100% - 200px);
+//   }
+
+//   .sc-message--content {
+//     padding-bottom: 30px;
+
+//     @media screen and (max-width: 768px) {
+//       padding-bottom: 20px;
+//     }
+//   }
+
+//   &.fadeUp-enter-active {
+//     animation-duration: 0.5s;
+//   }
+// }
+
+.mt-wrapper {
+  margin: 0 auto;
+  max-width: 700px;
+  width: calc(100% - 50px);
+  @media screen and (min-width: 768px) {
+    width: 100%;
+  }
+
+  &.fadeUp-enter-active {
+    animation-duration: 0.5s;
+  }
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 0;
+}
+
+.mt-wrapper-author {
+  z-index: 1;
+}
+
+// MT --- MT --- MT --- MT --- MT --- MT --- MT --- MT ---
+// MT --- MT --- MT --- MT --- MT --- MT --- MT --- MT ---
+// MT --- MT --- MT --- MT --- MT --- MT --- MT --- MT ---
+
+.mt {
+  padding: 25px;
+  background-color: white;
+  border-radius: 30px;
+  box-shadow: none;
+
+  max-width: 90%;
+  margin-bottom: 30px;
+  line-height: 1.6;
+  font-size: 16px;
+  position: relative;
+}
+
+.emit {
+  align-self: flex-end;
+  //   margin-right: 80px;
+
+  border-bottom-right-radius: 0;
+}
+
+.reap {
+  align-self: flex-start;
+  //   margin-left: 80px;
+  border-bottom-left-radius: 0;
+}
+
+.mt-meta {
+  font-size: xx-small;
+  margin-bottom: 0px;
+  margin-top: 5px;
+  opacity: 0.5;
+  text-align: center;
+}
+
+//DO we NEED SOMETHING FOR  href
+// a {
+//     color: #2d2d2d !important;
+//     text-decoration: underline;
+//   }
+
+// TEXT --- TEXT --- TEXT ---
+
+// .sc-message--text {
+//   transition: width 0.3s linear, height 0.3s linear 0.3s;
+//   box-sizing: border-box;
+//   opacity: 0;
+//   overflow: hidden;
+
+//   .sc-message--text--content {
+//   }
+// }
+
+.mt-text {
+  // ? ? ? ? ? ?
+
+  transition: width 0.3s linear, height 0.3s linear 0.3s;
+  // opacity: 0
+  animation-duration: 0.3s;
+  animation-delay: 0.6s;
+
+  // ? ? ? ? ? ?
+}
+
+.last-internal-message {
+  border-bottom-left-radius: 30px;
+  border-top-left-radius: 0;
+}
+
+.mt-text.emit {
+}
+
+.mt-text.reap {
+}
+
+// THE REST --- THE REST --- THE REST --- THE REST ---
+// THE REST --- THE REST --- THE REST --- THE REST ---
+// THE REST --- THE REST --- THE REST --- THE REST ---
+
+.sc-message--content {
+  &.sent {
+    &.internal {
+      margin-top: -17px;
+      .sc-message--text,
+      .sc-message--list,
+      .sc-message--button,
+      .sc-message--image {
+        border-top-right-radius: 0;
+      }
+    }
+  }
+
+  // INTERNAL FIRST LAST --- INTERNAL FIRST LAST --- INTERNAL FIRST LAST ---
+  // INTERNAL FIRST LAST --- INTERNAL FIRST LAST --- INTERNAL FIRST LAST ---
+  // INTERNAL FIRST LAST --- INTERNAL FIRST LAST --- INTERNAL FIRST LAST ---
+
+  &.received {
+    &.internal {
+      .sc-message--text,
+      .sc-message--button {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+      }
+    }
+    &.first-internal-message {
+      .sc-message--text,
+      .sc-message--button {
+        border-top-left-radius: 30px !important;
+      }
+    }
+    &.last-internal-message {
+      .sc-message--text,
+      .sc-message--button {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 30px !important;
+      }
+
+      .sc-message--button {
+        transition: width 0.3s linear 0.5s, height 0.3s linear 0.8s;
+
+        .sc-message--button--text {
+          animation-delay: 1.3s;
+        }
+      }
+    }
+  }
+
+  // Typing indicator --- Typing indicator --- Typing indicator ---
+  // Typing indicator --- Typing indicator --- Typing indicator ---
+  // Typing indicator --- Typing indicator --- Typing indicator ---
+
+  .sc-typing-indicator {
+    animation-duration: 0.3s;
+    padding: 16px 30px 20px 30px;
+    font-size: 16px !important;
+    line-height: 30px;
+
+    span {
+      width: 6px;
+      height: 6px;
+      margin-right: 4;
+      border-radius: 3px;
+      vertical-align: bottom;
+      animation-delay: 0.1s !important;
+      animation: bob 1s infinite;
+
+      &:first-child {
+        animation-delay: 0s !important;
+      }
+
+      &:last-child {
+        animation-delay: 0.2s !important;
+        margin-right: 0;
+      }
+    }
+
+    &.v-leave-to {
+      position: absolute;
+      background: none !important;
+    }
+  }
+}
+
+// stuff for lower components
+
+.sc-message--time-read {
+  display: none;
+}
+
+.sc-message--list {
+  max-width: calc(100% - 10px);
+  .sc-message--list--element {
+    padding: 12px 15px;
+    width: calc(100% - 30px);
+    .sc-message--list--subtitle {
+      font-size: 14px;
+    }
+  }
+}
+
+.sc-message--list--button {
+  a,
+  button {
+    font-size: 14px;
+    padding: 7px 17px;
+    border-radius: 12px;
+  }
+}

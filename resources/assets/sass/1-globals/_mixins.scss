@@ -1,0 +1,54 @@
+////////////////////////////////////////////////////
+///PX TO REM*****PX TO REM*****PX TO REM*****///////
+////////////////////////////////////////////////////
+
+///function to turn px into rem
+@function calculateRem($size) {
+    $remSize: $size / 16px;
+    @return #{$remSize}rem;
+  }
+
+  ////use it like this
+  //h1 {@include fontSize(32px);//}
+  @mixin fontSize($size) {
+    font-size: $size; //Fallback in px
+    font-size: calculateRem($size);
+  }
+
+
+  @mixin marginBtm($size) {
+    margin-bottom: $size; //Fallback in px
+    margin-bottom: calculateRem($size);
+  }
+
+  //////////////////////////////////////////////////////
+  ///** BreakPoints **** BreakPoints **** BreakPoints **
+  //////////////////////////////////////////////////////
+//   $media-x-sml: 450px;
+//   $media-sml: 576px;
+//   $media-med: 768px;
+//   $media-lrg: 992px;
+//   $media-lrg-xl: 1200px;
+
+//   //mixins
+//   @mixin media-zero{@media (max-width: #{$media-sml}) {@content;}}
+//   @mixin media-x-sml{@media (min-width: #{$media-x-sml}) {@content;}}
+//   @mixin media-sml {@media (min-width: #{$media-sml}) {@content;}}
+//   @mixin media-med {@media (min-width: #{$media-med}) {@content;}}
+//   @mixin media-lrg {@media (min-width: #{$media-lrg}) {@content;}}
+//   @mixin media-lrg-xl {@media (min-width: #{$media-lrg-xl}) {@content;}}
+
+//   @mixin media-sml-max {@media (max-width: #{$media-sml}) {@content;}}
+//   @mixin media-med-max {@media (max-width: #{$media-med}) {@content;}}
+//   @mixin media-lrg-max {@media (max-width: #{$media-lrg}) {@content;}}
+//   @mixin media-lrg-xl-max {@media (max-width: #{$media-lrg-xl}) {@content;}}
+
+//   .hide-from-sml {@include media-sml{display: none;}}
+//   .hide-from-med {@include media-med{display: none;}}
+//   .hide-from-lrg {@include media-lrg{display: none;}}
+//   .hide-from-lrg-xl {@include media-lrg-xl{display: none;}}
+
+//   .hide-at-sml {@include media-sml-max{display: none;}}
+//   .hide-at-med {@include media-med-max{display: none;}}
+//   .hide-at-lrg {@include media-lrg-max{display: none;}}
+//   .hide-at-lrg-xl {@include media-lrg-xl-max{display: none;}}

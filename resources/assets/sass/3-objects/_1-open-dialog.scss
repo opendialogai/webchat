@@ -1,5 +1,8 @@
 
-/*
+
+//   👇🏻 👇🏻 👇🏻 from component FOR COMMENTS SECTION 👇🏻 👇🏻 👇🏻
+
+
 .nav {
   background-color: var(--header-text-color);
   border-bottom: 1px solid var(--header-background-color);
@@ -15,9 +18,7 @@
 .nav .nav-item.active a.nav-link {
   color: var(--header-text-color);
   font-weight: 600;
-} */
-
-/*
+}
 .comment-section-selector-wrapper {
   border-bottom: 1px solid var(--header-background-color);
 }
@@ -30,19 +31,12 @@
 }
 .comments-enabled .nav .nav-item.active {
   width: 60%;
-} */
+}
 
-.sc-chat-window {
-    height: calc(100vh - var(--header-height)) !important;
-  }
-  .comments-disabled .sc-chat-window {
-    height: 100% !important;
-  }
-
-  /* .minimized-header {
-    cursor: pointer;
-    padding: 0.75rem 1rem;
-    text-align: center;
-    background-color: var(--header-background-color);
-    color: var(--header-text-color);
-  } */
+.minimized-header {
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  background-color: var(--header-background-color);
+  color: var(--header-text-color);
+}
