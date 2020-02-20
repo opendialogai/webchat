@@ -52,48 +52,48 @@ export default {
     }
   },
 
-  mounted() {
-    if (this.data.animate) {
-      const w = this.$refs.message.offsetWidth + 1 + "px";
-      const h = this.$refs.message.offsetHeight + "px";
+//   mounted() {
+//     if (this.data.animate) {
+//       const w = this.$refs.message.offsetWidth + 1 + "px";
+//       const h = this.$refs.message.offsetHeight + "px";
 
-      const typingIndicator = document.querySelector(".sc-typing-indicator");
+//       const typingIndicator = document.querySelector(".sc-typing-indicator");
 
-      if (typingIndicator) {
-        const typingIndicatorRect = typingIndicator.getBoundingClientRect();
+//       if (typingIndicator) {
+//         const typingIndicatorRect = typingIndicator.getBoundingClientRect();
 
-        this.$refs.message.style.width = typingIndicatorRect.width + "px";
-        this.$refs.message.style.height = typingIndicatorRect.height + "px";
-        this.$refs.message.style.opacity = 1;
+//         this.$refs.message.style.width = typingIndicatorRect.width + "px";
+//         this.$refs.message.style.height = typingIndicatorRect.height + "px";
+//         this.$refs.message.style.opacity = 1;
 
-        setTimeout(() => {
-          this.$refs.message.style.width = w;
-          this.$refs.message.style.height = h;
-        }, 1);
-      } else {
-        this.$refs.message.style.width = "94px";
-        this.$refs.message.style.height = "66px";
-        this.$refs.message.style.opacity = 1;
+//         setTimeout(() => {
+//           this.$refs.message.style.width = w;
+//           this.$refs.message.style.height = h;
+//         }, 1);
+//       } else {
+//         this.$refs.message.style.width = "94px";
+//         this.$refs.message.style.height = "66px";
+//         this.$refs.message.style.opacity = 1;
 
-        setTimeout(() => {
-          this.$refs.message.style.width = w;
-          this.$refs.message.style.height = h;
-        }, 500);
-      }
+//         setTimeout(() => {
+//           this.$refs.message.style.width = w;
+//           this.$refs.message.style.height = h;
+//         }, 500);
+//       }
 
-      setTimeout(() => {
-        this.$root.$emit("scroll-down-message-list");
-      }, 450);
-      setTimeout(() => {
-        this.$root.$emit("scroll-down-message-list");
-      }, 900);
+//       setTimeout(() => {
+//         this.$root.$emit("scroll-down-message-list");
+//       }, 450);
+//       setTimeout(() => {
+//         this.$root.$emit("scroll-down-message-list");
+//       }, 900);
 
-      window.addEventListener("resize", () => {
-        this.$refs.message.style.width = null;
-        this.$refs.message.style.height = null;
-      });
-    }
-  }
+//       window.addEventListener("resize", () => {
+//         this.$refs.message.style.width = null;
+//         this.$refs.message.style.height = null;
+//       });
+//     }
+//   }
 };
 </script>
 

@@ -188,13 +188,13 @@ export default {
           text: '#1b212a',
         },
         button: {
-          bg: '#4e8cff',
-          hoverbg: '#0000ff',
+          bg: '#00f',
+          hoverbg: '#ffffff',
           text: '#ffffff',
         },
         externalButton: {
-          bg: '#4e8cff',
-          hoverbg: '#0000ff',
+          bg: '#00f',
+          hoverbg: '#fff ',
           text: '#ffffff',
         },
         minimizeButton: {

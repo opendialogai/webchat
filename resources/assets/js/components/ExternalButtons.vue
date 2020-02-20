@@ -1,24 +1,17 @@
 <template>
-  <div
-    v-if="externalButtons.length"
-    class="mt-wrapper sc-external-buttons-row"
-    :style="{background: colors.messageList.bg}"
-  >
-    <div class="mt mt-external-buttons sc-external-buttons-row-wrapper fade-enter-active">
+  <div v-if="externalButtons.length" class="mt-wrapper">
+    <div
+      class="mt mt-external-buttons fade-enter-active"
+      :style="{ '--background': colors.messageList.bg}"
+    >
       <button
-        class="sc-external-buttons-element"
-        :class="(buttonClicked == idx) ? 'sc-external-buttons-element--clicked' : ''"
+        class="mt-external-buttons__button"
+        :class="(buttonClicked == idx) ? 'mt-external-buttons__button--clicked' : ''"
         v-for="(externalButton, idx) in externalButtons"
         v-on:click="_handleClick(externalButton, idx)"
-        :style="{background: colors.receivedMessage.bg, color: colors.externalButton.text, '--button-hover': colors.externalButton.hoverbg}"
+        :style="{'--btn-bg': colors.externalButton.bg, '--btn-color': colors.externalButton.text, '--btn-bg-hover': colors.externalButton.hoverbg}"
         :key="idx"
       >
-        <div class="sc-external-buttons-element--top"></div>
-        <div class="sc-external-buttons-element--right"></div>
-        <div class="sc-external-buttons-element--bottom"></div>
-        <div class="sc-external-buttons-element--left"></div>
-        <div class="sc-external-buttons-element--background"></div>
-
         <span v-html="externalButton.text"></span>
       </button>
     </div>
@@ -58,10 +51,19 @@ export default {
 };
 </script>
 
-
-
 <style scoped>
 .mt-external-buttons {
+  background-color: var(--background);
+}
 
+.mt-external-buttons__button {
+  background-color: var(--btn-bg);
+  color: var(--btn-color);
+  border: 1px solid var(--btn-bg);
+}
+
+.mt-external-buttons__button:hover {
+  background-color: var(--btn-bg-hover);
+  color: var(--btn-bg);
 }
 </style>

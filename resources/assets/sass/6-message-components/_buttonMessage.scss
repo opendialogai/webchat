@@ -1,114 +1,34 @@
-.mt-message-button {
-
-
-    transition: width 0.3s linear, height 0.3s linear 0.3s;
-    opacity: 0;
-}
-
-
-.mt-message-button__text{
-    animation-duration: 0.3s;
-    animation-delay: 0.6s;
-    font-size: 16px !important;
-    line-height: 26px;
-
-}
-
-.mt-message-button__buttons {
-    padding-bottom: 3px;
-    button {
-      font-size: 14px;
-      padding: 7px 17px;
-      width: 100%;
-      border-radius: 12px;
-      margin-bottom: 5px;
-
-
-    }
-  }
-
-// OLD --- OLD --- OLD --- OLD --- OLD ---
-// OLD --- OLD --- OLD --- OLD --- OLD ---
-// OLD --- OLD --- OLD --- OLD --- OLD ---
-
-.sc-message--button {
-
-  overflow: hidden;
-
-
-  box-sizing: border-box;
+.mt-message-with-button {
+  transition: width 0.3s linear, height 0.3s linear 0.3s;
   opacity: 0;
+}
+
+.mt-message-with-button__text {
+  animation-duration: 0.3s;
+  animation-delay: 0.6s;
+
+  margin-bottom: 30px;
+}
+
+.mt-message-with-button__buttons-wrapper {
+  text-align: center;
+  animation-duration: 1s;
+}
+
+.mt-message-with-button__buttons-wrapper__button {
+  margin: 3px 10px;
   padding: 20px 30px;
+  border: 1px solid;
+  border-radius: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  position: relative;
+  transition: 0.4s;
 
-  border: 1px solid #ff0000;
+  &:active {
+    border: 2px solid green;
 
-  .sc-message--button--text {
-
-  }
-  .sc-message--button--buttons {
-    padding: 0;
-  }
-}
-
-.sc-message--button {
-  padding: 7px 15px;
-  .sc-message--button--text {
-    font-size: 15px !important;
-    color: #2d2d2d !important;
-
-    a {
-      color: #2d2d2d !important;
-      text-decoration: underline;
-    }
   }
 }
-
-.sc-message--button-response {
-  padding: 7px 15px;
-  .button {
-    display: inline-block;
-    font-size: 14px;
-    padding: 7px 17px;
-    border-radius: 12px;
-    text-align: center;
-    margin: 0 -4px;
-  }
-}
-
-.sc-message--button {
-    background: #eaeaea;
-    border-radius: 6px;
-    padding: 10px 12px;
-    max-width: calc(100% - 40px);
-  }
-
-  .sc-message--button .sc-message--button--buttons {
-    padding-top: 15px;
-  }
-
-  .sc-message--button button {
-    cursor: pointer;
-    border-radius: 30px;
-    border: none;
-    font-size: 14px;
-    padding: 12px 17px;
-    margin: 0 10px 10px 0;
-  }
-
-  .sc-message--button button:hover {
-    background-color: var(--button-hover) !important;
-  }
-
-  .sc-message--button button:last-child {
-    margin-right: 0;
-  }
-
-  .sc-message--button .sc-message--button--text {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 1.4;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    -webkit-font-smoothing: subpixel-antialiased;
-    animation-duration: 0s;
-  }

@@ -1,7 +1,7 @@
 <template>
   <div
     ref="message"
-    class="mt mt-message-button"
+    class="mt mt-message-with-button"
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
@@ -9,14 +9,20 @@
     }]"
     :style="messageColors"
   >
-    <div class="mt-message-button__text fade-enter-active" v-linkified>
+    <div class="mt-message-with-button__text fade-enter-active" v-linkified>
       <span v-html="data.text"></span>
     </div>
 
     <template v-if="data.buttons.length && !data.external">
-
-      <div class="mt-message-button__buttons">
-        <button v-for="(button, idx) in data.buttons" :key="idx" @click="_handleClick(button)" :style="{backgroundColor: colors.button.bg, color: colors.button.text, '--button-hover': colors.button.hoverbg}" v-html="button.text"></button>
+      <div class="mt-message-with-button__buttons-wrapper">
+        <button
+          v-for="(button, idx) in data.buttons"
+          :key="idx"
+          @click="_handleClick(button)"
+          :style="{'--btn-bg': colors.button.bg, '--btn-color': colors.button.text, '--btn-bg-hover': colors.button.hoverbg}"
+          v-html="button.text"
+          class="mt-message-with-button__buttons-wrapper__button"
+        ></button>
       </div>
     </template>
   </div>
@@ -51,55 +57,68 @@ export default {
     }
   },
   methods: {
-    _handleClick (button) {
-      this.onButtonClick(button, this.message)
+    _handleClick(button) {
+      this.onButtonClick(button, this.message);
     }
   },
-  mounted () {
+  mounted() {
     if (this.data.animate) {
-      const w = (this.$refs.message.offsetWidth + 1) + 'px'
-      const h = this.$refs.message.offsetHeight + 'px'
+      const w = this.$refs.message.offsetWidth + 1 + "px";
+      const h = this.$refs.message.offsetHeight + "px";
 
-      const typingIndicator = document.querySelector('.sc-typing-indicator')
+      const typingIndicator = document.querySelector(".sc-typing-indicator");
 
       if (typingIndicator) {
-        const typingIndicatorRect = typingIndicator.getBoundingClientRect()
+        const typingIndicatorRect = typingIndicator.getBoundingClientRect();
 
-        this.$refs.message.style.width = typingIndicatorRect.width + 'px'
-        this.$refs.message.style.height = typingIndicatorRect.height + 'px'
-        this.$refs.message.style.opacity = 1
+        this.$refs.message.style.width = typingIndicatorRect.width + "px";
+        this.$refs.message.style.height = typingIndicatorRect.height + "px";
+        this.$refs.message.style.opacity = 1;
 
         setTimeout(() => {
-          this.$refs.message.style.width = w
-          this.$refs.message.style.height = h
-        }, 1)
+          this.$refs.message.style.width = w;
+          this.$refs.message.style.height = h;
+        }, 1);
       } else {
-        this.$refs.message.style.width = '94px'
-        this.$refs.message.style.height = '66px'
-        this.$refs.message.style.opacity = 1
+        this.$refs.message.style.width = "94px";
+        this.$refs.message.style.height = "66px";
+        this.$refs.message.style.opacity = 1;
 
         setTimeout(() => {
-          this.$refs.message.style.width = w
-          this.$refs.message.style.height = h
-        }, 500)
+          this.$refs.message.style.width = w;
+          this.$refs.message.style.height = h;
+        }, 500);
       }
 
       setTimeout(() => {
-        this.$root.$emit('scroll-down-message-list')
-      }, 450)
+        this.$root.$emit("scroll-down-message-list");
+      }, 450);
       setTimeout(() => {
-        this.$root.$emit('scroll-down-message-list')
-      }, 900)
+        this.$root.$emit("scroll-down-message-list");
+      }, 900);
 
-      window.addEventListener('resize', () => {
-        this.$refs.message.style.width = null
-        this.$refs.message.style.height = null
-      })
+      window.addEventListener("resize", () => {
+        this.$refs.message.style.width = null;
+        this.$refs.message.style.height = null;
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped>
+.mt-message-with-button__buttons-wrapper__button {
+  background-color: var(--btn-bg);
+  color: var(--btn-color);
+  border: 1px solid var(--btn-bg);
+}
 
+.mt-message-with-button__buttons-wrapper__button:active {
+  border: 2px solid var(--btn-bg);
+}
+
+.mt-message-with-button__buttons-wrapper__button:hover {
+  background-color: var(--btn-bg-hover);
+  color: var(--btn-bg);
+}
 </style>
