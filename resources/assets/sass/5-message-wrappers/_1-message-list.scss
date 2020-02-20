@@ -6,6 +6,10 @@
 /* Hide scrollbar for IE and Edge */
 .message-list {
   -ms-overflow-style: none;
+  &.fadeUp-enter-active {
+    animation-duration: 0.5s;
+  }
+
 }
 
 .message-list {
