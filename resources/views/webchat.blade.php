@@ -24,12 +24,7 @@
 </div>
 
 
-<!-- <link rel="stylesheet" type="text/css" href="/vendor/webchat/css/app.css?{{env("CSS_VERSION", "v1")}}"> -->
-
 <link rel="stylesheet" type="text/css" href="/vendor/webchat/css/main.css?{{env("CSS_VERSION", "v1")}}">
-
-<!-- <link rel="stylesheet" type="text/css" href="/vendor/webchat/css/app-fullpage.css?{{env("CSS_VERSION", "v1")}}"> -->
-
 
 <script>
     window.openDialogSettings = {

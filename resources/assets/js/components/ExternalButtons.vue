@@ -9,7 +9,7 @@
         :class="(buttonClicked == idx) ? 'mt-external-buttons__button--clicked' : ''"
         v-for="(externalButton, idx) in externalButtons"
         v-on:click="_handleClick(externalButton, idx)"
-        :style="{'--btn-bg': colors.externalButton.bg, '--btn-color': colors.externalButton.text, '--btn-bg-hover': colors.externalButton.hoverbg}"
+        :style="{'background-color': colors.externalButton.bg}"
         :key="idx"
       >
         <span v-html="externalButton.text"></span>

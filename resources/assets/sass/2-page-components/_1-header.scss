@@ -1,5 +1,4 @@
 .header {
-
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
@@ -10,17 +9,16 @@
   }
   display: flex;
   justify-content: flex-start;
-
 }
 
 .header__btm-fade {
-    position: absolute;
-    bottom: -25px;
-    height: 25px;
-    width: 100%;
-    background: rgb(27, 33, 42);
-    background: linear-gradient(180deg, rgba(27, 33, 42, 1) 0%, rgba(255, 255, 255, 0) 100%);
-    z-index: 999;
+  position: absolute;
+  bottom: -25px;
+  height: 25px;
+  width: 100%;
+  background: rgb(27, 33, 42);
+  background: linear-gradient(180deg, rgba(27, 33, 42, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  z-index: 999;
 }
 
 .header-nav {

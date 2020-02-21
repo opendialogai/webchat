@@ -18,10 +18,8 @@
     <opendialog-chat></opendialog-chat>
 </div>
 
-<!-- <link rel="stylesheet" type="text/css" href="/vendor/webchat/css/app.css?{{env("CSS_VERSION", "v1")}}"> -->
 
 <link rel="stylesheet" type="text/css" href="/vendor/webchat/css/main.css?{{env("CSS_VERSION", "v1")}}">
-
 
 <script src="/vendor/webchat/js/app.js?{{env("JS_VERSION", "v1")}}"></script>
 
