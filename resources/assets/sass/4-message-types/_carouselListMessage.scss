@@ -1,0 +1,74 @@
+.sc-message--carousel-list {
+  background: none !important;
+  box-shadow: none !important;
+  overflow: hidden;
+  border-radius: 0 !important;
+  width: auto !important;
+  max-width: none;
+  margin: -19px 0 !important;
+  padding-left: 86px;
+
+  @media screen and (max-width: 768px) {
+    padding-left: 50px;
+    margin: -19px -50px !important;
+  }
+  @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
+    padding-left: 25px;
+    margin: -19px -25px !important;
+  }
+
+  .slider {
+    overflow: visible;
+    padding: 19px 0;
+
+    .slider-wrap > div {
+      width: 316px;
+      margin-right: 25px;
+      overflow: visible;
+
+      @media screen and (max-width: 768px) {
+        width: 326px;
+        margin-right: 14px;
+      }
+
+      .sc-message--rich {
+        margin: 0 !important;
+      }
+    }
+
+    .slider-pagination {
+      display: none;
+    }
+  }
+
+  .sc-message--carousel-list--arrows {
+    top: calc(50% - 30px);
+    left: 0;
+    width: 100%;
+
+    div {
+      width: 60px;
+      height: 60px;
+      background-color: blue;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 100%;
+
+      span {
+        font-size: 30px;
+        font-weight: bold;
+        color: white;
+      }
+      &.sc-message--carousel-list--arrow-left {
+      }
+
+      &.sc-message--carousel-list--arrow-right {
+      }
+
+      @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
+        display: none;
+      }
+    }
+  }
+}

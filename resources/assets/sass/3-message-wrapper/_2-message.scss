@@ -1,3 +1,6 @@
+// Old CSS still being used by some components
+// Old CSS still being used by some components
+// Old CSS still being used by some components
 .sc-message {
   width: 300px;
   margin: 0 auto;
@@ -7,9 +10,7 @@
   position: relative;
 }
 
-.sc-message.fadeUp-enter-active {
-  animation-duration: 0s;
-}
+.sc-message
 
 .sc-chat-window.fullscreen .sc-message {
   width: 100%;
@@ -75,30 +76,12 @@
   }
 }
 
-// ######## FROM ORIG APP.JS --- ######## FROM ORIG APP.JS ---
-// ######## FROM ORIG APP.JS --- ######## FROM ORIG APP.JS ---
-// ######## FROM ORIG APP.JS --- ######## FROM ORIG APP.JS ---
+// New component CSS --- New component CSS --- New component CSS ---
+// New component CSS --- New component CSS --- New component CSS ---
+// New component CSS --- New component CSS --- New component CSS ---
 
-// .sc-message {
-//   max-width: 828px;
-//   padding-bottom: 0;
-//   width: calc(100% - 50px);
-//   @media screen and (min-width: 768px) {
-//     width: calc(100% - 200px);
-//   }
 
-//   .sc-message--content {
-//     padding-bottom: 30px;
-
-//     @media screen and (max-width: 768px) {
-//       padding-bottom: 20px;
-//     }
-//   }
-
-//   &.fadeUp-enter-active {
-//     animation-duration: 0.5s;
-//   }
-// }
+// message type wrapper --- message type wrapper ---
 
 .mt-wrapper {
   margin: 0 auto;
@@ -122,9 +105,11 @@
   z-index: 1;
 }
 
-// MT --- MT --- MT --- MT --- MT --- MT --- MT --- MT ---
-// MT --- MT --- MT --- MT --- MT --- MT --- MT --- MT ---
-// MT --- MT --- MT --- MT --- MT --- MT --- MT --- MT ---
+.mt-wrapper.fadeUp-enter-active {
+  animation-duration: 0s;
+}
+
+// message type --- message type ---message type ---
 
 .mt {
   padding: 25px;
@@ -139,16 +124,16 @@
   position: relative;
 }
 
+
+// 🧘🏻‍♂️ User Sends Emits 🧘🏻‍♂️
 .emit {
   align-self: flex-end;
-  //   margin-right: 80px;
-
   border-bottom-right-radius: 0;
 }
 
+// 🤖 Robot Receives Reap 🤖
 .reap {
   align-self: flex-start;
-  //   margin-left: 80px;
   border-bottom-left-radius: 0;
 }
 
@@ -160,59 +145,7 @@
   text-align: center;
 }
 
-//DO we NEED SOMETHING FOR  href
-// a {
-//     color: #2d2d2d !important;
-//     text-decoration: underline;
-//   }
-
-// TEXT --- TEXT --- TEXT ---
-
-// .sc-message--text {
-//   transition: width 0.3s linear, height 0.3s linear 0.3s;
-//   box-sizing: border-box;
-//   opacity: 0;
-//   overflow: hidden;
-
-//   .sc-message--text--content {
-//   }
-// }
-
-.mt-text {
-  // ? ? ? ? ? ?
-
-  transition: width 0.3s linear, height 0.3s linear;
-
-//   animation: spread 0.3s ease-in-out;
-//   transition: width 0.3s linear, height 0.3s linear, opacity 0.9s linear;
-  // opacity: 0
-//   animation-duration: 0.3s;
-//   animation-delay: 0.6s;
-// opacity: 0;
-  // ? ? ? ? ? ?
-}
-
-.last-internal-message {
-  border-bottom-left-radius: 30px;
-  border-top-left-radius: 0;
-}
-
-
-.fade-enter-active{
-    opacity: 1;
-}
-
-
-
-  // Typing indicator --- Typing indicator --- Typing indicator ---
-  // Typing indicator --- Typing indicator --- Typing indicator ---
-  // Typing indicator --- Typing indicator --- Typing indicator ---
-
-
-
-
 // Time meta data hidden
-
 .sc-message--time-read {
   display: none;
 }

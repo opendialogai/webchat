@@ -57,7 +57,7 @@ export default {
       const w = this.$refs.message.offsetWidth + 1 + "px";
       const h = this.$refs.message.offsetHeight + "px";
 
-      const typingIndicator = document.querySelector(".sc-typing-indicator");
+      const typingIndicator = document.querySelector(".mt-typing-indicator");
 
       if (typingIndicator) {
         const typingIndicatorRect = typingIndicator.getBoundingClientRect();

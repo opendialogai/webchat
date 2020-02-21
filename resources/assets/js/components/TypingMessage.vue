@@ -1,7 +1,7 @@
 <template>
   <transition leave-active-class="fadeOut">
     <div
-      class="mt mt-typing-indicator sc-typing-indicator"
+      class="mt mt-typing-indicator"
       :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
