@@ -1,5 +1,5 @@
 <template>
-  <div class="sc-message--carousel-list">
+  <div class="mt mt-carousel">
     <slider
       :direction="data.view_type"
       :pagination-visible="true"
@@ -39,21 +39,30 @@
       </div>
     </slider>
 
-    <div v-if="data.view_type == 'horizontal'" class="sc-message--carousel-list--arrows">
-
-      <div v-if="showLeftArrow" class="sc-message--carousel-list--arrow-left" @click="previousPage">
+    <div v-if="data.view_type == 'horizontal'" class="mt-carousel__arrows">
+      <div
+        v-if="showLeftArrow"
+        class="mt-carousel__arrows__arrow mt-carousel__arrows__arrow-left"
+        @click="previousPage"
+      >
         <!-- <img src="./assets/left.svg" /> -->
-        <span>&lt;</span>
-      </div>
-      <div v-if="showRightArrow" class="sc-message--carousel-list--arrow-right" @click="nextPage">
-        <!-- <img src="./assets/right.svg" /> -->
-
         <span>&gt;</span>
       </div>
+      <div
+        v-if="showRightArrow"
+        class="mt-carousel__arrows__arrow mt-carousel__arrows__right"
+        @click="nextPage"
+      >
+        <!-- <img src="./assets/right.svg" /> -->
+
+        <span>&lt;</span>
+      </div>
     </div>
+    <div class="mt-carousel__gradient mt-carousel__gradient--right"></div>
+    <div class="mt-carousel__gradient mt-carousel__gradient--left"></div>
   </div>
 </template>
-
+Â
 <script>
 import Slider from "vue-plain-slider";
 
@@ -128,42 +137,24 @@ export default {
 </script>
 
 <style scoped>
-/*         carousel           */
-
-.sc-message--carousel-list {
-  background: #eaeaea;
+.mt-carousel {
+  /* background: #eaeaea;
   border-radius: 6px;
   padding: 0 15px;
   max-width: calc(100% - 40px);
-  position: relative;
+  position: relative; */
+
+  background: none;
 }
 
-.sc-message--carousel-list .slider.horizontal {
+/* .mt-carousel .slider.horizontal {
   padding-bottom: 30px;
 }
-.sc-message--carousel-list .slider.vertical {
+.mt-carousel .slider.vertical {
   padding-right: 30px;
-}
+} */
 
-.sc-message--carousel-list--arrows {
-  position: absolute;
-  top: calc(50% - 25px);
-  width: calc(100% - 6px);
-  left: 3px;
-}
-.sc-message--carousel-list--arrows div {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-.sc-message--carousel-list--arrows img {
+.mt-carousel__arrows img {
   width: 100%;
-}
-
-.sc-message--carousel-list--arrows .sc-message--carousel-list--arrow-left {
-  float: left;
-}
-.sc-message--carousel-list--arrows .sc-message--carousel-list--arrow-right {
-  float: right;
 }
 </style>

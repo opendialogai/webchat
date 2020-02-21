@@ -1,38 +1,39 @@
-.sc-message--carousel-list {
-  background: none !important;
-  box-shadow: none !important;
-  overflow: hidden;
-  border-radius: 0 !important;
-  width: auto !important;
-  max-width: none;
-  margin: -19px 0 !important;
-  padding-left: 86px;
+.mt-carousel__gradient {
+  width: 80px;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  background: rgb(27, 33, 42);
+}
 
-  @media screen and (max-width: 768px) {
-    padding-left: 50px;
-    margin: -19px -50px !important;
-  }
-  @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
-    padding-left: 25px;
-    margin: -19px -25px !important;
-  }
+.mt-carousel__gradient--right {
+  right: 0;
+  background: linear-gradient(270deg, rgba(27, 33, 42, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.mt-carousel__gradient--left {
+  left: 0;
+  background: linear-gradient(90deg, rgba(27, 33, 42, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.mt-carousel {
+  overflow: hidden;
+  max-width: none;
 
   .slider {
     overflow: visible;
     padding: 19px 0;
 
     .slider-wrap > div {
-      width: 316px;
-      margin-right: 25px;
-      overflow: visible;
-
-      @media screen and (max-width: 768px) {
-        width: 326px;
-        margin-right: 14px;
+      @media (min-width: $media-med) {
+        width: 300px;
       }
 
-      .sc-message--rich {
-        margin: 0 !important;
+      overflow: visible;
+
+      .mt-message-rich {
+        margin: 0 auto !important;
       }
     }
 
@@ -41,34 +42,44 @@
     }
   }
 
-  .sc-message--carousel-list--arrows {
-    top: calc(50% - 30px);
+  //   arrows --- arrows --- arrows ---
+  //   arrows --- arrows --- arrows ---
+  //   arrows --- arrows --- arrows ---
+
+  .mt-carousel__arrows {
+    position: absolute;
     left: 0;
-    width: 100%;
+    right: 0;
+    top: calc(50% - 30px);
+    z-index: 2;
+  }
 
-    div {
-      width: 60px;
-      height: 60px;
-      background-color: blue;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 100%;
+  .mt-carousel__arrows__arrow {
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(#000000, 0.3);
 
-      span {
-        font-size: 30px;
-        font-weight: bold;
-        color: white;
-      }
-      &.sc-message--carousel-list--arrow-left {
-      }
-
-      &.sc-message--carousel-list--arrow-right {
-      }
-
-      @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
-        display: none;
-      }
+    &:hover {
+      background-color: rgba(#000000, 0.7);
     }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+
+    span {
+      font-size: 30px;
+      font-weight: bold;
+      color: white;
+    }
+  }
+
+  .mt-carousel__arrows__arrow-left {
+    float: left;
+  }
+
+  .mt-carousel__arrows__arrow-left {
+    float: right;
   }
 }

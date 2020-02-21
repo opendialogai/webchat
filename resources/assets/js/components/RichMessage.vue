@@ -1,5 +1,5 @@
 <template>
-  <div class="mt sc-message--rich" :style="messageColors"  :class="[{
+  <div class="mt mt-message-rich sc-message--rich" :style="messageColors"  :class="[{
         animate: this.data.animate,
     }]">
     <div class="sc-message--rich--title">{{ data.title }}</div>

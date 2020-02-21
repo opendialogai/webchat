@@ -10,9 +10,7 @@
   position: relative;
 }
 
-.sc-message
-
-.sc-chat-window.fullscreen .sc-message {
+.sc-message .sc-chat-window.fullscreen .sc-message {
   width: 100%;
 }
 
@@ -80,7 +78,6 @@
 // New component CSS --- New component CSS --- New component CSS ---
 // New component CSS --- New component CSS --- New component CSS ---
 
-
 // message type wrapper --- message type wrapper ---
 
 .mt-wrapper {
@@ -121,9 +118,8 @@
   margin-bottom: 30px;
   line-height: 1.6;
   font-size: 16px;
-  position: relative;
+  //   position: relative;
 }
-
 
 // 🧘🏻‍♂️ User Sends Emits 🧘🏻‍♂️
 .emit {
@@ -149,4 +145,3 @@
 .sc-message--time-read {
   display: none;
 }
-
