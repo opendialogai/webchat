@@ -9,19 +9,16 @@
     }]"
       :style="messageColors"
     >
-      <!-- <span  :style="{'background-color': messageColors.color}"></span>
-      <span :style="{'background-color': messageColors.color}"></span>
-      <span :style="{'background-color': messageColors.color}"></span>-->
 
       <div class="all-blobs">
-        <div class="blob-wrapper">
-          <div class="blob"></div>
+        <div class="blob">
+          <div class="blob-content"></div>
         </div>
-        <div class="blob-wrapper">
-          <div class="blob"></div>
+        <div class="blob">
+          <div class="blob-content"></div>
         </div>
-        <div class="blob-wrapper">
-          <div class="blob"></div>
+        <div class="blob">
+          <div class="blob-content"></div>
         </div>
       </div>
     </div>
