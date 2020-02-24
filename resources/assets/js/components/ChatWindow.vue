@@ -31,6 +31,7 @@
         :onSubmit="onUserInputSubmit"
         :onButtonClick="onButtonClick"
         :externalButtons="externalButtons"
+        :animateExternalButtons="animateExternalButtons"
         :lastMessage="lastMessage"
         :showFile="showFile"
         :placeholder="placeholder"
@@ -189,6 +190,16 @@ export default {
       let messages = this.messageList
 
       return messages
+    },
+    animateExternalButtons() {
+      if (this.messages.length > 0) {
+        const lastMessage = this.messages[this.messages.length - 1]
+        if (lastMessage.type === 'button' && lastMessage.data.external) {
+          return lastMessage.data.animate
+        }
+      }
+
+      return false
     },
     externalButtons() {
       if (this.messages.length > 0) {

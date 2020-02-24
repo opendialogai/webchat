@@ -1,15 +1,15 @@
 <template>
   <div v-if="externalButtons.length" class="mt-wrapper">
     <div
-      class="mt mt-external-buttons fade-enter-active"
-      :style="{ '--background': colors.messageList.bg}"
+      class="mt mt-external-buttons"
+      :class="{animate: this.animate, 'fade-enter-active': this.animate}"
+      :style="{'--btn-bg': colors.button.bg, '--btn-color': colors.button.text, '--btn-bg-hover': colors.button.hoverbg, '--background': colors.messageList.bg}"
     >
       <button
         class="mt-external-buttons__button"
         :class="(buttonClicked == idx) ? 'mt-external-buttons__button--clicked' : ''"
         v-for="(externalButton, idx) in externalButtons"
         v-on:click="_handleClick(externalButton, idx)"
-        :style="{'background-color': colors.externalButton.bg}"
         :key="idx"
       >
         <span v-html="externalButton.text"></span>
@@ -21,6 +21,10 @@
 <script>
 export default {
   props: {
+    animate: {
+      type: Boolean,
+      default: false
+    },
     externalButtons: {
       type: Array,
       default: () => []

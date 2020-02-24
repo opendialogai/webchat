@@ -58,6 +58,9 @@ export default {
   },
   methods: {
     _handleClick(button) {
+      if (this.data.animate) {
+        this.$refs.message.style.height = null;
+      }
       this.onButtonClick(button, this.message);
     }
   },
@@ -114,7 +117,6 @@ export default {
 }
 
 .mt-message-with-button__buttons-wrapper__button:active {
-
 }
 
 .mt-message-with-button__buttons-wrapper__button:hover {
