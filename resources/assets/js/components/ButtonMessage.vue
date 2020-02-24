@@ -58,6 +58,10 @@ export default {
   },
   methods: {
     _handleClick(button) {
+      if (this.data.animate) {
+        this.$refs.message.style.height = null;
+      }
+
       this.onButtonClick(button, this.message);
     }
   },
