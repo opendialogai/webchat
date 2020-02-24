@@ -2,12 +2,18 @@
   transition: width 0.3s linear, height 0.3s linear;
 }
 
-.first-message{
-    border-bottom-right-radius: 0px;
+.first-message,
+.middle-message,
+.last-message {
+  margin-bottom: 15px;
 }
 
-.middle-message{
-    border-radius: 0;
+.first-message {
+  border-bottom-right-radius: 0px;
+}
+
+.middle-message {
+  border-radius: 0;
 }
 
 .last-message {
