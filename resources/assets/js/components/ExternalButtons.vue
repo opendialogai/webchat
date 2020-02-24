@@ -1,7 +1,8 @@
 <template>
   <div v-if="externalButtons.length" class="mt-wrapper">
     <div
-      class="mt mt-external-buttons fade-enter-active"
+      class="mt mt-external-buttons"
+      :class="{animate: this.animate, 'fade-enter-active': this.animate}"
       :style="{ '--background': colors.messageList.bg}"
     >
       <button
@@ -21,6 +22,10 @@
 <script>
 export default {
   props: {
+    animate: {
+      type: Boolean,
+      default: false
+    },
     externalButtons: {
       type: Array,
       default: () => []

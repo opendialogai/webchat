@@ -2,6 +2,7 @@
   <div class="sc-user-input-wrapper"  :style="{backgroundColor: colors.messageList.bg}">
     <ExternalButtons
       :externalButtons="externalButtons"
+      :animate="animateExternalButtons"
       v-on:sendExternalButton="_submitExternalButton"
       :colors="colors"
     />
@@ -62,6 +63,10 @@ export default {
     externalButtons: {
       type: Array,
       default: () => []
+    },
+    animateExternalButtons: {
+      type: Boolean,
+      default: false
     },
     onSubmit: {
       type: Function,
