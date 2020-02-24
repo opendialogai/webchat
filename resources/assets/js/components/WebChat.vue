@@ -391,7 +391,7 @@ export default {
                       lastMessage.type = message.type;
                       lastMessage.data = message.data;
 
-                      if (i === 0) {
+                      if (i === 0 && response.data.length > 1) {
                         lastMessage.data.first = true;
                       }
 

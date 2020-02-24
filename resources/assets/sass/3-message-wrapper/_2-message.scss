@@ -117,7 +117,11 @@
   max-width: 90%;
   margin-bottom: 30px;
   line-height: 1.6;
-  font-size: 16px;
+  font-size: 15px;
+  @media (min-width: $media-sml){
+    font-size: 16px;
+  }
+
   //   position: relative;
 }
 

@@ -12,9 +12,8 @@
       <div class="header-nav__logo">
         <img v-if="imageUrl" :src="imageUrl" alt />
       </div>
-
-      <div @click.stop="onRestartButtonClick" class="header-nav__restart-button">
-        <div v-if="showRestartButton">
+      <div v-if="showRestartButton">
+        <div @click.stop="onRestartButtonClick" class="header-nav__restart-button">
           <img src="./assets/restart.svg" />
           <span>Restart</span>
         </div>
@@ -27,9 +26,6 @@
 
 
 <script>
-
-
-
 export default {
   props: {
     imageUrl: {
@@ -66,7 +62,4 @@ export default {
 };
 </script>
 <style scoped>
-
-
-
 </style>
