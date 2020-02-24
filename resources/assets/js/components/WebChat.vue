@@ -391,12 +391,16 @@ export default {
                       lastMessage.type = message.type;
                       lastMessage.data = message.data;
 
-                      if (response.data.length > 1) {
-                        lastMessage.data.firstInternal = true;
+                      if (i === 0) {
+                        lastMessage.data.first = true;
                       }
 
+                        if (i > 0 && i < response.data.length - 1) {
+                            lastMessage.data.middle = true;
+                        }
+
                       if (i > 0 && i === response.data.length - 1) {
-                        lastMessage.data.lastInternal = true;
+                        lastMessage.data.last = true;
                       }
 
                       this.$root.$emit("scroll-down-message-list");

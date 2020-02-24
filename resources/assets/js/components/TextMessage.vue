@@ -8,8 +8,9 @@
         emit : this.author === 'me',
         reap: this.author === 'them',
         system: this.type === 'system',
-        'first-internal-message': this.data && this.data.firstInternal,
-        'last-internal-message': this.data && this.data.lastInternal,
+        'first-message': this.data && this.data.first,
+        'middle-message': this.data && this.data.middle,
+        'last-message': this.data && this.data.last,
     }]"
     :style="messageColors"
     v-linkified:options="{ format: function (value, type) { return '<span>' + value + '</span>'; } }"
