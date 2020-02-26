@@ -12,6 +12,8 @@
       class="minimize-button"
       @click="minimizeChat"
     />
+
+
     <div
       v-show="commentsEnabled && isMinimized"
       class="minimized-header"
@@ -21,6 +23,8 @@
       /
       {{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}
     </div>
+
+
     <b-nav
       v-show="ready && commentsEnabled && !isMinimized"
       ref="opendialogWidgetTabs"
@@ -44,6 +48,9 @@
         {{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}
       </b-nav-item>
     </b-nav>
+
+
+
     <div
       v-show="commentsEnabled && activeTab == 'comments'"
       class="comments-container"
@@ -159,36 +166,39 @@ export default {
       collectUserIp: true,
       colours: {
         header: {
-          bg: '#4e8cff',
+          bg: '#1b212a',
           text: '#ffffff',
         },
         launcher: {
-          bg: '#4e8cff',
+          bg: '#1b212a',
         },
         messageList: {
-          bg: '#ffffff',
+          bg: '#1b212a',
         },
         sentMessage: {
-          bg: '#4e8cff',
+          bg: '#0000ff',
           text: '#ffffff',
         },
         receivedMessage: {
-          bg: '#eaeaea',
-          text: '#222222',
+          bg: '#ffffff',
+          text: '#1b212a',
         },
         userInput: {
-          bg: '#f4f7f9',
-          text: '#565867',
+          bg: '#fffffff',
+          text: '#1b212a',
         },
         button: {
-          bg: '#4e8cff',
-          hoverbg: '#0000ff',
+          bg: '#00f',
+          hoverbg: '#ffffff',
           text: '#ffffff',
         },
         externalButton: {
-          bg: '#4e8cff',
-          hoverbg: '#0000ff',
+          bg: '#00f',
+          hoverbg: '#fff ',
           text: '#ffffff',
+        },
+        minimizeButton: {
+          bg: '#000000',
         },
       },
       comments: {},
@@ -694,6 +704,9 @@ export default {
         if (colours.externalEuttonText) {
           this.colours.externalButton.text = colours.externalEuttonText;
         }
+        if (colours.minimizeButtonBackground) {
+          this.colours.minimizeButton.bg = colours.minimizeButtonBackground;
+        }
       }
 
       if (config.user && !window._.isEmpty(config.user)) {
@@ -807,48 +820,5 @@ export default {
 </script>
 
 <style>
-.nav {
-  background-color: var(--header-text-color);
-  border-bottom: 1px solid var(--header-background-color);
-  color: var(--header-text-color);
-}
-.nav .nav-item a.nav-link {
-  color: var(--header-background-color);
-  font-size: 17px;
-}
-.nav .nav-item.active {
-  background-color: var(--header-background-color);
-}
-.nav .nav-item.active a.nav-link {
-  color: var(--header-text-color);
-  font-weight: 600;
-}
-.comment-section-selector-wrapper {
-  border-bottom: 1px solid var(--header-background-color);
-}
-.comment-section-selector-wrapper .comment-section-selector {
-  border: none;
-}
 
-.comments-enabled .nav .nav-item {
-  width: 40%;
-}
-.comments-enabled .nav .nav-item.active {
-  width: 60%;
-}
-
-.sc-chat-window {
-  height: calc(100vh - var(--header-height)) !important;
-}
-.comments-disabled .sc-chat-window {
-  height: 100% !important;
-}
-
-.minimized-header {
-  cursor: pointer;
-  padding: 0.75rem 1rem;
-  text-align: center;
-  background-color: var(--header-background-color);
-  color: var(--header-text-color);
-}
 </style>

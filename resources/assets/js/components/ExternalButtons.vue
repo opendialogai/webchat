@@ -1,19 +1,17 @@
 <template>
-  <div v-if="externalButtons.length" class="sc-external-buttons-row" :style="{background: colors.messageList.bg}">
-    <div class="sc-external-buttons-row-wrapper fade-enter-active">
+  <div v-if="externalButtons.length" class="mt-wrapper">
+    <div
+      class="mt mt-external-buttons"
+      :class="{animate: this.animate, 'fade-enter-active': this.animate}"
+      :style="{'--btn-bg': colors.button.bg, '--btn-color': colors.button.text, '--btn-bg-hover': colors.button.hoverbg, '--background': colors.messageList.bg}"
+    >
       <button
-        class="sc-external-buttons-element"
-        :class="(buttonClicked == idx) ? 'sc-external-buttons-element--clicked' : ''"
+        class="mt-external-buttons__button"
+        :class="(buttonClicked == idx) ? 'mt-external-buttons__button--clicked' : ''"
         v-for="(externalButton, idx) in externalButtons"
         v-on:click="_handleClick(externalButton, idx)"
-        :style="{background: colors.externalButton.bg, color: colors.externalButton.text, '--button-hover': colors.externalButton.hoverbg}"
-        :key="idx">
-        <div class="sc-external-buttons-element--top"></div>
-        <div class="sc-external-buttons-element--right"></div>
-        <div class="sc-external-buttons-element--bottom"></div>
-        <div class="sc-external-buttons-element--left"></div>
-        <div class="sc-external-buttons-element--background"></div>
-
+        :key="idx"
+      >
         <span v-html="externalButton.text"></span>
       </button>
     </div>
@@ -23,6 +21,10 @@
 <script>
 export default {
   props: {
+    animate: {
+      type: Boolean,
+      default: false
+    },
     externalButtons: {
       type: Array,
       default: () => []
@@ -35,54 +37,37 @@ export default {
   data() {
     return {
       buttonClicked: -1
-    }
+    };
   },
   watch: {
     externalButtons() {
       if (this.externalButtons.length == 0) {
-        this.buttonClicked = -1
+        this.buttonClicked = -1;
       }
     }
   },
   methods: {
     _handleClick(externalButton, idx) {
-      this.buttonClicked = idx
-      this.$emit('sendExternalButton', externalButton)
+      this.buttonClicked = idx;
+      this.$emit("sendExternalButton", externalButton);
     }
   }
-}
+};
 </script>
 
 <style scoped>
-.sc-external-buttons-row {
-  text-align: center;
-  padding: 10px;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
-}
-.sc-external-buttons-row-wrapper {
-  animation-duration: 0s;
-}
-.sc-external-buttons-element {
-  margin: 3px;
-  padding: 5px 10px 5px 10px;
-  border: 1px solid;
-  border-radius: 15px;
-  font-size: 14px;
-  background: inherit;
-  cursor: pointer;
+.mt-external-buttons {
+  background-color: var(--background);
 }
 
-.sc-external-buttons-element:hover {
-  background-color: var(--button-hover) !important;
+.mt-external-buttons__button {
+  background-color: var(--btn-bg);
+  color: var(--btn-color);
+  border: 1px solid var(--btn-bg);
 }
 
-.sc-external-buttons-element--top,
-.sc-external-buttons-element--right,
-.sc-external-buttons-element--bottom,
-.sc-external-buttons-element--left,
-.sc-external-buttons-element--background {
-  display: none;
+.mt-external-buttons__button:hover {
+  background-color: var(--btn-bg-hover);
+  color: var(--btn-bg);
 }
 </style>

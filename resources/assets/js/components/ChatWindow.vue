@@ -1,5 +1,5 @@
 <template>
-  <div class="sc-chat-window" :class="{opened: isOpen, closed: !isOpen, expanded: isExpand, fullscreen: fullScreen}">
+  <div class="chat-window sc-chat-window" :class="{opened: isOpen, closed: !isOpen, expanded: isExpand, fullscreen: fullScreen}">
     <Header
       v-if="!fullScreen"
       :teamName="agentProfile.teamName"
@@ -27,10 +27,13 @@
     <template v-if="!showLongTextInput">
       <UserInput
         :contentEditable="contentEditable"
+        :showEmoji="showEmoji"
         :onSubmit="onUserInputSubmit"
         :onButtonClick="onButtonClick"
         :externalButtons="externalButtons"
+        :animateExternalButtons="animateExternalButtons"
         :lastMessage="lastMessage"
+        :showFile="showFile"
         :placeholder="placeholder"
         :colors="colors" />
     </template>
@@ -67,6 +70,14 @@ export default {
       default: true
     },
     fullScreen: {
+      type: Boolean,
+      default: false
+    },
+    showEmoji: {
+      type: Boolean,
+      default: false
+    },
+    showFile: {
       type: Boolean,
       default: false
     },
@@ -180,6 +191,16 @@ export default {
 
       return messages
     },
+    animateExternalButtons() {
+      if (this.messages.length > 0) {
+        const lastMessage = this.messages[this.messages.length - 1]
+        if (lastMessage.type === 'button' && lastMessage.data.external) {
+          return lastMessage.data.animate
+        }
+      }
+
+      return false
+    },
     externalButtons() {
       if (this.messages.length > 0) {
         const lastMessage = this.messages[this.messages.length - 1]
@@ -198,64 +219,8 @@ export default {
 }
 </script>
 <style scoped>
-.sc-chat-window {
-  width: 370px;
-  height: calc(100% - 120px);
-  max-height: 590px;
-  position: fixed;
-  right: 25px;
-  bottom: 100px;
-  box-sizing: border-box;
-  box-shadow: 0px 7px 40px 2px rgba(148, 149, 150, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: 0.3s ease-in-out;
-  border-radius: 10px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
 
-.sc-chat-window.expanded {
-  width: 490px;
-}
 
-.sc-chat-window.fullscreen {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-height: 100vh;
-  bottom: 0;
-  right: 0;
-}
 
-.sc-chat-window.closed {
-  height: 75px;
-  bottom: 90px;
-  overflow: hidden;
-  border-radius: 10px;
-}
 
-.sc-message--me {
-  text-align: right;
-}
-.sc-message--them {
-  text-align: left;
-}
-
-@media (max-width: 450px) {
-  .sc-chat-window {
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
-    right: 0px;
-    bottom: 0px;
-    border-radius: 0px;
-  }
-  .sc-chat-window {
-    transition: 0.1s ease-in-out;
-  }
-  .sc-chat-window.closed {
-    bottom: 0px;
-  }
-}
 </style>

@@ -1,3 +1,6 @@
+// This is injected early on, before...  vendor-local/webchat/resources/views/webchat-iframe.blade.php
+// This is styling for the iframe chat box
+
 #opendialog-bot {
   cursor: pointer;
   position: fixed;
@@ -12,6 +15,7 @@
   -moz-border-radius: 50px;
   border-radius: 50px;
 }
+
 
 #opendialog-bot:hover {
   background: blue;
