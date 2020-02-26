@@ -1,6 +1,6 @@
 .header {
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   position: relative;
   @media (min-width: $media-sml) {
@@ -9,43 +9,68 @@
   }
   display: flex;
   justify-content: flex-start;
+  box-shadow: 0 3px 26px 3px rgba(0, 0, 0, 0.3);
+
+  height: 92px;
 }
 
-.header__btm-fade {
-  position: absolute;
-  bottom: -25px;
-  height: 25px;
-  width: 100%;
-  background: rgb(27, 33, 42);
-  background: linear-gradient(180deg, rgba(27, 33, 42, 1) 0%, rgba(255, 255, 255, 0) 100%);
-  z-index: 999;
-}
+// .header__btm-fade {
+//   position: absolute;
+//   bottom: -25px;
+//   height: 25px;
+//   width: 100%;
+//   background: rgb(27, 33, 42);
+//   background: linear-gradient(180deg, rgba(27, 33, 42, 1) 0%, rgba(255, 255, 255, 0) 100%);
+//   z-index: 999;
+//   ///👇🏻
+//   display: none;
+// }
 
 .header-nav {
   max-width: 1000px;
-  width: calc(100% - 50px);
-  margin: 20px auto;
+
+  width: 100%;
+  //   margin: 20px auto;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column-reverse;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
+
+  @media (min-width: $media-med) {
+    flex-direction: row;
+    width: calc(100% - 50px);
+    justify-content: space-between;
+    margin: 10px auto;
+  }
 }
 
 .header-nav__team-name {
-  width: 28%;
+  width: 100%;
   align-items: center;
-  justify-content: flex-start;
-  display: none;
+  justify-content: center;
+  display: flex;
+  //   display: none;
   @media (min-width: $media-med) {
     display: flex;
+    width: 28%;
   }
 }
 
 .header-nav__logo {
-  align-self: center;
-  width: 40%;
-  min-width: 175px;
+  border: 1px solid green;
+
+//   width: 40%;
+
+  width: 78px;
+  min-height: 22px;
+margin-bottom: 10px;
   @media (min-width: $media-sml) {
     width: 28%;
+  }
+  img {
+
+    object-fit: contain;
   }
 }
 

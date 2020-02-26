@@ -12,15 +12,20 @@
       <div class="header-nav__logo">
         <img v-if="imageUrl" :src="imageUrl" alt />
       </div>
-      <div v-if="showRestartButton">
-        <div @click.stop="onRestartButtonClick" class="header-nav__restart-button">
-          <img src="./assets/restart.svg" />
-          <span>Restart</span>
-        </div>
+
+      <div
+        v-if="showRestartButton"
+        @click.stop="onRestartButtonClick"
+        class="header-nav__restart-button"
+      >
+        <img src="./assets/restart.svg" />
+        <span>Restart</span>
       </div>
+
+      <div v-else class="header-nav__restart-button"></div>
     </div>
 
-    <div class="header__btm-fade"></div>
+    <!-- <div class="header__btm-fade"></div> -->
   </div>
 </template>
 

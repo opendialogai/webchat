@@ -166,7 +166,7 @@ export default {
       collectUserIp: true,
       colours: {
         header: {
-          bg: '#1b212a',
+          bg: '#da291c',
           text: '#ffffff',
         },
         launcher: {
@@ -181,7 +181,7 @@ export default {
         },
         receivedMessage: {
           bg: '#ffffff',
-          text: '#1b212a',
+          text: 'pink',
         },
         userInput: {
           bg: '#fffffff',
@@ -191,6 +191,7 @@ export default {
           bg: '#00f',
           hoverbg: '#ffffff',
           text: '#ffffff',
+
         },
         externalButton: {
           bg: '#00f',

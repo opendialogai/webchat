@@ -9,7 +9,8 @@
     @endif
 
     <!-- Fonts -->
-    <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.min.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.min.css" /> -->
+    <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.css" />
 </head>
 
 <body>
@@ -17,6 +18,7 @@
 <div id="app">
     <opendialog-chat></opendialog-chat>
 </div>
+
 
 
 <link rel="stylesheet" type="text/css" href="/vendor/webchat/css/main.css?{{env("CSS_VERSION", "v1")}}">
