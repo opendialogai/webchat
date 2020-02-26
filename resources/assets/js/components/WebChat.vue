@@ -195,7 +195,7 @@ export default {
     loading(isLoading) {
       if (!isLoading) {
         setTimeout(() => {
-          const header = document.querySelector(`#${this.id} .sc-header`);
+          const header = document.querySelector(`#${this.id} .header`);
           if (header) {
             this.headerHeight = header.offsetHeight;
           }
