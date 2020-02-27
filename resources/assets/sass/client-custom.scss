@@ -1,60 +1,124 @@
-
-
 // <Header />
 // remove vertical linear fade
 .header__btm-fade {
-    display: none;
+  display: none;
 }
 // and add box shadow to header
-.header{
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+.header {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
-
-
 
 //   <MessageList />
 //message list bkg is in test.css
 // .message-list {}
 
-
 // <Message />
 // Line up the bot avatar inline with the message-type
-.mt{
-    max-width: calc(90% - 45px);
-    @media (min-width: $media-med){
-        max-width: calc(90% - 60px);
-    }
+.mt {
+  max-width: calc(90% - 45px);
+  @media (min-width: $media-med) {
+    max-width: calc(90% - 60px);
+  }
 }
 
-.reap{
-    margin-left: 45px;
+.reap {
+  margin-left: 45px;
 
-    @media (min-width: $media-med){
-        margin-left: 60px;
-    }
+  @media (min-width: $media-med) {
+    margin-left: 60px;
+  }
 }
 
 .mt-author img.avatar {
-    padding: 0;
-    width: 36px;
-    @media screen and (min-width: 768px) {
-      border-radius: 0;
-      width: 50px;
-
-    }
+  padding: 0;
+  width: 36px;
+  @media screen and (min-width: 768px) {
+    border-radius: 0;
+    width: 50px;
+  }
 }
 
 .mt-author.reap {
-    margin-bottom: -50px;
-    margin-left: 0px;
-    @media (min-width: 900px) {
+  margin-bottom: -50px;
+  margin-left: 0px;
+  @media (min-width: 900px) {
+    margin-bottom: -70px;
+  }
+}
 
-      margin-bottom: -70px;
+/* User Input --- User Input --- User Input ---  */
+
+.user-input__form {
+  min-height: 195px;
+  height: 195px;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.user-input__form::before {
+  content: "Enter your message here";
+  margin: 0;
+  padding: 0;
+  height: 10px;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.57;
+  color: #38383a;
+}
+
+.user-input__form-text-input {
+  flex: unset;
+  /* border: 1px solid green; */
+  width: 100%;
+  caret-color: #da291c;
+  font-family: Gotham;
+  font-size: 16px;
+  font-weight: 300;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.38;
+
+  padding: 0;
+  margin: 0;
+  margin-top: 15px;
+
+  height: 100%;
+}
+
+.user-input__form-text-input::before {
+  /* border: 1px solid blue; */
+  //   margin-top: -30px;
+  display: none;
+  color: transparent;
+}
+
+.user-input__buttons {
+  width: 100%;
+  margin: 0;
+}
+
+.user-input__button {
+    align-items: flex-start;
+}
+
+.send-btn {
+    width: 85px;
+    height: 50px;
+    background-color: #da291c;
+    border-radius: 34.5px;
+    transition: .4s;
+
+    &:hover{
+        background-color: #c01a1e;
     }
-  }
-// stop ChatWindow.vue expanding on user-input focue (click)
-  .expanded {
-      width: 400px;
-  }
+}
 
+.send-btn::before {
+  content: "Send";
+  font-size: 18px;
+  color: white;
+}
 
+// .send-btn:hover:before{
+//     background-color: #c01a1e;
+// }

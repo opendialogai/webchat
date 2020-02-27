@@ -8,18 +8,22 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  width: 100% !important;
+  overflow-x: hidden;
 }
+
+
+// 🔥 ☠️ 💀 DoN't Do It !!!!! 🔥 ☠️ 💀
+// Do this in app-framne.scss
+// .expanded {
+//   ⚰️  width: 400px; ⚰️
+//   }
 
 .font-playfair{
     font-family: 'Playfair Display', ;
 }
 
-.chat-window.expanded {
-  width: 490px;
-  @media (min-width: $media-med){
-  width: 100%;
-  }
-}
+
 
 // .chat-window.fullscreen {
 //   position: relative;
@@ -28,6 +32,10 @@
 //   max-height: 100vh;
 //   bottom: 0;
 //   right: 0;
+// }
+
+// .chat-window.opened{
+//     width: 100%;
 // }
 
 .chat-window.closed {

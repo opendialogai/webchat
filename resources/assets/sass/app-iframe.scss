@@ -16,35 +16,37 @@
   border-radius: 50px;
 }
 
-
 #opendialog-bot:hover {
   background: blue;
 }
 
 iframe#opendialog-chatwindow {
   position: fixed;
-  height: 70%;
+  //   height: 70%;
+  height: 629px;
   bottom: 0;
   right: 10px;
   border: none;
-  width: 400px;
+
   box-shadow: #aaa 0 0 10px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   background-color: #fff;
   box-sizing: border-box;
+
+  //   Set the width of the iframe here
+  // .chat-window will fill this up (width: 100%)
+  //   width: 350px;
+  width: 423px;
+  transition: 0.3s ease-in-out;
 }
 
-
-// iframe#opendialog-chatwindow.expanded {
-//   width: 490px;
-// }
-
+//   Set the width of the eXpAnDeD iframe here
+// .chat-window will fill this up (width: 100%)
 iframe#opendialog-chatwindow.expanded {
-    width: 400px;
-
-  }
-
+  //   width: 400px;
+  width: 423px;
+}
 
 iframe.open#opendialog-chatwindow {
   position: fixed;

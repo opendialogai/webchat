@@ -1,6 +1,7 @@
 .user-input {
   position: relative;
   width: 100%;
+
 }
 
 .user-input__form {
@@ -12,7 +13,7 @@
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
-  margin: 0 auto;
+
 }
 
 .user-input__form.active {
@@ -41,20 +42,19 @@
   -webkit-font-smoothing: antialiased;
   display: flex;
   flex: 1;
+
+
 }
 
 .user-input__form-text-input:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
-
   filter: contrast(15%);
   outline: none;
 }
 
 // Form Buttons --- Form Buttons --- Form Buttons ---
 
-.user-input__buttons {
-}
 
 .user-input__buttons {
   width: 50px;
@@ -63,6 +63,7 @@
   justify-content: center;
   align-items: center;
   margin-right: 20px;
+
 }
 
 .user-input__button {
@@ -73,6 +74,8 @@
   outline: none;
   height: 100%;
   width: 100%;
+
+
 }
 
 // restyle the button - remove default styles
@@ -85,6 +88,8 @@
     outline: none;
     border: none;
   }
+
+
 }
 
 // Whats this 👇🏻 dunno
