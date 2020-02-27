@@ -150,7 +150,7 @@ export default {
       loading: true,
       maxInputCharacters: 0,
       messageList: [],
-      placeholder: "Type a message",
+      placeholder: "Enter your message",
       showLongTextInput: false,
       showMessages: true,
       showTypingIndicator: false,

@@ -4,6 +4,13 @@
     @click="onClose"
     :style="{background: colors.header.bg, color: colors.header.text}"
   >
+
+
+<!-- if chat-box closed-->
+<!-- //open chat btn -->
+
+
+<!-- else if chat box open -->
     <div class="header-nav">
       <div class="header-nav__team-name">
         <span v-if="teamName" v-html="teamName"></span>
@@ -25,7 +32,7 @@
       <div v-else class="header-nav__restart-button"></div>
     </div>
 
-    <!-- <div class="header__btm-fade"></div> -->
+    <div class="header__btm-fade"></div>
   </div>
 </template>
 

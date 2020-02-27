@@ -14,9 +14,12 @@
     font-family: 'Playfair Display', ;
 }
 
-// .chat-window.expanded {
-//   width: 490px;
-// }
+.chat-window.expanded {
+  width: 490px;
+  @media (min-width: $media-med){
+  width: 100%;
+  }
+}
 
 // .chat-window.fullscreen {
 //   position: relative;

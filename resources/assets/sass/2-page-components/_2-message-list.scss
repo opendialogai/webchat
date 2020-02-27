@@ -9,15 +9,15 @@
   &.fadeUp-enter-active {
     animation-duration: 0.5s;
   }
-
 }
 
 .message-list {
   flex: 1;
   overflow-y: auto;
-  padding: 20px 0 0 ;
+  padding: 20px 0 0;
 
-  @media (min-width: $media-med){
-    padding: 40px 0 0 ;
+  @media (min-width: $media-med) {
+    padding: 40px 0 0;
   }
+
 }

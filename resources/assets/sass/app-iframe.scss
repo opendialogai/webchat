@@ -29,13 +29,22 @@ iframe#opendialog-chatwindow {
   border: none;
   width: 400px;
   box-shadow: #aaa 0 0 10px;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   background-color: #fff;
+  box-sizing: border-box;
 }
+
+
+// iframe#opendialog-chatwindow.expanded {
+//   width: 490px;
+// }
+
 iframe#opendialog-chatwindow.expanded {
-  width: 490px;
-}
+    width: 400px;
+
+  }
+
 
 iframe.open#opendialog-chatwindow {
   position: fixed;

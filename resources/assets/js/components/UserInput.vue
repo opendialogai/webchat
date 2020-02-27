@@ -1,15 +1,13 @@
 <template>
-  <div class="sc-user-input-wrapper"  :style="{backgroundColor: colors.messageList.bg}">
+  <div class="user-input" :style="{backgroundColor: colors.messageList.bg}">
     <ExternalButtons
       :externalButtons="externalButtons"
       :animate="animateExternalButtons"
       v-on:sendExternalButton="_submitExternalButton"
       :colors="colors"
     />
-    <div
-      v-if="file"
-      class="file-container"
-    >
+
+    <div v-if="file" class="file-container">
       <span class="icon-file-message">
         <img src="./assets/file.svg" alt="genericFileIcon" height="15" />
       </span>
@@ -18,8 +16,9 @@
         <img src="./assets/close.svg" alt="close icon" height="10" title="Remove the file" />
       </span>
     </div>
+
     <form
-      class="sc-user-input"
+      class="user-input__form"
       :class="{active: inputActive, disabled: !contentEditable}"
       :style="{background: colors.userInput.bg}"
     >
@@ -32,13 +31,14 @@
         @input="onTextChange($event)"
         :contentEditable="contentEditable"
         :placeholder="placeholder"
-        class="sc-user-input--text"
+        class="user-input__form-text-input"
         ref="userInput"
         :style="{color: colors.userInput.text}"
       ></div>
-      <div class="sc-user-input--buttons">
-        <div class="sc-user-input--button">
-          <SendIcon :onClick="_submitText" :color="colors.userInput.text" />
+
+      <div class="user-input__buttons">
+        <div class="user-input__button">
+          <button @click.prevent="_submitText" class="send-btn"></button>
         </div>
       </div>
     </form>
@@ -47,12 +47,11 @@
 
 
 <script>
-import SendIcon from "./SendIcon.vue";
+
 import ExternalButtons from "./ExternalButtons.vue";
 
 export default {
   components: {
-    SendIcon,
     ExternalButtons
   },
   props: {
@@ -78,7 +77,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: "Write a reply"
+      default: "Enter your message"
     },
     lastMessage: {
       type: Object,
@@ -175,6 +174,4 @@ export default {
 </script>
 
 <style>
-
-
 </style>

@@ -1,7 +1,7 @@
 .header {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+
   position: relative;
   @media (min-width: $media-sml) {
     border-radius: 0;
@@ -14,17 +14,15 @@
   height: 92px;
 }
 
-// .header__btm-fade {
-//   position: absolute;
-//   bottom: -25px;
-//   height: 25px;
-//   width: 100%;
-//   background: rgb(27, 33, 42);
-//   background: linear-gradient(180deg, rgba(27, 33, 42, 1) 0%, rgba(255, 255, 255, 0) 100%);
-//   z-index: 999;
-//   ///👇🏻
-//   display: none;
-// }
+.header__btm-fade {
+  position: absolute;
+  bottom: -25px;
+  height: 25px;
+  width: 100%;
+  background: rgb(27, 33, 42);
+  background: linear-gradient(180deg, rgba(27, 33, 42, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  z-index: 999;
+}
 
 .header-nav {
   max-width: 1000px;
@@ -58,18 +56,13 @@
 }
 
 .header-nav__logo {
-  border: 1px solid green;
-
-//   width: 40%;
-
   width: 78px;
   min-height: 22px;
-margin-bottom: 10px;
+  margin-bottom: 10px;
   @media (min-width: $media-sml) {
     width: 28%;
   }
   img {
-
     object-fit: contain;
   }
 }

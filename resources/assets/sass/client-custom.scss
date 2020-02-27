@@ -1,0 +1,60 @@
+
+
+// <Header />
+// remove vertical linear fade
+.header__btm-fade {
+    display: none;
+}
+// and add box shadow to header
+.header{
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+
+//   <MessageList />
+//message list bkg is in test.css
+// .message-list {}
+
+
+// <Message />
+// Line up the bot avatar inline with the message-type
+.mt{
+    max-width: calc(90% - 45px);
+    @media (min-width: $media-med){
+        max-width: calc(90% - 60px);
+    }
+}
+
+.reap{
+    margin-left: 45px;
+
+    @media (min-width: $media-med){
+        margin-left: 60px;
+    }
+}
+
+.mt-author img.avatar {
+    padding: 0;
+    width: 36px;
+    @media screen and (min-width: 768px) {
+      border-radius: 0;
+      width: 50px;
+
+    }
+}
+
+.mt-author.reap {
+    margin-bottom: -50px;
+    margin-left: 0px;
+    @media (min-width: 900px) {
+
+      margin-bottom: -70px;
+    }
+  }
+// stop ChatWindow.vue expanding on user-input focue (click)
+  .expanded {
+      width: 400px;
+  }
+
+
