@@ -18,6 +18,7 @@ class WebchatSetting extends Model
     public const GENERAL                   = 'general';
     public const URL                       = 'url';
     public const TEAM_NAME                 = 'teamName';
+    public const LOGO                      = 'logo';
     public const VALID_PATH                = 'validPath';
     public const MESSAGE_DELAY             = 'messageDelay';
     public const OPEN                      = 'open';
@@ -58,7 +59,6 @@ class WebchatSetting extends Model
     public const BUTTON_BACKGROUND                = 'buttonBackground';
     public const BUTTON_HOVER_BACKGROUND          = 'buttonHoverBackground';
     public const BUTTON_TEXT                      = 'buttonText';
-    public const MINIMIZE_BUTTON_BACKGROUND       = 'minimizeButtonBackground';
     public const EXTERNAL_BUTTON_BACKGROUND       = 'externalButtonBackground';
     public const EXTERNAL_BUTTON_HOVER_BACKGROUND = 'externalButtonHoverBackground';
     public const EXTERNAL_BUTTON_TEXT             = 'externalButtonText';
@@ -123,6 +123,7 @@ class WebchatSetting extends Model
                 WebchatSetting::STRING => [
                     WebchatSetting::URL,
                     WebchatSetting::TEAM_NAME,
+                    WebchatSetting::LOGO,
                     WebchatSetting::CHATBOT_CSS_PATH,
                     WebchatSetting::CHATBOT_FULLPAGE_CSS_PATH,
                     WebchatSetting::PAGE_CSS_PATH,
@@ -173,7 +174,6 @@ class WebchatSetting extends Model
                     WebchatSetting::EXTERNAL_BUTTON_BACKGROUND,
                     WebchatSetting::EXTERNAL_BUTTON_HOVER_BACKGROUND,
                     WebchatSetting::EXTERNAL_BUTTON_TEXT,
-                    WebchatSetting::MINIMIZE_BUTTON_BACKGROUND,
                 ],
             ],
             WebchatSetting::COMMENTS => [

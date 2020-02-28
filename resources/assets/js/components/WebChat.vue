@@ -10,9 +10,7 @@
   >
     <template v-if="loading">
       <div class="loading">
-        <div class="loading-message">
-          Loading chat history
-        </div>
+        <div class="loading-message">Loading chat history</div>
 
         <div class="loading-indicator">
           <span />
@@ -37,8 +35,6 @@
         :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
         :content-editable="contentEditable"
-        :show-emoji="false"
-        :show-file="false"
         :show-expand-button="false"
         :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
@@ -59,34 +55,34 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
-const moment = require('moment-timezone');
+const moment = require("moment-timezone");
 
 export default {
-  name: 'WebChat',
+  name: "WebChat",
   props: {
     agentProfile: {
       type: Object,
-      required: true,
+      required: true
     },
     callbackMap: {
       type: Array,
-      required: true,
+      required: true
     },
     canCloseChat: Boolean,
     chatbotAvatarPath: {
       type: String,
-      default: '',
+      default: ""
     },
     chatbotName: {
       type: String,
-      default: '',
+      default: ""
     },
     chatIsOpen: Boolean,
     colours: {
       type: Object,
-      required: true,
+      required: true
     },
     hideDatetimeMessage: Boolean,
     hideTypingIndicatorOnInternalMessages: Boolean,
@@ -96,23 +92,23 @@ export default {
     showHistory: Boolean,
     numberOfMessages: {
       type: Number,
-      required: true,
+      required: true
     },
     messageDelay: {
       type: Number,
-      required: true,
+      required: true
     },
     newMessageIcon: {
       type: String,
-      required: true,
+      required: true
     },
     parentUrl: {
       type: String,
-      required: true,
+      required: true
     },
     restartButtonCallback: {
       type: String,
-      default: '',
+      default: ""
     },
     showRestartButton: Boolean,
     showExpandButton: Boolean,
@@ -122,45 +118,45 @@ export default {
     useHumanName: Boolean,
     user: {
       type: Object,
-      required: true,
+      required: true
     },
     userInfo: {
       type: Object,
-      required: true,
+      required: true
     },
     userTimezone: {
       type: String,
-      required: true,
+      required: true
     },
     userExternalId: {
       type: String,
-      required: true,
+      required: true
     },
     userUuid: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
-      buttonText: 'Submit',
+      buttonText: "Submit",
       confirmationMessage: null,
       contentEditable: false,
       headerHeight: 0,
-      headerText: '',
-      id: '',
+      headerText: "",
+      id: "",
       initialText: null,
       isOpen: this.chatIsOpen,
       loading: true,
       maxInputCharacters: 0,
       messageList: [],
-      placeholder: 'Type a message',
+      placeholder: "Type a message",
       showLongTextInput: false,
       showMessages: true,
       showTypingIndicator: false,
       users: [],
-      userName: '',
-      uuid: this.userUuid,
+      userName: "",
+      uuid: this.userUuid
     };
   },
   watch: {
@@ -169,17 +165,20 @@ export default {
       let previousMessage = this.messageList[this.messageList.length - 2];
       const lastMessage = this.messageList[this.messageList.length - 1];
 
-      if (previousMessage && previousMessage.type === 'author') {
+      if (previousMessage && previousMessage.type === "author") {
         spliceIndex = 2;
         previousMessage = this.messageList[this.messageList.length - 3];
       }
 
       if (!this.hideDatetimeMessage) {
-        if (!previousMessage || previousMessage.type !== 'datetime') {
-          if (!previousMessage || previousMessage.data.date !== lastMessage.data.date) {
+        if (!previousMessage || previousMessage.type !== "datetime") {
+          if (
+            !previousMessage ||
+            previousMessage.data.date !== lastMessage.data.date
+          ) {
             this.messageList.splice(this.messageList.length - spliceIndex, 0, {
-              type: 'datetime',
-              datetime: lastMessage.data.date,
+              type: "datetime",
+              datetime: lastMessage.data.date
             });
           }
         }
@@ -193,29 +192,24 @@ export default {
         this.dateTimezoneFormat(lastMessage);
       }
     },
-    isOpen(isOpen) {
-      if (isOpen) {
-        this.agentProfile.imageUrl = null;
-      }
-    },
     loading(isLoading) {
       if (!isLoading) {
         setTimeout(() => {
-          const header = document.querySelector(`#${this.id} .sc-header`);
+          const header = document.querySelector(`#${this.id} .header`);
           if (header) {
             this.headerHeight = header.offsetHeight;
           }
         }, 1000);
       }
-    },
+    }
   },
   created() {
     this.id = `webchat-${this.$uuid.v4()}`;
 
     const urlParams = new URLSearchParams(window.location.search);
 
-    if (urlParams.has('mobile')) {
-      if (urlParams.get('mobile')) {
+    if (urlParams.has("mobile")) {
+      if (urlParams.get("mobile")) {
         this.isMobile = true;
         this.showExpandButton = false;
       }
@@ -225,19 +219,22 @@ export default {
     this.userName = `${this.user.first_name} ${this.user.last_name}`;
     this.fetchMessages();
 
-    window.addEventListener('message', (event) => {
+    window.addEventListener("message", event => {
       if (event.data) {
-        if (event.data.triggerConversation && event.data.triggerConversation.callback_id) {
+        if (
+          event.data.triggerConversation &&
+          event.data.triggerConversation.callback_id
+        ) {
           const data = {};
           if (event.data.triggerConversation.value) {
             data.value = event.data.triggerConversation.value;
           }
 
           this.sendMessage({
-            type: 'trigger',
-            author: 'me',
+            type: "trigger",
+            author: "me",
             callback_id: event.data.triggerConversation.callback_id,
-            data,
+            data
           });
         }
 
@@ -257,32 +254,46 @@ export default {
   },
   methods: {
     dateTimezoneFormat(message) {
-      if (this.userTimezone !== 'utc') {
-        const date = moment.tz(`${message.data.date} ${message.data.time}`, 'ddd D MMM hh:mm A', 'utc').tz(this.userTimezone);
+      if (this.userTimezone !== "utc") {
+        const date = moment
+          .tz(
+            `${message.data.date} ${message.data.time}`,
+            "ddd D MMM hh:mm A",
+            "utc"
+          )
+          .tz(this.userTimezone);
 
         /* eslint-disable no-param-reassign */
-        message.data.date = date.format('ddd D MMM');
-        message.data.time = date.format('hh:mm A');
+        message.data.date = date.format("ddd D MMM");
+        message.data.time = date.format("hh:mm A");
         /* eslint-enable no-param-reassign */
       }
     },
     sendMessage(msg) {
       const newMsg = msg;
-      newMsg.data.date = moment().tz('UTC').format('ddd D MMM');
-      newMsg.data.time = moment().tz('UTC').format('hh:mm A');
+      newMsg.data.date = moment()
+        .tz("UTC")
+        .format("ddd D MMM");
+      newMsg.data.time = moment()
+        .tz("UTC")
+        .format("hh:mm A");
 
-      newMsg.user_id = (this.user.email) ? this.user.email : this.uuid;
+      newMsg.user_id = this.user.email ? this.user.email : this.uuid;
       newMsg.user = this.user;
 
-      if (!newMsg.user.name && newMsg.user.first_name && newMsg.user.last_name) {
+      if (
+        !newMsg.user.name &&
+        newMsg.user.first_name &&
+        newMsg.user.last_name
+      ) {
         newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
       }
 
       // Give the message an id.
       newMsg.id = this.$uuid.v4();
 
-      if (newMsg.type === 'chat_open' && this.userInfo) {
-        Object.keys(this.userInfo).forEach((key) => {
+      if (newMsg.type === "chat_open" && this.userInfo) {
+        Object.keys(this.userInfo).forEach(key => {
           newMsg.user[key] = this.userInfo[key];
         });
       }
@@ -294,22 +305,35 @@ export default {
           this.messageList.push(authorMsg);
         }
 
-        this.buttonText = 'Submit';
-        this.headerText = '';
+        this.buttonText = "Submit";
+        this.headerText = "";
         this.maxInputCharacters = 0;
         this.showLongTextInput = false;
         this.showMessages = true;
         this.messageList.push(newMsg);
       }
 
-      if (newMsg.type === 'text' && newMsg.data.text.length > 0) {
-        window.parent.postMessage({ dataLayerEvent: 'message_sent_to_chatbot' }, '*');
+      if (newMsg.type === "text" && newMsg.data.text.length > 0) {
+        window.parent.postMessage(
+          { dataLayerEvent: "message_sent_to_chatbot" },
+          "*"
+        );
       }
-      if (newMsg.type === 'button_response') {
-        window.parent.postMessage({ dataLayerEvent: 'user_clicked_button_in_chatbot' }, '*');
+      if (newMsg.type === "button_response") {
+        window.parent.postMessage(
+          { dataLayerEvent: "user_clicked_button_in_chatbot" },
+          "*"
+        );
       }
 
-      if (newMsg.type === 'chat_open' || newMsg.type === 'url_click' || newMsg.type === 'trigger' || newMsg.type === 'form_response' || newMsg.type === 'webchat_list_response' || newMsg.data.text.length > 0) {
+      if (
+        newMsg.type === "chat_open" ||
+        newMsg.type === "url_click" ||
+        newMsg.type === "trigger" ||
+        newMsg.type === "form_response" ||
+        newMsg.type === "webchat_list_response" ||
+        newMsg.data.text.length > 0
+      ) {
         // Make a copy of the message to send to the backend.
         // This is needed so that the author change will not affect this.messageList.
         const msgCopy = Object.assign({}, newMsg);
@@ -317,60 +341,74 @@ export default {
         // Set the message author ID.
         msgCopy.author = msgCopy.user_id;
         const webchatMessage = {
-          notification: 'message',
+          notification: "message",
           user_id: msgCopy.user_id,
           author: msgCopy.author,
           message_id: msgCopy.id,
-          content: msgCopy,
+          content: msgCopy
         };
 
         // Need to add error handling here
-        axios.post('/incoming/webchat', webchatMessage).then(
-          (response) => {
+        axios.post("/incoming/webchat", webchatMessage).then(
+          response => {
             if (response.data instanceof Array) {
               response.data.forEach((message, i) => {
                 if (!message) {
                   this.contentEditable = true;
                 } else {
                   if (i === 0) {
-                    if ((this.useBotName || this.useBotAvatar) && !message.data.hideavatar) {
+                    if (
+                      (this.useBotName || this.useBotAvatar) &&
+                      !message.data.hideavatar
+                    ) {
                       const authorMsg = this.newAuthorMessage(message);
 
                       this.messageList.push(authorMsg);
                     }
 
                     this.messageList.push({
-                      author: 'them',
-                      type: 'typing',
-                      data: {},
+                      author: "them",
+                      type: "typing",
+                      data: {
+                        animate: this.messageAnimation
+                      }
                     });
                   }
 
                   setTimeout(() => {
-                    this.$emit('newMessage', message);
+                    this.$emit("newMessage", message);
 
                     /* eslint-disable no-param-reassign */
                     message.data.animate = this.messageAnimation;
 
-                    if (i === 0 || !this.hideTypingIndicatorOnInternalMessages) {
-                      const lastMessage = this.messageList[this.messageList.length - 1];
+                    if (
+                      i === 0 ||
+                      !this.hideTypingIndicatorOnInternalMessages
+                    ) {
+                      const lastMessage = this.messageList[
+                        this.messageList.length - 1
+                      ];
                       lastMessage.type = message.type;
                       lastMessage.data = message.data;
 
-                      if (response.data.length > 1) {
-                        lastMessage.data.firstInternal = true;
+                      if (i === 0 && response.data.length > 1) {
+                        lastMessage.data.first = true;
                       }
 
-                      if (i > 0 && (i === (response.data.length - 1))) {
-                        lastMessage.data.lastInternal = true;
+                        if (i > 0 && i < response.data.length - 1) {
+                            lastMessage.data.middle = true;
+                        }
+
+                      if (i > 0 && i === response.data.length - 1) {
+                        lastMessage.data.last = true;
                       }
 
-                      this.$root.$emit('scroll-down-message-list');
+                      this.$root.$emit("scroll-down-message-list");
                       setTimeout(() => {
-                        this.$root.$emit('scroll-down-message-list');
+                        this.$root.$emit("scroll-down-message-list");
                       }, 50);
                     } else {
-                      if (i > 0 && (i === (response.data.length - 1))) {
+                      if (i > 0 && i === response.data.length - 1) {
                         /* eslint-disable no-param-reassign */
                         message.data.lastInternal = true;
                       }
@@ -383,13 +421,15 @@ export default {
                     }
 
                     if (!this.hideTypingIndicatorOnInternalMessages) {
-                      if (i < (response.data.length - 1)) {
+                      if (i < response.data.length - 1) {
                         this.$nextTick(() => {
                           this.$nextTick(() => {
                             this.messageList.push({
-                              author: 'them',
-                              type: 'typing',
-                              data: {},
+                              author: "them",
+                              type: "typing",
+                              data: {
+                                animate: this.messageAnimation
+                              }
                             });
                           });
                         });
@@ -397,30 +437,40 @@ export default {
                     }
                   }, (i + 1) * this.messageDelay);
 
-                  window.parent.postMessage({ dataLayerEvent: 'message_received_from_chatbot' }, '*');
+                  window.parent.postMessage(
+                    { dataLayerEvent: "message_received_from_chatbot" },
+                    "*"
+                  );
                 }
               });
             } else if (response.data) {
               const message = response.data;
 
-              if (newMsg.type === 'chat_open') {
+              if (newMsg.type === "chat_open") {
                 if (message && message.data) {
-                  if ((this.useBotName || this.useBotAvatar) && !message.data.hideavatar) {
+                  if (
+                    (this.useBotName || this.useBotAvatar) &&
+                    !message.data.hideavatar
+                  ) {
                     const authorMsg = this.newAuthorMessage(message);
 
                     this.messageList.push(authorMsg);
                   }
 
                   this.messageList.push({
-                    author: 'them',
-                    type: 'typing',
-                    data: {},
+                    author: "them",
+                    type: "typing",
+                    data: {
+                      animate: this.messageAnimation
+                    }
                   });
 
                   setTimeout(() => {
-                    const lastMessage = this.messageList[this.messageList.length - 1];
+                    const lastMessage = this.messageList[
+                      this.messageList.length - 1
+                    ];
 
-                    this.$emit('newMessage', message);
+                    this.$emit("newMessage", message);
 
                     message.data.animate = this.messageAnimation;
 
@@ -435,33 +485,40 @@ export default {
                 }
               } else {
                 if (message.data) {
-                  if ((this.useBotName || this.useBotAvatar) && !message.data.hideavatar) {
+                  if (
+                    (this.useBotName || this.useBotAvatar) &&
+                    !message.data.hideavatar
+                  ) {
                     const authorMsg = this.newAuthorMessage(message);
 
                     this.messageList.push(authorMsg);
                   }
 
                   this.messageList.push({
-                    author: 'them',
-                    type: 'typing',
-                    data: {},
+                    author: "them",
+                    type: "typing",
+                    data: {
+                      animate: this.messageAnimation
+                    }
                   });
                 }
                 setTimeout(() => {
                   // Only add a message to the list if it is a message object
-                  if (typeof message === 'object' && message !== null) {
-                    const lastMessage = this.messageList[this.messageList.length - 1];
+                  if (typeof message === "object" && message !== null) {
+                    const lastMessage = this.messageList[
+                      this.messageList.length - 1
+                    ];
 
-                    this.$emit('newMessage', message);
+                    this.$emit("newMessage", message);
 
                     message.data.animate = this.messageAnimation;
 
                     lastMessage.type = message.type;
                     lastMessage.data = message.data;
 
-                    this.$root.$emit('scroll-down-message-list');
+                    this.$root.$emit("scroll-down-message-list");
                     setTimeout(() => {
-                      this.$root.$emit('scroll-down-message-list');
+                      this.$root.$emit("scroll-down-message-list");
                     }, 50);
                   }
 
@@ -469,7 +526,7 @@ export default {
                     this.contentEditable = !message.data.disable_text;
                   }
 
-                  if (message.type === 'longtext') {
+                  if (message.type === "longtext") {
                     if (message.data.character_limit) {
                       this.maxInputCharacters = message.data.character_limit;
                     }
@@ -503,7 +560,10 @@ export default {
                   }
                 }, this.messageDelay);
 
-                window.parent.postMessage({ dataLayerEvent: 'message_received_from_chatbot' }, '*');
+                window.parent.postMessage(
+                  { dataLayerEvent: "message_received_from_chatbot" },
+                  "*"
+                );
               }
             }
           },
@@ -511,13 +571,17 @@ export default {
           () => {
             setTimeout(() => {
               const message = {
-                type: 'text',
-                author: 'them',
+                type: "text",
+                author: "them",
                 data: {
-                  date: moment().tz('UTC').format('ddd D MMM'),
-                  time: moment().tz('UTC').format('hh:mm A'),
-                  text: "We're sorry, that didn't work, please try again",
-                },
+                  date: moment()
+                    .tz("UTC")
+                    .format("ddd D MMM"),
+                  time: moment()
+                    .tz("UTC")
+                    .format("hh:mm A"),
+                  text: "We're sorry, that didn't work, please try again"
+                }
               };
 
               const lastMessage = this.messageList[this.messageList.length - 1];
@@ -530,42 +594,45 @@ export default {
               lastMessage.type = message.type;
               lastMessage.data = message.data;
 
-              this.$root.$emit('scroll-down-message-list');
+              this.$root.$emit("scroll-down-message-list");
             }, this.messageDelay);
-          },
+          }
         );
       }
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {
-        this.$emit('expandChat');
+        this.$emit("expandChat");
       }
     },
-    userInputBlur() {
-    },
+    userInputBlur() {},
     sendReadReceipt(newMessage) {
       // Create the message object to send to our endpoint.
       const pusherMsg = {
-        notification: 'read_receipt', // Is mapped to the broadcast event type.
+        notification: "read_receipt", // Is mapped to the broadcast event type.
         user_id: this.uuid, // UUID of the webchat end user.
         author: this.uuid, // UUID of the webchat end user.
-        message_id: newMessage.id, // Unique id for this message.
+        message_id: newMessage.id // Unique id for this message.
       };
 
-      axios.post('/incoming/webchat', pusherMsg).then(() => {});
+      axios.post("/incoming/webchat", pusherMsg).then(() => {});
     },
     onMessageWasSent(msg) {
       const msgToSend = msg;
-      if (this.messageList.length && this.messageList[this.messageList.length - 1].type === 'longtext') {
-        msgToSend.type = 'longtext_response';
-        msgToSend.callback_id = this.messageList[this.messageList.length - 1].data.callback_id;
+      if (
+        this.messageList.length &&
+        this.messageList[this.messageList.length - 1].type === "longtext"
+      ) {
+        msgToSend.type = "longtext_response";
+        msgToSend.callback_id = this.messageList[
+          this.messageList.length - 1
+        ].data.callback_id;
       }
 
       this.sendMessage(msgToSend);
-      this.placeholder = 'Write a reply';
+      this.placeholder = "Write a reply";
     },
-    openChat() {
-    },
+    openChat() {},
     async onButtonClick(button, msg) {
       if (msg.data.external) {
         await new Promise(resolve => setTimeout(resolve, 300));
@@ -580,7 +647,7 @@ export default {
       }
 
       if (button.tab_switch) {
-        this.$emit('switchToCommentsTab');
+        this.$emit("switchToCommentsTab");
         return;
       }
 
@@ -588,9 +655,9 @@ export default {
         this.onLinkClick(button.link);
 
         if (button.link_new_tab) {
-          window.open(button.link, '_blank');
+          window.open(button.link, "_blank");
         } else {
-          window.open(button.link, '_parent');
+          window.open(button.link, "_parent");
         }
         return;
       }
@@ -600,86 +667,88 @@ export default {
       }
 
       if (!this.isExpand) {
-        this.$emit('expandChat');
+        this.$emit("expandChat");
       }
 
       this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
 
       this.sendMessage({
-        type: 'button_response',
-        author: 'me',
+        type: "button_response",
+        author: "me",
         callback_id: button.callback_id,
         data: {
           text: button.text,
-          value: button.value,
-        },
+          value: button.value
+        }
       });
     },
     onListButtonClick(callback) {
       this.sendMessage({
-        type: 'webchat_list_response',
-        author: 'me',
+        type: "webchat_list_response",
+        author: "me",
         callback_id: callback,
-        data: {},
+        data: {}
       });
     },
     onLinkClick(url) {
       this.sendMessage({
-        type: 'url_click',
+        type: "url_click",
         author: this.uuid,
         data: {
-          url,
-        },
+          url
+        }
       });
     },
     onFormButtonClick(data, msg) {
-      this.messageList[this.messageList.indexOf(msg)].type = 'text';
+      this.messageList[this.messageList.indexOf(msg)].type = "text";
 
       const responseData = {};
       const newMessageText = [];
 
-      msg.data.elements.forEach((element) => {
+      msg.data.elements.forEach(element => {
         responseData[element.name] = data[element.name].value;
 
         if (element.display) {
-          newMessageText.push(`${element.display}: ${data[element.name].value}`);
+          newMessageText.push(
+            `${element.display}: ${data[element.name].value}`
+          );
         } else {
           newMessageText.push(data[element.name].value);
         }
       });
 
-      responseData.text = newMessageText.join('\n');
+      responseData.text = newMessageText.join("\n");
 
       this.sendMessage({
-        type: 'form_response',
-        author: 'me',
+        type: "form_response",
+        author: "me",
         callback_id: msg.data.callback_id,
-        data: responseData,
+        data: responseData
       });
     },
     onRestartButtonClick() {
       this.sendMessage({
-        type: 'trigger',
-        author: 'me',
+        type: "trigger",
+        author: "me",
         callback_id: this.restartButtonCallback,
-        data: {},
+        data: {}
       });
     },
     expandChat() {
-      this.$emit('expandChat');
+      this.$emit("expandChat");
     },
     toggleChatOpen() {
       this.isOpen = !this.isOpen;
-      this.$emit('toggleChatOpen', this.headerHeight);
+      this.$emit("toggleChatOpen", this.headerHeight);
     },
     workoutCallback() {
       // Default
-      let callbackId = 'WELCOME';
+      let callbackId = "WELCOME";
       const urlParams = new URLSearchParams(window.location.search);
 
       // If the url has a callback id present, use that
-      if (urlParams.has('callback_id')) {
-        callbackId = urlParams.get('callback_id');
+      if (urlParams.has("callback_id")) {
+        callbackId = urlParams.get("callback_id");
       } else {
         // Check if the url matches one in the callback map
         this.callbackMap.forEach((url, idx) => {
@@ -691,10 +760,15 @@ export default {
       return callbackId;
     },
     wildcardToRegExp(string) {
-      return new RegExp(`^${string.split(/\*+/).map(this.regExpEscape).join('.*')}$`);
+      return new RegExp(
+        `^${string
+          .split(/\*+/)
+          .map(this.regExpEscape)
+          .join(".*")}$`
+      );
     },
     regExpEscape(string) {
-      return string.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
+      return string.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&");
     },
     async fetchMessages() {
       if (this.showHistory) {
@@ -705,9 +779,9 @@ export default {
       }
 
       const message = {
-        type: 'chat_open',
+        type: "chat_open",
         callback_id: this.workoutCallback(),
-        data: {},
+        data: {}
       };
 
       this.sendMessage(message);
@@ -715,20 +789,23 @@ export default {
     getChatHistory() {
       this.loading = true;
 
-      const userId = (this.user && this.user.email) ? this.user.email : this.uuid;
+      const userId = this.user && this.user.email ? this.user.email : this.uuid;
 
-      const ignoreTypes = 'chat_open,trigger';
+      const ignoreTypes = "chat_open,trigger";
 
-      return axios.get(`/user/${userId}/history?limit=${this.numberOfMessages}&ignore=${ignoreTypes}`)
-        .then((response) => {
+      return axios
+        .get(
+          `/user/${userId}/history?limit=${this.numberOfMessages}&ignore=${ignoreTypes}`
+        )
+        .then(response => {
           response.data.reverse().forEach((message, i, messages) => {
             // Ignore 'url_click' messages.
-            if (message.type === 'url_click') {
+            if (message.type === "url_click") {
               return;
             }
 
             // Ignore 'trigger' messages.
-            if (message.type === 'trigger') {
+            if (message.type === "trigger") {
               return;
             }
 
@@ -736,27 +813,37 @@ export default {
 
             // Sets the author to 'me' for messages from the current user
             if (currentMessage.author === userId) {
-              currentMessage.author = 'me';
+              currentMessage.author = "me";
             } else {
-              currentMessage.author = 'them';
+              currentMessage.author = "them";
             }
 
             // Convert to the right message type for display
-            if (currentMessage.type === 'button' || currentMessage.type === 'long_text' || currentMessage.type === 'form') {
-              currentMessage.type = 'text';
+            if (
+              currentMessage.type === "button" ||
+              currentMessage.type === "long_text" ||
+              currentMessage.type === "form"
+            ) {
+              currentMessage.type = "text";
             }
 
-            if (i === 0 && currentMessage.data && currentMessage.data.internal) {
+            if (
+              i === 0 &&
+              currentMessage.data &&
+              currentMessage.data.internal
+            ) {
               delete currentMessage.data.internal;
             }
 
             if (!this.hideDatetimeMessage) {
-              if ((i === 0 && currentMessage.data)
-                || this.messageList[this.messageList.length - 1].data.date
-                !== currentMessage.data.date) {
+              if (
+                (i === 0 && currentMessage.data) ||
+                this.messageList[this.messageList.length - 1].data.date !==
+                  currentMessage.data.date
+              ) {
                 this.messageList.push({
-                  type: 'datetime',
-                  datetime: currentMessage.data.date,
+                  type: "datetime",
+                  datetime: currentMessage.data.date
                 });
               }
             }
@@ -765,8 +852,14 @@ export default {
               this.dateTimezoneFormat(currentMessage);
             }
 
-            if ((currentMessage.author === 'me' && (this.useHumanName || this.useHumanAvatar))
-                || (currentMessage.author === 'them' && !currentMessage.data.hideavatar && !currentMessage.data.internal && (this.useBotName || this.useBotAvatar))) {
+            if (
+              (currentMessage.author === "me" &&
+                (this.useHumanName || this.useHumanAvatar)) ||
+              (currentMessage.author === "them" &&
+                !currentMessage.data.hideavatar &&
+                !currentMessage.data.internal &&
+                (this.useBotName || this.useBotAvatar))
+            ) {
               const authorMsg = this.newAuthorMessage(currentMessage);
 
               this.messageList.push(authorMsg);
@@ -780,14 +873,17 @@ export default {
         });
     },
     newAuthorMessage(message) {
-      if (message.author === 'them') {
+      if (message.author === "them") {
         const authorMsg = {
-          type: 'author',
+          type: "author",
+          author: "them",
           data: {
-            text: (this.useBotName) ? this.chatbotName : '',
+            author: "them",
+            animate: this.messageAnimation,
+            text: this.useBotName ? this.chatbotName : "",
             date: message.data.date,
-            time: message.data.time,
-          },
+            time: message.data.time
+          }
         };
 
         if (this.useBotAvatar) {
@@ -798,19 +894,23 @@ export default {
       }
 
       const authorMsg = {
-        type: 'author',
-        author: 'me',
+        type: "author",
+        author: "me",
         data: {
-          author: 'me',
-          text: (this.useHumanName) ? this.userName : '',
+          animate: this.messageAnimation,
+          author: "me",
+          text: this.useHumanName ? this.userName : "",
           date: message.data.date,
-          time: message.data.time,
-        },
+          time: message.data.time
+        }
       };
 
       if (this.useHumanAvatar) {
         const avatarName = this.userName
-          .split(' ').map(n => n[0]).join('').toUpperCase();
+          .split(" ")
+          .map(n => n[0])
+          .join("")
+          .toUpperCase();
         authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
       }
 
@@ -819,10 +919,10 @@ export default {
     checkHideChat() {
       const urlParams = new URLSearchParams(window.location.search);
 
-      if (urlParams.has('hide')) {
-        if (urlParams.get('hide')) {
+      if (urlParams.has("hide")) {
+        if (urlParams.get("hide")) {
           this.$nextTick(() => {
-            this.$emit('toggleChatOpen');
+            this.$emit("toggleChatOpen");
           });
         }
       }
@@ -841,69 +941,19 @@ export default {
           this.createUuid();
         }
       }
-    },
-  },
+    }
+  }
 };
-
 </script>
 
 <style scoped>
-    .loading {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        /* var inherited from OpenDialogChat component. */
-        height: calc(100vh - var(--header-height));
-    }
-
-    .loading-message {
-        font-size: 18px;
-        color: #B6B5BA;
-        margin-bottom: 17px;
-    }
-
-    .mobile .loading-message {
-        margin-bottom: 5px;
-    }
-
-    .loading-indicator span {
-        display: inline-block;
-        background-color: #B6B5BA;
-        width: 11px;
-        height: 11px;
-        border-radius: 100%;
-        margin-right: 4px;
-        animation: bob 2s infinite;
-    }
-
-    /* SAFARI GLITCH */
-    .loading-indicator span:nth-child(1) {
-        animation-delay: -1s;
-    }
-
-    .loading-indicator span:nth-child(2) {
-        animation-delay: -0.85s;
-    }
-
-    .loading-indicator span:nth-child(3) {
-        animation-delay: -0.7s;
-    }
-
-    @keyframes bob {
-        10% {
-            transform: translateY(-10px);
-            background-color: #9E9DA2;
-        }
-        50% {
-            transform: translateY(0);
-            background-color: #B6B5BA;
-        }
-    }
+/* var inherited from OpenDialogChat component???? */
+/* .loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - var(--header-height));
+} */
 </style>
 
-<style>
-    .comments-enabled .sc-header {
-        display: none !important;
-    }
-</style>

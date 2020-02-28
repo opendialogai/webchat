@@ -1,8 +1,6 @@
 /** Proxima Nova **/
 @font-face {
     font-family: 'proxima_nova_altblack';
-    src: url('proximanovaaltblack.eot');
-    src: url('proximanovaaltblack.eot?#iefix') format('embedded-opentype'),
          url('proximanovaaltblack.woff2') format('woff2'),
          url('proximanovaaltblack.woff') format('woff'),
          url('proximanovaaltblack.ttf') format('truetype'),
@@ -50,7 +48,6 @@
     src: url('proximanovasemibold.eot');
     src: url('proximanovasemibold.eot?#iefix') format('embedded-opentype'),
          url('proximanovasemibold.woff2') format('woff2'),
-         url('proximanovasemibold.woff') format('woff'),
          url('proximanovasemibold.ttf') format('truetype'),
          url('proximanovasemibold.svg#proxima_nova_ltsemibold') format('svg');
     font-weight: normal;
@@ -67,4 +64,9 @@
          url('proximanovathin.svg#proxima_nova_ltthin') format('svg');
     font-weight: normal;
     font-style: normal;
+}
+
+@font-face {
+    font-family: 'Sofia Pro';
+    src: url('sofiapro-light.otf') format('opentype');
 }

@@ -23,18 +23,17 @@
     <opendialog-chat></opendialog-chat>
 </div>
 
-<link rel="stylesheet" type="text/css" href="/vendor/webchat/css/app.css?{{env("CSS_VERSION", "v1")}}">
 
-<link rel="stylesheet" type="text/css" href="/vendor/webchat/css/app-fullpage.css?{{env("CSS_VERSION", "v1")}}">
+<link rel="stylesheet" type="text/css" href="/vendor/webchat/css/main.css?{{env("CSS_VERSION", "v1")}}">
 
 <script>
     window.openDialogSettings = {
         url: "{{ env("APP_URL") }}",
         user: {
-            first_name: '{!! auth()->user() ? auth()->user()->name : '' !!}',
-            last_name: '',
-            email: '{!! auth()->user() ? auth()->user()->email : '' !!}',
-            external_id: '{!! auth()->user() ? auth()->user()->id : '' !!}',
+            first_name: '{!! app('request')->input('first_name') ? app('request')->input('first_name') : (auth()->user() ? auth()->user()->name : '') !!}',
+            last_name: '{!! app('request')->input('last_name') ? app('request')->input('last_name') : '' !!}',
+            email: '{!! app('request')->input('email') ? app('request')->input('email') : (auth()->user() ? auth()->user()->email : '') !!}',
+            external_id: '{!! app('request')->input('external_id') ? app('request')->input('external_id') : (auth()->user() ? auth()->user()->id : '') !!}',
         },
     };
 </script>

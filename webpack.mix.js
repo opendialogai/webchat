@@ -16,8 +16,11 @@ mix.webpackConfig(require('./webpack.config'));
 mix.js('resources/assets/js/app.js', './public/js')
     .js('resources/assets/js/opendialog-bot.js', './public/js')
     .js('resources/assets/js/opendialog-bot-full.js', './public/js')
-    .sass('resources/assets/sass/app.scss', './public/css')
-    .sass('resources/assets/sass/app-fullpage.scss', './public/css');
+
+    .sass('resources/assets/sass/main.scss', './public/css')
+    // .sass('resources/assets/sass/app.scss', './public/css')
+    // .sass('resources/assets/sass/app-iframe.scss', './public/css')
+    // .sass('resources/assets/sass/app-fullpage.scss', './public/css');
 
 // Source maps when not in production.
 if (!mix.inProduction()) {

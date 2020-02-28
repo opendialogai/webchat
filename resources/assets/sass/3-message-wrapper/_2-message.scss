@@ -1,0 +1,151 @@
+// Old CSS still being used by some components
+// Old CSS still being used by some components
+// Old CSS still being used by some components
+.sc-message {
+  width: 300px;
+  margin: 0 auto;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.sc-message .sc-chat-window.fullscreen .sc-message {
+  width: 100%;
+}
+
+.sc-message--content {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.sc-message--content.sent {
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.sc-message--name {
+  font-size: x-small;
+  margin-top: -5px;
+  color: gray;
+  text-align: left;
+}
+
+.sc-message--content.sent + .sc-message--time-read {
+  text-align: right;
+}
+
+.sc-message--content.system {
+  justify-content: center;
+}
+
+.sc-message--content.read {
+  justify-content: center;
+}
+
+.sc-message--content.sent .sc-message--avatar {
+  display: none;
+}
+
+.sc-message--avatar {
+  background-image: url(https://d13yacurqjgara.cloudfront.net/assets/avatar-default-aa2eab7684294781f93bc99ad394a0eb3249c5768c21390163c9f55ea8ef83a4.gif);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 50%;
+  align-self: center;
+  margin-right: 15px;
+}
+
+.sc-message--meta {
+  font-size: xx-small;
+  margin-bottom: -10px;
+  color: white;
+  text-align: center;
+}
+
+@media (max-width: 450px) {
+  .sc-message {
+    width: 80%;
+  }
+}
+
+// New component CSS --- New component CSS --- New component CSS ---
+// New component CSS --- New component CSS --- New component CSS ---
+// New component CSS --- New component CSS --- New component CSS ---
+
+// message type wrapper --- message type wrapper ---
+
+.mt-wrapper {
+  margin: 0 auto;
+  max-width: 700px;
+  width: calc(100% - 50px);
+  @media screen and (min-width: 768px) {
+    width: 100%;
+  }
+
+  &.fadeUp-enter-active {
+    animation-duration: 0.5s;
+  }
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 0;
+}
+
+.mt-wrapper-author {
+  z-index: 1;
+}
+
+.mt-wrapper.fadeUp-enter-active {
+  animation-duration: 0s;
+}
+
+// message type --- message type ---message type ---
+
+.mt {
+  padding: 25px;
+  background-color: white;
+  border-radius: 30px;
+  box-shadow: none;
+
+  max-width: 90%;
+  margin-bottom: 30px;
+  line-height: 1.6;
+  font-size: 15px;
+  @media (min-width: $media-sml){
+    font-size: 16px;
+  }
+
+  //   position: relative;
+}
+
+// 🧘🏻‍♂️ User Sends Emits 🧘🏻‍♂️
+.emit {
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+}
+
+// 🤖 Robot Receives Reap 🤖
+.reap {
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+}
+
+.mt-meta {
+  font-size: xx-small;
+  margin-bottom: 0px;
+  margin-top: 5px;
+  opacity: 0.5;
+  text-align: center;
+}
+
+// Time meta data hidden
+.sc-message--time-read {
+  display: none;
+}

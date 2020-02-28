@@ -9,14 +9,16 @@ import 'regenerator-runtime/runtime';
 import 'whatwg-fetch';
 import 'url-search-params-polyfill';
 
-import Chat from '@opendialogai/vue-beautiful-chat';
 import UUID from 'vue-uuid';
 import BootstrapVue from 'bootstrap-vue';
 import VueJsCookie from 'vue-js-cookie';
 import store from '@/store';
 
+import linkify from 'vue-linkify'
+import Launcher from './components/Launcher.vue'
 
 require('@/bootstrap');
+require('vue2-animate/dist/vue2-animate.min.css')
 window.Vue = require('vue');
 
 /**
@@ -26,11 +28,19 @@ window.Vue = require('vue');
  */
 
 window.Vue.component('opendialog-chat', require('@/components/OpenDialogChat.vue').default);
+window.Vue.component('beautiful-chat', Launcher)
 
-window.Vue.use(Chat);
 window.Vue.use(UUID);
 window.Vue.use(BootstrapVue);
 window.Vue.use(VueJsCookie);
+
+window.Vue.prototype.$chat = {
+    _setDynamicContainer: function(dynamicContainer) {
+        Plugin.dynamicContainer = dynamicContainer
+    }
+}
+
+window.Vue.directive('linkified', linkify)
 
 // eslint-disable-next-line no-unused-vars
 const { app } = new window.Vue({
