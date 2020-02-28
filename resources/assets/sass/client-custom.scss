@@ -1,11 +1,81 @@
-// <Header />
+// Header.vue --- Header.vue --- Header.vue ---
+// Header.vue --- Header.vue --- Header.vue ---
+// Header.vue --- Header.vue --- Header.vue ---
+
 // remove vertical linear fade
 .header__btm-fade {
   display: none;
 }
 // and add box shadow to header
 .header {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: width 1.25s;
+//   box-shadow: 0 3px 26px 3px rgba(0, 0, 0, 0.3);
+  // box-shadow: unset;
+}
+
+
+
+.header.header-closed {
+  margin-bottom: 20px;
+}
+
+.header-closed {
+  .header-nav {
+    display: none;
+  }
+
+  //   width: 346px;
+  width: 90px;
+  height: 90px;
+  border-radius: 45px;
+}
+
+.header-open {
+  .header-cta {
+    display: none;
+  }
+
+  .header {
+    width: 100%;
+  }
+}
+
+.header-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.header-cta-expand {
+  .header-cta__text {
+    display: block;
+  }
+
+  width: 346px;
+}
+
+.header-cta__icon {
+  height: 50px;
+  width: 50px;
+  background-color: pink;
+}
+
+.header-cta__text {
+  margin-left: 20px;
+  span {
+    display: block;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #ffffff;
+  }
+
+  display: none;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 //   <MessageList />
@@ -98,19 +168,19 @@
 }
 
 .user-input__button {
-    align-items: flex-start;
+  align-items: flex-start;
 }
 
 .send-btn {
-    width: 85px;
-    height: 50px;
-    background-color: #da291c;
-    border-radius: 34.5px;
-    transition: .4s;
+  width: 85px;
+  height: 50px;
+  background-color: #da291c;
+  border-radius: 34.5px;
+  transition: 0.4s;
 
-    &:hover{
-        background-color: #c01a1e;
-    }
+  &:hover {
+    background-color: #c01a1e;
+  }
 }
 
 .send-btn::before {

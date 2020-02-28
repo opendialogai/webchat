@@ -10,6 +10,8 @@
       :showRestartButton="showRestartButton"
       :onRestartButtonClick="onRestartButtonClick"
       :colors="colors"
+      :isOpen="isOpen"
+
     />
     <MessageList
       v-if="showMessages"

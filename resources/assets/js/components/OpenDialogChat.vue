@@ -195,7 +195,7 @@ export default {
       isExpand: false,
       isMinimized: false,
       isMobile: false,
-      isOpen: true,
+      isOpen: false,
       showHistory: false,
       numberOfMessages: 10,
       messageAnimation: false,
@@ -799,10 +799,12 @@ export default {
         if (window.self !== window.top) {
           if (!this.isOpen) {
             if (headerHeight) {
-              window.parent.postMessage({ height: `${headerHeight}px` }, "*");
+            //   window.parent.postMessage({ height: `${headerHeight}px` }, "*");
+                 window.parent.postMessage({ height: `110px` }, "*");
             } else if (this.commentsEnabled) {
               const height = document.querySelector(".nav").offsetHeight;
-              window.parent.postMessage({ height: `${height}px` }, "*");
+            //   window.parent.postMessage({ height: `${height}px` }, "*");
+              window.parent.postMessage({ height: `110px` }, "*");
             }
           } else {
             window.parent.postMessage({ height: "auto" }, "*");

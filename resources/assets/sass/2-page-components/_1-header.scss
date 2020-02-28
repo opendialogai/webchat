@@ -9,10 +9,20 @@
   }
   display: flex;
   justify-content: flex-start;
-  box-shadow: 0 3px 26px 3px rgba(0, 0, 0, 0.3);
+//   box-shadow: 0 3px 26px 3px rgba(0, 0, 0, 0.3);
 
-  height: 92px;
+  height: 82px;
 }
+
+
+
+.header-open{
+
+}
+.header-closed{
+
+}
+
 
 .header__btm-fade {
   position: absolute;
@@ -49,6 +59,7 @@
   justify-content: center;
   display: flex;
   //   display: none;
+  font-size: 14px;
   @media (min-width: $media-med) {
     display: flex;
     width: 28%;

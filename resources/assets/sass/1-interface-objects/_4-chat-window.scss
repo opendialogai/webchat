@@ -3,15 +3,14 @@
 }
 
 .chat-window {
-  font-family: 'Gotham', "Arial";
+  font-family: "Gotham", "Arial";
   transition: 0.3s ease-in-out;
   height: 100%;
   display: flex;
   flex-direction: column;
   width: 100% !important;
-  overflow-x: hidden;
+  overflow: hidden;
 }
-
 
 // 🔥 ☠️ 💀 DoN't Do It !!!!! 🔥 ☠️ 💀
 // Do this in app-framne.scss
@@ -19,11 +18,9 @@
 //   ⚰️  width: 400px; ⚰️
 //   }
 
-.font-playfair{
-    font-family: 'Playfair Display', ;
+.font-playfair {
+  font-family: "Playfair Display";
 }
-
-
 
 // .chat-window.fullscreen {
 //   position: relative;
@@ -39,10 +36,7 @@
 // }
 
 .chat-window.closed {
-  height: 75px;
-  bottom: 90px;
-  overflow: hidden;
-  border-radius: 10px;
+    height: unset;
 }
 
 // 👇🏻👇🏻👇🏻 OLD style you might need for the comments tab and max/min buttons👇🏻👇🏻👇🏻

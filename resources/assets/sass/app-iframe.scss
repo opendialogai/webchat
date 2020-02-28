@@ -28,7 +28,8 @@ iframe#opendialog-chatwindow {
   right: 10px;
   border: none;
 
-  box-shadow: #aaa 0 0 10px;
+  // 👇🏻 turned off for Avaya
+  //   box-shadow: #aaa 0 0 10px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   background-color: #fff;
@@ -55,8 +56,8 @@ iframe.open#opendialog-chatwindow {
   right: 0;
 }
 
-#opendialog-bot .sc-open-icon,
-#opendialog-bot .sc-closed-icon {
+#opendialog-bot .open-icon,
+#opendialog-bot .closed-icon {
   width: 60px;
   height: 60px;
   position: fixed;
@@ -65,24 +66,24 @@ iframe.open#opendialog-chatwindow {
   transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
 }
 
-#opendialog-bot .sc-closed-icon {
+#opendialog-bot .closed-icon {
   transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
   width: 60px;
   height: 60px;
 }
 
-#opendialog-bot .sc-open-icon {
+#opendialog-bot .open-icon {
   padding: 20px;
   box-sizing: border-box;
   opacity: 0;
 }
 
-#opendialog-bot.opened .sc-open-icon {
+#opendialog-bot.opened .open-icon {
   transform: rotate(-90deg);
   opacity: 1;
 }
 
-#opendialog-bot.opened .sc-closed-icon {
+#opendialog-bot.opened .closed-icon {
   transform: rotate(-90deg);
   opacity: 0;
 }
@@ -109,4 +110,5 @@ iframe.open#opendialog-chatwindow {
     top: 0 !important;
     bottom: 0 !important;
   }
+
 }
