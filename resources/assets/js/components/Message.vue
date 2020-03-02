@@ -24,7 +24,7 @@
     />
 
     <CarouselListMessage
-      v-if="message.type === 'list' && message.data.view_type"
+      v-else-if="message.type === 'list' && message.data.view_type"
       :message="message"
       :data="message.data"
       :messageColors="determineMessageColors()"
@@ -44,9 +44,9 @@
       v-else-if="message.type === 'typing'"
       :data="message.data"
       :messageColors="determineMessageColors()"
-    :author="message.author"
-
+      :author="message.author"
     />
+
     <ButtonMessage
       v-else-if="message.type === 'button'"
       :message="message"
@@ -56,12 +56,14 @@
       :onButtonClick="onButtonClick"
       :author="message.author"
     />
+
     <ButtonResponseMessage
       v-else-if="message.type === 'button_response'"
       :data="message.data"
       :messageColors="determineMessageColors()"
       :author="message.author"
     />
+
     <FormMessage
       v-else-if="message.type === 'form'"
       :message="message"
@@ -70,18 +72,21 @@
       :colors="colors"
       :onFormButtonClick="onFormButtonClick"
     />
+
     <FormResponseMessage
       v-else-if="message.type === 'form_response'"
       :data="message.data"
       :messageColors="determineMessageColors()"
       :author="message.author"
     />
+
     <ImageMessage
       v-else-if="message.type === 'image'"
       :data="message.data"
       :messageColors="determineMessageColors()"
       :author="message.author"
     />
+
     <ListMessage
       v-else-if="message.type === 'list'"
       :message="message"
@@ -90,6 +95,7 @@
       :colors="colors"
       :onButtonClick="onListButtonClick"
     />
+
     <RichMessage
       v-else-if="message.type === 'rich'"
       :message="message"
@@ -97,9 +103,16 @@
       :messageColors="determineMessageColors()"
       :colors="colors"
       :onButtonClick="onButtonClick"
-
-
     />
+
+    <FpRichMessage
+      v-else-if="message.type === 'fp-rich'"
+      :message="message"
+      :data="message.data"
+      :messageColors="determineMessageColors()"
+      :colors="colors"
+    />
+
     <DatetimeFakeMessage v-else-if="message.type === 'datetime'" :message="message" />
 
     <span
@@ -121,6 +134,7 @@ import ListMessage from "./ListMessage.vue";
 import ImageMessage from "./ImageMessage.vue";
 import FormMessage from "./FormMessage.vue";
 import FormResponseMessage from "./FormResponseMessage.vue";
+import FpRichMessage from "./FpRichMessage.vue";
 import ButtonMessage from "./ButtonMessage.vue";
 import ButtonResponseMessage from "./ButtonResponseMessage.vue";
 import RichMessage from "./RichMessage.vue";
@@ -146,6 +160,7 @@ export default {
     ButtonMessage,
     ButtonResponseMessage,
     RichMessage,
+    FpRichMessage,
     TextMessage,
     LongTextMessage,
     TypingMessage,
