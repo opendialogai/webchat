@@ -125,6 +125,8 @@
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
         :user-external-id="userExternalId"
+        :closed-intent="closedIntent"
+        :open-intent="openIntent"
         @expandChat="expandChat"
         @toggleChatOpen="toggleChatOpen"
         @newMessage="newWebChatMessage"
@@ -163,6 +165,7 @@ export default {
       canCloseChat: true,
       chatbotAvatarPath: '',
       chatbotName: 'OD Bot',
+      closedIntent: '',
       collectUserIp: true,
       colours: {
         header: {
@@ -217,6 +220,7 @@ export default {
       messageAnimation: false,
       messageDelay: 1000,
       newMessageIcon: '',
+      openIntent: '',
       parentUrl: '',
       pathInitialised: false,
       restartButtonCallback: '',
@@ -513,6 +517,10 @@ export default {
         configUrl = `${window.location.origin}/webchat-config`;
       }
 
+      if (sessionStorage.uuid) {
+        configUrl = `?user_id=${sessionStorage.uuid}`;
+      }
+
       const response = await fetch(configUrl);
       const json = await response.json();
       return json;
@@ -767,6 +775,13 @@ export default {
             this.numberOfMessages = config.webchatHistory.numberOfMessages;
           }
         }
+      }
+
+      if (config.closedIntent) {
+        this.closedIntent = config.closedIntent;
+      }
+      if (config.openIntent) {
+        this.openIntent = config.openIntent;
       }
 
       if (config.newPathname !== undefined) {

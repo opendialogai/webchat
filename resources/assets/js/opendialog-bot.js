@@ -253,24 +253,11 @@ if (window.openDialogSettings) {
     if (isValidPath()) {
       addCssToPage(`${url}/vendor/webchat/css/app-iframe.css`);
 
-      if (window.openDialogSettings.general.hideOpenCloseIcons === 'false' || !window.openDialogSettings.general.hideOpenCloseIcons) {
-        drawOpenCloseIcons(url);
-      }
+      drawOpenCloseIcons(url);
+      openChatWindow(url);
 
       if (window.openDialogSettings.general.pageCssPath) {
         addCssToPage(window.openDialogSettings.general.pageCssPath);
-      }
-
-      if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {
-        openChatWindow(url);
-      } else if ((window.openDialogSettings.general.open && window.innerWidth <= mobileWidth)
-          || settings.general.startMinimized) {
-        query = `${query}&hide=true`;
-        openChatWindow(url);
-
-        document.body.classList.remove('chatbot-no-scroll');
-      } else if (window.openDialogSettings.general.open) {
-        openChatWindow(url);
       }
     }
   });

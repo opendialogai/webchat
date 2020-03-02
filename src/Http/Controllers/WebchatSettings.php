@@ -3,6 +3,8 @@
 namespace OpenDialogAi\Webchat\Http\Controllers;
 
 use Illuminate\Http\Request;
+use OpenDialogAi\ContextEngine\Contexts\User\UserService;
+use OpenDialogAi\Core\Conversation\ChatbotUser;
 use OpenDialogAi\Webchat\WebchatSetting;
 
 class WebchatSettings
@@ -43,6 +45,33 @@ class WebchatSettings
                         unset($childSettings[$idx]);
                     }
                 }
+            }
+        }
+
+        if ($userId = $request->get('user_id')) {
+            $userService = resolve(UserService::class);
+            $userType = $userService->getUserType($userId);
+
+            $config[WebchatSetting::USER_TYPE] = $userType;
+
+            switch ($userType) {
+                case ChatbotUser::NEW_USER:
+                    $config[WebchatSetting::SHOW_MINIMIZED] = $config[WebchatSetting::NEW_USER_START_MINIMIZED];
+                    $config[WebchatSetting::CLOSED_INTENT] = $config[WebchatSetting::NEW_USER_CLOSED_CALLBACK];
+                    $config[WebchatSetting::OPEN_INTENT] = $config[WebchatSetting::NEW_USER_OPEN_CALLBACK];
+                    break;
+
+                case ChatbotUser::RETURNING_USER:
+                    $config[WebchatSetting::SHOW_MINIMIZED] = $config[WebchatSetting::RETURNING_USER_START_MINIMIZED];
+                    $config[WebchatSetting::CLOSED_INTENT] = $config[WebchatSetting::RETURNING_USER_CLOSED_CALLBACK];
+                    $config[WebchatSetting::OPEN_INTENT] = $config[WebchatSetting::RETURNING_USER_OPEN_CALLBACK];
+                    break;
+
+                case ChatbotUser::ONGOING_USER:
+                    $config[WebchatSetting::SHOW_MINIMIZED] = $config[WebchatSetting::ONGOING_USER_START_MINIMIZED];
+                    $config[WebchatSetting::CLOSED_INTENT] = $config[WebchatSetting::ONGOING_USER_CLOSED_CALLBACK];
+                    $config[WebchatSetting::OPEN_INTENT] = $config[WebchatSetting::ONGOING_USER_OPEN_CALLBACK];
+                    break;
             }
         }
 

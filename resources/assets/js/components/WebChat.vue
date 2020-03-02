@@ -80,6 +80,10 @@ export default {
       default: ""
     },
     chatIsOpen: Boolean,
+    closedIntent: {
+      type: String,
+      default: ""
+    },
     colours: {
       type: Object,
       required: true
@@ -101,6 +105,10 @@ export default {
     newMessageIcon: {
       type: String,
       required: true
+    },
+    openIntent: {
+      type: String,
+      default: ""
     },
     parentUrl: {
       type: String,
@@ -749,6 +757,8 @@ export default {
       // If the url has a callback id present, use that
       if (urlParams.has("callback_id")) {
         callbackId = urlParams.get("callback_id");
+      } else if (this.openIntent) {
+        callbackId = this.openIntent;
       } else {
         // Check if the url matches one in the callback map
         this.callbackMap.forEach((url, idx) => {
@@ -781,7 +791,9 @@ export default {
       const message = {
         type: "chat_open",
         callback_id: this.workoutCallback(),
-        data: {}
+        data: {
+          value: this.parentUrl
+        }
       };
 
       this.sendMessage(message);
