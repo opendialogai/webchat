@@ -121,7 +121,7 @@ export default {
       }
     },
     validateEmail(emailAddress) {
-      if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress)) {
+      if (/^[^\s@]+@[^\s@]+$/.test(emailAddress)) {
         return true;
       }
 
