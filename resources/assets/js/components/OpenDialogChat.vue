@@ -799,12 +799,13 @@ export default {
         if (window.self !== window.top) {
           if (!this.isOpen) {
             if (headerHeight) {
-            //   window.parent.postMessage({ height: `${headerHeight}px` }, "*");
-                 window.parent.postMessage({ height: `110px` }, "*");
+
+
+              window.parent.postMessage({ height: `140px` }, "*");
             } else if (this.commentsEnabled) {
               const height = document.querySelector(".nav").offsetHeight;
-            //   window.parent.postMessage({ height: `${height}px` }, "*");
-              window.parent.postMessage({ height: `110px` }, "*");
+
+              window.parent.postMessage({ height: `140px` }, "*");
             }
           } else {
             window.parent.postMessage({ height: "auto" }, "*");

@@ -1,15 +1,15 @@
 .header {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-
   position: relative;
+
   @media (min-width: $media-sml) {
     border-radius: 0;
     box-shadow: none;
   }
   display: flex;
   justify-content: flex-start;
-  //   box-shadow: 0 3px 26px 3px rgba(0, 0, 0, 0.3);
+
 
   height: 82px;
 }

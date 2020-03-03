@@ -70,9 +70,11 @@ function openChatWindow(url, div = null) {
     ifrm.setAttribute('id', 'opendialog-chatwindow');
     ifrm.setAttribute('src', `${url}/web-chat-iframe?${query}`);
     ifrm.setAttribute('scrolling', "no");
+    ifrm.setAttribute('allowtransparency', "true");
 
     // set height on page load
-    ifrm.style.height = '110px';
+    ifrm.style.backgroundColor= 'transparent';
+    ifrm.style.height = '140px';
     window.document.body.appendChild(ifrm);
 
     //if you want a full iframe on page load turn this on
