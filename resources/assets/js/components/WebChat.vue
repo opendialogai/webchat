@@ -50,9 +50,16 @@
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
       />
+      <div class="close-chat">
+        <div class="close-chat__button" @click="toggleChatOpen"  >
+          <img src="/images/close-btn.svg" class="close-chat__img" />
+        </div>
+      </div>
     </template>
   </div>
 </template>
+
+
 
 <script>
 import axios from "axios";
@@ -395,9 +402,9 @@ export default {
                         lastMessage.data.first = true;
                       }
 
-                        if (i > 0 && i < response.data.length - 1) {
-                            lastMessage.data.middle = true;
-                        }
+                      if (i > 0 && i < response.data.length - 1) {
+                        lastMessage.data.middle = true;
+                      }
 
                       if (i > 0 && i === response.data.length - 1) {
                         lastMessage.data.last = true;

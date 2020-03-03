@@ -1,44 +1,26 @@
 // This is injected early on, before...  vendor-local/webchat/resources/views/webchat-iframe.blade.php
 // This is styling for the iframe chat box
 
-#opendialog-bot {
-  cursor: pointer;
-  position: fixed;
-  height: 60px;
-  width: 60px;
-  bottom: 10px;
-  right: 10px;
-  border: none;
-  z-index: 2147483000;
-  background: #4e8cff;
-  -webkit-border-radius: 50px;
-  -moz-border-radius: 50px;
-  border-radius: 50px;
-}
-
-#opendialog-bot:hover {
-  background: blue;
-}
 
 iframe#opendialog-chatwindow {
   position: fixed;
-  //   height: 70%;
-  height: 629px;
+
+  //   height: 750px;
+  //add extra height for box-shadow
+  height: 770px;
+
+  //   width: 423px;
+  //add extra width for box-shadow: ;
+  width: 463px;
   bottom: 0;
   right: 10px;
   border: none;
 
   // 👇🏻 turned off for Avaya
-  //   box-shadow: #aaa 0 0 10px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  //   border-radius: 10px;
   background-color: #fff;
   box-sizing: border-box;
 
-  //   Set the width of the iframe here
-  // .chat-window will fill this up (width: 100%)
-  //   width: 350px;
-  width: 423px;
   transition: 0.3s ease-in-out;
 }
 
@@ -110,5 +92,31 @@ iframe.open#opendialog-chatwindow {
     top: 0 !important;
     bottom: 0 !important;
   }
-
 }
+
+
+
+// What is this 🤔 I dunno?
+
+// #opendialog-bot {
+//   cursor: pointer;
+//   position: fixed;
+//   height: 60px;
+//   width: 60px;
+//   bottom: 10px;
+//   right: 10px;
+//   border: none;
+//   z-index: 2147483000;
+//   background: #4e8cff;
+//   -webkit-border-radius: 50px;
+//   -moz-border-radius: 50px;
+//   border-radius: 50px;
+// }
+// #opendialog-bot:hover {
+//   background: blue;
+// }
+
+// Turn window backgrounf color on
+// body {
+//   background-color: lightgrey;
+// }

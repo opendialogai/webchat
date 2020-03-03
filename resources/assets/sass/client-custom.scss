@@ -1,7 +1,27 @@
-// Header.vue --- Header.vue --- Header.vue ---
-// Header.vue --- Header.vue --- Header.vue ---
-// Header.vue --- Header.vue --- Header.vue ---
+.webchat-container{
+    // border: 1px solid blue;
+    background-color: transparent;
 
+}
+
+
+// ChatWindow.vue --- ChatWindow.vue --- ChatWindow.vue ---
+
+.chat-window {
+  // border: 1px solid blue;
+  height: calc(100% - 140px);
+  border-radius: 10px;
+  width: 423px;
+  margin: 0 auto;
+}
+
+.chat-window.opened {
+  //   box-shadow: 0 3px 26px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+  margin: 20px auto 0;
+}
+
+// Header.vue --- Header.vue --- Header.vue ---
 // remove vertical linear fade
 .header__btm-fade {
   display: none;
@@ -12,6 +32,7 @@
   width: 100%;
   background-color: unset !important;
   justify-content: flex-end;
+  border-radius: unset;
 }
 
 // Inital state of the header
@@ -20,7 +41,7 @@
     display: none;
   }
   height: 90px;
-  margin-bottom: 30px;
+  margin: 30px 0;
 }
 
 //When the header is open fully - full chat box
@@ -43,6 +64,7 @@
   background-color: #da291c;
   transition: width 0.45s;
   margin-right: 10px;
+  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
 }
 
 .header-cta-expand {
@@ -76,7 +98,7 @@
 
 //   <MessageList />
 //message list bkg is in test.css
-// .message-list {}
+.message-list {}
 
 // <Message />
 // Line up the bot avatar inline with the message-type
@@ -188,3 +210,43 @@
 // .send-btn:hover:before{
 //     background-color: #c01a1e;
 // }
+
+// close-chat --- close-chat --- close-chat ---
+// close-chat --- close-chat --- close-chat ---
+// close-chat --- close-chat --- close-chat ---
+
+.close-chat {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+  margin-bottom: 10px;
+}
+
+.close-chat__button {
+  width: 90px;
+  height: 90px;
+  background-color: #313133;
+  border-radius: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #000000;
+
+    // .close-chat__img {
+    //   transform: rotate(90deg);
+    //   transform-origin: center;
+    // }
+  }
+  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+}
+
+.close-chat__img {
+  width: 31px;
+  height: 30px;
+  object-fit: contain;
+  transition: transform 0.5s;
+  // background-color: #ffffff;
+}

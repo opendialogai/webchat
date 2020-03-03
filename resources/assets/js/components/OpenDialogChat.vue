@@ -788,8 +788,6 @@ export default {
       }, 1000);
     },
     toggleChatOpen(headerHeight = 0) {
-      console.log("toggleChatOpen() is good");
-
       if (this.canCloseChat) {
         this.isOpen = !this.isOpen;
         this.isMinimized = !this.isOpen;
@@ -801,20 +799,16 @@ export default {
         if (window.self !== window.top) {
           if (!this.isOpen) {
             if (headerHeight) {
-              window.parent.postMessage(
-                { height: `110px`, border: "1px solid green" },
-                "*"
-              );
+
+
+              window.parent.postMessage({ height: `140px` }, "*");
             } else if (this.commentsEnabled) {
               const height = document.querySelector(".nav").offsetHeight;
-              window.parent.postMessage(
-                { height: `110px`, border: "1px solid green" },
-                "*"
-              );
+
+              window.parent.postMessage({ height: `140px` }, "*");
             }
           } else {
             window.parent.postMessage({ height: "auto" }, "*");
-            console.log("you have got to ELSE!!!");
           }
         }
       }

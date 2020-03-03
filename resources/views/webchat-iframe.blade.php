@@ -11,17 +11,13 @@
     <!-- Fonts -->
     <!-- <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.min.css" /> -->
     <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.css" />
-
-
 </head>
 
-<body>
+<body style="background-color: transparent">
 
 <div id="app">
     <opendialog-chat></opendialog-chat>
 </div>
-
-
 
 <link rel="stylesheet" type="text/css" href="/vendor/webchat/css/main.css?{{env("CSS_VERSION", "v1")}}">
 <link rel="stylesheet" type="text/css" href="/css/test.css" />
