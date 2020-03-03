@@ -100,6 +100,13 @@
 
 
     />
+    <HandToHumanMessage
+      v-else-if="message.type === 'hand-to-human'"
+      :data="message.data"
+      :author="message.author"
+      :type="message.type"
+      :messageColors="determineMessageColors()"
+    />
     <DatetimeFakeMessage v-else-if="message.type === 'datetime'" :message="message" />
 
     <span
@@ -129,6 +136,7 @@ import LongTextMessage from "./LongTextMessage.vue";
 import TypingMessage from "./TypingMessage.vue";
 import AuthorMessage from "./AuthorMessage.vue";
 import chatIcon from "./assets/chat-icon.svg";
+import HandToHumanMessage from "./HandToHumanMessage";
 
 export default {
   data() {
@@ -149,7 +157,8 @@ export default {
     TextMessage,
     LongTextMessage,
     TypingMessage,
-    AuthorMessage
+    AuthorMessage,
+    HandToHumanMessage
   },
   props: {
     message: {
