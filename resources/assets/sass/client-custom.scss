@@ -6,37 +6,28 @@
 .header__btm-fade {
   display: none;
 }
-// and add box shadow to header
+
 .header {
-  transition: width 1.25s;
-//   box-shadow: 0 3px 26px 3px rgba(0, 0, 0, 0.3);
-  // box-shadow: unset;
+  //   border: 1px solid blue;
+  width: 100%;
+  background-color: unset !important;
+  justify-content: flex-end;
 }
 
-
-
-.header.header-closed {
-  margin-bottom: 20px;
-}
-
+// Inital state of the header
 .header-closed {
   .header-nav {
     display: none;
   }
-
-  //   width: 346px;
-  width: 90px;
   height: 90px;
-  border-radius: 45px;
+  margin-bottom: 30px;
 }
 
+//When the header is open fully - full chat box
 .header-open {
+  background-color: #da291c !important;
   .header-cta {
     display: none;
-  }
-
-  .header {
-    width: 100%;
   }
 }
 
@@ -44,23 +35,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
   cursor: pointer;
   white-space: nowrap;
+  height: 90px;
+  width: 90px;
+  border-radius: 45px;
+  background-color: #da291c;
+  transition: width 0.45s;
+  margin-right: 10px;
 }
 
 .header-cta-expand {
   .header-cta__text {
     display: block;
   }
-
-  width: 346px;
+  width: 370px;
+  justify-content: space-between;
+  padding: 0 35px;
 }
 
 .header-cta__icon {
   height: 50px;
   width: 50px;
-  background-color: pink;
 }
 
 .header-cta__text {

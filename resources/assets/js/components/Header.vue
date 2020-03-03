@@ -7,13 +7,13 @@
       :style="{background: colors.header.bg, color: colors.header.text}"
       :class="{'header-open': isOpen, 'header-closed': !isOpen}"
     >
-      <div class="header-cta">
+      <div class="header-cta" ref="headerCta">
         <div class="header-cta__icon">
           <img src alt />
         </div>
 
         <div class="header-cta__text" ref="headerCtaText">
-          <span ref="headerCtaTextSpan">Chat now</span>
+          <span ref="headerCtaTextSpan">Chat with us</span>
           <span>Or call 1 800 XXXXXX</span>
         </div>
       </div>
@@ -52,12 +52,8 @@ export default {
 
   mounted() {
     setTimeout(() => {
-      console.log("hurrah");
-    //   this.$refs.headerCtaText.style.display = "block";
-    //   this.$refs.header.style.width = "346px";
-
-      this.$refs.header.classList.add('header-cta-expand')
-    }, 1000);
+      this.$refs.headerCta.classList.add('header-cta-expand')
+    }, 500);
   },
 
   props: {
@@ -99,4 +95,7 @@ export default {
 };
 </script>
 <style scoped>
+
+
+
 </style>
