@@ -70,6 +70,7 @@ function openChatWindow(url, div = null) {
     ifrm.setAttribute('id', 'opendialog-chatwindow');
     ifrm.setAttribute('src', `${url}/web-chat-iframe?${query}`);
     ifrm.setAttribute('scrolling', "no");
+    ifrm.setAttribute('myTestAttr', "true");
 
     // set height on page load
     ifrm.style.height = '110px';

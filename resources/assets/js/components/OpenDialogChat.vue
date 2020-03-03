@@ -796,28 +796,25 @@ export default {
 
         if (!this.isOpen) {
           this.$root.$emit("scroll-down-message-list");
-          console.log('$emit("scroll-down-message-list") is good');
         }
 
         if (window.self !== window.top) {
-          console.log("(window.self !== window.top) is good");
-
           if (!this.isOpen) {
-            console.log("if (!this.isOpen)  is good");
-
             if (headerHeight) {
-
-                console.log('if (headerHeight) is good');
-
-              window.parent.postMessage({ height: `110px` }, "*");
+              window.parent.postMessage(
+                { height: `110px`, border: "1px solid green" },
+                "*"
+              );
             } else if (this.commentsEnabled) {
               const height = document.querySelector(".nav").offsetHeight;
-              window.parent.postMessage({ height: `110px` }, "*");
+              window.parent.postMessage(
+                { height: `110px`, border: "1px solid green" },
+                "*"
+              );
             }
           } else {
             window.parent.postMessage({ height: "auto" }, "*");
-            console.log('you have got to ELSE!!!');
-
+            console.log("you have got to ELSE!!!");
           }
         }
       }
