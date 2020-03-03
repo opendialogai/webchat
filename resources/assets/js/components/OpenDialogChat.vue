@@ -788,26 +788,36 @@ export default {
       }, 1000);
     },
     toggleChatOpen(headerHeight = 0) {
+      console.log("toggleChatOpen() is good");
+
       if (this.canCloseChat) {
         this.isOpen = !this.isOpen;
         this.isMinimized = !this.isOpen;
 
         if (!this.isOpen) {
           this.$root.$emit("scroll-down-message-list");
+          console.log('$emit("scroll-down-message-list") is good');
         }
 
         if (window.self !== window.top) {
+          console.log("(window.self !== window.top) is good");
+
           if (!this.isOpen) {
+            console.log("if (!this.isOpen)  is good");
+
             if (headerHeight) {
-            //   window.parent.postMessage({ height: `${headerHeight}px` }, "*");
-                 window.parent.postMessage({ height: `110px` }, "*");
+
+                console.log('if (headerHeight) is good');
+
+              window.parent.postMessage({ height: `110px` }, "*");
             } else if (this.commentsEnabled) {
               const height = document.querySelector(".nav").offsetHeight;
-            //   window.parent.postMessage({ height: `${height}px` }, "*");
               window.parent.postMessage({ height: `110px` }, "*");
             }
           } else {
             window.parent.postMessage({ height: "auto" }, "*");
+            console.log('you have got to ELSE!!!');
+
           }
         }
       }
