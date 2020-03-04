@@ -220,8 +220,6 @@ export default {
     modeData(newValue, oldValue) {
       chatService.setModeData(newValue);
 
-
-
       if (oldValue.mode === "custom" && newValue.mode === "webchat") {
         // Convert the Hand-to-Human message to a text message
         console.log(this.messageList.map((message) => [message.data.text, message.mode]))

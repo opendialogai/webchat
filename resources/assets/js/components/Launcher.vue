@@ -35,6 +35,7 @@
 </template>
 <script>
   import ChatWindow from './ChatWindow.vue'
+  import SessionStorageMixin from "../mixins/SessionStorageMixin";
 
   export default {
   props: {
@@ -212,10 +213,10 @@
   components: {
     ChatWindow
   },
+  mixins: [SessionStorageMixin],
   created() {
-    let sessionStorageSettings = JSON.parse(window.sessionStorage.getItem('opendialog-webchat'));
-    if (sessionStorageSettings && sessionStorageSettings.mode === 'custom') {
-      this.setChatMode(sessionStorageSettings);
+    if (this.isCustomModeInSession()) {
+      this.setChatMode(this.getModeDataInSession());
     }
   },
   methods: {

@@ -119,6 +119,7 @@
 
   import Comments from "@/components/Comments";
   import WebChat from "@/components/WebChat";
+  import SessionStorageMixin from "../mixins/SessionStorageMixin";
 
   const { detect } = require("detect-browser");
 const jstz = require("jstz");
@@ -129,6 +130,7 @@ export default {
     Comments,
     WebChat
   },
+  mixins: [SessionStorageMixin],
   data() {
     return {
       activeTab: "webchat",
@@ -839,7 +841,7 @@ export default {
     setChatMode(data) {
       console.log('Chat mode set to: ', data);
       this.modeData = data;
-      window.sessionStorage.setItem('opendialog-webchat', JSON.stringify(data));
+      this.setModeDataInSession(data);
     }
   }
 };
