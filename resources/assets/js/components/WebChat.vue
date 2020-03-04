@@ -440,17 +440,11 @@ export default {
                     }
 
                     if (message.type === "fp-form") {
-                      this.fpFormInputMessage = message;
-
-                      this.showMessages = false;
-                      this.showFullPageFormInput = true;
+                      this.showFullPageFormInputMessage(message);
                     }
 
                     if (message.type === "fp-rich") {
-                      this.fpRichInputMessage = message;
-
-                      this.showMessages = false;
-                      this.showFullPageRichInput = true;
+                      this.showFullPageRichInputMessage(message);
                     }
 
                     if (!this.hideTypingIndicatorOnInternalMessages) {
@@ -510,6 +504,14 @@ export default {
                     lastMessage.type = message.type;
                     lastMessage.data = message.data;
 
+                    if (message.type === "fp-form") {
+                      this.showFullPageFormInputMessage(message);
+                    }
+
+                    if (message.type === "fp-rich") {
+                      this.showFullPageRichInputMessage(message);
+                    }
+
                     this.contentEditable = !message.data.disable_text;
                   }, this.messageDelay);
                 } else {
@@ -560,17 +562,11 @@ export default {
                   }
 
                   if (message.type === "fp-form") {
-                    this.fpFormInputMessage = message;
-
-                    this.showMessages = false;
-                    this.showFullPageFormInput = true;
+                    this.showFullPageFormInputMessage(message);
                   }
 
                   if (message.type === "fp-rich") {
-                    this.fpRichInputMessage = message;
-
-                    this.showMessages = false;
-                    this.showFullPageRichInput = true;
+                    this.showFullPageRichInputMessage(message);
                   }
 
                   if (message.type === "longtext") {
@@ -977,6 +973,18 @@ export default {
           });
         }
       }
+    },
+    showFullPageFormInputMessage(message) {
+      this.fpFormInputMessage = message;
+
+      this.showMessages = false;
+      this.showFullPageFormInput = true;
+    },
+    showFullPageRichInputMessage(message) {
+      this.fpRichInputMessage = message;
+
+      this.showMessages = false;
+      this.showFullPageRichInput = true;
     },
     createUuid() {
       const uuid = this.$uuid.v4();
