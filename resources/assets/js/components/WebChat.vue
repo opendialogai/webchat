@@ -222,7 +222,6 @@ export default {
 
       if (oldValue.mode === "custom" && newValue.mode === "webchat") {
         // Convert the Hand-to-Human message to a text message
-        console.log(this.messageList.map((message) => [message.data.text, message.mode]))
         let filteredMessageList = this.messageList.filter((message) => message.mode === "webchat" && message.type === 'hand-to-human');
         let handToHumanMessage = filteredMessageList[filteredMessageList.length-1];
         handToHumanMessage.type = 'text';
@@ -723,7 +722,6 @@ export default {
       }
     },
     setChatMode(data) {
-      console.log("WebChat");
       this.$emit('setChatMode', data);
     }
   }

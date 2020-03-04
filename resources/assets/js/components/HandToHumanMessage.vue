@@ -31,15 +31,7 @@
         required: true
       }
     },
-    watch: {
-      modeData(newValue, oldValue) {
-        console.log("H2H: modeData changed from/to ", oldValue, newValue);
-      }
-    },
     mounted() {
-      console.log(this.data);
-
-      console.log("Simulating H2H takeover");
       this.$emit('setChatMode', {
         mode: 'custom',
         options: {

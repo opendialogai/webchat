@@ -839,7 +839,6 @@ export default {
       window.parent.postMessage({ height: "auto" }, "*");
     },
     setChatMode(data) {
-      console.log('Chat mode set to: ', data);
       this.modeData = data;
       this.setModeDataInSession(data);
     }

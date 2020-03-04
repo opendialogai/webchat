@@ -231,7 +231,6 @@
         : this.receivedColorsStyle();
     },
     setChatMode(mode) {
-      console.log("Message");
       this.$emit('setChatMode', mode);
     }
   }

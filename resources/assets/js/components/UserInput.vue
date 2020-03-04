@@ -181,7 +181,6 @@
       this.file = file;
     },
     closeChat() {
-      console.log(this.modeData);
       this.$emit('setChatMode', {
         mode: 'webchat',
         options: {

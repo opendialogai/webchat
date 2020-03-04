@@ -237,7 +237,6 @@
   },
   methods: {
     setChatMode(mode) {
-      console.log("ChatWindow");
       this.$emit('setChatMode', mode);
     }
   }

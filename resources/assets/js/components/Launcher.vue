@@ -221,7 +221,6 @@
   },
   methods: {
     setChatMode(mode) {
-      console.log("Launcher");
       this.$emit('setChatMode', mode);
     }
   }

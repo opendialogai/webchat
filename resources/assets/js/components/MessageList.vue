@@ -108,7 +108,6 @@
       );
     },
     setChatMode(mode) {
-      console.log("MessageList");
       this.$emit('setChatMode', mode);
     }
   },
