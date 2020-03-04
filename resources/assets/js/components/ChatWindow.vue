@@ -11,7 +11,6 @@
       :onRestartButtonClick="onRestartButtonClick"
       :colors="colors"
       :isOpen="isOpen"
-
     />
     <MessageList
       v-if="showMessages"
@@ -39,7 +38,10 @@
         :lastMessage="lastMessage"
         :showFile="showFile"
         :placeholder="placeholder"
-        :colors="colors" />
+        :colors="colors"
+        :mode-data="modeData"
+        @setChatMode="setChatMode"
+      />
     </template>
     <template v-else>
       <LongTextUserInput

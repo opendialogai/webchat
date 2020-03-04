@@ -40,6 +40,13 @@
         <div class="user-input__button">
           <button @click.prevent="_submitText" class="send-btn"></button>
         </div>
+
+        <div
+          class="user-input__button"
+          v-if="modeData.mode === 'custom'"
+        >
+          <button @click.stop="closeChat" class="end-chat-btn">End chat</button>
+        </div>
       </div>
     </form>
   </div>
@@ -48,9 +55,9 @@
 
 <script>
 
-import ExternalButtons from "./ExternalButtons.vue";
+  import ExternalButtons from "./ExternalButtons.vue";
 
-export default {
+  export default {
   components: {
     ExternalButtons
   },
@@ -84,6 +91,10 @@ export default {
       required: true
     },
     colors: {
+      type: Object,
+      required: true
+    },
+    modeData: {
       type: Object,
       required: true
     }
@@ -168,6 +179,15 @@ export default {
     },
     _handleFileSubmit(file) {
       this.file = file;
+    },
+    closeChat() {
+      console.log(this.modeData);
+      this.$emit('setChatMode', {
+        mode: 'webchat',
+        options: {
+          'callback_id': this.modeData.options.callback_id
+        }
+      });
     }
   }
 };

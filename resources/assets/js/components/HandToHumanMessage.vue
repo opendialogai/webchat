@@ -41,18 +41,11 @@
 
       console.log("Simulating H2H takeover");
       this.$emit('setChatMode', {
-        mode: 'custom'
+        mode: 'custom',
+        options: {
+          'callback_id': this.data.elements.callback_id
+        }
       });
-
-      setTimeout(() => {
-        console.log("Simulating H2H giveback");
-        this.$emit('setChatMode', {
-          mode: 'webchat',
-          options: {
-            'callback_id': this.data.elements.callback_id
-          }
-        });
-      }, 7500);
     }
   }
 </script>
