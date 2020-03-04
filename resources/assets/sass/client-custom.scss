@@ -1,0 +1,252 @@
+.webchat-container{
+    // border: 1px solid blue;
+    background-color: transparent;
+
+}
+
+
+// ChatWindow.vue --- ChatWindow.vue --- ChatWindow.vue ---
+
+.chat-window {
+  // border: 1px solid blue;
+  height: calc(100% - 140px);
+  border-radius: 10px;
+  width: 423px;
+  margin: 0 auto;
+}
+
+.chat-window.opened {
+  //   box-shadow: 0 3px 26px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+  margin: 20px auto 0;
+}
+
+// Header.vue --- Header.vue --- Header.vue ---
+// remove vertical linear fade
+.header__btm-fade {
+  display: none;
+}
+
+.header {
+  //   border: 1px solid blue;
+  width: 100%;
+  background-color: unset !important;
+  justify-content: flex-end;
+  border-radius: unset;
+}
+
+// Inital state of the header
+.header-closed {
+  .header-nav {
+    display: none;
+  }
+  height: 90px;
+  margin: 30px 0;
+}
+
+//When the header is open fully - full chat box
+.header-open {
+  background-color: #da291c !important;
+  .header-cta {
+    display: none;
+  }
+}
+
+.header-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  white-space: nowrap;
+  height: 90px;
+  width: 90px;
+  border-radius: 45px;
+  background-color: #da291c;
+  transition: width 0.45s;
+  margin-right: 10px;
+  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+}
+
+.header-cta-expand {
+  .header-cta__text {
+    display: block;
+  }
+  width: 370px;
+  justify-content: space-between;
+  padding: 0 35px;
+}
+
+.header-cta__icon {
+  height: 50px;
+  width: 50px;
+}
+
+.header-cta__text {
+  margin-left: 20px;
+  span {
+    display: block;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #ffffff;
+  }
+
+  display: none;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+//   <MessageList />
+//message list bkg is in test.css
+.message-list {}
+
+// <Message />
+// Line up the bot avatar inline with the message-type
+.mt {
+  max-width: calc(90% - 45px);
+  @media (min-width: $media-med) {
+    max-width: calc(90% - 60px);
+  }
+}
+
+.reap {
+  margin-left: 45px;
+
+  @media (min-width: $media-med) {
+    margin-left: 60px;
+  }
+}
+
+.mt-author img.avatar {
+  padding: 0;
+  width: 36px;
+  @media screen and (min-width: 768px) {
+    border-radius: 0;
+    width: 50px;
+  }
+}
+
+.mt-author.reap {
+  margin-bottom: -50px;
+  margin-left: 0px;
+  @media (min-width: 900px) {
+    margin-bottom: -70px;
+  }
+}
+
+/* User Input --- User Input --- User Input ---  */
+
+.user-input__form {
+  min-height: 195px;
+  height: 195px;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.user-input__form::before {
+  content: "Enter your message here";
+  margin: 0;
+  padding: 0;
+  height: 10px;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.57;
+  color: #38383a;
+}
+
+.user-input__form-text-input {
+  flex: unset;
+  /* border: 1px solid green; */
+  width: 100%;
+  caret-color: #da291c;
+  font-family: Gotham;
+  font-size: 16px;
+  font-weight: 300;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.38;
+
+  padding: 0;
+  margin: 0;
+  margin-top: 15px;
+
+  height: 100%;
+}
+
+.user-input__form-text-input::before {
+  /* border: 1px solid blue; */
+  //   margin-top: -30px;
+  display: none;
+  color: transparent;
+}
+
+.user-input__buttons {
+  width: 100%;
+  margin: 0;
+}
+
+.user-input__button {
+  align-items: flex-start;
+}
+
+.send-btn {
+  width: 85px;
+  height: 50px;
+  background-color: #da291c;
+  border-radius: 34.5px;
+  transition: 0.4s;
+
+  &:hover {
+    background-color: #c01a1e;
+  }
+}
+
+.send-btn::before {
+  content: "Send";
+  font-size: 18px;
+  color: white;
+}
+
+// .send-btn:hover:before{
+//     background-color: #c01a1e;
+// }
+
+// close-chat --- close-chat --- close-chat ---
+// close-chat --- close-chat --- close-chat ---
+// close-chat --- close-chat --- close-chat ---
+
+.close-chat {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+  margin-bottom: 10px;
+}
+
+.close-chat__button {
+  width: 90px;
+  height: 90px;
+  background-color: #313133;
+  border-radius: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #000000;
+
+    // .close-chat__img {
+    //   transform: rotate(90deg);
+    //   transform-origin: center;
+    // }
+  }
+  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+}
+
+.close-chat__img {
+  width: 31px;
+  height: 30px;
+  object-fit: contain;
+  transition: transform 0.5s;
+  // background-color: #ffffff;
+}

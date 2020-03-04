@@ -14,7 +14,6 @@
   text-align: center;
   animation-duration: 1s;
   margin-top: 30px;
-
 }
 
 .mt-message-with-button__buttons-wrapper__button {
@@ -28,8 +27,4 @@
   outline: none;
   position: relative;
   transition: 0.4s;
-
-  &:active {
-    border: 2px solid green;
-  }
 }

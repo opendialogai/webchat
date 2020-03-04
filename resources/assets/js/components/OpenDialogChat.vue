@@ -7,23 +7,13 @@
     ]"
     :style="cssProps"
   >
-    <div
-      v-if="commentsEnabled && !isMinimized"
-      class="minimize-button"
-      @click="minimizeChat"
-    />
+    <div v-if="commentsEnabled && !isMinimized" class="minimize-button" @click="minimizeChat" />
 
-
-    <div
-      v-show="commentsEnabled && isMinimized"
-      class="minimized-header"
-      @click="maximizeChat"
-    >
+    <div v-show="commentsEnabled && isMinimized" class="minimized-header" @click="maximizeChat">
       {{ comments.commentsName ? comments.commentsName : 'Comments' }}
       /
       {{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}
     </div>
-
 
     <b-nav
       v-show="ready && commentsEnabled && !isMinimized"
@@ -37,28 +27,16 @@
         :class="{ active: activeTab === 'comments' }"
         class="pr-1"
         @click="activateTab('comments')"
-      >
-        {{ comments.commentsName ? comments.commentsName : 'Comments' }}
-      </b-nav-item>
+      >{{ comments.commentsName ? comments.commentsName : 'Comments' }}</b-nav-item>
       <b-nav-item
         :class="{ active: activeTab === 'webchat' }"
         class="pr-1"
         @click="activateTab('webchat')"
-      >
-        {{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}
-      </b-nav-item>
+      >{{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}</b-nav-item>
     </b-nav>
 
-
-
-    <div
-      v-show="commentsEnabled && activeTab == 'comments'"
-      class="comments-container"
-    >
-      <div
-        ref="opendialogWidgetSectionSelector"
-        class="comment-section-selector-wrapper"
-      >
+    <div v-show="commentsEnabled && activeTab == 'comments'" class="comments-container">
+      <div ref="opendialogWidgetSectionSelector" class="comment-section-selector-wrapper">
         <b-form-select
           v-if="sectionOptions.length"
           v-model="sectionId"
@@ -90,10 +68,7 @@
         :user-external-id="userExternalId"
       />
     </div>
-    <div
-      v-show="activeTab == 'webchat'"
-      class="webchat-container"
-    >
+    <div v-show="activeTab == 'webchat'" class="webchat-container">
       <WebChat
         v-if="ready"
         :agent-profile="agentProfile"
@@ -137,73 +112,82 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { mapState } from 'vuex';
+import axios from "axios";
+import { mapState } from "vuex";
 
-import cssVars from 'css-vars-ponyfill';
+import cssVars from "css-vars-ponyfill";
 
-import Comments from '@/components/Comments';
-import WebChat from '@/components/WebChat';
+import Comments from "@/components/Comments";
+import WebChat from "@/components/WebChat";
 
-const { detect } = require('detect-browser');
-const jstz = require('jstz');
+const { detect } = require("detect-browser");
+const jstz = require("jstz");
 
 export default {
-  name: 'OpenDialogChat',
+  name: "OpenDialogChat",
   components: {
     Comments,
-    WebChat,
+    WebChat
   },
   data() {
     return {
-      activeTab: 'webchat',
+      activeTab: "webchat",
       agentProfile: {
-        teamName: 'Opendialog Webchat',
-        imageUrl: null,
+        teamName: "Opendialog Webchat",
+        imageUrl: null
       },
       callbackMap: [],
       canCloseChat: true,
-      chatbotAvatarPath: '',
-      chatbotName: 'OD Bot',
-      closedIntent: '',
+      chatbotAvatarPath: "",
+      chatbotName: "OD Bot",
+      closedIntent: "",
       collectUserIp: true,
       colours: {
         header: {
-          bg: '#1b212a',
-          text: '#ffffff',
+          bg: "#da291c",
+          text: "#ffffff"
         },
         launcher: {
-          bg: '#1b212a',
+          bg: "#f9f9fb"
         },
         messageList: {
-          bg: '#1b212a',
+          bg: "#f9f9fb"
         },
         sentMessage: {
-          bg: '#0000ff',
-          text: '#ffffff',
+          bg: "#da291c",
+          text: "#ffffff"
         },
         receivedMessage: {
-          bg: '#ffffff',
-          text: '#1b212a',
+          bg: "#575759",
+          text: "#ffffff"
         },
         userInput: {
-          bg: '#fffffff',
-          text: '#1b212a',
+          bg: "#fffffff",
+          text: "#313133"
         },
         button: {
-          bg: '#00f',
-          hoverbg: '#ffffff',
-          text: '#ffffff',
+          bg: "#da291c",
+          hoverbg: "#c01a1e",
+          text: "#ffffff",
+          // 👇🏻 new
+          hoverText: "#ffffff",
+          border: "#da291c",
+          hoverBorder: "#c01a1e"
         },
         externalButton: {
-          bg: '#00f',
-          hoverbg: '#fff ',
-          text: '#ffffff',
+          bg: "#ffffff",
+          hoverbg: "#575759",
+          text: "#313133",
+          //new 👇🏻
+          hoverText: "#ffffff",
+          border: "#575759",
+          hoverBorder: "#575759"
         },
         minimizeButton: {
-          bg: '#000000',
-        },
+          bg: "#000000"
+        }
       },
+
       comments: {},
       commentsKey: 0,
       commentsEnabled: true,
@@ -214,22 +198,22 @@ export default {
       isExpand: false,
       isMinimized: false,
       isMobile: false,
-      isOpen: true,
+      isOpen: false,
       showHistory: false,
       numberOfMessages: 10,
       messageAnimation: false,
       messageDelay: 1000,
-      newMessageIcon: '',
-      openIntent: '',
-      parentUrl: '',
+      newMessageIcon: "",
+      openIntent: "",
+      parentUrl: "",
       pathInitialised: false,
-      restartButtonCallback: '',
+      restartButtonCallback: "",
       sectionCustomFilters: {},
-      sectionFilterPathPattern: '',
-      sectionFilterQuery: '',
-      sectionId: '',
+      sectionFilterPathPattern: "",
+      sectionFilterQuery: "",
+      sectionId: "",
       sectionOptions: [],
-      sectionQueryString: '',
+      sectionQueryString: "",
       settingsInitialised: false,
       showExpandButton: true,
       showRestartButton: false,
@@ -240,22 +224,31 @@ export default {
       useBotName: false,
       useHumanName: false,
       user: {},
-      userTimezone: '',
-      userFirstName: '',
-      userLastName: '',
-      userExternalId: '',
-      userUuid: '',
+      userTimezone: "",
+      userFirstName: "",
+      userLastName: "",
+      userExternalId: "",
+      userUuid: ""
     };
   },
   computed: {
-    ...mapState(['apiReady']),
+    ...mapState(["apiReady"]),
     ready() {
-      return this.settingsInitialised && this.timezoneInitialised && this.ipAddressInitialised;
-    },
+      return (
+        this.settingsInitialised &&
+        this.timezoneInitialised &&
+        this.ipAddressInitialised
+      );
+    }
   },
   watch: {
     settingsInitialised(settingsAreInitialised) {
-      if (settingsAreInitialised && this.apiReady && this.pathInitialised && this.commentsEnabled) {
+      if (
+        settingsAreInitialised &&
+        this.apiReady &&
+        this.pathInitialised &&
+        this.commentsEnabled
+      ) {
         this.getCommentSections();
       }
 
@@ -271,7 +264,12 @@ export default {
       }
     },
     apiReady(apiIsReady) {
-      if (apiIsReady && this.pathInitialised && this.commentsEnabled && this.settingsInitialised) {
+      if (
+        apiIsReady &&
+        this.pathInitialised &&
+        this.commentsEnabled &&
+        this.settingsInitialised
+      ) {
         this.getCommentSections();
       }
     },
@@ -282,16 +280,16 @@ export default {
     },
     // Refresh comments when the section is changed.
     sectionId(newId, oldId) {
-      if (oldId !== '' && newId !== oldId) {
+      if (oldId !== "" && newId !== oldId) {
         this.commentsKey += 1;
       }
-    },
+    }
   },
   created() {
     const urlParams = new URLSearchParams(window.location.search);
 
-    if (urlParams.has('mobile')) {
-      if (urlParams.get('mobile')) {
+    if (urlParams.has("mobile")) {
+      if (urlParams.get("mobile")) {
         this.isMobile = true;
         this.showExpandButton = false;
       }
@@ -301,11 +299,11 @@ export default {
   },
   methods: {
     newWebChatMessage() {
-      this.activateTab('webchat');
+      this.activateTab("webchat");
     },
     switchToCommentsTab() {
       if (this.commentsEnabled) {
-        this.activateTab('comments');
+        this.activateTab("comments");
       }
     },
     activateTab(tabName) {
@@ -313,7 +311,9 @@ export default {
 
       // Timeout is necessary to make the select element available
       // for the height calculation.
-      setTimeout(() => { this.cssProps = this.getCssProps(); }, 0);
+      setTimeout(() => {
+        this.cssProps = this.getCssProps();
+      }, 0);
     },
     expandChat(forceExpand = false) {
       if (!this.showExpandButton && !forceExpand) {
@@ -323,9 +323,9 @@ export default {
       this.isExpand = !this.isExpand;
 
       if (this.isExpand) {
-        window.parent.postMessage({ dataLayerEvent: 'chatbot_maximized' }, '*');
+        window.parent.postMessage({ dataLayerEvent: "chatbot_maximized" }, "*");
       } else {
-        window.parent.postMessage({ dataLayerEvent: 'chatbot_minimized' }, '*');
+        window.parent.postMessage({ dataLayerEvent: "chatbot_minimized" }, "*");
       }
 
       if (!this.isOpen) {
@@ -335,11 +335,11 @@ export default {
       // Only add the expanded class on non-mobile devices
       if (window.self !== window.top && !this.isMobile) {
         if (!this.isExpand) {
-          window.parent.postMessage({ removeClass: 'expanded' }, '*');
-          this.$root.$emit('scroll-down-message-list');
+          window.parent.postMessage({ removeClass: "expanded" }, "*");
+          this.$root.$emit("scroll-down-message-list");
         } else {
-          window.parent.postMessage({ addClass: 'expanded' }, '*');
-          this.$root.$emit('scroll-down-message-list');
+          window.parent.postMessage({ addClass: "expanded" }, "*");
+          this.$root.$emit("scroll-down-message-list");
         }
       }
     },
@@ -347,10 +347,10 @@ export default {
       const cssVariables = {};
 
       if (this.colours.header && this.colours.header.bg) {
-        cssVariables['--header-background-color'] = this.colours.header.bg;
+        cssVariables["--header-background-color"] = this.colours.header.bg;
       }
       if (this.colours.header && this.colours.header.text) {
-        cssVariables['--header-text-color'] = this.colours.header.text;
+        cssVariables["--header-text-color"] = this.colours.header.text;
       }
 
       // Starting height of 2px accounts for the bottom border.
@@ -364,11 +364,11 @@ export default {
       if (this.isMinimized) {
         headerHeight = 50;
       }
-      cssVariables['--header-height'] = `${headerHeight}px`;
+      cssVariables["--header-height"] = `${headerHeight}px`;
 
       cssVars({
         onlyLegacy: true,
-        variables: cssVariables,
+        variables: cssVariables
       });
 
       // Show the tabs, now that we've got the correct CSS.
@@ -379,8 +379,8 @@ export default {
     initSettings() {
       this.userTimezone = jstz.determine().name();
       const browserInfo = detect();
-      const ipAddress = 'n/a';
-      const country = 'n/a';
+      const ipAddress = "n/a";
+      const country = "n/a";
       const browserLanguage = navigator.language || navigator.userLanguage;
       const { os } = browserInfo;
       const browser = `${browserInfo.name} ${browserInfo.version}`;
@@ -392,13 +392,13 @@ export default {
         browserLanguage,
         os,
         browser,
-        timezone,
+        timezone
       };
 
       this.timezoneInitialised = true;
 
       // Add event listener for custom open dialog settings.
-      window.addEventListener('message', (event) => {
+      window.addEventListener("message", event => {
         if (event.data) {
           if (event.data.openDialogSettings) {
             const customConfig = event.data.openDialogSettings;
@@ -412,7 +412,7 @@ export default {
           }
 
           if (event.data.customUserSettings) {
-            Object.keys(event.data.customUserSettings).forEach((key) => {
+            Object.keys(event.data.customUserSettings).forEach(key => {
               if (this.user.custom === undefined) this.user.custom = {};
               this.user.custom[key] = event.data.customUserSettings[key];
             });
@@ -430,21 +430,24 @@ export default {
     },
     initialiseSettings(customConfig) {
       // Get default settings from the config endpoint.
-      this.getWebchatConfig().then((config) => {
-        this.setConfig(config);
-        return true;
-      }).then(() => {
-        // Over-ride default config with any custom settings.
-        this.setConfig(customConfig);
+      this.getWebchatConfig()
+        .then(config => {
+          this.setConfig(config);
+          return true;
+        })
+        .then(() => {
+          // Over-ride default config with any custom settings.
+          this.setConfig(customConfig);
 
-        if (!this.settingsInitialised) {
-          this.settingsInitialised = true;
-        }
-      });
+          if (!this.settingsInitialised) {
+            this.settingsInitialised = true;
+          }
+        });
     },
     getUserIp() {
-      axios.get('https://ipinfo.io/')
-        .then((response) => {
+      axios
+        .get("https://ipinfo.io/")
+        .then(response => {
           this.userInfo.ipAddress = response.data.ip;
           this.userInfo.country = response.data.country;
           this.ipAddressInitialised = true;
@@ -454,22 +457,22 @@ export default {
         });
     },
     getCommentSections() {
-      let action = '';
-      let getter = '';
+      let action = "";
+      let getter = "";
       let filter = {};
       if (this.sectionQueryString) {
         filter = {
           [this.sectionFilterQuery]: this.sectionQueryString,
-          enabled: '1',
+          enabled: "1"
         };
-        Object.keys(this.sectionCustomFilters).forEach((key) => {
+        Object.keys(this.sectionCustomFilters).forEach(key => {
           filter[key] = this.sectionCustomFilters[key];
         });
-        action = 'sections/loadWhere';
-        getter = 'sections/where';
+        action = "sections/loadWhere";
+        getter = "sections/where";
       } else {
-        action = 'sections/loadAll';
-        getter = 'sections/all';
+        action = "sections/loadAll";
+        getter = "sections/all";
       }
 
       this.$store.dispatch(action, { filter }).then(() => {
@@ -482,25 +485,27 @@ export default {
 
         this.sectionOptions = [];
 
-        sections.sort((a, b) => {
-          const numberA = parseInt(a.attributes.number, 10);
-          const numberB = parseInt(b.attributes.number, 10);
+        sections
+          .sort((a, b) => {
+            const numberA = parseInt(a.attributes.number, 10);
+            const numberB = parseInt(b.attributes.number, 10);
 
-          if (numberA > numberB) return 1;
-          if (numberA < numberB) return -1;
-          return 0;
-        }).forEach((section) => {
-          this.sectionOptions.push({
-            value: section[this.comments.commentsSectionIdFieldName],
-            text: section.attributes[
-              this.comments.commentsSectionNameFieldName
-            ],
+            if (numberA > numberB) return 1;
+            if (numberA < numberB) return -1;
+            return 0;
+          })
+          .forEach(section => {
+            this.sectionOptions.push({
+              value: section[this.comments.commentsSectionIdFieldName],
+              text:
+                section.attributes[this.comments.commentsSectionNameFieldName]
+            });
           });
-        });
 
         // Default to the first section if one is not detected.
-        if (this.sectionId === '') {
-          this.sectionId = (this.sectionOptions.length > 0) ? this.sectionOptions[0].value : '';
+        if (this.sectionId === "") {
+          this.sectionId =
+            this.sectionOptions.length > 0 ? this.sectionOptions[0].value : "";
         }
 
         // Force comments reload.
@@ -511,9 +516,9 @@ export default {
         this.cssProps = this.getCssProps();
       });
     },
-    async getWebchatConfig(url = '') {
+    async getWebchatConfig(url = "") {
       let configUrl = url;
-      if (configUrl === '') {
+      if (configUrl === "") {
         configUrl = `${window.location.origin}/webchat-config`;
       }
 
@@ -541,7 +546,7 @@ export default {
           // eslint-disable-next-line prefer-destructuring
           this.sectionQueryString = matches[1];
         } else {
-          this.sectionQueryString = '';
+          this.sectionQueryString = "";
         }
       }
 
@@ -550,7 +555,7 @@ export default {
         const matches = e.match(this.comments.commentsSectionPathPattern);
         if (matches && matches.length > 1) {
           this.updateSectionSelection(matches[1]);
-          this.activeTab = 'comments';
+          this.activeTab = "comments";
 
           setTimeout(() => {
             this.cssProps = this.getCssProps();
@@ -559,7 +564,7 @@ export default {
       }
 
       if (this.commentsEnabled === false) {
-        this.activeTab = 'webchat';
+        this.activeTab = "webchat";
       }
 
       this.pathInitialised = true;
@@ -593,7 +598,7 @@ export default {
         }
 
         if (general.logo) {
-            this.agentProfile.imageUrl = general.logo;
+          this.agentProfile.imageUrl = general.logo;
         }
 
         if (general.messageDelay) {
@@ -616,7 +621,7 @@ export default {
           this.useHumanName = general.useHumanName;
         }
 
-        if (Object.prototype.hasOwnProperty.call(general, 'collectUserIp')) {
+        if (Object.prototype.hasOwnProperty.call(general, "collectUserIp")) {
           this.collectUserIp = general.collectUserIp;
         }
 
@@ -649,7 +654,8 @@ export default {
         }
 
         if (general.hideTypingIndicatorOnInternalMessages) {
-          this.hideTypingIndOnInternalMessages = general.hideTypingIndicatorOnInternalMessages;
+          this.hideTypingIndOnInternalMessages =
+            general.hideTypingIndicatorOnInternalMessages;
         }
 
         if (general.messageAnimation) {
@@ -707,7 +713,8 @@ export default {
           this.colours.externalButton.bg = colours.externalButtonBackground;
         }
         if (colours.externalButtonHoverBackground) {
-          this.colours.externalButton.hoverbg = colours.externalButtonHoverBackground;
+          this.colours.externalButton.hoverbg =
+            colours.externalButtonHoverBackground;
         }
         if (colours.externalEuttonText) {
           this.colours.externalButton.text = colours.externalEuttonText;
@@ -744,26 +751,29 @@ export default {
           this.commentsEnabled = false;
         }
 
-        Object.keys(config.comments).forEach((commentConfigKey) => {
+        Object.keys(config.comments).forEach(commentConfigKey => {
           this.comments[commentConfigKey] = config.comments[commentConfigKey];
         });
 
         if (this.comments.commentsSectionEntityName) {
           // Set up convenience mappings.
           this.sectionFilterQuery = this.comments.commentsSectionFilterQuery
-            ? this.comments.commentsSectionFilterQuery : '';
-          this.sectionFilterPathPattern = this.comments.commentsSectionFilterPathPattern
-            ? this.comments.commentsSectionFilterPathPattern : '';
+            ? this.comments.commentsSectionFilterQuery
+            : "";
+          this.sectionFilterPathPattern = this.comments
+            .commentsSectionFilterPathPattern
+            ? this.comments.commentsSectionFilterPathPattern
+            : "";
         }
       }
 
       if (config.triggerConversation) {
         // FIXME pass this to child component.
         this.sendMessage({
-          type: 'trigger',
+          type: "trigger",
           author: this.userUuid,
           callback_id: config.triggerConversation.callback_id,
-          data: {},
+          data: {}
         });
       }
 
@@ -798,19 +808,22 @@ export default {
         this.isMinimized = !this.isOpen;
 
         if (!this.isOpen) {
-          this.$root.$emit('scroll-down-message-list');
+          this.$root.$emit("scroll-down-message-list");
         }
 
         if (window.self !== window.top) {
           if (!this.isOpen) {
             if (headerHeight) {
-              window.parent.postMessage({ height: `${headerHeight}px` }, '*');
+
+
+              window.parent.postMessage({ height: `140px` }, "*");
             } else if (this.commentsEnabled) {
-              const height = document.querySelector('.nav').offsetHeight;
-              window.parent.postMessage({ height: `${height}px` }, '*');
+              const height = document.querySelector(".nav").offsetHeight;
+
+              window.parent.postMessage({ height: `140px` }, "*");
             }
           } else {
-            window.parent.postMessage({ height: 'auto' }, '*');
+            window.parent.postMessage({ height: "auto" }, "*");
           }
         }
       }
@@ -823,17 +836,16 @@ export default {
     minimizeChat() {
       this.isMinimized = true;
       this.isOpen = false;
-      window.parent.postMessage({ height: '50px' }, '*');
+      window.parent.postMessage({ height: "50px" }, "*");
     },
     maximizeChat() {
       this.isMinimized = false;
       this.isOpen = true;
-      window.parent.postMessage({ height: 'auto' }, '*');
-    },
-  },
+      window.parent.postMessage({ height: "auto" }, "*");
+    }
+  }
 };
 </script>
 
 <style>
-
 </style>

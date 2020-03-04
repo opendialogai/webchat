@@ -39,7 +39,11 @@
 @import "./4-message-types/carouselListMessage";
 @import "./4-message-types/external-button";
 @import "./4-message-types/formMessage";
+@import "./4-message-types/fullPageFormInput";
+@import "./4-message-types/fullPageRichInput";
 @import "./4-message-types/imageMessage";
 @import "./4-message-types/richMessage";
 @import "./4-message-types/textMessage";
 @import "./4-message-types/typingMessage";
+
+@import "./client-custom.scss";

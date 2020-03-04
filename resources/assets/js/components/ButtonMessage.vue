@@ -2,24 +2,39 @@
   <div
     ref="message"
     class="mt mt-message-with-button"
+
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
         reap: this.author === 'them',
     }]"
-    :style="messageColors"
   >
+    <!-- 👇🏻 this was an attr in the above div -->
+    <!-- :style="messageColors" -->
+
     <div class="mt-message-with-button__text fade-enter-active" v-linkified>
       <span v-html="data.text"></span>
     </div>
 
     <template v-if="data.buttons.length && !data.external">
-      <div class="mt-message-with-button__buttons-wrapper">
+      <div
+        class="mt-message-with-button__buttons-wrapper"
+           :style="{
+            '--background': colors.messageList.bg,
+
+            '--btn-bg': colors.button.bg,
+            '--btn-bg-hover': colors.button.hoverbg,
+
+            '--btn-color': colors.button.text,
+            '--btn-color-hover':  colors.button.hoverText,
+
+            '--btn-border-color':colors.button.border,
+            '--btn-border-color-hover':colors.button.hoverBorder }"
+      >
         <button
           v-for="(button, idx) in data.buttons"
           :key="idx"
           @click="_handleClick(button)"
-          :style="{'--btn-bg': colors.button.bg, '--btn-color': colors.button.text, '--btn-bg-hover': colors.button.hoverbg}"
           v-html="button.text"
           class="mt-message-with-button__buttons-wrapper__button"
         ></button>
@@ -110,17 +125,21 @@ export default {
 </script>
 
 <style scoped>
+
+
 .mt-message-with-button__buttons-wrapper__button {
   background-color: var(--btn-bg);
   color: var(--btn-color);
-  border: 1px solid var(--btn-bg);
+  border: 2px solid var(--btn-border-color);
 }
 
-.mt-message-with-button__buttons-wrapper__button:active {
-}
 
 .mt-message-with-button__buttons-wrapper__button:hover {
-  background-color: var(--btn-bg-hover);
-  color: var(--btn-bg);
+background-color: var(--btn-bg-hover);
+  color: var(--btn-color-hover);
+  border: 2px solid var(--btn-border-color-hover);
 }
+
+
+
 </style>

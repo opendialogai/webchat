@@ -14,7 +14,8 @@
     @endif
 
     <!-- Fonts -->
-    <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.min.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.min.css" /> -->
+    <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.css" />
 </head>
 
 <body>
