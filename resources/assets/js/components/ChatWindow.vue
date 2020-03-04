@@ -193,6 +193,15 @@
   data() {
     return {}
   },
+  watch: {
+    modeData(newValue, oldValue) {
+      if (newValue.mode === 'custom') {
+        this.agentProfile.teamName = 'You are now speaking to [AGENT_NAME]';
+      } else {
+        this.agentProfile.teamName = '';
+      }
+    }
+  },
   computed: {
     messages() {
       let messages = this.messageList
