@@ -41,4 +41,8 @@ ChatService.prototype.sendResponseError = function(error, webChatComponent) {
   return this.getActiveService().sendResponseError(error);
 };
 
+ChatService.prototype.initialiseChat = function(webChatComponent) {
+  return this.getActiveService().initialiseChat(webChatComponent);
+};
+
 export default new ChatService();

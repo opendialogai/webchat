@@ -1,5 +1,8 @@
+import ConversiveClient from "../clients/ConversiveClient";
+
 let ConversiveMode = function() {
   this.name = "custom";
+  this.client = new ConversiveClient();
 };
 
 ConversiveMode.prototype.sendRequest = function(message) {
@@ -15,6 +18,16 @@ ConversiveMode.prototype.sendResponseSuccess = function(response, webChatCompone
 
 ConversiveMode.prototype.sendResponseError = function(error, webChatComponent) {
   console.log("Conversive mode response error", webChatComponent.modeData);
+};
+
+ConversiveMode.prototype.initialiseChat = function(webChatComponent) {
+  return this.client.getSession()
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 export default ConversiveMode;

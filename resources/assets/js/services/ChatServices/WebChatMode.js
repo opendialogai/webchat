@@ -291,5 +291,8 @@ WebChatMode.prototype.sendResponseError = function(error, webChatComponent) {
   }, webChatComponent.messageDelay);
 };
 
+WebChatMode.prototype.initialiseChat = function(webChatComponent) {
+  return new Promise((resolve, reject) => resolve());
+};
 
 export default WebChatMode;

@@ -236,7 +236,7 @@ export default {
       }
 
       if (newValue.mode === 'custom') {
-        this.contentEditable = true;
+        this.setupCustomMode();
       }
     }
   },
@@ -723,6 +723,11 @@ export default {
     },
     setChatMode(data) {
       this.$emit('setChatMode', data);
+    },
+    async setupCustomMode() {
+      this.contentEditable = true;
+
+      await chatService.initialiseChat(this);
     }
   }
 };
