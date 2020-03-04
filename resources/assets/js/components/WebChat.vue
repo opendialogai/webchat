@@ -235,6 +235,10 @@ export default {
           data: {}
         });
       }
+
+      if (newValue.mode === 'custom') {
+        this.contentEditable = true;
+      }
     }
   },
   created() {
