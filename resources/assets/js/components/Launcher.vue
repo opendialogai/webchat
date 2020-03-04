@@ -28,6 +28,7 @@
       :confirmationMessage="confirmationMessage"
       :initialText="initialText"
       :fullScreen="fullScreen"
+      @setChatMode="setChatMode"
     />
   </div>
 </template>
@@ -205,6 +206,18 @@ export default {
   },
   components: {
     ChatWindow
+  },
+  created() {
+    let localStorageSettings = JSON.parse(window.localStorage.getItem('opendialog-webchat'));
+    if (localStorageSettings && localStorageSettings.mode === 'custom') {
+      this.setChatMode('custom');
+    }
+  },
+  methods: {
+    setChatMode(mode) {
+      console.log("Launcher");
+      this.$emit('setChatMode', mode);
+    }
   }
 }
 </script>

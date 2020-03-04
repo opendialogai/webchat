@@ -11,6 +11,7 @@
       :onLinkClick="onLinkClick"
       :onListButtonClick="onListButtonClick"
       :onFormButtonClick="onFormButtonClick"
+      @setChatMode="setChatMode"
     />
     <Message
       v-if="showTypingIndicator"
@@ -99,6 +100,10 @@ export default {
         this.$refs.scrollList.scrollTop >
           this.$refs.scrollList.scrollHeight - 300
       );
+    },
+    setChatMode(mode) {
+      console.log("MessageList");
+      this.$emit('setChatMode', mode);
     }
   },
   mounted() {

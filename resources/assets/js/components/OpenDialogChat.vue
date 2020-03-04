@@ -104,6 +104,7 @@
         @toggleChatOpen="toggleChatOpen"
         @newMessage="newWebChatMessage"
         @switchToCommentsTab="switchToCommentsTab"
+        @setChatMode="setChatMode"
       />
     </div>
   </div>
@@ -827,6 +828,10 @@ export default {
       this.isMinimized = false;
       this.isOpen = true;
       window.parent.postMessage({ height: "auto" }, "*");
+    },
+    setChatMode(data) {
+      console.log('Chat mode set to: ', data);
+      window.localStorage.setItem('opendialog-webchat', JSON.stringify(data));
     }
   }
 };

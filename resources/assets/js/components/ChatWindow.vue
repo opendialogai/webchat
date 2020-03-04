@@ -25,6 +25,7 @@
       :onFormButtonClick="onFormButtonClick"
       :onListButtonClick="onListButtonClick"
       :onLinkClick="onLinkClick"
+      @setChatMode="setChatMode"
     />
     <template v-if="!showLongTextInput">
       <UserInput
@@ -216,6 +217,12 @@ export default {
     lastMessage() {
       if (this.messages.length == 0) return {}
       return this.messages[this.messages.length - 1]
+    }
+  },
+  methods: {
+    setChatMode(mode) {
+      console.log("ChatWindow");
+      this.$emit('setChatMode', mode);
     }
   }
 }

@@ -106,6 +106,7 @@
       :author="message.author"
       :type="message.type"
       :messageColors="determineMessageColors()"
+      @setChatMode="setChatMode"
     />
     <DatetimeFakeMessage v-else-if="message.type === 'datetime'" :message="message" />
 
@@ -223,6 +224,10 @@ export default {
       return this.message.author === "me"
         ? this.sentColorsStyle()
         : this.receivedColorsStyle();
+    },
+    setChatMode(mode) {
+      console.log("Message");
+      this.$emit('setChatMode', mode);
     }
   }
 };

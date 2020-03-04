@@ -49,6 +49,7 @@
         :initial-text="initialText"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
+        @setChatMode="setChatMode"
       />
       <div class="close-chat">
         <div class="close-chat__button" @click="toggleChatOpen"  >
@@ -163,7 +164,8 @@ export default {
       showTypingIndicator: false,
       users: [],
       userName: "",
-      uuid: this.userUuid
+      uuid: this.userUuid,
+      chatMode: "webchat"
     };
   },
   watch: {
@@ -829,8 +831,13 @@ export default {
             if (
               currentMessage.type === "button" ||
               currentMessage.type === "long_text" ||
-              currentMessage.type === "form"
+              currentMessage.type === "form" ||
+              currentMessage.type === "hand-to-human"
             ) {
+              if (currentMessage.type === "hand-to-human") {
+                currentMessage.data.text = currentMessage.data.elements.text;
+              }
+
               currentMessage.type = "text";
             }
 
@@ -948,6 +955,27 @@ export default {
           this.createUuid();
         }
       }
+    },
+    setChatMode(data) {
+      console.log("WebChat");
+
+      if (this.chatMode === "custom" && data.mode === "webchat") {
+        // Convert the Hand-to-Human message to a text message
+        let handToHumanMessage = this.messageList[this.messageList.length-1];
+        handToHumanMessage.type = 'text';
+        handToHumanMessage.data.text = handToHumanMessage.data.elements.text;
+
+        this.sendMessage({
+          type: "trigger",
+          author: "me",
+          callback_id: data.options.callback_id,
+          data: {}
+        });
+      }
+
+      this.chatMode = data.mode;
+
+      this.$emit('setChatMode', data);
     }
   }
 };
