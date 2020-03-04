@@ -25,6 +25,15 @@
       messageColors: {
         type: Object,
         required: true
+      },
+      modeData: {
+        type: Object,
+        required: true
+      }
+    },
+    watch: {
+      modeData(newValue, oldValue) {
+        console.log("H2H: modeData changed from/to ", oldValue, newValue);
       }
     },
     mounted() {
@@ -35,15 +44,15 @@
         mode: 'custom'
       });
 
-      // setTimeout(() => {
-      //   console.log("Simulating H2H giveback");
-      //   this.$emit('setChatMode', {
-      //     mode: 'webchat',
-      //     options: {
-      //       'callback_id': this.data.elements.callback_id
-      //     }
-      //   });
-      // }, 2000);
+      setTimeout(() => {
+        console.log("Simulating H2H giveback");
+        this.$emit('setChatMode', {
+          mode: 'webchat',
+          options: {
+            'callback_id': this.data.elements.callback_id
+          }
+        });
+      }, 7500);
     }
   }
 </script>

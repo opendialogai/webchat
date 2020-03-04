@@ -28,14 +28,15 @@
       :confirmationMessage="confirmationMessage"
       :initialText="initialText"
       :fullScreen="fullScreen"
+      :mode-data="modeData"
       @setChatMode="setChatMode"
     />
   </div>
 </template>
 <script>
-import ChatWindow from './ChatWindow.vue'
+  import ChatWindow from './ChatWindow.vue'
 
-export default {
+  export default {
   props: {
     contentEditable: {
       type: Boolean,
@@ -197,6 +198,10 @@ export default {
     alwaysScrollToBottom: {
       type: Boolean,
       default: () => false
+    },
+    modeData: {
+      type: Object,
+      required: true
     }
   },
   data () {
@@ -208,9 +213,9 @@ export default {
     ChatWindow
   },
   created() {
-    let localStorageSettings = JSON.parse(window.localStorage.getItem('opendialog-webchat'));
-    if (localStorageSettings && localStorageSettings.mode === 'custom') {
-      this.setChatMode('custom');
+    let sessionStorageSettings = JSON.parse(window.sessionStorage.getItem('opendialog-webchat'));
+    if (sessionStorageSettings && sessionStorageSettings.mode === 'custom') {
+      this.setChatMode(sessionStorageSettings);
     }
   },
   methods: {

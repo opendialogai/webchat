@@ -2,6 +2,7 @@
   <div class="message-list" ref="scrollList" :style="{'--messageList-bkg': colors.messageList.bg}">
     <Message
       v-for="(message, idx) in messages"
+      v-show="message.mode === modeData.mode"
       :message="message"
       :read="message.read"
       :chatImageUrl="chatImageUrl"
@@ -11,6 +12,7 @@
       :onLinkClick="onLinkClick"
       :onListButtonClick="onListButtonClick"
       :onFormButtonClick="onFormButtonClick"
+      :mode-data="modeData"
       @setChatMode="setChatMode"
     />
     <Message
@@ -26,10 +28,10 @@
   </div>
 </template>
 <script>
-import Message from "./Message.vue";
-import chatIcon from "./assets/chat-icon.svg";
+  import Message from "./Message.vue";
+  import chatIcon from "./assets/chat-icon.svg";
 
-export default {
+  export default {
   components: {
     Message
   },
@@ -68,6 +70,10 @@ export default {
     },
     onLinkClick: {
       type: Function,
+      required: true
+    },
+    modeData: {
+      type: Object,
       required: true
     }
   },

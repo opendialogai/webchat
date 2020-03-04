@@ -100,6 +100,7 @@
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
         :user-external-id="userExternalId"
+        :mode-data="modeData"
         @expandChat="expandChat"
         @toggleChatOpen="toggleChatOpen"
         @newMessage="newWebChatMessage"
@@ -111,15 +112,15 @@
 </template>
 
 <script>
-import axios from "axios";
-import { mapState } from "vuex";
+  import axios from "axios";
+  import {mapState} from "vuex";
 
-import cssVars from "css-vars-ponyfill";
+  import cssVars from "css-vars-ponyfill";
 
-import Comments from "@/components/Comments";
-import WebChat from "@/components/WebChat";
+  import Comments from "@/components/Comments";
+  import WebChat from "@/components/WebChat";
 
-const { detect } = require("detect-browser");
+  const { detect } = require("detect-browser");
 const jstz = require("jstz");
 
 export default {
@@ -225,7 +226,11 @@ export default {
       userFirstName: "",
       userLastName: "",
       userExternalId: "",
-      userUuid: ""
+      userUuid: "",
+      modeData: {
+        mode: 'webchat',
+        options: {}
+      }
     };
   },
   computed: {
@@ -293,6 +298,8 @@ export default {
     }
 
     this.initSettings();
+
+
   },
   methods: {
     newWebChatMessage() {
@@ -831,7 +838,8 @@ export default {
     },
     setChatMode(data) {
       console.log('Chat mode set to: ', data);
-      window.localStorage.setItem('opendialog-webchat', JSON.stringify(data));
+      this.modeData = data;
+      window.sessionStorage.setItem('opendialog-webchat', JSON.stringify(data));
     }
   }
 };

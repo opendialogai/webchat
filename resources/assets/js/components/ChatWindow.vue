@@ -25,6 +25,7 @@
       :onFormButtonClick="onFormButtonClick"
       :onListButtonClick="onListButtonClick"
       :onLinkClick="onLinkClick"
+      :mode-data="modeData"
       @setChatMode="setChatMode"
     />
     <template v-if="!showLongTextInput">
@@ -55,12 +56,12 @@
 </template>
 
 <script>
-import Header from './Header.vue'
-import MessageList from './MessageList.vue'
-import UserInput from './UserInput.vue'
-import LongTextUserInput from './LongTextUserInput.vue'
+  import Header from './Header.vue'
+  import MessageList from './MessageList.vue'
+  import UserInput from './UserInput.vue'
+  import LongTextUserInput from './LongTextUserInput.vue'
 
-export default {
+  export default {
   components: {
     Header,
     MessageList,
@@ -183,6 +184,10 @@ export default {
     initialText: {
         type: String,
         default: null
+    },
+    modeData: {
+      type: Object,
+      required: true
     }
   },
   data() {

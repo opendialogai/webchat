@@ -106,6 +106,7 @@
       :author="message.author"
       :type="message.type"
       :messageColors="determineMessageColors()"
+      :mode-data="modeData"
       @setChatMode="setChatMode"
     />
     <DatetimeFakeMessage v-else-if="message.type === 'datetime'" :message="message" />
@@ -123,23 +124,23 @@
 </template>
 
 <script>
-import DatetimeFakeMessage from "./DatetimeFakeMessage.vue";
-import CarouselListMessage from "./CarouselListMessage.vue";
-import ListMessage from "./ListMessage.vue";
-import ImageMessage from "./ImageMessage.vue";
-import FormMessage from "./FormMessage.vue";
-import FormResponseMessage from "./FormResponseMessage.vue";
-import ButtonMessage from "./ButtonMessage.vue";
-import ButtonResponseMessage from "./ButtonResponseMessage.vue";
-import RichMessage from "./RichMessage.vue";
-import TextMessage from "./TextMessage.vue";
-import LongTextMessage from "./LongTextMessage.vue";
-import TypingMessage from "./TypingMessage.vue";
-import AuthorMessage from "./AuthorMessage.vue";
-import chatIcon from "./assets/chat-icon.svg";
-import HandToHumanMessage from "./HandToHumanMessage";
+  import DatetimeFakeMessage from "./DatetimeFakeMessage.vue";
+  import CarouselListMessage from "./CarouselListMessage.vue";
+  import ListMessage from "./ListMessage.vue";
+  import ImageMessage from "./ImageMessage.vue";
+  import FormMessage from "./FormMessage.vue";
+  import FormResponseMessage from "./FormResponseMessage.vue";
+  import ButtonMessage from "./ButtonMessage.vue";
+  import ButtonResponseMessage from "./ButtonResponseMessage.vue";
+  import RichMessage from "./RichMessage.vue";
+  import TextMessage from "./TextMessage.vue";
+  import LongTextMessage from "./LongTextMessage.vue";
+  import TypingMessage from "./TypingMessage.vue";
+  import AuthorMessage from "./AuthorMessage.vue";
+  import chatIcon from "./assets/chat-icon.svg";
+  import HandToHumanMessage from "./HandToHumanMessage";
 
-export default {
+  export default {
   data() {
     return {
       authorName: null
@@ -192,6 +193,10 @@ export default {
     },
     read: {
       type: Boolean
+    },
+    modeData: {
+      type: Object,
+      required: true
     }
   },
 
