@@ -3,7 +3,17 @@
     <div
       class="mt mt-external-buttons"
       :class="{animate: this.animate, 'fade-enter-active': this.animate}"
-      :style="{'--btn-bg': colors.button.bg, '--btn-color': colors.button.text, '--btn-bg-hover': colors.button.hoverbg, '--background': colors.messageList.bg}"
+      :style="{
+            '--background': colors.messageList.bg,
+
+            '--btn-bg': colors.externalButton.bg,
+            '--btn-bg-hover': colors.externalButton.hoverbg,
+
+            '--btn-color': colors.externalButton.text,
+            '--btn-color-hover':  colors.externalButton.hoverText,
+
+            '--btn-border-color':colors.externalButton.border,
+            '--btn-border-color-hover':colors.externalButton.hoverBorder }"
     >
       <button
         class="mt-external-buttons__button"
@@ -63,11 +73,12 @@ export default {
 .mt-external-buttons__button {
   background-color: var(--btn-bg);
   color: var(--btn-color);
-  border: 1px solid var(--btn-bg);
+  border: 2px solid var(--btn-border-color);
 }
 
 .mt-external-buttons__button:hover {
   background-color: var(--btn-bg-hover);
-  color: var(--btn-bg);
+  color: var(--btn-color-hover);
+  border: 2px solid var(--btn-border-color-hover);
 }
 </style>

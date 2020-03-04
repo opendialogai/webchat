@@ -1,5 +1,5 @@
 <template>
-  <div class="message-list" ref="scrollList" :style="{backgroundColor: colors.messageList.bg}">
+  <div class="message-list" ref="scrollList" :style="{'--messageList-bkg': colors.messageList.bg}">
     <Message
       v-for="(message, idx) in messages"
       :message="message"
@@ -114,5 +114,9 @@ export default {
 </script>
 
 <style scoped>
+.message-list {
+    /* background-color: yellow; */
+  background-color: var(--messageList-bkg);
 
+}
 </style>

@@ -82,7 +82,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: 'Write a reply'
+      default: 'Enter your message'
     },
     showRestartButton: {
       type: Boolean,
