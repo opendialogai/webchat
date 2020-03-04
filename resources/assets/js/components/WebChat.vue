@@ -560,11 +560,17 @@ export default {
                   }
 
                   if (message.type === "fp-form") {
+                    this.fpFormInputMessage = message;
+
                     this.showMessages = false;
+                    this.showFullPageFormInput = true;
                   }
 
                   if (message.type === "fp-rich") {
+                    this.fpRichInputMessage = message;
+
                     this.showMessages = false;
+                    this.showFullPageRichInput = true;
                   }
 
                   if (message.type === "longtext") {
