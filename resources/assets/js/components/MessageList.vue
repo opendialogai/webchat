@@ -85,8 +85,9 @@ export default {
 
           let i = 0;
           const scrollInterval = setInterval(() => {
-            this.$refs.scrollList.scrollTop =
-              this.$refs.scrollList.scrollTop + scrollStep;
+            if (this.$refs.scrollList) {
+              this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollTop + scrollStep;
+            }
             i = i + 1;
             if (i == 15) clearInterval(scrollInterval);
           }, 30);

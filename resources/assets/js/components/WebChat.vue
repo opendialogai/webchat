@@ -27,6 +27,8 @@
         :is-open="isOpen"
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
+        :on-full-page-form-input-submit="onFullPageFormInputSubmit"
+        :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
         :open="openChat"
         :on-button-click="onButtonClick"
@@ -39,6 +41,8 @@
         :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
         :show-long-text-input="showLongTextInput"
+        :show-full-page-form-input="showFullPageFormInput"
+        :show-full-page-rich-input="showFullPageRichInput"
         :show-messages="showMessages"
         :max-input-characters="maxInputCharacters"
         :button-text="buttonText"
@@ -47,6 +51,8 @@
         :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
+        :fp-form-input-message="fpFormInputMessage"
+        :fp-rich-input-message="fpRichInputMessage"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
       />
@@ -149,6 +155,8 @@ export default {
       buttonText: "Submit",
       confirmationMessage: null,
       contentEditable: false,
+      fpFormInputMessage: {},
+      fpRichInputMessage: {},
       headerHeight: 0,
       headerText: "",
       id: "",
@@ -159,6 +167,8 @@ export default {
       messageList: [],
       placeholder: "Enter your message",
       showLongTextInput: false,
+      showFullPageFormInput: false,
+      showFullPageRichInput: false,
       showMessages: true,
       showTypingIndicator: false,
       users: [],
@@ -316,6 +326,8 @@ export default {
         this.headerText = "";
         this.maxInputCharacters = 0;
         this.showLongTextInput = false;
+        this.showFullPageFormInput = false;
+        this.showFullPageRichInput = false;
         this.showMessages = true;
         this.messageList.push(newMsg);
       }
@@ -427,6 +439,14 @@ export default {
                       this.contentEditable = !message.data.disable_text;
                     }
 
+                    if (message.type === "fp-form") {
+                      this.showFullPageFormInputMessage(message);
+                    }
+
+                    if (message.type === "fp-rich") {
+                      this.showFullPageRichInputMessage(message);
+                    }
+
                     if (!this.hideTypingIndicatorOnInternalMessages) {
                       if (i < response.data.length - 1) {
                         this.$nextTick(() => {
@@ -484,6 +504,14 @@ export default {
                     lastMessage.type = message.type;
                     lastMessage.data = message.data;
 
+                    if (message.type === "fp-form") {
+                      this.showFullPageFormInputMessage(message);
+                    }
+
+                    if (message.type === "fp-rich") {
+                      this.showFullPageRichInputMessage(message);
+                    }
+
                     this.contentEditable = !message.data.disable_text;
                   }, this.messageDelay);
                 } else {
@@ -531,6 +559,14 @@ export default {
 
                   if (message.data) {
                     this.contentEditable = !message.data.disable_text;
+                  }
+
+                  if (message.type === "fp-form") {
+                    this.showFullPageFormInputMessage(message);
+                  }
+
+                  if (message.type === "fp-rich") {
+                    this.showFullPageRichInputMessage(message);
                   }
 
                   if (message.type === "longtext") {
@@ -639,6 +675,14 @@ export default {
       this.sendMessage(msgToSend);
       this.placeholder = "Write a reply";
     },
+    onFullPageFormInputSubmit(data) {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onFormButtonClick(data, msg);
+    },
+    onFullPageRichInputSubmit(button) {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onButtonClick(button, msg);
+    },
     openChat() {},
     async onButtonClick(button, msg) {
       if (msg.data.external) {
@@ -667,10 +711,6 @@ export default {
           window.open(button.link, "_parent");
         }
         return;
-      }
-
-      if (msg.data.clear_after_interaction) {
-        this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
       }
 
       if (!this.isExpand) {
@@ -933,6 +973,18 @@ export default {
           });
         }
       }
+    },
+    showFullPageFormInputMessage(message) {
+      this.fpFormInputMessage = message;
+
+      this.showMessages = false;
+      this.showFullPageFormInput = true;
+    },
+    showFullPageRichInputMessage(message) {
+      this.fpRichInputMessage = message;
+
+      this.showMessages = false;
+      this.showFullPageRichInput = true;
     },
     createUuid() {
       const uuid = this.$uuid.v4();

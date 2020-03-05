@@ -26,7 +26,31 @@
       :onListButtonClick="onListButtonClick"
       :onLinkClick="onLinkClick"
     />
-    <template v-if="!showLongTextInput">
+
+    <template v-if="showLongTextInput">
+      <LongTextUserInput
+        :headerText="headerText"
+        :maxInputCharacters="maxInputCharacters"
+        :buttonText="buttonText"
+        :confirmationMessage="confirmationMessage"
+        :onSubmit="onUserInputSubmit"
+        :placeholder="placeholder"
+        :initialText="initialText"
+        :colors="colors" />
+    </template>
+    <template v-else-if="showFullPageFormInput">
+      <FullPageFormInput
+        :message="fpFormInputMessage"
+        :onSubmit="onFullPageFormInputSubmit"
+        :colors="colors" />
+    </template>
+    <template v-else-if="showFullPageRichInput">
+      <FullPageRichInput
+        :message="fpRichInputMessage"
+        :onSubmit="onFullPageRichInputSubmit"
+        :colors="colors" />
+    </template>
+    <template v-else>
       <UserInput
         :contentEditable="contentEditable"
         :showEmoji="showEmoji"
@@ -39,17 +63,6 @@
         :placeholder="placeholder"
         :colors="colors" />
     </template>
-    <template v-else>
-      <LongTextUserInput
-        :headerText="headerText"
-        :maxInputCharacters="maxInputCharacters"
-        :buttonText="buttonText"
-        :confirmationMessage="confirmationMessage"
-        :onSubmit="onUserInputSubmit"
-        :placeholder="placeholder"
-        :initialText="initialText"
-        :colors="colors" />
-    </template>
   </div>
 </template>
 
@@ -57,6 +70,8 @@
 import Header from './Header.vue'
 import MessageList from './MessageList.vue'
 import UserInput from './UserInput.vue'
+import FullPageFormInput from './FullPageFormInput.vue'
+import FullPageRichInput from './FullPageRichInput.vue'
 import LongTextUserInput from './LongTextUserInput.vue'
 
 export default {
@@ -64,6 +79,8 @@ export default {
     Header,
     MessageList,
     UserInput,
+    FullPageFormInput,
+    FullPageRichInput,
     LongTextUserInput
   },
   props: {
@@ -74,6 +91,14 @@ export default {
     fullScreen: {
       type: Boolean,
       default: false
+    },
+    fpFormInputMessage: {
+      type: Object,
+      default: () => {}
+    },
+    fpRichInputMessage: {
+      type: Object,
+      default: () => {}
     },
     showEmoji: {
       type: Boolean,
@@ -92,6 +117,14 @@ export default {
       required: true
     },
     onUserInputSubmit: {
+      type: Function,
+      required: true
+    },
+    onFullPageFormInputSubmit: {
+      type: Function,
+      required: true
+    },
+    onFullPageRichInputSubmit: {
       type: Function,
       required: true
     },
@@ -151,6 +184,14 @@ export default {
       type: Boolean,
       default: () => false
     },
+    showFullPageFormInput: {
+      type: Boolean,
+      default: () => false
+    },
+    showFullPageRichInput: {
+      type: Boolean,
+      default: () => false
+    },
     showMessages: {
       type: Boolean,
       default: () => true
@@ -180,8 +221,8 @@ export default {
       required: true
     },
     initialText: {
-        type: String,
-        default: null
+      type: String,
+      default: null
     }
   },
   data() {

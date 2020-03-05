@@ -3,6 +3,8 @@
     <ChatWindow
       :messageList="messageList"
       :onUserInputSubmit="onMessageWasSent"
+      :onFullPageFormInputSubmit="onFullPageFormInputSubmit"
+      :onFullPageRichInputSubmit="onFullPageRichInputSubmit"
       :agentProfile="agentProfile"
       :isOpen="isOpen"
       :isExpand="isExpand"
@@ -21,6 +23,8 @@
       :colors="colors"
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :showLongTextInput="showLongTextInput"
+      :showFullPageFormInput="showFullPageFormInput"
+      :showFullPageRichInput="showFullPageRichInput"
       :showMessages="showMessages"
       :maxInputCharacters="maxInputCharacters"
       :headerText="headerText"
@@ -28,6 +32,8 @@
       :confirmationMessage="confirmationMessage"
       :initialText="initialText"
       :fullScreen="fullScreen"
+      :fpFormInputMessage="fpFormInputMessage"
+      :fpRichInputMessage="fpRichInputMessage"
     />
   </div>
 </template>
@@ -76,6 +82,14 @@ export default {
       type: Function,
       required: true
     },
+    onFullPageFormInputSubmit: {
+      type: Function,
+      required: true
+    },
+    onFullPageRichInputSubmit: {
+      type: Function,
+      required: true
+    },
     messageList: {
       type: Array,
       default: () => []
@@ -96,9 +110,25 @@ export default {
       type: Boolean,
       default: () => false
     },
+    showFullPageFormInput: {
+      type: Boolean,
+      default: () => false
+    },
+    showFullPageRichInput: {
+      type: Boolean,
+      default: () => false
+    },
     showMessages: {
       type: Boolean,
       default: () => true
+    },
+    fpFormInputMessage: {
+      type: Object,
+      default: () => {}
+    },
+    fpRichInputMessage: {
+      type: Object,
+      default: () => {}
     },
     maxInputCharacters: {
       type: Number,
