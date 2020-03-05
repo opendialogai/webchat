@@ -1,5 +1,5 @@
 <template>
-  <div class="message-list" ref="scrollList" :style="{backgroundColor: colors.messageList.bg}">
+  <div class="message-list" ref="scrollList" :style="{'--messageList-bkg': colors.messageList.bg}">
     <Message
       v-for="(message, idx) in messages"
       :message="message"
@@ -85,8 +85,9 @@ export default {
 
           let i = 0;
           const scrollInterval = setInterval(() => {
-            this.$refs.scrollList.scrollTop =
-              this.$refs.scrollList.scrollTop + scrollStep;
+            if (this.$refs.scrollList) {
+              this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollTop + scrollStep;
+            }
             i = i + 1;
             if (i == 15) clearInterval(scrollInterval);
           }, 30);
@@ -114,5 +115,9 @@ export default {
 </script>
 
 <style scoped>
+.message-list {
+    /* background-color: yellow; */
+  background-color: var(--messageList-bkg);
 
+}
 </style>

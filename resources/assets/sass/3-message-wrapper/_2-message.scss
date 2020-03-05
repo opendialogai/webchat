@@ -81,6 +81,7 @@
 // message type wrapper --- message type wrapper ---
 
 .mt-wrapper {
+
   margin: 0 auto;
   max-width: 700px;
   width: calc(100% - 50px);
@@ -98,6 +99,8 @@
   z-index: 0;
 }
 
+
+// special wrapper for author message (avatar) only
 .mt-wrapper-author {
   z-index: 1;
 }
@@ -110,14 +113,14 @@
 
 .mt {
   padding: 25px;
-  background-color: white;
+
   border-radius: 30px;
   box-shadow: none;
 
   max-width: 90%;
   margin-bottom: 30px;
   line-height: 1.6;
-  font-size: 15px;
+  font-size: 14px;
   @media (min-width: $media-sml){
     font-size: 16px;
   }
