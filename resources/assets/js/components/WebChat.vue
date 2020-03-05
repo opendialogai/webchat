@@ -170,6 +170,7 @@ export default {
       showTypingIndicator: false,
       users: [],
       userName: "",
+      chatbotAvatar: this.chatbotAvatarPath,
       uuid: this.userUuid,
       chatMode: "webchat"
     };
@@ -237,6 +238,8 @@ export default {
 
       if (newValue.mode === 'custom') {
         this.setupCustomMode();
+      } else if (newValue.mode === 'webchat') {
+        this.setupWebchatMode();
       }
     }
   },
@@ -665,7 +668,7 @@ export default {
         };
 
         if (this.useBotAvatar) {
-          authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+          authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatar}" />`;
         }
 
         return authorMsg;
@@ -726,7 +729,14 @@ export default {
     },
     async setupCustomMode() {
       this.contentEditable = true;
+      this.chatbotAvatar = "/vendor/webchat/images/agent.svg";
 
+      await chatService.initialiseChat(this);
+    },
+    async setupWebchatMode() {
+      this.contentEditable = false;
+      this.chatbotAvatar = this.chatbotAvatarPath;
+      
       await chatService.initialiseChat(this);
     }
   }
