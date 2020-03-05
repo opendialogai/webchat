@@ -84,22 +84,21 @@ ConversiveClient.prototype.getSession = function(uuid) {
   });
 };
 
-ConversiveClient.prototype.sendAutoText = async function(uuid, sessionToken) {
+ConversiveClient.prototype.sendAutoText = async function(sessionToken) {
   return this.makeRequest("sendAutoText", {
     b: "_startup",
-    t: await this.getSessionId(),
+    t: sessionToken,
     rsn: this.requestSerialNumber,
   });
 };
 
 ConversiveClient.prototype.getMessagesAfter = async function(sessionToken) {
   return this.makeRequest("getMessagesAfter", {
-    t: await this.getSessionId(),
+    t: sessionToken,
     sn: this.getSerialNumber(),
   })
     .then((response) => {
       let messages = response.m;
-      console.log("Received " + messages.length + " messages");
       if (messages.length > 0) {
         let finalMessage = messages[messages.length - 1];
         this.setSerialNumber(finalMessage.sn);
