@@ -6,6 +6,7 @@ let ConversiveClient = function() {
   this.version = 2;
   this.siteCode = "yuk1mj2spx61";
   this.requestSerialNumber = 0;
+  this.serialNumber = 0;
 };
 
 ConversiveClient.prototype.getServerBindId = function () {
@@ -65,6 +66,14 @@ ConversiveClient.prototype.getSessionId = async function(uuid) {
   }
 };
 
+ConversiveClient.prototype.getSerialNumber = function() {
+  return this.serialNumber;
+};
+
+ConversiveClient.prototype.setSerialNumber = function(number) {
+  this.serialNumber = number;
+};
+
 ConversiveClient.prototype.getSession = function(uuid) {
   return this.makeRequest("getSession", {
     v: this.version,
@@ -81,6 +90,23 @@ ConversiveClient.prototype.sendAutoText = async function(uuid, sessionToken) {
     t: await this.getSessionId(),
     rsn: this.requestSerialNumber,
   });
+};
+
+ConversiveClient.prototype.getMessagesAfter = async function(sessionToken) {
+  return this.makeRequest("getMessagesAfter", {
+    t: await this.getSessionId(),
+    sn: this.getSerialNumber(),
+  })
+    .then((response) => {
+      let messages = response.m;
+      console.log("Received " + messages.length + " messages");
+      if (messages.length > 0) {
+        let finalMessage = messages[messages.length - 1];
+        this.setSerialNumber(finalMessage.sn);
+      }
+
+      return messages;
+    });
 };
 
 export default ConversiveClient;

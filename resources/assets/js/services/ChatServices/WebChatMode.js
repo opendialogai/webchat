@@ -295,4 +295,6 @@ WebChatMode.prototype.initialiseChat = function(webChatComponent) {
   return new Promise((resolve, reject) => resolve());
 };
 
+WebChatMode.prototype.destroyChat = function(webChatComponent) {};
+
 export default WebChatMode;

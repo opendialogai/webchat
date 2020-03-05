@@ -45,4 +45,8 @@ ChatService.prototype.initialiseChat = function(webChatComponent) {
   return this.getActiveService().initialiseChat(webChatComponent);
 };
 
+ChatService.prototype.destroyChat = function(webChatComponent) {
+  return this.getActiveService().destroyChat(webChatComponent);
+};
+
 export default new ChatService();

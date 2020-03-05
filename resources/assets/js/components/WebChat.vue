@@ -219,14 +219,23 @@ export default {
       }
     },
     modeData(newValue, oldValue) {
+      if (oldValue.mode === 'custom') {
+        this.destroyCustomMode();
+      } else if (oldValue.mode === 'webchat') {
+        this.destroyWebchatMode();
+      }
+
       chatService.setModeData(newValue);
 
       if (oldValue.mode === "custom" && newValue.mode === "webchat") {
         // Convert the Hand-to-Human message to a text message
         let filteredMessageList = this.messageList.filter((message) => message.mode === "webchat" && message.type === 'hand-to-human');
         let handToHumanMessage = filteredMessageList[filteredMessageList.length-1];
-        handToHumanMessage.type = 'text';
-        handToHumanMessage.data.text = handToHumanMessage.data.elements.text;
+
+        if (handToHumanMessage) {
+          handToHumanMessage.type = 'text';
+          handToHumanMessage.data.text = handToHumanMessage.data.elements.text;
+        }
 
         this.sendMessage({
           type: "trigger",
@@ -727,6 +736,12 @@ export default {
     setChatMode(data) {
       this.$emit('setChatMode', data);
     },
+    destroyCustomMode() {
+      chatService.destroyChat(this);
+    },
+    destroyWebchatMode() {
+      chatService.destroyChat(this);
+    },
     async setupCustomMode() {
       this.contentEditable = true;
       this.chatbotAvatar = "/vendor/webchat/images/agent.svg";
@@ -736,7 +751,7 @@ export default {
     async setupWebchatMode() {
       this.contentEditable = false;
       this.chatbotAvatar = this.chatbotAvatarPath;
-      
+
       await chatService.initialiseChat(this);
     }
   }
