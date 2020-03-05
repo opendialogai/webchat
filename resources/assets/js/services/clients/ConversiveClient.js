@@ -53,6 +53,22 @@ ConversiveClient.prototype.makeRequest = function(apiFunction, options) {
     });
 };
 
+ConversiveClient.prototype.getSessionId = async function(uuid) {
+  let modeDataInSession = SessionStorageMixin.methods.getModeDataInSession();
+
+  if (modeDataInSession.options.sessionId) {
+    return Promise.resolve(modeDataInSession.options.sessionId);
+  } else {
+    return this.getSession(uuid).then((response) => {
+      let sessionId = response.t;
+      modeDataInSession = SessionStorageMixin.methods.getModeDataInSession();
+      modeDataInSession.options.sessionId = sessionId;
+      SessionStorageMixin.methods.setModeDataInSession(modeDataInSession);
+      return sessionId;
+    });
+  }
+};
+
 ConversiveClient.prototype.getSession = function(uuid) {
   return this.makeRequest("getSession", { uuid });
 };

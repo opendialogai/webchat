@@ -38,7 +38,7 @@ ChatService.prototype.sendResponseSuccess = function(response, webChatComponent)
 };
 
 ChatService.prototype.sendResponseError = function(error, webChatComponent) {
-  return this.getActiveService().sendResponseError(error);
+  return this.getActiveService().sendResponseError(error, webChatComponent);
 };
 
 ChatService.prototype.initialiseChat = function(webChatComponent) {
