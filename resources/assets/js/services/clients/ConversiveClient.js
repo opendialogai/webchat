@@ -76,7 +76,6 @@ ConversiveClient.prototype.getSession = function(uuid) {
 };
 
 ConversiveClient.prototype.sendAutoText = async function(uuid, sessionToken) {
-  console.log(uuid, sessionToken);
   return this.makeRequest("sendAutoText", {
     b: "_startup",
     t: await this.getSessionId(),
