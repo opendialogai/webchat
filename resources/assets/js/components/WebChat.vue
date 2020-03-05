@@ -384,7 +384,7 @@ export default {
         // Need to add error handling here
         axios.post("/incoming/webchat", webchatMessage).then(
           response => {
-            if (newMsg.type === "chat_open") {
+            if (newMsg.type === "chat_open" && !newMsg.data.open) {
               if (response.data instanceof Array) {
                 response.data.forEach((message) => {
                   if (message.data && message.data.text && this.ctaText.length < 2) {
@@ -397,9 +397,7 @@ export default {
                   this.ctaText.push(message.data.text);
                 }
               }
-            }
-
-            if (response.data instanceof Array) {
+            } else if (response.data instanceof Array) {
               response.data.forEach((message, i) => {
                 if (!message) {
                   this.contentEditable = true;
@@ -821,11 +819,6 @@ export default {
       this.isOpen = !this.isOpen;
       this.$emit("toggleChatOpen", this.headerHeight);
     },
-    chatOpenCallback() {
-      let callbackId = false;
-      callbackId = (this.isOpen) ? this.openIntent : this.closedIntent;
-      return callbackId;
-    },
     wildcardToRegExp(string) {
       return new RegExp(
         `^${string
@@ -845,17 +838,22 @@ export default {
         this.checkHideChat();
       }
 
-      this.sendChatOpenMessage();
+      this.sendChatOpenMessage(this.isOpen);
+
+      setTimeout(() => {
+        this.sendChatOpenMessage(!this.isOpen);
+      }, 3000);
     },
-    sendChatOpenMessage() {
-      const callback = this.chatOpenCallback();
+    sendChatOpenMessage(open = true) {
+      const callback = (open) ? this.openIntent : this.closedIntent;
 
       if (callback) {
         const message = {
           type: "chat_open",
           callback_id: callback,
           data: {
-            value: this.parentUrl
+            value: this.parentUrl,
+            open
           }
         };
 
