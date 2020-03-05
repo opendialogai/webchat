@@ -36,7 +36,6 @@ export default {
       type: Object,
       required: true
     },
-
     colors: {
       type: Object,
       required: true
@@ -53,7 +52,6 @@ export default {
       type: Function,
       required: true
     }
-
   },
   methods: {
     _handleClick(button) {
@@ -98,7 +96,7 @@ export default {
   background-color: var(--button-hover) !important;
 }
 
-.sc-message--button button:last-child {
+.sc-message--rich button:last-child {
   margin-right: 0;
 }
 
