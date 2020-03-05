@@ -58,6 +58,14 @@ ConversiveMode.prototype.handleNewMessages = function (messages, webChatComponen
       }
     });
   });
+
+  if (filteredMessages.length > 0) {
+    let lastMessage = filteredMessages[filteredMessages.length-1];
+
+    let updatedModeData = webChatComponent.modeData;
+    updatedModeData.options.teamName = lastMessage.n;
+    webChatComponent.setChatMode(updatedModeData);
+  }
 };
 
 export default ConversiveMode;

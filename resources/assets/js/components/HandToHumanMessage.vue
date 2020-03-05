@@ -30,7 +30,8 @@
       this.$emit('setChatMode', {
         mode: 'custom',
         options: {
-          'callback_id': this.data.elements.callback_id
+          callback_id: this.data.elements.callback_id,
+          teamName: ''
         }
       });
     }

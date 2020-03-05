@@ -196,11 +196,14 @@
     return {}
   },
   watch: {
-    modeData(newValue, oldValue) {
-      if (newValue.mode === 'custom') {
-        this.agentProfile.teamName = 'You are now speaking to [AGENT_NAME]';
-      } else {
+    "modeData.mode": function(newValue, oldValue) {
+      if (newValue.mode !== 'custom') {
         this.agentProfile.teamName = '';
+      }
+    },
+    "modeData.options.teamName": function(newValue, oldValue) {
+      if (newValue) {
+        this.agentProfile.teamName = 'You are now speaking to ' + newValue;
       }
     }
   },
