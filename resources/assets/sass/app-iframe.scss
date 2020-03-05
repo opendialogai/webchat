@@ -1,6 +1,30 @@
 // This is injected early on, before...  vendor-local/webchat/resources/views/webchat-iframe.blade.php
 // This is styling for the iframe chat box
 
+.v-select .vs__dropdown-toggle {
+  border: 1px solid orange;
+  background: blue;
+}
+
+.vs__dropdown-menu {
+  border: 1px solid orange;
+  background: blue;
+}
+
+.v-select .vs__search::placeholder,
+.v-select .vs__dropdown-toggle,
+.v-select .vs__dropdown-menu {
+  background: #dfe5fb;
+  border: none;
+  color: #394066;
+  text-transform: lowercase;
+  font-variant: small-caps;
+}
+
+.v-select .vs__clear,
+.v-select .vs__open-indicator {
+  fill: #394066;
+}
 
 iframe#opendialog-chatwindow {
   position: fixed;
@@ -28,7 +52,7 @@ iframe#opendialog-chatwindow {
 // .chat-window will fill this up (width: 100%)
 iframe#opendialog-chatwindow.expanded {
   //   width: 400px;
-//   width: 463px;
+  //   width: 463px;
 }
 
 iframe.open#opendialog-chatwindow {
@@ -94,32 +118,7 @@ iframe.open#opendialog-chatwindow {
   }
 }
 
-
-
 // Welcome
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // What is this 🤔 I dunno?
 

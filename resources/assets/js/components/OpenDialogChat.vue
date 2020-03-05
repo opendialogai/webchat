@@ -180,6 +180,12 @@ export default {
           border: "#575759",
           hoverBorder: "#575759"
         },
+
+        form: {
+          labelTextColor: "#575759",
+          formHighlightColor: "#da291c",
+          inputBorderColor: "#979797"
+        },
         minimizeButton: {
           bg: "#000000"
         }
@@ -799,8 +805,6 @@ export default {
         if (window.self !== window.top) {
           if (!this.isOpen) {
             if (headerHeight) {
-
-
               window.parent.postMessage({ height: `140px` }, "*");
             } else if (this.commentsEnabled) {
               const height = document.querySelector(".nav").offsetHeight;
