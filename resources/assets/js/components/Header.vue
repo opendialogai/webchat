@@ -47,9 +47,6 @@
 
 <script>
 export default {
-  //   methods: {},
-  //   beforeMount() {},
-
   mounted() {
     setTimeout(() => {
       this.$refs.headerCta.classList.add('header-cta-expand')
