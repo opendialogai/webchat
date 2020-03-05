@@ -23,7 +23,7 @@ ConversiveMode.prototype.sendResponseError = function(error, webChatComponent) {
 ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
   return this.client.getSessionId(webChatComponent.uuid)
     .then((sessionToken) => {
-      return this.client.sendAutoText(webChatComponent.uuid, sessionToken);
+      return this.client.sendAutoText(sessionToken);
     })
     .then((response) => {
       return this.client.getSessionId(webChatComponent.uuid);
@@ -46,6 +46,17 @@ ConversiveMode.prototype.destroyChat = function(webChatComponent) {
 ConversiveMode.prototype.handleNewMessages = function (messages, webChatComponent) {
   let filteredMessages = messages.filter((message) => message.source === 2 && message.type === 1);
   console.log("Received " + filteredMessages.length + " text messages from agent");
+
+  if (filteredMessages.length > 0) {
+    webChatComponent.messageList.push(webChatComponent.newAuthorMessage({
+      author: "them",
+      data: {
+        time: (new Date()).toLocaleTimeString(),
+        date: (new Date()).toLocaleDateString(),
+      }
+    }));
+  }
+
   filteredMessages.forEach((message) => {
     webChatComponent.messageList.push({
       author: "them",
@@ -53,8 +64,8 @@ ConversiveMode.prototype.handleNewMessages = function (messages, webChatComponen
       type: "text",
       data: {
         text: message.b,
-        time: "12:03",
-        date: "2020-03-05"
+        time: (new Date()).toLocaleTimeString(),
+        date: (new Date()).toLocaleDateString(),
       }
     });
   });
