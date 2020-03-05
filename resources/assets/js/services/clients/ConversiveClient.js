@@ -5,7 +5,7 @@ let ConversiveClient = function() {
   this.baseUrl = "https://avayatest.conversive.com";
   this.version = 2;
   this.siteCode = "yuk1mj2spx61";
-  this.requestedSerialNumber = 0;
+  this.requestSerialNumber = 0;
 };
 
 ConversiveClient.prototype.getServerBindId = function () {
@@ -30,14 +30,10 @@ ConversiveClient.prototype.buildUrl = function(endpoint, parameters) {
 
 ConversiveClient.prototype.makeRequest = function(apiFunction, options) {
   let data = {
-    v: this.version,
-    sc: this.siteCode,
-    n: "",
-    tc: options.uuid,
-    iad: false,
+    ...options,
     f: apiFunction,
   };
-  let encodedData = Object.keys(data).map((key) => key + "=" + data[key]).join("&");
+  let encodedData = Object.keys(data).map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])).join("&");
 
   return axios.post(this.buildUrl("/CLA_API/FrontendChatAPI.aspx", {
     sbid: this.getServerBindId()
@@ -48,7 +44,7 @@ ConversiveClient.prototype.makeRequest = function(apiFunction, options) {
     }
   })
     .then((response) => {
-      this.requestedSerialNumber++;
+      this.requestSerialNumber++;
       return Promise.resolve(response.data);
     });
 };
@@ -70,12 +66,22 @@ ConversiveClient.prototype.getSessionId = async function(uuid) {
 };
 
 ConversiveClient.prototype.getSession = function(uuid) {
-  return this.makeRequest("getSession", { uuid });
+  return this.makeRequest("getSession", {
+    v: this.version,
+    sc: this.siteCode,
+    n: "",
+    tc: uuid,
+    iad: false,
+  });
 };
 
-ConversiveClient.prototype.sendAutoText = function(uuid, sessionToken) {
+ConversiveClient.prototype.sendAutoText = async function(uuid, sessionToken) {
   console.log(uuid, sessionToken);
-  // return this.makeRequest("sendAutoText", { uuid, sessionToken });
+  return this.makeRequest("sendAutoText", {
+    b: "_startup",
+    t: await this.getSessionId(),
+    rsn: this.requestSerialNumber,
+  });
 };
 
 export default ConversiveClient;
