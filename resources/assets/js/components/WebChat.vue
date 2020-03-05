@@ -53,6 +53,7 @@
         :initial-text="initialText"
         :fp-form-input-message="fpFormInputMessage"
         :fp-rich-input-message="fpRichInputMessage"
+        :cta-text="ctaText"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
       />
@@ -163,6 +164,7 @@ export default {
       buttonText: "Submit",
       confirmationMessage: null,
       contentEditable: false,
+      ctaText: [],
       fpFormInputMessage: {},
       fpRichInputMessage: {},
       headerHeight: 0,
@@ -317,10 +319,14 @@ export default {
       // Give the message an id.
       newMsg.id = this.$uuid.v4();
 
-      if (newMsg.type === "chat_open" && this.userInfo) {
-        Object.keys(this.userInfo).forEach(key => {
-          newMsg.user[key] = this.userInfo[key];
-        });
+      if (newMsg.type === "chat_open") {
+        this.ctaText = [];
+
+        if (this.userInfo) {
+          Object.keys(this.userInfo).forEach(key => {
+            newMsg.user[key] = this.userInfo[key];
+          });
+        }
       }
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
@@ -378,6 +384,21 @@ export default {
         // Need to add error handling here
         axios.post("/incoming/webchat", webchatMessage).then(
           response => {
+            if (newMsg.type === "chat_open") {
+              if (response.data instanceof Array) {
+                response.data.forEach((message) => {
+                  if (message.data && message.data.text && this.ctaText.length < 2) {
+                    this.ctaText.push(message.data.text);
+                  }
+                });
+              } else if (response.data) {
+                const message = response.data;
+                if (message.data && message.data.text) {
+                  this.ctaText.push(message.data.text);
+                }
+              }
+            }
+
             if (response.data instanceof Array) {
               response.data.forEach((message, i) => {
                 if (!message) {
@@ -800,24 +821,9 @@ export default {
       this.isOpen = !this.isOpen;
       this.$emit("toggleChatOpen", this.headerHeight);
     },
-    workoutCallback() {
-      // Default
-      let callbackId = "WELCOME";
-      const urlParams = new URLSearchParams(window.location.search);
-
-      // If the url has a callback id present, use that
-      if (urlParams.has("callback_id")) {
-        callbackId = urlParams.get("callback_id");
-      } else if (this.openIntent) {
-        callbackId = this.openIntent;
-      } else {
-        // Check if the url matches one in the callback map
-        this.callbackMap.forEach((url, idx) => {
-          if (this.parentUrl.match(this.wildcardToRegExp(url))) {
-            callbackId = this.callbackMap[idx];
-          }
-        });
-      }
+    chatOpenCallback() {
+      let callbackId = false;
+      callbackId = (this.isOpen) ? this.openIntent : this.closedIntent;
       return callbackId;
     },
     wildcardToRegExp(string) {
@@ -839,15 +845,22 @@ export default {
         this.checkHideChat();
       }
 
-      const message = {
-        type: "chat_open",
-        callback_id: this.workoutCallback(),
-        data: {
-          value: this.parentUrl
-        }
-      };
+      this.sendChatOpenMessage();
+    },
+    sendChatOpenMessage() {
+      const callback = this.chatOpenCallback();
 
-      this.sendMessage(message);
+      if (callback) {
+        const message = {
+          type: "chat_open",
+          callback_id: callback,
+          data: {
+            value: this.parentUrl
+          }
+        };
+
+        this.sendMessage(message);
+      }
     },
     getChatHistory() {
       this.loading = true;
