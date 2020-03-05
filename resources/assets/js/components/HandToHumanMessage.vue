@@ -1,9 +1,4 @@
 <template>
-    <div
-      class="mt mt-text"
-    >
-      <span>[Hand-to-Human]</span>
-    </div>
 </template>
 
 <script>
