@@ -44,19 +44,22 @@ ConversiveMode.prototype.destroyChat = function(webChatComponent) {
 };
 
 ConversiveMode.prototype.handleNewMessages = function (messages, webChatComponent) {
-  let filteredMessages = messages.filter((message) => message.source === 2 && message.type === 1);
-
-  if (filteredMessages.length > 0) {
-    webChatComponent.messageList.push(webChatComponent.newAuthorMessage({
-      author: "them",
-      data: {
-        time: (new Date()).toLocaleTimeString(),
-        date: (new Date()).toLocaleDateString(),
-      }
-    }));
+  let textMessages = messages.filter((message) => message.source === 2 && message.type === 1);
+  if (textMessages.length > 0) {
+    this.handleNewTextMessages(textMessages, webChatComponent);
   }
+};
 
-  filteredMessages.forEach((message) => {
+ConversiveMode.prototype.handleNewTextMessages = function(textMessages, webChatComponent) {
+  webChatComponent.messageList.push(webChatComponent.newAuthorMessage({
+    author: "them",
+    data: {
+      time: (new Date()).toLocaleTimeString(),
+      date: (new Date()).toLocaleDateString(),
+    }
+  }));
+
+  textMessages.forEach((message) => {
     webChatComponent.messageList.push({
       author: "them",
       mode: "custom",
@@ -69,13 +72,10 @@ ConversiveMode.prototype.handleNewMessages = function (messages, webChatComponen
     });
   });
 
-  if (filteredMessages.length > 0) {
-    let lastMessage = filteredMessages[filteredMessages.length-1];
-
-    let updatedModeData = webChatComponent.modeData;
-    updatedModeData.options.teamName = lastMessage.n;
-    webChatComponent.setChatMode(updatedModeData);
-  }
+  let lastMessage = textMessages[textMessages.length-1];
+  let updatedModeData = webChatComponent.modeData;
+  updatedModeData.options.teamName = lastMessage.n;
+  webChatComponent.setChatMode(updatedModeData);
 };
 
 export default ConversiveMode;
