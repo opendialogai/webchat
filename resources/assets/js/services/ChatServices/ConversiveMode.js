@@ -21,7 +21,13 @@ ConversiveMode.prototype.sendResponseError = function(error, webChatComponent) {
 };
 
 ConversiveMode.prototype.initialiseChat = function(webChatComponent) {
-  return this.client.getSession()
+  return this.client.getSession(webChatComponent.uuid)
+    .then((response) => {
+      console.log(response);
+      let sessionToken = response.t;
+
+      return this.client.sendAutoText(webChatComponent.uuid, sessionToken);
+    })
     .then((response) => {
       console.log(response);
     })
