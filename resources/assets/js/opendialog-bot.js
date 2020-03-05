@@ -145,52 +145,18 @@ function openChatWindow(url, div = null) {
 }
 
 /**
- * Draws the open/close icons on screen along with it's listener
- */
-function drawOpenCloseIcons(url) {
-    const div = document.createElement('div');
-    div.setAttribute('id', 'opendialog-bot');
-    document.body.appendChild(div);
-
-    const openIcon = document.createElement('img');
-    openIcon.classList.add('closed-icon');
-    openIcon.setAttribute('src', `${url}/images/vendor/webchat/images/logo-no-bg.svg`);
-
-    const closeIcon = document.createElement('img');
-    closeIcon.classList.add('open-icon');
-    closeIcon.setAttribute('src', `${url}/images/vendor/webchat/images/close-icon.png`);
-
-    div.addEventListener('click', () => {
-        const element = document.getElementById('opendialog-chatwindow');
-        if (!element) {
-            openChatWindow(url, div);
-        } else {
-            element.parentNode.removeChild(element);
-            div.classList.remove('opened');
-            document.body.classList.remove('chatbot-no-scroll');
-        }
-    }, false);
-
-    if (window.openDialogSettings.colours.iconBackground) {
-        div.style.background = window.openDialogSettings.colours.iconBackground;
-    }
-
-    if (window.openDialogSettings.colours.iconHoverBackground) {
-        const style = document.createElement('style');
-        style.innerHTML = `#opendialog-bot:hover { background: ${window.openDialogSettings.colours.iconHoverBackground} !important }`;
-        div.appendChild(style);
-    }
-
-    div.appendChild(openIcon);
-    div.appendChild(closeIcon);
-}
-
-/**
  * Gets the webchat settings from the database
  * @returns {Promise<any>}
  */
-async function getSettings(url) {
-    const response = await fetch(`${url}/webchat-config`);
+async function getSettings(url, userId = '') {
+    let configUrl = `${url}/webchat-config`;
+    if (userId) {
+        configUrl = `${configUrl}?user_id=${userId}`;
+    } else if (sessionStorage.uuid) {
+        configUrl = `${configUrl}?user_id=${sessionStorage.uuid}`;
+    }
+
+    const response = await fetch(configUrl);
     const json = await response.json();
     return json;
 }
@@ -237,8 +203,10 @@ function isValidPath() {
 
 if (window.openDialogSettings) {
     const { url } = window.openDialogSettings;
+    const userId = (window.openDialogSettings.user && window.openDialogSettings.user.email) ?
+        window.openDialogSettings.user.email : '';
 
-    getSettings(url).then((settings) => {
+    getSettings(url, userId).then((settings) => {
         mergeSettings(settings);
 
         const mobileWidth = (window.openDialogSettings.mobileWidth)
@@ -260,12 +228,21 @@ if (window.openDialogSettings) {
         if (isValidPath()) {
             addCssToPage(`${url}/vendor/webchat/css/app-iframe.css`);
 
-      drawOpenCloseIcons(url);
-      openChatWindow(url);
+            if (window.openDialogSettings.general.pageCssPath) {
+                addCssToPage(window.openDialogSettings.general.pageCssPath);
+            }
 
-      if (window.openDialogSettings.general.pageCssPath) {
-        addCssToPage(window.openDialogSettings.general.pageCssPath);
-      }
-    }
-  });
+            if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {
+                openChatWindow(url);
+            } else if ((window.openDialogSettings.general.open && window.innerWidth <= mobileWidth)
+                || settings.general.startMinimized) {
+                query = `${query}&hide=true`;
+                openChatWindow(url);
+
+                document.body.classList.remove('chatbot-no-scroll');
+            } else if (window.openDialogSettings.general.open) {
+                openChatWindow(url);
+            }
+        }
+    });
 }

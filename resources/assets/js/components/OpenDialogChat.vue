@@ -140,7 +140,7 @@ export default {
       canCloseChat: true,
       chatbotAvatarPath: "",
       chatbotName: "OD Bot",
-      closedIntent: '',
+      closedIntent: "",
       collectUserIp: true,
       colours: {
         header: {
@@ -204,7 +204,7 @@ export default {
       messageAnimation: false,
       messageDelay: 1000,
       newMessageIcon: "",
-      openIntent: '',
+      openIntent: "",
       parentUrl: "",
       pathInitialised: false,
       restartButtonCallback: "",
@@ -429,8 +429,10 @@ export default {
       });
     },
     initialiseSettings(customConfig) {
+      const userId = (customConfig.user && customConfig.user.email) ? customConfig.user.email : "";
+
       // Get default settings from the config endpoint.
-      this.getWebchatConfig()
+      this.getWebchatConfig(userId)
         .then(config => {
           this.setConfig(config);
           return true;
@@ -516,14 +518,13 @@ export default {
         this.cssProps = this.getCssProps();
       });
     },
-    async getWebchatConfig(url = "") {
-      let configUrl = url;
-      if (configUrl === "") {
-        configUrl = `${window.location.origin}/webchat-config`;
-      }
+    async getWebchatConfig(userId) {
+      let configUrl = `${window.location.origin}/webchat-config`;
 
-      if (sessionStorage.uuid) {
-        configUrl = `?user_id=${sessionStorage.uuid}`;
+      if (userId) {
+        configUrl = `${configUrl}?user_id=${userId}`;
+      } else if (sessionStorage.uuid) {
+        configUrl = `${configUrl}?user_id=${sessionStorage.uuid}`;
       }
 
       const response = await fetch(configUrl);
@@ -796,6 +797,10 @@ export default {
 
       if (config.newPathname !== undefined) {
         this.handleHistoryChange(config.newPathname);
+      }
+
+      if (!config.showMinimized && !this.isOpen) {
+        this.toggleChatOpen();
       }
 
       setTimeout(() => {
