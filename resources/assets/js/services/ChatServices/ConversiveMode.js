@@ -45,7 +45,6 @@ ConversiveMode.prototype.destroyChat = function(webChatComponent) {
 
 ConversiveMode.prototype.handleNewMessages = function (messages, webChatComponent) {
   let filteredMessages = messages.filter((message) => message.source === 2 && message.type === 1);
-  console.log("Received " + filteredMessages.length + " text messages from agent");
 
   if (filteredMessages.length > 0) {
     webChatComponent.messageList.push(webChatComponent.newAuthorMessage({
