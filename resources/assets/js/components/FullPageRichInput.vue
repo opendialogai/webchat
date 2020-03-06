@@ -1,31 +1,53 @@
 <template>
-  <div class="sc-full-page-rich-input--container" :style="{backgroundColor: colors.messageList.bg}">
-    <div class="sc-full-page-rich-input" :style="{color: colors.receivedMessage.text, backgroundColor: colors.receivedMessage.bg}">
-      <div class="sc-message--fp-rich--title">{{ message.data.title }}</div>
-      <div class="sc-message--fp-rich--subtitle">{{ message.data.subtitle }}</div>
-      <p class="sc-message--fp-rich--text" v-linkified>
+  <div
+    class="mt-fpri"
+    :style="{
+            '--background': colors.messageList.bg,
+            '--btn-bg': colors.button.bg,
+            '--btn-bg-hover': colors.button.hoverbg,
+            '--btn-color': colors.button.text,
+            '--btn-color-hover':  colors.button.hoverText,
+            '--btn-border-color':colors.button.border,
+            '--btn-border-color-hover':colors.button.hoverBorder }"
+  >
+    <div v-if="message.data.title">
+      <div class="mt-fpri__title">{{ message.data.title }}</div>
+    </div>
+    <div v-if="message.data.subtitle">
+      <div class="mt-fpri__subtitle">{{ message.data.subtitle }}</div>
+    </div>
+
+    <div v-if="message.data.text">
+      <p class="mt-fpri__text" v-linkified>
         <span v-html="message.data.text"></span>
       </p>
-
-      <template v-if="message.data.image">
-        <div class="sc-message--fp-rich--image">
-          <template v-if="message.data.image.url">
-            <a :href="message.data.image.url" :target="message.data.image.link_new_tab ? '_blank' : '_parent'"><img :src="message.data.image.src" /></a>
-          </template>
-          <template v-else>
-            <img :src="message.data.image.src" />
-          </template>
-        </div>
-      </template>
-
-      <template v-if="message.data.buttons.length">
-        <div class="sc-message--fp-rich--buttons">
-          <button v-for="(button, idx) in message.data.buttons" :key="idx" @click="_handleClick(button)" :style="{backgroundColor: colors.button.bg, color: colors.button.text, '--button-hover': colors.button.hoverbg}">
-            {{button.text}}
-          </button>
-        </div>
-      </template>
     </div>
+    <template v-if="message.data.image">
+      <div class="mt-fpri__image">
+        <template v-if="message.data.image.url">
+          <a
+            :href="message.data.image.url"
+            :target="message.data.image.link_new_tab ? '_blank' : '_parent'"
+          >
+            <img :src="message.data.image.src" />
+          </a>
+        </template>
+        <template v-else>
+          <img :src="message.data.image.src" />
+        </template>
+      </div>
+    </template>
+
+    <template v-if="message.data.buttons.length">
+      <div class="mt-fpri__buttons">
+        <button
+          v-for="(button, idx) in message.data.buttons"
+          :key="idx"
+          @click="_handleClick(button)"
+          :style="{backgroundColor: colors.button.bg, color: colors.button.text, '--button-hover': colors.button.hoverbg}"
+        >{{button.text}}</button>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -45,6 +67,7 @@ export default {
       required: true
     }
   },
+
   methods: {
     _handleClick(button) {
       this.onSubmit(button);
@@ -54,17 +77,96 @@ export default {
 </script>
 
 <style scoped>
-.sc-full-page-rich-input--container {
+.mt-fpri {
+  background-color: var(--background);
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 20px;
 }
 
-.sc-message--fp-rich {
+/* Title/Subtitle */
+
+.mt-fpri__title {
+  font-family: PlayfairDisplay;
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 1.5;
+  text-align: center;
+  color: #000000;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+.mt-fpri__subtitle {
+  margin: 0 0 20px 0;
+}
+
+.mt-fpri__text {
+  margin: 0 0 20px 0;
+}
+
+/* image */
+.mt-fpri__image {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* button */
+
+.mt-fpri__buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.mt-fpri__buttons button {
+  margin-bottom: 10px;
+  /* padding: 20px 30px; */
+  border: 1px solid;
+
+  font-size: 15px;
+
+  line-height: 1.33;
+
+  text-align: center;
+  color: #ffffff;
+
+  font-weight: normal;
+  cursor: pointer;
+
+  border: none;
+  outline: none;
+  position: relative;
+  transition: 0.4s;
+
+  width: 325px;
+  min-height: 61px;
+  border-radius: 34.5px;
+}
+
+.mt-fpri__buttons button {
+  background-color: var(--btn-bg);
+  color: var(--btn-color);
+  border: 2px solid var(--btn-border-color);
+}
+
+.mt-fpri__buttons button:hover {
+  background-color: var(--btn-bg-hover);
+  color: var(--btn-color-hover);
+  border: 2px solid var(--btn-border-color-hover);
+}
+
+/* .sc-message--fp-rich {
   background: #eaeaea;
   border-radius: 6px;
   padding: 0 12px;
   max-width: calc(100% - 40px);
-}
-
+  border: 1px solid blue;
+} */
+/*
 .sc-message--fp-rich .sc-message--fp-rich--text {
   font-weight: 400;
   font-size: 14px;
@@ -97,5 +199,5 @@ export default {
 
 .sc-message--fp-rich .sc-message--fp-rich--image img {
   max-width: 100%;
-}
+} */
 </style>
