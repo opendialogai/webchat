@@ -9,110 +9,121 @@
             '--btn-text-color-hover':  colors.button.hoverText,
             '--btn-border-color':colors.button.border,
             '--btn-border-color-hover':colors.button.hoverBorder,
-
-
             '--labelTextColor' :colors.form.labelTextColor,
             '--formHighlightColor'  :colors.form.formHighlightColor,
             '--inputBorderColor' :colors.form.inputBorderColor }"
   >
-    <div class="mt-fp-form__title" v-html="message.data.text"></div>
+    <div class="mt-fp-form__elements">
+      <div class="mt-fp-form__title" v-html="message.data.text"></div>
 
-    <div v-if="errors.length" class="sc-message--fp-form--errors">
-      <div v-for="error in errors">
-        <span v-html="error"></span>
-      </div>
-    </div>
+      <div
+        v-for="element in message.data.elements"
+        class="mt-fp-form__element"
+        :class="element.name"
+      >
+        <span
+          v-if="element.display"
+          class="mt-fp-form__label"
+          :class="[
+          { 'mt-fp-form__label--radio' : element.element_type == 'radio'},
+          { 'mt-fp-form__label--error' : errors.find(x => x.type === element.name)}
+          ]"
+        >{{ element.display }}</span>
 
-    <div v-for="element in message.data.elements" class="mt-fp-form__element">
-      <span
-        v-if="element.display"
-        class="mt-fp-form__label"
-        :class="{ 'mt-fp-form__label--radio' : element.element_type == 'radio'}"
-      >{{ element.display }}</span>
+        <!-- <div v-if="errors.length"> -->
 
-      <template v-if="element.element_type == 'text'">
-        <input
-          type="text"
-          class="mt-fp-form__input"
-          v-model="form.data[element.name].value"
-          v-on:keyup.enter="_handleClick"
-        />
-      </template>
+        <!-- </div> -->
 
-      <template v-if="element.element_type == 'textarea'">
-        <textarea
-          class="mt-fp-form__input mt-fp-form__textarea"
-          v-model="form.data[element.name].value"
-        />
-      </template>
+        <template v-if="element.element_type == 'text'">
+          <input
+            type="text"
+            class="mt-fp-form__input"
+            v-model="form.data[element.name].value"
+            v-on:keyup.enter="_handleClick"
+            :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
+          />
 
-      <template v-if="element.element_type == 'select'">
-        <select
-          @change="onSelectChange"
-          class="mt-fp-form__select"
-          v-model="form.data[element.name].value"
-        >
-          <option value>-- Please choose an option --</option>
-          <option
-            v-for="(option_text, option_value) in element.options"
-            v-bind:value="option_value"
-          >{{ option_text }}</option>
-        </select>
-      </template>
+          <!-- 👇🏻 This creates an error element if you need it  -->
+          <!-- <div v-for="error in errors">
+            <div v-if="error.type == element.name" v-html="error.message" class="mt-fp-form__error"></div>
+          </div>-->
+        </template>
 
-      <template v-if="element.element_type == 'radio'">
-        <div class="mt-fp-form__radio">
-          <div
-            class="mt-fp-form__radio-btn"
-            v-for="(radio_text, radio_value) in element.options"
-            :key="radio_value"
+        <template v-if="element.element_type == 'textarea'">
+          <textarea
+            class="mt-fp-form__input mt-fp-form__textarea"
+            v-model="form.data[element.name].value"
+          />
+        </template>
+
+        <template v-if="element.element_type == 'select'">
+          <select
+            @change="onSelectChange"
+            class="mt-fp-form__select"
+            v-model="form.data[element.name].value"
           >
-            <input
-              name="contact-option"
-              type="radio"
-              v-bind:id="radio_value"
-              v-bind:value="radio_value"
-            />
-            <label v-bind:for="radio_value">{{ radio_text }}</label>
+            <option value>-- Please choose an option --</option>
+            <option
+              v-for="(option_text, option_value) in element.options"
+              v-bind:value="option_value"
+            >{{ option_text }}</option>
+          </select>
+        </template>
+
+        <template v-if="element.element_type == 'radio'">
+          <div class="mt-fp-form__radio">
+            <div
+              class="mt-fp-form__radio-btn"
+              v-for="(radio_text, radio_value) in element.options"
+              :key="radio_value"
+            >
+              <input
+                name="contact-option"
+                type="radio"
+                v-bind:id="radio_value"
+                v-bind:value="radio_value"
+              />
+              <label v-bind:for="radio_value">{{ radio_text }}</label>
+            </div>
           </div>
-        </div>
-      </template>
+        </template>
 
-      <template v-if="element.element_type == 'auto-select'">
-        <v-select
-          class="mt-fp-form__auto-select style-chooser"
-          @input="onSelectChange"
-          v-model="form.data[element.name].value"
-          :options="element.options"
-          :reduce="option => option.key"
-          label="value"
-        ></v-select>
-      </template>
+        <template v-if="element.element_type == 'auto-select'">
+          <v-select
+            class="mt-fp-form__auto-select style-chooser"
+            @input="onSelectChange"
+            v-model="form.data[element.name].value"
+            :options="element.options"
+            :reduce="option => option.key"
+            label="value"
+          ></v-select>
+        </template>
 
-      <template v-if="element.element_type == 'email'">
-        <input
-          type="email"
-          class="mt-fp-form__input"
-          v-model="form.data[element.name].value"
-          v-on:keyup.enter="_handleClick"
-        />
-      </template>
+        <template v-if="element.element_type == 'email'">
+          <input
+            type="email"
+            class="mt-fp-form__input"
+            v-model="form.data[element.name].value"
+            v-on:keyup.enter="_handleClick"
+          />
+        </template>
 
-      <template v-if="element.element_type == 'number'">
-        <input
-          type="tel"
-          class="mt-fp-form__input"
-          v-model="form.data[element.name].value"
-          v-on:keyup.enter="_handleClick"
-        />
-      </template>
+        <template v-if="element.element_type == 'number'">
+          <input
+            type="tel"
+            class="mt-fp-form__input"
+            v-model="form.data[element.name].value"
+            v-on:keyup.enter="_handleClick"
+          />
+        </template>
+      </div>
+
+      <button
+        class="mt-fp-form__submit"
+        v-if="!message.data.auto_submit"
+        @click="_handleClick"
+      >{{ message.data.submit_text }}</button>
     </div>
-
-    <button
-      class="mt-fp-form__submit"
-      v-if="!message.data.auto_submit"
-      @click="_handleClick"
-    >{{ message.data.submit_text }}</button>
   </div>
 </template>
 
@@ -121,6 +132,9 @@ import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 
 export default {
+  //   mounted: function() {
+  //     console.log("console your log here");
+  //   },
   components: {
     vSelect
   },
@@ -167,9 +181,10 @@ export default {
           element.required &&
           this.isEmpty(this.form.data[element.name].value)
         ) {
-          this.errors.push(
-            "<em>" + element.display + "</em> field is required"
-          );
+          this.errors.push({
+            type: element.name,
+            message: "<em>" + element.display + "</em> is required"
+          });
         }
       });
     },
@@ -177,6 +192,7 @@ export default {
       return value === null || value === undefined || value === "";
     }
   },
+
   created() {
     this.message.data.elements.forEach(element => {
       this.form.data[element.name] = {
@@ -191,25 +207,46 @@ export default {
 <style scoped>
 .mt-fp-form__title {
   margin-bottom: 20px;
+  width: 100%;
+  text-align: center;
 }
 
 /* form --- form --- form ---  */
 
 .mt-fp-form {
-  flex: 1;
-  padding-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   background-color: var(--messageListBg);
+  overflow-x: hidden;
+}
+
+.mt-fp-form__elements {
+  width: 90%;
+  margin: 0 auto;
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-top: 20px;
   overflow-y: auto;
 }
 
 .mt-fp-form__element {
   position: relative;
-  width: 90%;
+  width: 100%;
   margin: 0 auto 18px;
 }
+
+/* 🔥 avaya - custom css 🔥 */
+/* 🔥 avaya - custom css 🔥 */
+
+.first_name,
+.last_name {
+  width: 47%;
+  padding: 0;
+  margin: 0 0 18px;
+}
+
+/* 🔥 avaya - custom css 🔥 */
+/* 🔥 avaya - custom css 🔥 */
 
 /* labels --- labels --- labels ---  */
 
@@ -233,6 +270,18 @@ export default {
   color: unset;
 }
 
+.mt-fp-form__label--error {
+  color: var(--btn-bg);
+}
+
+.mt-fp-form__label--error:before {
+  content: "*";
+}
+
+.mt-fp-form__label--error:after {
+  /* content: " Required"; */
+}
+
 /* input --- input --- input ---  */
 
 .mt-fp-form__input {
@@ -243,15 +292,19 @@ export default {
   width: 100%;
 }
 
+.mt-fp-form__input--error {
+  /* outline: none; */
+  /* border: 1px solid var(--btn-bg); */
+}
+
 .mt-fp-form__input:focus {
   outline: none;
   border: 1px solid var(--btn-bg);
 }
 
 /* textarea -- */
-
 .mt-fp-form__textarea {
-  height: 120px;
+  height: 100px;
   padding: 10px;
 }
 
@@ -314,7 +367,7 @@ doesnt work though 🤦🏻‍♂️
 
 .mt-fp-form__radio {
   display: flex;
-  margin: 10px 0 20px;
+  margin: 10px auto 20px;
 }
 
 .mt-fp-form__radio-btn {
@@ -322,6 +375,10 @@ doesnt work though 🤦🏻‍♂️
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.mt-fp-form__radio-btn:first-child {
+  margin-left: 8px;
 }
 
 .mt-fp-form__radio-btn label {
@@ -334,9 +391,11 @@ doesnt work though 🤦🏻‍♂️
   -ms-transform: scale(1.7); /* IE 9 */
   -webkit-transform: scale(1.7); /* Chrome, Safari, Opera */
   transform: scale(1.7);
-  color: var(--btn-bg);
-  background-color: var(--btn-bg);
-  border: solid 1px var(--btn-bg);
+
+  /* 👇🏻 Won't work - browser specific */
+  /* color: var(--btn-bg); */
+  /* background-color: var(--btn-bg); */
+  /* border: solid 1px var(--btn-bg); */
 }
 
 /* submit --- submit --- submit ---  */
@@ -348,12 +407,18 @@ doesnt work though 🤦🏻‍♂️
   width: 280px;
   padding: 0 20px;
   border-radius: 30px;
-  margin-bottom: 20px;
+  margin: 0 auto 20px;
+  font-size: 18px;
 }
 
 .mt-fp-form__submit:hover {
   color: var(--btn-text-color-hover);
   background-color: var(--btn-bg-hover);
+}
+
+.mt-fp-form__submit:focus {
+  outline: none;
+  border: 1px solid var(--btn-bg-hover);
 }
 
 /*
