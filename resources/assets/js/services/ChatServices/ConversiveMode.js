@@ -4,6 +4,7 @@ let ConversiveMode = function() {
   this.name = "custom";
   this.client = new ConversiveClient();
   this.pollingInterval = null;
+  this.typingIndicatorIndex = null;
 };
 
 ConversiveMode.prototype.sendRequest = function(message) {
@@ -30,8 +31,9 @@ ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
     })
     .then((sessionToken) => {
       this.pollingInterval = setInterval(async () => {
+        let isFirstRequest = this.client.serialNumber < 1;
         let messages = await this.client.getMessagesAfter(sessionToken);
-        this.handleNewMessages(messages, webChatComponent);
+        this.handleNewMessages(messages, isFirstRequest, webChatComponent);
       }, 1000);
     })
     .catch((error) => {
@@ -43,14 +45,61 @@ ConversiveMode.prototype.destroyChat = function(webChatComponent) {
   clearInterval(this.pollingInterval);
 };
 
-ConversiveMode.prototype.handleNewMessages = function (messages, webChatComponent) {
+ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest, webChatComponent) {
   let textMessages = messages.filter((message) => message.source === 2 && message.type === 1);
+  let typingMessages = messages.filter((message) => message.source === 2 && message.type === 2);
+
   if (textMessages.length > 0) {
     this.handleNewTextMessages(textMessages, webChatComponent);
+  }
+
+  if (typingMessages.length > 0 && !isFirstRequest) {
+    // We only show typing indicators for subsequent requests incase the initial batch contains previous indicators
+    this.handleNewTypingMessages(typingMessages, webChatComponent);
   }
 };
 
 ConversiveMode.prototype.handleNewTextMessages = function(textMessages, webChatComponent) {
+  console.log("Adding " + textMessages.length + " new messages.");
+  if (this.typingIndicatorIndex !== null) {
+    console.log("Converting typing indicator.");
+    this.convertTypingIndicatorToFirstMessage(textMessages, webChatComponent);
+    this.addMessagesToMessageList(textMessages.slice(1), webChatComponent);
+  } else {
+    this.addAuthorMessage(webChatComponent);
+    this.addMessagesToMessageList(textMessages, webChatComponent);
+  }
+
+  this.setTeamName(textMessages, webChatComponent);
+};
+
+ConversiveMode.prototype.handleNewTypingMessages = function(typingMessages, webChatComponent) {
+  if (webChatComponent.messageList[webChatComponent.messageList.length-1].mode !== "custom") {
+    this.addAuthorMessage(webChatComponent);
+  }
+
+  let newTypingIndicatorMessage = {
+    author: "them",
+    type: "typing",
+    mode: "custom",
+    data: {
+      animate: true,
+    }
+  };
+
+  let index = webChatComponent.messageList.push(newTypingIndicatorMessage) - 1;
+  this.typingIndicatorIndex = index;
+
+  setTimeout(() => {
+    let typingIndicatorMessage = webChatComponent.messageList[index];
+    if (typingIndicatorMessage.type === "typing") {
+      webChatComponent.messageList.splice(index, 1);
+      this.typingIndicatorIndex = null;
+    }
+  }, 5000);
+};
+
+ConversiveMode.prototype.addAuthorMessage = function(webChatComponent) {
   webChatComponent.messageList.push(webChatComponent.newAuthorMessage({
     author: "them",
     data: {
@@ -58,7 +107,23 @@ ConversiveMode.prototype.handleNewTextMessages = function(textMessages, webChatC
       date: (new Date()).toLocaleDateString(),
     }
   }));
+};
 
+ConversiveMode.prototype.convertTypingIndicatorToFirstMessage = function(textMessages, webChatComponent) {
+  let typingIndicatorIndex = this.typingIndicatorIndex;
+  this.typingIndicatorIndex = null;
+
+  let firstMessage = textMessages[0];
+  let typingIndicatorMessage = webChatComponent.messageList[typingIndicatorIndex];
+  typingIndicatorMessage.type = "text";
+  typingIndicatorMessage.data = {
+    text: firstMessage.b,
+    time: (new Date()).toLocaleTimeString(),
+    date: (new Date()).toLocaleDateString(),
+  };
+};
+
+ConversiveMode.prototype.addMessagesToMessageList = function(textMessages, webChatComponent) {
   textMessages.forEach((message) => {
     webChatComponent.messageList.push({
       author: "them",
@@ -71,7 +136,9 @@ ConversiveMode.prototype.handleNewTextMessages = function(textMessages, webChatC
       }
     });
   });
+};
 
+ConversiveMode.prototype.setTeamName = function(textMessages, webChatComponent) {
   let lastMessage = textMessages[textMessages.length-1];
   let updatedModeData = webChatComponent.modeData;
   updatedModeData.options.teamName = lastMessage.n;
