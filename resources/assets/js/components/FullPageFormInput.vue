@@ -78,10 +78,12 @@
               :key="radio_value"
             >
               <input
-                name="contact-option"
+                @change="onRadioChange"
+                name="radio"
                 type="radio"
                 v-bind:id="radio_value"
                 v-bind:value="radio_value"
+                v-model="form.data[element.name].value"
               />
               <label v-bind:for="radio_value">{{ radio_text }}</label>
             </div>
@@ -132,9 +134,6 @@ import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 
 export default {
-  //   mounted: function() {
-  //     console.log("console your log here");
-  //   },
   components: {
     vSelect
   },
@@ -154,6 +153,7 @@ export default {
   },
   data() {
     return {
+      picked: "",
       form: {
         data: []
       },
@@ -168,11 +168,11 @@ export default {
     },
     _handleClick() {
       this.validateForm();
-
       if (!this.errors.length) {
         this.onSubmit(this.form.data);
       }
     },
+
     validateForm() {
       this.errors = [];
 
