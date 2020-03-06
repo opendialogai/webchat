@@ -11,7 +11,7 @@ ConversiveMode.prototype.sendRequest = function(message, webChatComponent) {
   console.log("Sending:", message);
 
   return this.client.getSessionId(webChatComponent.uuid)
-    .then(sessionId => this.client.sendTextMessage(message.data.text, sessionId));
+    .then(sessionId => this.client.sendMessage(message, sessionId));
 };
 
 ConversiveMode.prototype.sendResponseSuccess = function(response, webChatComponent) {
@@ -21,6 +21,7 @@ ConversiveMode.prototype.sendResponseSuccess = function(response, webChatCompone
 ConversiveMode.prototype.sendResponseError = function(error, webChatComponent) {
   console.log("Conversive mode response error", webChatComponent.modeData);
 };
+
 ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
   return this.client.getSessionId(webChatComponent.uuid)
     .then((sessionToken) => {
@@ -47,34 +48,51 @@ ConversiveMode.prototype.destroyChat = function(webChatComponent) {
 
 ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest, webChatComponent) {
   let incomingTextMessages = messages.filter((message) => message.source === 2 && message.type === 1);
-  let incomingTypingMessages = messages.filter((message) => message.source === 2 && message.type === 2);
+
+  if (this.typingIndicatorIndex !== null && incomingTextMessages.length > 0) {
+    let firstMessage = incomingTextMessages[0];
+    this.convertTypingIndicatorToFirstMessage(firstMessage, webChatComponent);
+    firstMessage.skip = true;
+  }
 
   if (incomingTextMessages.length > 0) {
-    this.handleNewTextMessages(incomingTextMessages, webChatComponent);
+    this.setTeamName(incomingTextMessages, webChatComponent);
   }
 
-  if (incomingTypingMessages.length > 0 && !isFirstRequest) {
-    // We only show typing indicators for subsequent requests incase the initial batch contains previous indicators
-    this.handleNewTypingMessages(incomingTypingMessages, webChatComponent);
-  }
+  messages.forEach((message) => {
+    if (message.skip) {
+      return;
+    }
+
+    switch (message.type) {
+      case 1:
+        this.handleNewTextMessage(message, isFirstRequest, webChatComponent);
+        break;
+
+      case 2:
+        this.handleNewTypingMessage(message, isFirstRequest, webChatComponent);
+        break;
+    }
+  });
 };
 
-ConversiveMode.prototype.handleNewTextMessages = function(textMessages, webChatComponent) {
-  if (this.typingIndicatorIndex !== null) {
-    this.convertTypingIndicatorToFirstMessage(textMessages, webChatComponent);
-    this.addMessagesToMessageList(textMessages.slice(1), webChatComponent);
-  } else {
-    this.addAuthorMessage(webChatComponent);
-    this.addMessagesToMessageList(textMessages, webChatComponent);
+ConversiveMode.prototype.handleNewTextMessage = function(textMessage, isFirstRequest, webChatComponent) {
+  if (textMessage.source === 1 && !isFirstRequest || ![1, 2].includes(textMessage.source)) {
+    return;
   }
 
-  this.setTeamName(textMessages, webChatComponent);
+  this.addAuthorMessage(textMessage, webChatComponent);
+  this.addMessageToMessageList(textMessage, webChatComponent);
 };
 
-ConversiveMode.prototype.handleNewTypingMessages = function(typingMessages, webChatComponent) {
+ConversiveMode.prototype.handleNewTypingMessage = function(typingMessage, isFirstRequest, webChatComponent) {
+  if (typingMessage.source !== 2 || isFirstRequest) {
+    return;
+  }
+
   let previousMessage = webChatComponent.messageList[webChatComponent.messageList.length-1];
   if (previousMessage.mode !== "custom" || previousMessage.author !== "them") {
-    this.addAuthorMessage(webChatComponent);
+    this.addAuthorMessage(typingMessage, webChatComponent);
   }
 
   let newTypingIndicatorMessage = {
@@ -98,9 +116,9 @@ ConversiveMode.prototype.handleNewTypingMessages = function(typingMessages, webC
   }, 5000);
 };
 
-ConversiveMode.prototype.addAuthorMessage = function(webChatComponent) {
+ConversiveMode.prototype.addAuthorMessage = function(message, webChatComponent) {
   webChatComponent.messageList.push(webChatComponent.newAuthorMessage({
-    author: "them",
+    author: message.source === 1 ? "me" : "them",
     data: {
       time: (new Date()).toLocaleTimeString(),
       date: (new Date()).toLocaleDateString(),
@@ -108,11 +126,10 @@ ConversiveMode.prototype.addAuthorMessage = function(webChatComponent) {
   }));
 };
 
-ConversiveMode.prototype.convertTypingIndicatorToFirstMessage = function(textMessages, webChatComponent) {
+ConversiveMode.prototype.convertTypingIndicatorToFirstMessage = function(firstMessage, webChatComponent) {
   let typingIndicatorIndex = this.typingIndicatorIndex;
   this.typingIndicatorIndex = null;
 
-  let firstMessage = textMessages[0];
   let typingIndicatorMessage = webChatComponent.messageList[typingIndicatorIndex];
   typingIndicatorMessage.type = "text";
   typingIndicatorMessage.data = {
@@ -122,18 +139,16 @@ ConversiveMode.prototype.convertTypingIndicatorToFirstMessage = function(textMes
   };
 };
 
-ConversiveMode.prototype.addMessagesToMessageList = function(textMessages, webChatComponent) {
-  textMessages.forEach((message) => {
-    webChatComponent.messageList.push({
-      author: "them",
-      mode: "custom",
-      type: "text",
-      data: {
-        text: message.b,
-        time: (new Date()).toLocaleTimeString(),
-        date: (new Date()).toLocaleDateString(),
-      }
-    });
+ConversiveMode.prototype.addMessageToMessageList = function(textMessage, webChatComponent) {
+  webChatComponent.messageList.push({
+    author: textMessage.source === 1 ? "me" : "them",
+    mode: "custom",
+    type: "text",
+    data: {
+      text: textMessage.b,
+      time: (new Date()).toLocaleTimeString(),
+      date: (new Date()).toLocaleDateString(),
+    }
   });
 };
 
