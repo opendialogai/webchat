@@ -8,18 +8,10 @@
       :class="{'header-open': isOpen, 'header-closed': !isOpen}"
     >
       <div class="header-cta" ref="headerCta">
-        <div class="header-cta__icon">
-          <img src alt />
-        </div>
+        <div class="header-cta__icon"></div>
 
-        <div
-          v-if="ctaText.length"
-          class="header-cta__text"
-          ref="headerCtaText"
-        >
-          <span v-for="text in ctaText">
-            {{ text }}
-          </span>
+        <div v-if="ctaText.length" class="header-cta__text" ref="headerCtaText">
+          <span v-for="text in ctaText">{{ text }}</span>
         </div>
       </div>
 
@@ -55,10 +47,14 @@ export default {
   watch: {
     ctaText() {
       if (this.ctaText.length) {
-        this.$refs.headerCta.classList.add('header-cta-expand');
+        //   this.$refs.headerCta.classList.add("header-cta-expand");
+        setTimeout(() => {
+          this.$refs.headerCta.classList.add("header-cta-expand");
+        }, 1000);
       }
-    },
+    }
   },
+
   props: {
     ctaText: {
       type: Array,
@@ -103,5 +99,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

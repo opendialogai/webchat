@@ -267,6 +267,7 @@ export default {
   line-height: 1.38;
   letter-spacing: normal;
   color: unset;
+  background-color: transparent;
 }
 
 .mt-fp-form__label--error {
