@@ -34,6 +34,7 @@
       :fullScreen="fullScreen"
       :fpFormInputMessage="fpFormInputMessage"
       :fpRichInputMessage="fpRichInputMessage"
+      :ctaText="ctaText"
     />
   </div>
 </template>
@@ -89,6 +90,10 @@ export default {
     onFullPageRichInputSubmit: {
       type: Function,
       required: true
+    },
+    ctaText: {
+      type: Array,
+      default: () => []
     },
     messageList: {
       type: Array,
