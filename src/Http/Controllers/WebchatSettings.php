@@ -54,8 +54,12 @@ class WebchatSettings
         $config[WebchatSetting::OPEN_INTENT] = 'WELCOME';
 
         if ($userId = $request->get('user_id')) {
-            $userService = resolve(UserService::class);
-            $userType = $userService->getUserType($userId);
+            try {
+                $userService = resolve(UserService::class);
+                $userType = $userService->getUserType($userId);
+            } catch (\Exception $e) {
+                $userType = ChatbotUser::NEW_USER;
+            }
 
             $config[WebchatSetting::USER_TYPE] = $userType;
 
