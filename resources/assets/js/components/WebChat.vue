@@ -53,6 +53,7 @@
         :initial-text="initialText"
         :fp-form-input-message="fpFormInputMessage"
         :fp-rich-input-message="fpRichInputMessage"
+        :cta-text="ctaText"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
       />
@@ -93,6 +94,10 @@ export default {
       default: ""
     },
     chatIsOpen: Boolean,
+    closedIntent: {
+      type: String,
+      default: ""
+    },
     colours: {
       type: Object,
       required: true
@@ -114,6 +119,10 @@ export default {
     newMessageIcon: {
       type: String,
       required: true
+    },
+    openIntent: {
+      type: String,
+      default: ""
     },
     parentUrl: {
       type: String,
@@ -155,6 +164,7 @@ export default {
       buttonText: "Submit",
       confirmationMessage: null,
       contentEditable: false,
+      ctaText: [],
       fpFormInputMessage: {},
       fpRichInputMessage: {},
       headerHeight: 0,
@@ -309,10 +319,12 @@ export default {
       // Give the message an id.
       newMsg.id = this.$uuid.v4();
 
-      if (newMsg.type === "chat_open" && this.userInfo) {
-        Object.keys(this.userInfo).forEach(key => {
-          newMsg.user[key] = this.userInfo[key];
-        });
+      if (newMsg.type === "chat_open") {
+        if (this.userInfo) {
+          Object.keys(this.userInfo).forEach(key => {
+            newMsg.user[key] = this.userInfo[key];
+          });
+        }
       }
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
@@ -370,7 +382,20 @@ export default {
         // Need to add error handling here
         axios.post("/incoming/webchat", webchatMessage).then(
           response => {
-            if (response.data instanceof Array) {
+            if (newMsg.type === "chat_open" && !newMsg.data.open) {
+              if (response.data instanceof Array) {
+                response.data.forEach((message) => {
+                  if (message.data && message.data.text && this.ctaText.length < 2) {
+                    this.ctaText.push(message.data.text);
+                  }
+                });
+              } else if (response.data) {
+                const message = response.data;
+                if (message.data && message.data.text) {
+                  this.ctaText.push(message.data.text);
+                }
+              }
+            } else if (response.data instanceof Array) {
               response.data.forEach((message, i) => {
                 if (!message) {
                   this.contentEditable = true;
@@ -788,24 +813,6 @@ export default {
       this.isOpen = !this.isOpen;
       this.$emit("toggleChatOpen", this.headerHeight);
     },
-    workoutCallback() {
-      // Default
-      let callbackId = "WELCOME";
-      const urlParams = new URLSearchParams(window.location.search);
-
-      // If the url has a callback id present, use that
-      if (urlParams.has("callback_id")) {
-        callbackId = urlParams.get("callback_id");
-      } else {
-        // Check if the url matches one in the callback map
-        this.callbackMap.forEach((url, idx) => {
-          if (this.parentUrl.match(this.wildcardToRegExp(url))) {
-            callbackId = this.callbackMap[idx];
-          }
-        });
-      }
-      return callbackId;
-    },
     wildcardToRegExp(string) {
       return new RegExp(
         `^${string
@@ -825,13 +832,27 @@ export default {
         this.checkHideChat();
       }
 
-      const message = {
-        type: "chat_open",
-        callback_id: this.workoutCallback(),
-        data: {}
-      };
+      this.sendChatOpenMessage(this.isOpen);
 
-      this.sendMessage(message);
+      setTimeout(() => {
+        this.sendChatOpenMessage(!this.isOpen);
+      }, 3000);
+    },
+    sendChatOpenMessage(open = true) {
+      const callback = (open) ? this.openIntent : this.closedIntent;
+
+      if (callback) {
+        const message = {
+          type: "chat_open",
+          callback_id: callback,
+          data: {
+            value: this.parentUrl,
+            open
+          }
+        };
+
+        this.sendMessage(message);
+      }
     },
     getChatHistory() {
       this.loading = true;
