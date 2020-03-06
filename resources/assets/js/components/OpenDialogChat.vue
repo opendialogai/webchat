@@ -101,6 +101,8 @@
         :user-uuid="userUuid"
         :user-external-id="userExternalId"
         :mode-data="modeData"
+        :closed-intent="closedIntent"
+        :open-intent="openIntent"
         @expandChat="expandChat"
         @toggleChatOpen="toggleChatOpen"
         @newMessage="newWebChatMessage"
@@ -112,16 +114,16 @@
 </template>
 
 <script>
-  import axios from "axios";
-  import {mapState} from "vuex";
+import axios from "axios";
+import { mapState } from "vuex";
 
-  import cssVars from "css-vars-ponyfill";
+import cssVars from "css-vars-ponyfill";
 
-  import Comments from "@/components/Comments";
-  import WebChat from "@/components/WebChat";
-  import SessionStorageMixin from "../mixins/SessionStorageMixin";
+import Comments from "@/components/Comments";
+import WebChat from "@/components/WebChat";
+import SessionStorageMixin from "../mixins/SessionStorageMixin";
 
-  const { detect } = require("detect-browser");
+const { detect } = require("detect-browser");
 const jstz = require("jstz");
 
 export default {
@@ -142,6 +144,7 @@ export default {
       canCloseChat: true,
       chatbotAvatarPath: "",
       chatbotName: "OD Bot",
+      closedIntent: "",
       collectUserIp: true,
       colours: {
         header: {
@@ -184,6 +187,11 @@ export default {
           border: "#575759",
           hoverBorder: "#575759"
         },
+        form: {
+          labelTextColor: "#575759",
+          formHighlightColor: "#da291c",
+          inputBorderColor: "#979797"
+        },
         minimizeButton: {
           bg: "#000000"
         }
@@ -205,6 +213,7 @@ export default {
       messageAnimation: false,
       messageDelay: 1000,
       newMessageIcon: "",
+      openIntent: "",
       parentUrl: "",
       pathInitialised: false,
       restartButtonCallback: "",
@@ -300,8 +309,6 @@ export default {
     }
 
     this.initSettings();
-
-
   },
   methods: {
     newWebChatMessage() {
@@ -435,8 +442,10 @@ export default {
       });
     },
     initialiseSettings(customConfig) {
+      const userId = (customConfig.user && customConfig.user.email) ? customConfig.user.email : "";
+
       // Get default settings from the config endpoint.
-      this.getWebchatConfig()
+      this.getWebchatConfig(userId)
         .then(config => {
           this.setConfig(config);
           return true;
@@ -522,10 +531,13 @@ export default {
         this.cssProps = this.getCssProps();
       });
     },
-    async getWebchatConfig(url = "") {
-      let configUrl = url;
-      if (configUrl === "") {
-        configUrl = `${window.location.origin}/webchat-config`;
+    async getWebchatConfig(userId) {
+      let configUrl = `${window.location.origin}/webchat-config`;
+
+      if (userId) {
+        configUrl = `${configUrl}?user_id=${userId}`;
+      } else if (sessionStorage.uuid) {
+        configUrl = `${configUrl}?user_id=${sessionStorage.uuid}`;
       }
 
       const response = await fetch(configUrl);
@@ -789,8 +801,19 @@ export default {
         }
       }
 
+      if (config.closedIntent) {
+        this.closedIntent = config.closedIntent;
+      }
+      if (config.openIntent) {
+        this.openIntent = config.openIntent;
+      }
+
       if (config.newPathname !== undefined) {
         this.handleHistoryChange(config.newPathname);
+      }
+
+      if (!config.showMinimized && !this.isOpen) {
+        this.toggleChatOpen();
       }
 
       setTimeout(() => {
@@ -809,8 +832,6 @@ export default {
         if (window.self !== window.top) {
           if (!this.isOpen) {
             if (headerHeight) {
-
-
               window.parent.postMessage({ height: `140px` }, "*");
             } else if (this.commentsEnabled) {
               const height = document.querySelector(".nav").offsetHeight;

@@ -33,12 +33,12 @@ ChatService.prototype.sendRequest = function(message) {
   return this.getActiveService().sendRequest(message);
 };
 
-ChatService.prototype.sendResponseSuccess = function(response, webChatComponent) {
-  return this.getActiveService().sendResponseSuccess(response, webChatComponent);
+ChatService.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
+  return this.getActiveService().sendResponseSuccess(response, sentMessage, webChatComponent);
 };
 
-ChatService.prototype.sendResponseError = function(error, webChatComponent) {
-  return this.getActiveService().sendResponseError(error);
+ChatService.prototype.sendResponseError = function(error, sentMessage, webChatComponent) {
+  return this.getActiveService().sendResponseError(error, sentMessage, webChatComponent);
 };
 
 export default new ChatService();
