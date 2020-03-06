@@ -12,9 +12,14 @@
           <img src alt />
         </div>
 
-        <div class="header-cta__text" ref="headerCtaText">
-          <span ref="headerCtaTextSpan">Chat with us</span>
-          <span>Or call 1 800 XXXXXX</span>
+        <div
+          v-if="ctaText.length"
+          class="header-cta__text"
+          ref="headerCtaText"
+        >
+          <span v-for="text in ctaText">
+            {{ text }}
+          </span>
         </div>
       </div>
 
@@ -47,13 +52,18 @@
 
 <script>
 export default {
-  mounted() {
-    setTimeout(() => {
-      this.$refs.headerCta.classList.add('header-cta-expand')
-    }, 500);
+  watch: {
+    ctaText() {
+      if (this.ctaText.length) {
+        this.$refs.headerCta.classList.add('header-cta-expand');
+      }
+    },
   },
-
   props: {
+    ctaText: {
+      type: Array,
+      default: () => []
+    },
     imageUrl: {
       type: String
     },
@@ -91,8 +101,7 @@ export default {
   }
 };
 </script>
+
 <style scoped>
-
-
 
 </style>

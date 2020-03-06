@@ -11,7 +11,7 @@
       :onRestartButtonClick="onRestartButtonClick"
       :colors="colors"
       :isOpen="isOpen"
-
+      :ctaText="ctaText"
     />
     <MessageList
       v-if="showMessages"
@@ -155,6 +155,10 @@ export default {
     onRestartButtonClick: {
       type: Function,
       required: true
+    },
+    ctaText: {
+      type: Array,
+      default: () => []
     },
     messageList: {
       type: Array,
