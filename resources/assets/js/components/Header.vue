@@ -52,10 +52,12 @@
 
 <script>
 export default {
-  mounted() {
-    setTimeout(() => {
-      this.$refs.headerCta.classList.add('header-cta-expand')
-    }, 500);
+  watch: {
+    ctaText() {
+      if (this.ctaText.length) {
+        this.$refs.headerCta.classList.add('header-cta-expand');
+      }
+    },
   },
   props: {
     ctaText: {

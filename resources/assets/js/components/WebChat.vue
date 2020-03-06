@@ -320,8 +320,6 @@ export default {
       newMsg.id = this.$uuid.v4();
 
       if (newMsg.type === "chat_open") {
-        this.ctaText = [];
-
         if (this.userInfo) {
           Object.keys(this.userInfo).forEach(key => {
             newMsg.user[key] = this.userInfo[key];
