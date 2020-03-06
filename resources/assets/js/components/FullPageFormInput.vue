@@ -78,7 +78,6 @@
               :key="radio_value"
             >
               <input
-                @change="onRadioChange"
                 name="radio"
                 type="radio"
                 v-bind:id="radio_value"
