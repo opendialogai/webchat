@@ -15,7 +15,7 @@
             '--formHighlightColor'  :colors.form.formHighlightColor,
             '--inputBorderColor' :colors.form.inputBorderColor }"
   >
-    <div class="mt-fp-form__text" v-html="message.data.text"></div>
+    <div class="mt-fp-form__title" v-html="message.data.text"></div>
 
     <div v-if="errors.length" class="sc-message--fp-form--errors">
       <div v-for="error in errors">
@@ -24,7 +24,11 @@
     </div>
 
     <div v-for="element in message.data.elements" class="mt-fp-form__element">
-      <span v-if="element.display" class="mt-fp-form__label">{{ element.display }}</span>
+      <span
+        v-if="element.display"
+        class="mt-fp-form__label"
+        :class="{ 'mt-fp-form__label--radio' : element.element_type == 'radio'}"
+      >{{ element.display }}</span>
 
       <template v-if="element.element_type == 'text'">
         <input
@@ -57,15 +61,6 @@
       </template>
 
       <template v-if="element.element_type == 'radio'">
-        <!-- <input type="radio" class="mt-fp-form__input" /> -->
-
-        <!-- <input
-
-            type="radio"
-            v-for="(radio_text, radio_value) in element.options"
-            v-bind:value="radio_value"
-        >{{ radio_text }}</input>-->
-
         <div class="mt-fp-form__radio">
           <div
             class="mt-fp-form__radio-btn"
@@ -83,7 +78,7 @@
         </div>
       </template>
 
-      <!-- <template v-if="element.element_type == 'auto-select'">
+      <template v-if="element.element_type == 'auto-select'">
         <v-select
           class="mt-fp-form__auto-select style-chooser"
           @input="onSelectChange"
@@ -92,7 +87,7 @@
           :reduce="option => option.key"
           label="value"
         ></v-select>
-      </template>-->
+      </template>
 
       <template v-if="element.element_type == 'email'">
         <input
@@ -105,7 +100,7 @@
 
       <template v-if="element.element_type == 'number'">
         <input
-          type="number"
+          type="tel"
           class="mt-fp-form__input"
           v-model="form.data[element.name].value"
           v-on:keyup.enter="_handleClick"
@@ -126,10 +121,6 @@ import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 
 export default {
-  // computed:{
-  //      console: () => console,
-  // },
-
   components: {
     vSelect
   },
@@ -198,6 +189,12 @@ export default {
 </script>
 
 <style scoped>
+.mt-fp-form__title {
+  margin-bottom: 20px;
+}
+
+/* form --- form --- form ---  */
+
 .mt-fp-form {
   flex: 1;
   padding-top: 20px;
@@ -211,8 +208,11 @@ export default {
 .mt-fp-form__element {
   position: relative;
   width: 90%;
-  margin: 20px auto;
+  margin: 0 auto 18px;
 }
+
+/* labels --- labels --- labels ---  */
+
 .mt-fp-form__label {
   position: absolute;
   top: -5px;
@@ -223,6 +223,17 @@ export default {
   margin: 0;
   color: var(--labelTextColor);
 }
+
+.mt-fp-form__label--radio {
+  position: unset;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 1.38;
+  letter-spacing: normal;
+  color: unset;
+}
+
+/* input --- input --- input ---  */
 
 .mt-fp-form__input {
   border-radius: 4px;
@@ -237,8 +248,7 @@ export default {
   border: 1px solid var(--btn-bg);
 }
 
-.mt-fp-form__text {
-}
+/* textarea -- */
 
 .mt-fp-form__textarea {
   height: 120px;
@@ -272,7 +282,6 @@ maybe look into https://cdnjs.com/libraries/bootstrap-select
 
 /*
 v-select --- v-select --- v-select ---
-
 https://vue-select.org/guide/css.html#overriding-default-styles
 doesnt work though 🤦🏻‍♂️
 */
@@ -280,7 +289,6 @@ doesnt work though 🤦🏻‍♂️
 .mt-fp-form__auto-select {
   width: 100%;
   display: block;
-  /* padding: 0.6em 1.4em 0.5em 0.8em; */
   font-style: 20px;
   line-height: 2.5;
   height: 40px;
@@ -306,11 +314,29 @@ doesnt work though 🤦🏻‍♂️
 
 .mt-fp-form__radio {
   display: flex;
-  margin-top: 20px;
+  margin: 10px 0 20px;
 }
 
 .mt-fp-form__radio-btn {
-  margin-right: 20px;
+  margin-right: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mt-fp-form__radio-btn label {
+  margin: 8px 0 0 16px;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.mt-fp-form__radio-btn input[type="radio"] {
+  -ms-transform: scale(1.7); /* IE 9 */
+  -webkit-transform: scale(1.7); /* Chrome, Safari, Opera */
+  transform: scale(1.7);
+  color: var(--btn-bg);
+  background-color: var(--btn-bg);
+  border: solid 1px var(--btn-bg);
 }
 
 /* submit --- submit --- submit ---  */
@@ -319,7 +345,7 @@ doesnt work though 🤦🏻‍♂️
   color: var(--btn-text-color);
   background-color: var(--btn-bg);
   min-height: 60px;
-
+  width: 280px;
   padding: 0 20px;
   border-radius: 30px;
   margin-bottom: 20px;
