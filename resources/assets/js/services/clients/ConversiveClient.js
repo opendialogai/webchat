@@ -108,4 +108,13 @@ ConversiveClient.prototype.getMessagesAfter = async function(sessionToken) {
     });
 };
 
+ConversiveClient.prototype.sendTextMessage = function(text, sessionToken) {
+  console.log("sendTextMessage", text, sessionToken);
+  return this.makeRequest("sendTextMessage", {
+    b: text,
+    t: sessionToken,
+    rsn: this.requestSerialNumber,
+  });
+};
+
 export default ConversiveClient;

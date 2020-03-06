@@ -378,7 +378,7 @@ export default {
         );
       }
 
-      chatService.sendRequest(newMsg).then(
+      chatService.sendRequest(newMsg, this).then(
           response => chatService.sendResponseSuccess(response, this),
           () => chatService.sendResponseError(null, this)
         );

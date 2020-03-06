@@ -4,7 +4,7 @@ let WebChatMode = function() {
   this.name = "webchat";
 };
 
-WebChatMode.prototype.sendRequest = function(message) {
+WebChatMode.prototype.sendRequest = function(message, webChatComponent) {
     if (
       message.type === "chat_open" ||
       message.type === "url_click" ||

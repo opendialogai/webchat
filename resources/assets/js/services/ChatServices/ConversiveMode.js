@@ -7,11 +7,11 @@ let ConversiveMode = function() {
   this.typingIndicatorIndex = null;
 };
 
-ConversiveMode.prototype.sendRequest = function(message) {
-  return new Promise((resolve, reject) => {
-    console.log("Using Conversive mode");
-    resolve();
-  });
+ConversiveMode.prototype.sendRequest = function(message, webChatComponent) {
+  console.log("Sending:", message);
+
+  return this.client.getSessionId(webChatComponent.uuid)
+    .then(sessionId => this.client.sendTextMessage(message.data.text, sessionId));
 };
 
 ConversiveMode.prototype.sendResponseSuccess = function(response, webChatComponent) {
@@ -46,23 +46,21 @@ ConversiveMode.prototype.destroyChat = function(webChatComponent) {
 };
 
 ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest, webChatComponent) {
-  let textMessages = messages.filter((message) => message.source === 2 && message.type === 1);
-  let typingMessages = messages.filter((message) => message.source === 2 && message.type === 2);
+  let incomingTextMessages = messages.filter((message) => message.source === 2 && message.type === 1);
+  let incomingTypingMessages = messages.filter((message) => message.source === 2 && message.type === 2);
 
-  if (textMessages.length > 0) {
-    this.handleNewTextMessages(textMessages, webChatComponent);
+  if (incomingTextMessages.length > 0) {
+    this.handleNewTextMessages(incomingTextMessages, webChatComponent);
   }
 
-  if (typingMessages.length > 0 && !isFirstRequest) {
+  if (incomingTypingMessages.length > 0 && !isFirstRequest) {
     // We only show typing indicators for subsequent requests incase the initial batch contains previous indicators
-    this.handleNewTypingMessages(typingMessages, webChatComponent);
+    this.handleNewTypingMessages(incomingTypingMessages, webChatComponent);
   }
 };
 
 ConversiveMode.prototype.handleNewTextMessages = function(textMessages, webChatComponent) {
-  console.log("Adding " + textMessages.length + " new messages.");
   if (this.typingIndicatorIndex !== null) {
-    console.log("Converting typing indicator.");
     this.convertTypingIndicatorToFirstMessage(textMessages, webChatComponent);
     this.addMessagesToMessageList(textMessages.slice(1), webChatComponent);
   } else {
@@ -74,7 +72,8 @@ ConversiveMode.prototype.handleNewTextMessages = function(textMessages, webChatC
 };
 
 ConversiveMode.prototype.handleNewTypingMessages = function(typingMessages, webChatComponent) {
-  if (webChatComponent.messageList[webChatComponent.messageList.length-1].mode !== "custom") {
+  let previousMessage = webChatComponent.messageList[webChatComponent.messageList.length-1];
+  if (previousMessage.mode !== "custom" || previousMessage.author !== "them") {
     this.addAuthorMessage(webChatComponent);
   }
 

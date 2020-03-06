@@ -29,8 +29,8 @@ ChatService.prototype.getActiveService = function() {
   return this.services[this.getMode()];
 };
 
-ChatService.prototype.sendRequest = function(message) {
-  return this.getActiveService().sendRequest(message);
+ChatService.prototype.sendRequest = function(message, webChatComponent) {
+  return this.getActiveService().sendRequest(message, webChatComponent);
 };
 
 ChatService.prototype.sendResponseSuccess = function(response, webChatComponent) {
