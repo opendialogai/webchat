@@ -45,7 +45,11 @@
           class="user-input__button"
           v-if="modeData.mode === 'custom'"
         >
-          <button @click.stop="closeChat" class="end-chat-btn">End chat</button>
+          <button v-if="!confirmCloseChat" @click.stop="toggleConfirmCloseChat" class="end-chat-btn">End chat</button>
+          <div v-if="confirmCloseChat">
+            <span>Are you sure?</span>
+            <button @click.stop="closeChat">Yes</button> / <button @click.stop="toggleConfirmCloseChat">No</button>
+          </div>
         </div>
       </div>
     </form>
@@ -103,7 +107,8 @@
     return {
       file: null,
       inputActive: false,
-      textEntered: false
+      textEntered: false,
+      confirmCloseChat: false,
     };
   },
   methods: {
@@ -180,7 +185,12 @@
     _handleFileSubmit(file) {
       this.file = file;
     },
+    toggleConfirmCloseChat() {
+      this.confirmCloseChat = !this.confirmCloseChat;
+    },
     closeChat() {
+      this.confirmCloseChat = false;
+
       this.$emit('setChatMode', {
         mode: 'webchat',
         options: {
