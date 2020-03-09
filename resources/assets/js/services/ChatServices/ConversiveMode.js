@@ -14,11 +14,11 @@ ConversiveMode.prototype.sendRequest = function(message) {
   });
 };
 
-ConversiveMode.prototype.sendResponseSuccess = function(response, webChatComponent) {
+ConversiveMode.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
   console.log("Conversive mode response success", webChatComponent.modeData);
 };
 
-ConversiveMode.prototype.sendResponseError = function(error, webChatComponent) {
+ConversiveMode.prototype.sendResponseError = function(error, sentMessage, webChatComponent) {
   console.log("Conversive mode response error", webChatComponent.modeData);
 };
 ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {

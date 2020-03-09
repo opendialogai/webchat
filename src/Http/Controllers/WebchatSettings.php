@@ -3,6 +3,8 @@
 namespace OpenDialogAi\Webchat\Http\Controllers;
 
 use Illuminate\Http\Request;
+use OpenDialogAi\ContextEngine\Contexts\User\UserService;
+use OpenDialogAi\Core\Conversation\ChatbotUser;
 use OpenDialogAi\Webchat\WebchatSetting;
 
 class WebchatSettings
@@ -43,6 +45,62 @@ class WebchatSettings
                         unset($childSettings[$idx]);
                     }
                 }
+            }
+        }
+
+        $config[WebchatSetting::USER_TYPE] = ChatbotUser::NEW_USER;
+        $config[WebchatSetting::SHOW_MINIMIZED] = false;
+        $config[WebchatSetting::CLOSED_INTENT] = 'CLOSED_MESSAGE';
+        $config[WebchatSetting::OPEN_INTENT] = 'WELCOME';
+
+        if ($userId = $request->get('user_id')) {
+            try {
+                $userService = resolve(UserService::class);
+                $userType = $userService->getUserType($userId);
+            } catch (\Exception $e) {
+                $userType = ChatbotUser::NEW_USER;
+            }
+
+            $config[WebchatSetting::USER_TYPE] = $userType;
+
+            $general = $config[WebchatSetting::GENERAL];
+
+            switch ($userType) {
+                case ChatbotUser::NEW_USER:
+                    if (isset($general[WebchatSetting::NEW_USER_START_MINIMIZED])) {
+                        $config[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::NEW_USER_START_MINIMIZED];
+                    }
+                    if (isset($general[WebchatSetting::NEW_USER_CLOSED_CALLBACK])) {
+                        $config[WebchatSetting::CLOSED_INTENT] = $general[WebchatSetting::NEW_USER_CLOSED_CALLBACK];
+                    }
+                    if (isset($general[WebchatSetting::NEW_USER_OPEN_CALLBACK])) {
+                        $config[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::NEW_USER_OPEN_CALLBACK];
+                    }
+                    break;
+
+                case ChatbotUser::RETURNING_USER:
+                    if (isset($general[WebchatSetting::RETURNING_USER_START_MINIMIZED])) {
+                        $config[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::RETURNING_USER_START_MINIMIZED];
+                    }
+                    if (isset($general[WebchatSetting::RETURNING_USER_CLOSED_CALLBACK])) {
+                        $config[WebchatSetting::CLOSED_INTENT] = $general[WebchatSetting::RETURNING_USER_CLOSED_CALLBACK];
+                    }
+                    if (isset($general[WebchatSetting::RETURNING_USER_OPEN_CALLBACK])) {
+                        $config[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::RETURNING_USER_OPEN_CALLBACK];
+                    }
+                    break;
+
+                case ChatbotUser::ONGOING_USER:
+                    if (isset($general[WebchatSetting::ONGOING_USER_START_MINIMIZED])) {
+                        $config[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::ONGOING_USER_START_MINIMIZED];
+                    }
+                    if (isset($general[WebchatSetting::ONGOING_USER_CLOSED_CALLBACK])) {
+                        $config[WebchatSetting::CLOSED_INTENT] = $general[WebchatSetting::ONGOING_USER_CLOSED_CALLBACK];
+                    }
+                    if (isset($general[WebchatSetting::ONGOING_USER_OPEN_CALLBACK])) {
+                        $config[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::ONGOING_USER_OPEN_CALLBACK];
+                    }
+                    break;
             }
         }
 
