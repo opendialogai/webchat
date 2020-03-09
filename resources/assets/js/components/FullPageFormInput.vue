@@ -84,6 +84,7 @@
                 v-bind:value="radio_value"
                 v-model="form.data[element.name].value"
               />
+
               <label v-bind:for="radio_value">{{ radio_text }}</label>
             </div>
           </div>
@@ -367,7 +368,8 @@ doesnt work though 🤦🏻‍♂️
 
 .mt-fp-form__radio {
   display: flex;
-  margin: 10px auto 20px;
+  margin: 20px auto 20px;
+  padding: 0 0 0 30px;
 }
 
 .mt-fp-form__radio-btn {
@@ -375,27 +377,61 @@ doesnt work though 🤦🏻‍♂️
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+
+  width: 80px;
 }
 
 .mt-fp-form__radio-btn:first-child {
   margin-left: 8px;
 }
 
+.mt-fp-form__radio-btn input[type="radio"] {
+  opacity: 0;
+}
+
 .mt-fp-form__radio-btn label {
-  margin: 8px 0 0 16px;
   font-size: 16px;
   line-height: 1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.mt-fp-form__radio-btn label:after {
+  content: "";
+  position: absolute;
+
+  left: -30px;
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  background-color: #da291c;
+  transition: 0.4s;
+  opacity: 0;
+}
+
+.mt-fp-form__radio-btn input[type="radio"]:checked + label:after {
+  opacity: 1;
+}
+
+.mt-fp-form__radio-btn label:before {
+  content: "";
+  position: absolute;
+  left: -38px;
+  top: -9px;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  border: 1px solid #979797;
+  /* background-color: #da291c; */
 }
 
 .mt-fp-form__radio-btn input[type="radio"] {
-  -ms-transform: scale(1.7); /* IE 9 */
-  -webkit-transform: scale(1.7); /* Chrome, Safari, Opera */
-  transform: scale(1.7);
-
-  /* 👇🏻 Won't work - browser specific */
-  /* color: var(--btn-bg); */
-  /* background-color: var(--btn-bg); */
-  /* border: solid 1px var(--btn-bg); */
+  /* opacity: 0; */
 }
 
 /* submit --- submit --- submit ---  */
