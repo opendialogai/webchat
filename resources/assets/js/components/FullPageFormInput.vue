@@ -125,6 +125,12 @@
         @click="_handleClick"
       >{{ message.data.submit_text }}</button>
     </div>
+
+    <template v-if="showLoader">
+      <div class="fp-loader">
+        <img src="./assets/fp-loader.svg" />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -156,7 +162,8 @@ export default {
       form: {
         data: []
       },
-      errors: []
+      errors: [],
+      showLoader: false
     };
   },
   methods: {
@@ -169,6 +176,8 @@ export default {
       this.validateForm();
       if (!this.errors.length) {
         this.onSubmit(this.form.data);
+
+        this.showLoader = true;
       }
     },
 
@@ -215,6 +224,7 @@ export default {
 .mt-fp-form {
   background-color: var(--messageListBg);
   overflow-x: hidden;
+  position: relative;
 }
 
 .mt-fp-form__elements {
@@ -532,4 +542,22 @@ doesnt work though 🤦🏻‍♂️
 .sc-message--fp-form--element .vs--single.vs--open .vs__selected {
   position: relative;
 } */
+
+.fp-loader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+.fp-loader img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
 </style>
