@@ -832,10 +832,12 @@ export default {
         this.checkHideChat();
       }
 
-      this.sendChatOpenMessage(this.isOpen);
+      const isOpen = this.isOpen;
+
+      this.sendChatOpenMessage(isOpen);
 
       setTimeout(() => {
-        this.sendChatOpenMessage(!this.isOpen);
+        this.sendChatOpenMessage(!isOpen);
       }, 3000);
     },
     sendChatOpenMessage(open = true) {
