@@ -44,7 +44,6 @@
           v-for="(button, idx) in message.data.buttons"
           :key="idx"
           @click="_handleClick(button)"
-          :style="{backgroundColor: colors.button.bg, color: colors.button.text, '--button-hover': colors.button.hoverbg}"
         >{{button.text}}</button>
       </div>
     </template>
@@ -124,11 +123,9 @@ export default {
 
 .mt-fpri__buttons button {
   margin-bottom: 10px;
-  /* padding: 20px 30px; */
+
   border: 1px solid;
-
   font-size: 15px;
-
   line-height: 1.33;
 
   text-align: center;
@@ -141,10 +138,15 @@ export default {
   outline: none;
   position: relative;
   transition: 0.4s;
-
-  width: 325px;
+  width: 95%;
+  max-width: 325px;
   min-height: 61px;
   border-radius: 34.5px;
+
+  padding: 0 20px;
+  @media (min-width: 450px) {
+    padding: 0 10px;
+  }
 }
 
 .mt-fpri__buttons button {
