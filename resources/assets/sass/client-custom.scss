@@ -1,24 +1,29 @@
-.webchat-container{
-    // border: 1px solid blue;
-    background-color: transparent;
-
+.webchat-container {
+  // border: 1px solid blue;
+  background-color: transparent;
 }
-
 
 // ChatWindow.vue --- ChatWindow.vue --- ChatWindow.vue ---
 
 .chat-window {
-  // border: 1px solid blue;
-  height: calc(100% - 140px);
   border-radius: 10px;
-  width: 423px;
+  height: calc(100% - 55px);
   margin: 0 auto;
+
+  @media (min-width: 450px) {
+    width: 423px;
+    height: calc(100% - 140px);
+  }
 }
 
 .chat-window.opened {
   //   box-shadow: 0 3px 26px 3px rgba(0, 0, 0, 0.3);
   box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
-  margin: 20px auto 0;
+  margin: 0px auto 0;
+
+  @media (min-width: 767px) {
+    margin: 20px auto 0;
+  }
 }
 
 // Header.vue --- Header.vue --- Header.vue ---
@@ -58,34 +63,58 @@
   justify-content: center;
   cursor: pointer;
   white-space: nowrap;
-  height: 90px;
-  width: 90px;
+  height: 60px;
+  width: 60px;
   border-radius: 45px;
   background-color: #da291c;
   transition: width 0.45s;
-  margin-right: 10px;
+  margin: 0 auto;
   box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+
+  @media (min-width: 450px) {
+    height: 90px;
+    width: 90px;
+    margin: 0 10px 0 0;
+  }
 }
 
 .header-cta-expand {
   .header-cta__text {
     display: block;
   }
-  width: 370px;
-  justify-content: space-between;
+
+  width: 285px;
+  height: 70px;
+
+  margin: 0 auto;
+  justify-content: flex-start;
   padding: 0 35px;
+
+  @media (min-width: 450px) {
+    width: 370px;
+    padding: 0 35px;
+    height: unset;
+  }
 }
 
 .header-cta__icon {
-  height: 50px;
-  width: 50px;
+  min-height: 40px;
+  min-width: 40px;
+  @media (min-width: 450px) {
+    min-height: 50px;
+    min-width: 50px;
+  }
 }
 
 .header-cta__text {
   margin-left: 20px;
   span {
+    font-size: 16px;
+    @media (min-width: 450px) {
+      font-size: 20px;
+    }
     display: block;
-    font-size: 20px;
+
     font-weight: 500;
     line-height: 1.5;
     color: #ffffff;
@@ -98,7 +127,8 @@
 
 //   <MessageList />
 //message list bkg is in test.css
-.message-list {}
+.message-list {
+}
 
 // <Message />
 // Line up the bot avatar inline with the message-type
@@ -107,6 +137,7 @@
   @media (min-width: $media-med) {
     max-width: calc(90% - 60px);
   }
+  margin-bottom: 20px;
 }
 
 .reap {
@@ -132,6 +163,14 @@
   @media (min-width: 900px) {
     margin-bottom: -70px;
   }
+}
+
+.mt-typing-indicator {
+  background-color: transparent !important;
+  color: grey !important;
+  color: #575759;
+  font-size: 14px;
+  padding: 25px 20px 10px 5px;
 }
 
 /* User Input --- User Input --- User Input ---  */
@@ -218,29 +257,34 @@
 .close-chat {
   display: flex;
   justify-content: center;
-  margin-top: 18px;
+  margin-top: -45px;
   margin-bottom: 10px;
+
+  @media (min-width: 450px) {
+    margin-top: 18px;
+    margin-bottom: 10px;
+  }
 }
 
 .close-chat__button {
-  width: 90px;
-  height: 90px;
+  position: relative;
+  z-index: 1;
+  width: 70px;
+  height: 70px;
   background-color: #313133;
   border-radius: 45px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-
+  @media (min-width: 450px) {
+    width: 90px;
+    height: 90px;
+    box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+  }
   &:hover {
     background-color: #000000;
-
-    // .close-chat__img {
-    //   transform: rotate(90deg);
-    //   transform-origin: center;
-    // }
   }
-  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
 }
 
 .close-chat__img {
