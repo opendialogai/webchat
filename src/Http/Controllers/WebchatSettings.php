@@ -67,39 +67,21 @@ class WebchatSettings
 
             switch ($userType) {
                 case ChatbotUser::NEW_USER:
-                    if (isset($general[WebchatSetting::NEW_USER_START_MINIMIZED])) {
-                        $config[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::NEW_USER_START_MINIMIZED];
-                    }
-                    if (isset($general[WebchatSetting::NEW_USER_CLOSED_CALLBACK])) {
-                        $config[WebchatSetting::CLOSED_INTENT] = $general[WebchatSetting::NEW_USER_CLOSED_CALLBACK];
-                    }
-                    if (isset($general[WebchatSetting::NEW_USER_OPEN_CALLBACK])) {
-                        $config[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::NEW_USER_OPEN_CALLBACK];
-                    }
+                    $config[WebchatSetting::SHOW_MINIMIZED] = (isset($general[WebchatSetting::NEW_USER_START_MINIMIZED])) ? $general[WebchatSetting::NEW_USER_START_MINIMIZED] : false;
+                    $config[WebchatSetting::CLOSED_INTENT] = (isset($general[WebchatSetting::NEW_USER_CLOSED_CALLBACK])) ? $general[WebchatSetting::NEW_USER_CLOSED_CALLBACK] : null;
+                    $config[WebchatSetting::OPEN_INTENT] = (isset($general[WebchatSetting::NEW_USER_OPEN_CALLBACK])) ? $general[WebchatSetting::NEW_USER_OPEN_CALLBACK] : null;
                     break;
 
                 case ChatbotUser::RETURNING_USER:
-                    if (isset($general[WebchatSetting::RETURNING_USER_START_MINIMIZED])) {
-                        $config[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::RETURNING_USER_START_MINIMIZED];
-                    }
-                    if (isset($general[WebchatSetting::RETURNING_USER_CLOSED_CALLBACK])) {
-                        $config[WebchatSetting::CLOSED_INTENT] = $general[WebchatSetting::RETURNING_USER_CLOSED_CALLBACK];
-                    }
-                    if (isset($general[WebchatSetting::RETURNING_USER_OPEN_CALLBACK])) {
-                        $config[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::RETURNING_USER_OPEN_CALLBACK];
-                    }
+                    $config[WebchatSetting::SHOW_MINIMIZED] = (isset($general[WebchatSetting::RETURNING_USER_START_MINIMIZED])) ? $general[WebchatSetting::RETURNING_USER_START_MINIMIZED] : false;
+                    $config[WebchatSetting::CLOSED_INTENT] = (isset($general[WebchatSetting::RETURNING_USER_CLOSED_CALLBACK])) ? $general[WebchatSetting::RETURNING_USER_CLOSED_CALLBACK] : null;
+                    $config[WebchatSetting::OPEN_INTENT] = (isset($general[WebchatSetting::RETURNING_USER_OPEN_CALLBACK])) ? $general[WebchatSetting::RETURNING_USER_OPEN_CALLBACK] : null;
                     break;
 
                 case ChatbotUser::ONGOING_USER:
-                    if (isset($general[WebchatSetting::ONGOING_USER_START_MINIMIZED])) {
-                        $config[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::ONGOING_USER_START_MINIMIZED];
-                    }
-                    if (isset($general[WebchatSetting::ONGOING_USER_CLOSED_CALLBACK])) {
-                        $config[WebchatSetting::CLOSED_INTENT] = $general[WebchatSetting::ONGOING_USER_CLOSED_CALLBACK];
-                    }
-                    if (isset($general[WebchatSetting::ONGOING_USER_OPEN_CALLBACK])) {
-                        $config[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::ONGOING_USER_OPEN_CALLBACK];
-                    }
+                    $config[WebchatSetting::SHOW_MINIMIZED] = (isset($general[WebchatSetting::ONGOING_USER_START_MINIMIZED])) ? $general[WebchatSetting::ONGOING_USER_START_MINIMIZED] : false;
+                    $config[WebchatSetting::CLOSED_INTENT] = (isset($general[WebchatSetting::ONGOING_USER_CLOSED_CALLBACK])) ? $general[WebchatSetting::ONGOING_USER_CLOSED_CALLBACK] : null;
+                    $config[WebchatSetting::OPEN_INTENT] = (isset($general[WebchatSetting::ONGOING_USER_OPEN_CALLBACK])) ? $general[WebchatSetting::ONGOING_USER_OPEN_CALLBACK] : null;
                     break;
             }
         }
