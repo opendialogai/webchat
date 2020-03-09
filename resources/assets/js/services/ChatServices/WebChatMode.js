@@ -35,12 +35,21 @@ WebChatMode.prototype.sendRequest = function(message, webChatComponent) {
     }
 };
 
-WebChatMode.prototype.sendResponseSuccess = function(response, webChatComponent) {
-  if (response === null) {
-    return;
-  }
-
-  if (response.data instanceof Array) {
+WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
+  if (sentMessage.type === "chat_open" && !sentMessage.data.open) {
+    if (response.data instanceof Array) {
+      response.data.forEach((message) => {
+        if (message.data && message.data.text && webChatComponent.ctaText.length < 2) {
+          webChatComponent.ctaText.push(message.data.text);
+        }
+      });
+    } else if (response.data) {
+      const message = response.data;
+      if (message.data && message.data.text) {
+        webChatComponent.ctaText.push(message.data.text);
+      }
+    }
+  } else if (response.data instanceof Array) {
     response.data.forEach((message, i) => {
       if (!message) {
         webChatComponent.contentEditable = true;
@@ -76,8 +85,8 @@ WebChatMode.prototype.sendResponseSuccess = function(response, webChatComponent)
             !webChatComponent.hideTypingIndicatorOnInternalMessages
           ) {
             const lastMessage = webChatComponent.messageList[
-            webChatComponent.messageList.length - 1
-              ];
+              webChatComponent.messageList.length - 1
+            ];
             lastMessage.type = message.type;
             lastMessage.data = message.data;
 
@@ -111,6 +120,14 @@ WebChatMode.prototype.sendResponseSuccess = function(response, webChatComponent)
             webChatComponent.contentEditable = !message.data.disable_text;
           }
 
+          if (message.type === "fp-form") {
+            webChatComponent.showFullPageFormInputMessage(message);
+          }
+
+          if (message.type === "fp-rich") {
+            webChatComponent.showFullPageRichInputMessage(message);
+          }
+
           if (!webChatComponent.hideTypingIndicatorOnInternalMessages) {
             if (i < response.data.length - 1) {
               webChatComponent.$nextTick(() => {
@@ -138,7 +155,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, webChatComponent)
   } else if (response.data) {
     const message = response.data;
 
-    if (newMsg.type === "chat_open") {
+    if (sentMessage.type === "chat_open") {
       if (message && message.data) {
         if (
           (webChatComponent.useBotName || webChatComponent.useBotAvatar) &&
@@ -160,8 +177,8 @@ WebChatMode.prototype.sendResponseSuccess = function(response, webChatComponent)
 
         setTimeout(() => {
           const lastMessage = webChatComponent.messageList[
-          webChatComponent.messageList.length - 1
-            ];
+            webChatComponent.messageList.length - 1
+          ];
 
           webChatComponent.$emit("newMessage", message);
 
@@ -169,6 +186,14 @@ WebChatMode.prototype.sendResponseSuccess = function(response, webChatComponent)
 
           lastMessage.type = message.type;
           lastMessage.data = message.data;
+
+          if (message.type === "fp-form") {
+            webChatComponent.showFullPageFormInputMessage(message);
+          }
+
+          if (message.type === "fp-rich") {
+            webChatComponent.showFullPageRichInputMessage(message);
+          }
 
           webChatComponent.contentEditable = !message.data.disable_text;
         }, webChatComponent.messageDelay);
@@ -199,8 +224,8 @@ WebChatMode.prototype.sendResponseSuccess = function(response, webChatComponent)
         // Only add a message to the list if it is a message object
         if (typeof message === "object" && message !== null) {
           const lastMessage = webChatComponent.messageList[
-          webChatComponent.messageList.length - 1
-            ];
+            webChatComponent.messageList.length - 1
+          ];
 
           webChatComponent.$emit("newMessage", message);
 
@@ -217,6 +242,14 @@ WebChatMode.prototype.sendResponseSuccess = function(response, webChatComponent)
 
         if (message.data) {
           webChatComponent.contentEditable = !message.data.disable_text;
+        }
+
+        if (message.type === "fp-form") {
+          webChatComponent.showFullPageFormInputMessage(message);
+        }
+
+        if (message.type === "fp-rich") {
+          webChatComponent.showFullPageRichInputMessage(message);
         }
 
         if (message.type === "longtext") {
@@ -261,7 +294,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, webChatComponent)
   }
 };
 
-WebChatMode.prototype.sendResponseError = function(error, webChatComponent) {
+WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatComponent) {
   setTimeout(() => {
     const message = {
       type: "text",
