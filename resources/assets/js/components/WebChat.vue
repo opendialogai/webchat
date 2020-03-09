@@ -27,6 +27,8 @@
         :is-open="isOpen"
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
+        :on-full-page-form-input-submit="onFullPageFormInputSubmit"
+        :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
         :open="openChat"
         :on-button-click="onButtonClick"
@@ -39,6 +41,8 @@
         :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
         :show-long-text-input="showLongTextInput"
+        :show-full-page-form-input="showFullPageFormInput"
+        :show-full-page-rich-input="showFullPageRichInput"
         :show-messages="showMessages"
         :max-input-characters="maxInputCharacters"
         :button-text="buttonText"
@@ -48,6 +52,9 @@
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
         :mode-data="modeData"
+        :fp-form-input-message="fpFormInputMessage"
+        :fp-rich-input-message="fpRichInputMessage"
+        :cta-text="ctaText"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
         @setChatMode="setChatMode"
@@ -64,10 +71,10 @@
 
 
 <script>
-  import axios from "axios";
-  import chatService from "../services/ChatService";
+import axios from "axios";
+import chatService from "../services/ChatService"
 
-  const moment = require("moment-timezone");
+const moment = require("moment-timezone");
 
 export default {
   name: "WebChat",
@@ -90,6 +97,10 @@ export default {
       default: ""
     },
     chatIsOpen: Boolean,
+    closedIntent: {
+      type: String,
+      default: ""
+    },
     colours: {
       type: Object,
       required: true
@@ -111,6 +122,10 @@ export default {
     newMessageIcon: {
       type: String,
       required: true
+    },
+    openIntent: {
+      type: String,
+      default: ""
     },
     parentUrl: {
       type: String,
@@ -156,6 +171,9 @@ export default {
       buttonText: "Submit",
       confirmationMessage: null,
       contentEditable: false,
+      ctaText: [],
+      fpFormInputMessage: {},
+      fpRichInputMessage: {},
       headerHeight: 0,
       headerText: "",
       id: "",
@@ -166,6 +184,8 @@ export default {
       messageList: [],
       placeholder: "Enter your message",
       showLongTextInput: false,
+      showFullPageFormInput: false,
+      showFullPageRichInput: false,
       showMessages: true,
       showTypingIndicator: false,
       users: [],
@@ -335,10 +355,12 @@ export default {
       // Give the message an id.
       newMsg.id = this.$uuid.v4();
 
-      if (newMsg.type === "chat_open" && this.userInfo) {
-        Object.keys(this.userInfo).forEach(key => {
-          newMsg.user[key] = this.userInfo[key];
-        });
+      if (newMsg.type === "chat_open") {
+        if (this.userInfo) {
+          Object.keys(this.userInfo).forEach(key => {
+            newMsg.user[key] = this.userInfo[key];
+          });
+        }
       }
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
@@ -352,6 +374,8 @@ export default {
         this.headerText = "";
         this.maxInputCharacters = 0;
         this.showLongTextInput = false;
+        this.showFullPageFormInput = false;
+        this.showFullPageRichInput = false;
         this.showMessages = true;
         this.messageList.push(newMsg);
       }
@@ -370,9 +394,8 @@ export default {
       }
 
       chatService.sendRequest(newMsg).then(
-          response => chatService.sendResponseSuccess(response, this),
-          () => chatService.sendResponseError(null, this)
-        );
+          response => chatService.sendResponseSuccess(response, newMsg, this),
+          () => chatService.sendResponseError(null, newMsg, this));
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {
@@ -406,6 +429,14 @@ export default {
       this.sendMessage(msgToSend);
       this.placeholder = "Write a reply";
     },
+    onFullPageFormInputSubmit(data) {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onFormButtonClick(data, msg);
+    },
+    onFullPageRichInputSubmit(button) {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onButtonClick(button, msg);
+    },
     openChat() {},
     async onButtonClick(button, msg) {
       if (msg.data.external) {
@@ -434,10 +465,6 @@ export default {
           window.open(button.link, "_parent");
         }
         return;
-      }
-
-      if (msg.data.clear_after_interaction) {
-        this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
       }
 
       if (!this.isExpand) {
@@ -515,24 +542,6 @@ export default {
       this.isOpen = !this.isOpen;
       this.$emit("toggleChatOpen", this.headerHeight);
     },
-    workoutCallback() {
-      // Default
-      let callbackId = "WELCOME";
-      const urlParams = new URLSearchParams(window.location.search);
-
-      // If the url has a callback id present, use that
-      if (urlParams.has("callback_id")) {
-        callbackId = urlParams.get("callback_id");
-      } else {
-        // Check if the url matches one in the callback map
-        this.callbackMap.forEach((url, idx) => {
-          if (this.parentUrl.match(this.wildcardToRegExp(url))) {
-            callbackId = this.callbackMap[idx];
-          }
-        });
-      }
-      return callbackId;
-    },
     wildcardToRegExp(string) {
       return new RegExp(
         `^${string
@@ -552,13 +561,27 @@ export default {
         this.checkHideChat();
       }
 
-      const message = {
-        type: "chat_open",
-        callback_id: this.workoutCallback(),
-        data: {}
-      };
+      this.sendChatOpenMessage(this.isOpen);
 
-      this.sendMessage(message);
+      setTimeout(() => {
+        this.sendChatOpenMessage(!this.isOpen);
+      }, 3000);
+    },
+    sendChatOpenMessage(open = true) {
+      const callback = (open) ? this.openIntent : this.closedIntent;
+
+      if (callback) {
+        const message = {
+          type: "chat_open",
+          callback_id: callback,
+          data: {
+            value: this.parentUrl,
+            open
+          }
+        };
+
+        this.sendMessage(message);
+      }
     },
     getChatHistory() {
       this.loading = true;
@@ -708,6 +731,18 @@ export default {
           });
         }
       }
+    },
+    showFullPageFormInputMessage(message) {
+      this.fpFormInputMessage = message;
+
+      this.showMessages = false;
+      this.showFullPageFormInput = true;
+    },
+    showFullPageRichInputMessage(message) {
+      this.fpRichInputMessage = message;
+
+      this.showMessages = false;
+      this.showFullPageRichInput = true;
     },
     createUuid() {
       const uuid = this.$uuid.v4();

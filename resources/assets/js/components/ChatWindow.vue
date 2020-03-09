@@ -11,6 +11,7 @@
       :onRestartButtonClick="onRestartButtonClick"
       :colors="colors"
       :isOpen="isOpen"
+      :ctaText="ctaText"
     />
     <MessageList
       v-if="showMessages"
@@ -27,7 +28,31 @@
       :mode-data="modeData"
       @setChatMode="setChatMode"
     />
-    <template v-if="!showLongTextInput">
+
+    <template v-if="showLongTextInput">
+      <LongTextUserInput
+        :headerText="headerText"
+        :maxInputCharacters="maxInputCharacters"
+        :buttonText="buttonText"
+        :confirmationMessage="confirmationMessage"
+        :onSubmit="onUserInputSubmit"
+        :placeholder="placeholder"
+        :initialText="initialText"
+        :colors="colors" />
+    </template>
+    <template v-else-if="showFullPageFormInput">
+      <FullPageFormInput
+        :message="fpFormInputMessage"
+        :onSubmit="onFullPageFormInputSubmit"
+        :colors="colors" />
+    </template>
+    <template v-else-if="showFullPageRichInput">
+      <FullPageRichInput
+        :message="fpRichInputMessage"
+        :onSubmit="onFullPageRichInputSubmit"
+        :colors="colors" />
+    </template>
+    <template v-else>
       <UserInput
         :contentEditable="contentEditable"
         :showEmoji="showEmoji"
@@ -43,31 +68,24 @@
         @setChatMode="setChatMode"
       />
     </template>
-    <template v-else>
-      <LongTextUserInput
-        :headerText="headerText"
-        :maxInputCharacters="maxInputCharacters"
-        :buttonText="buttonText"
-        :confirmationMessage="confirmationMessage"
-        :onSubmit="onUserInputSubmit"
-        :placeholder="placeholder"
-        :initialText="initialText"
-        :colors="colors" />
-    </template>
   </div>
 </template>
 
 <script>
-  import Header from './Header.vue'
-  import MessageList from './MessageList.vue'
-  import UserInput from './UserInput.vue'
-  import LongTextUserInput from './LongTextUserInput.vue'
+import Header from './Header.vue'
+import MessageList from './MessageList.vue'
+import UserInput from './UserInput.vue'
+import FullPageFormInput from './FullPageFormInput.vue'
+import FullPageRichInput from './FullPageRichInput.vue'
+import LongTextUserInput from './LongTextUserInput.vue'
 
-  export default {
+export default {
   components: {
     Header,
     MessageList,
     UserInput,
+    FullPageFormInput,
+    FullPageRichInput,
     LongTextUserInput
   },
   props: {
@@ -78,6 +96,14 @@
     fullScreen: {
       type: Boolean,
       default: false
+    },
+    fpFormInputMessage: {
+      type: Object,
+      default: () => {}
+    },
+    fpRichInputMessage: {
+      type: Object,
+      default: () => {}
     },
     showEmoji: {
       type: Boolean,
@@ -96,6 +122,14 @@
       required: true
     },
     onUserInputSubmit: {
+      type: Function,
+      required: true
+    },
+    onFullPageFormInputSubmit: {
+      type: Function,
+      required: true
+    },
+    onFullPageRichInputSubmit: {
       type: Function,
       required: true
     },
@@ -127,6 +161,10 @@
       type: Function,
       required: true
     },
+    ctaText: {
+      type: Array,
+      default: () => []
+    },
     messageList: {
       type: Array,
       default: () => []
@@ -152,6 +190,14 @@
       default: () => false
     },
     showLongTextInput: {
+      type: Boolean,
+      default: () => false
+    },
+    showFullPageFormInput: {
+      type: Boolean,
+      default: () => false
+    },
+    showFullPageRichInput: {
       type: Boolean,
       default: () => false
     },
@@ -184,8 +230,8 @@
       required: true
     },
     initialText: {
-        type: String,
-        default: null
+      type: String,
+      default: null
     },
     modeData: {
       type: Object,
