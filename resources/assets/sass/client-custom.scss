@@ -87,7 +87,7 @@
   height: 70px;
 
   margin: 0 auto;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 0 35px;
 
   @media (min-width: 450px) {
@@ -137,6 +137,7 @@
   @media (min-width: $media-med) {
     max-width: calc(90% - 60px);
   }
+  margin-bottom: 20px;
 }
 
 .reap {
@@ -162,6 +163,14 @@
   @media (min-width: 900px) {
     margin-bottom: -70px;
   }
+}
+
+.mt-typing-indicator {
+  background-color: transparent !important;
+  color: grey !important;
+  color: #575759;
+  font-size: 14px;
+  padding: 25px 20px 10px 5px;
 }
 
 /* User Input --- User Input --- User Input ---  */

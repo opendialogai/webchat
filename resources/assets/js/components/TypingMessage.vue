@@ -1,7 +1,7 @@
 <template>
   <transition leave-active-class="fadeOut">
     <div
-      class="mt mt-typing-indicator"
+      class="mt-typing-indicator"
       :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
@@ -55,14 +55,13 @@ export default {
 <style scoped>
 .typewriter {
   width: 60px;
-  padding-bottom: 15px;
 }
 .typewriter p {
   overflow: hidden; /* Ensures the content is not revealed until the animation */
   border-right: 0.15em solid #da291c;
   white-space: nowrap; /* Keeps the content on a single line */
-  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-  line-height: 1;
+  margin: -8px auto 0px;
+  line-height: 1.5;
 
   /* animation: typing 1s steps(9, end), blink-caret 0.75s step-end infinite; */
   animation: typing 3s steps(9, end) infinite,
