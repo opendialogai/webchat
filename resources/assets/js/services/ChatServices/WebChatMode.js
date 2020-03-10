@@ -215,6 +215,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
         webChatComponent.messageList.push({
           author: "them",
           type: "typing",
+          mode: webChatComponent.modeData.mode,
           data: {
             animate: webChatComponent.messageAnimation
           }
