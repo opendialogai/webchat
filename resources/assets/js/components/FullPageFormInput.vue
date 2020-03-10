@@ -234,6 +234,7 @@ export default {
 .mt-fp-form {
   background-color: var(--messageListBg);
   overflow-x: hidden;
+  flex: 1;
 }
 
 .mt-fp-form__elements {
