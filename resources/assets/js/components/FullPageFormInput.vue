@@ -125,6 +125,11 @@
         v-if="!message.data.auto_submit"
         @click="_handleClick"
       >{{ message.data.submit_text }}</button>
+
+        <button
+            class="mt-fp-form__submit"
+            @click="_handleCancel"
+        >{{ message.data.cancel_text }}</button>
     </div>
   </div>
 </template>
@@ -141,6 +146,10 @@ export default {
     onSubmit: {
       type: Function,
       required: true
+    },
+    onCancel: {
+        type: Function,
+        required: true
     },
     message: {
       type: Object,
@@ -165,6 +174,9 @@ export default {
       if (this.message.data.auto_submit) {
         this._handleClick();
       }
+    },
+    _handleCancel() {
+        this.onCancel(this.form.data);
     },
     _handleClick() {
       this.validateForm();

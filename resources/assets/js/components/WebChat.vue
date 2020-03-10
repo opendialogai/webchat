@@ -28,11 +28,13 @@
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
         :on-full-page-form-input-submit="onFullPageFormInputSubmit"
+        :on-full-page-form-input-cancel="onFullPageFormInputCancel"
         :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
         :open="openChat"
         :on-button-click="onButtonClick"
         :on-form-button-click="onFormButtonClick"
+        :on-form-cancel-click="onFormCancelClick"
         :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
@@ -382,24 +384,14 @@ export default {
         // Need to add error handling here
         axios.post("/incoming/webchat", webchatMessage).then(
           response => {
-            if (newMsg.type === "chat_open" && !newMsg.data.open) {
-              if (response.data instanceof Array) {
-                response.data.forEach((message) => {
-                  if (message.data && message.data.text && this.ctaText.length < 2) {
-                    this.ctaText.push(message.data.text);
-                  }
-                });
-              } else if (response.data) {
-                const message = response.data;
-                if (message.data && message.data.text) {
-                  this.ctaText.push(message.data.text);
-                }
-              }
-            } else if (response.data instanceof Array) {
+            if (response.data instanceof Array) {
               response.data.forEach((message, i) => {
                 if (!message) {
                   this.contentEditable = true;
                 } else {
+                    if (message.type === "cta") {
+                        this.ctaText.push(message.data.text);
+                    }
                   if (i === 0) {
                     if (
                       (this.useBotName || this.useBotAvatar) &&
@@ -704,6 +696,10 @@ export default {
       const msg = this.messageList[this.messageList.length - 1];
       this.onFormButtonClick(data, msg);
     },
+    onFullPageFormInputCancel() {
+        const msg = this.messageList[this.messageList.length - 1];
+        this.onFormCancelClick(msg);
+    },
     onFullPageRichInputSubmit(button) {
       const msg = this.messageList[this.messageList.length - 1];
       this.onButtonClick(button, msg);
@@ -743,15 +739,14 @@ export default {
       }
 
       this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
-
       this.sendMessage({
-        type: "button_response",
-        author: "me",
-        callback_id: button.callback_id,
-        data: {
-          text: button.text,
-          value: button.value
-        }
+          type: "button_response",
+          author: "me",
+          callback_id: button.callback_id,
+          data: {
+              text: button.text,
+              value: button.value
+          }
       });
     },
     onListButtonClick(callback) {
@@ -798,6 +793,16 @@ export default {
         data: responseData
       });
     },
+    onFormCancelClick(msg) {
+        console.log(msg);
+        this.messageList[this.messageList.indexOf(msg)].type = "text";
+        this.sendMessage({
+            type: "form_response",
+            author: "me",
+            callback_id: msg.data.cancel_callback,
+            data:{text: msg.data.cancel_text}
+        });
+    },
     onRestartButtonClick() {
       this.sendMessage({
         type: "trigger",
@@ -834,14 +839,10 @@ export default {
 
       const isOpen = this.isOpen;
 
-      this.sendChatOpenMessage(isOpen);
-
-      setTimeout(() => {
-        this.sendChatOpenMessage(!isOpen);
-      }, 3000);
+      this.sendChatOpenMessage();
     },
-    sendChatOpenMessage(open = true) {
-      const callback = (open) ? this.openIntent : this.closedIntent;
+    sendChatOpenMessage() {
+      const callback = this.openIntent;
 
       if (callback) {
         const message = {
@@ -849,7 +850,6 @@ export default {
           callback_id: callback,
           data: {
             value: this.parentUrl,
-            open
           }
         };
 
@@ -861,7 +861,7 @@ export default {
 
       const userId = this.user && this.user.email ? this.user.email : this.uuid;
 
-      const ignoreTypes = "chat_open,trigger";
+      const ignoreTypes = "chat_open,trigger,cta";
 
       return axios
         .get(
