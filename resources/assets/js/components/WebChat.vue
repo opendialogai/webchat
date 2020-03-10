@@ -382,29 +382,14 @@ export default {
         // Need to add error handling here
         axios.post("/incoming/webchat", webchatMessage).then(
           response => {
-            if (newMsg.type === "chat_open" && !newMsg.data.open) {
-              if (response.data instanceof Array) {
-                response.data.forEach((message) => {
-                  if (message.data && message.data.text && this.ctaText.length < 2) {
-                    this.ctaText.push(message.data.text);
-                  }
-                });
-
-                if (this.ctaText.length) {
-                  sessionStorage.ctaText = JSON.stringify(this.ctaText);
-                }
-              } else if (response.data) {
-                const message = response.data;
-                if (message.data && message.data.text) {
-                  this.ctaText.push(message.data.text);
-                  sessionStorage.ctaText = JSON.stringify(this.ctaText);
-                }
-              }
-            } else if (response.data instanceof Array) {
+            if (response.data instanceof Array) {
               response.data.forEach((message, i) => {
                 if (!message) {
                   this.contentEditable = true;
                 } else {
+                    if (message.type === "cta") {
+                        this.ctaText.push(message.data.text);
+                    }
                   if (i === 0) {
                     if (
                       (this.useBotName || this.useBotAvatar) &&
@@ -839,19 +824,10 @@ export default {
 
       const isOpen = this.isOpen;
 
-      this.sendChatOpenMessage(isOpen);
-
-      setTimeout(() => {
-        this.sendChatOpenMessage(!isOpen);
-      }, 3000);
+      this.sendChatOpenMessage();
     },
-    sendChatOpenMessage(open = true) {
-      if (!open && sessionStorage.ctaText) {
-        this.ctaText = JSON.parse(sessionStorage.ctaText);
-        return;
-      }
-
-      const callback = (open) ? this.openIntent : this.closedIntent;
+    sendChatOpenMessage() {
+      const callback = this.openIntent;
 
       if (callback) {
         const message = {
@@ -859,7 +835,6 @@ export default {
           callback_id: callback,
           data: {
             value: this.parentUrl,
-            open
           }
         };
 
@@ -871,7 +846,7 @@ export default {
 
       const userId = this.user && this.user.email ? this.user.email : this.uuid;
 
-      const ignoreTypes = "chat_open,trigger";
+      const ignoreTypes = "chat_open,trigger,cta";
 
       return axios
         .get(
