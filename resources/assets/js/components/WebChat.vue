@@ -340,9 +340,6 @@ export default {
         this.headerText = "";
         this.maxInputCharacters = 0;
         this.showLongTextInput = false;
-        this.showFullPageFormInput = false;
-        this.showFullPageRichInput = false;
-        this.showMessages = true;
         this.messageList.push(newMsg);
       }
 
@@ -462,6 +459,12 @@ export default {
 
                     if (message.type === "fp-rich") {
                       this.showFullPageRichInputMessage(message);
+                    }
+
+                    if (message.type !== "fp-form" && message.type !== "fp-rich") {
+                      this.showFullPageFormInput = false;
+                      this.showFullPageRichInput = false;
+                      this.showMessages = true;
                     }
 
                     if (!this.hideTypingIndicatorOnInternalMessages) {
@@ -584,6 +587,12 @@ export default {
 
                   if (message.type === "fp-rich") {
                     this.showFullPageRichInputMessage(message);
+                  }
+
+                  if (message.type !== "fp-form" && message.type !== "fp-rich") {
+                    this.showFullPageFormInput = false;
+                    this.showFullPageRichInput = false;
+                    this.showMessages = true;
                   }
 
                   if (message.type === "longtext") {
@@ -738,15 +747,18 @@ export default {
         this.$emit("expandChat");
       }
 
-      this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
+      if (msg.type !== "fp-rich") {
+        this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
+      }
+
       this.sendMessage({
-          type: "button_response",
-          author: "me",
-          callback_id: button.callback_id,
-          data: {
-              text: button.text,
-              value: button.value
-          }
+        type: "button_response",
+        author: "me",
+        callback_id: button.callback_id,
+        data: {
+          text: button.text,
+          value: button.value
+        }
       });
     },
     onListButtonClick(callback) {
@@ -1013,12 +1025,14 @@ export default {
       this.fpFormInputMessage = message;
 
       this.showMessages = false;
+      this.showFullPageRichInput = false;
       this.showFullPageFormInput = true;
     },
     showFullPageRichInputMessage(message) {
       this.fpRichInputMessage = message;
 
       this.showMessages = false;
+      this.showFullPageFormInput = false;
       this.showFullPageRichInput = true;
     },
     createUuid() {
