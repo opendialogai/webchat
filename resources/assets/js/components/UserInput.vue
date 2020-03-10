@@ -111,6 +111,9 @@
       confirmCloseChat: false,
     };
   },
+  created() {
+    this.onTextChange = _.debounce(this.onTextChangeForDebouncing, 500);
+  },
   methods: {
     cancelFile() {
       this.file = null;
@@ -132,7 +135,7 @@
         event.preventDefault();
       }
     },
-    onTextChange(event) {
+    onTextChangeForDebouncing(event) {
       if (event.target.innerHTML === "" || event.target.innerHTML === "<br>") {
         // Input is empty, turn off the typing indicator.
         if (this.textEntered === true) {
@@ -142,10 +145,8 @@
       } else {
         // Input is not empty, turn on the typing indicator if
         // it's not already.
-        if (this.textEntered === false) {
-          this.$parent.$parent.$emit("vbc-user-typing");
-          this.textEntered = true;
-        }
+        this.$parent.$parent.$emit("vbc-user-typing", event.target.innerHTML);
+        this.textEntered = true;
       }
     },
     _submitExternalButton(button) {

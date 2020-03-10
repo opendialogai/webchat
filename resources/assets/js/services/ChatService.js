@@ -41,6 +41,18 @@ ChatService.prototype.sendResponseError = function(error, sentMessage, webChatCo
   return this.getActiveService().sendResponseError(error, sentMessage, webChatComponent);
 };
 
+ChatService.prototype.sendTypingRequest = function(message, webChatComponent) {
+  return this.getActiveService().sendTypingRequest(message, webChatComponent);
+};
+
+ChatService.prototype.sendTypingResponseSuccess = function(response, webChatComponent) {
+  return this.getActiveService().sendTypingResponseSuccess(response, webChatComponent);
+};
+
+ChatService.prototype.sendTypingResponseError = function(error, webChatComponent) {
+  return this.getActiveService().sendTypingResponseError(error, webChatComponent);
+};
+
 ChatService.prototype.initialiseChat = function(webChatComponent) {
   return this.getActiveService().initialiseChat(webChatComponent);
 };

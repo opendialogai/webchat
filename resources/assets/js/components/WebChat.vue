@@ -57,6 +57,7 @@
         :cta-text="ctaText"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
+        @vbc-user-typing="userTyping"
         @setChatMode="setChatMode"
       />
       <div class="close-chat">
@@ -71,10 +72,10 @@
 
 
 <script>
-import axios from "axios";
-import chatService from "../services/ChatService"
+  import axios from "axios";
+  import chatService from "../services/ChatService"
 
-const moment = require("moment-timezone");
+  const moment = require("moment-timezone");
 
 export default {
   name: "WebChat",
@@ -790,6 +791,11 @@ export default {
       this.chatbotAvatar = this.chatbotAvatarPath;
 
       await chatService.initialiseChat(this);
+    },
+    userTyping(text) {
+      chatService.sendTypingRequest(text, this)
+        .then((response) => chatService.sendTypingResponseSuccess(response, this))
+        .catch(() => chatService.sendTypingResponseError(null, this));
     }
   }
 };

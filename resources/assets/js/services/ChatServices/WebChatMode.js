@@ -325,6 +325,18 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
   }, webChatComponent.messageDelay);
 };
 
+WebChatMode.prototype.sendTypingRequest = function(message, webChatComponent) {
+  return new Promise((resolve, reject) => resolve());
+};
+
+WebChatMode.prototype.sendTypingResponseSuccess = function(response, webChatComponent) {
+  return new Promise((resolve, reject) => resolve());
+};
+
+WebChatMode.prototype.sendTypingResponseError = function(error, webChatComponent) {
+  return new Promise((resolve, reject) => resolve());
+};
+
 WebChatMode.prototype.initialiseChat = function(webChatComponent) {
   return new Promise((resolve, reject) => resolve());
 };
