@@ -28,11 +28,13 @@
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
         :on-full-page-form-input-submit="onFullPageFormInputSubmit"
+        :on-full-page-form-input-cancel="onFullPageFormInputCancel"
         :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
         :open="openChat"
         :on-button-click="onButtonClick"
         :on-form-button-click="onFormButtonClick"
+        :on-form-cancel-click="onFormCancelClick"
         :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
@@ -694,6 +696,10 @@ export default {
       const msg = this.messageList[this.messageList.length - 1];
       this.onFormButtonClick(data, msg);
     },
+    onFullPageFormInputCancel() {
+        const msg = this.messageList[this.messageList.length - 1];
+        this.onFormCancelClick(msg);
+    },
     onFullPageRichInputSubmit(button) {
       const msg = this.messageList[this.messageList.length - 1];
       this.onButtonClick(button, msg);
@@ -733,15 +739,14 @@ export default {
       }
 
       this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
-
       this.sendMessage({
-        type: "button_response",
-        author: "me",
-        callback_id: button.callback_id,
-        data: {
-          text: button.text,
-          value: button.value
-        }
+          type: "button_response",
+          author: "me",
+          callback_id: button.callback_id,
+          data: {
+              text: button.text,
+              value: button.value
+          }
       });
     },
     onListButtonClick(callback) {
@@ -787,6 +792,16 @@ export default {
         callback_id: msg.data.callback_id,
         data: responseData
       });
+    },
+    onFormCancelClick(msg) {
+        console.log(msg);
+        this.messageList[this.messageList.indexOf(msg)].type = "text";
+        this.sendMessage({
+            type: "form_response",
+            author: "me",
+            callback_id: msg.data.cancel_callback,
+            data:{text: msg.data.cancel_text}
+        });
     },
     onRestartButtonClick() {
       this.sendMessage({
