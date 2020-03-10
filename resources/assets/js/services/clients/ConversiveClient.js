@@ -120,4 +120,12 @@ ConversiveClient.prototype.sendMessage = function(message, sessionToken) {
   });
 };
 
+ConversiveClient.prototype.sendTypingMessage = function(text, sessionToken) {
+  return this.makeRequest("sendTextMessage", {
+    b: text,
+    t: sessionToken,
+    rsn: this.requestSerialNumber,
+  });
+};
+
 export default ConversiveClient;
