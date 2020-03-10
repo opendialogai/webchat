@@ -172,7 +172,13 @@ export default {
         this.onSubmit(this.form.data);
       }
     },
+    validateEmail(emailAddress) {
+      if (/^[^\s@]+@[^\s@]+$/.test(emailAddress)) {
+        return true;
+      }
 
+      return false;
+    },
     validateForm() {
       this.errors = [];
 
@@ -185,6 +191,18 @@ export default {
             type: element.name,
             message: "<em>" + element.display + "</em> is required"
           });
+        }
+
+        if (
+          element.element_type === 'email' &&
+          !this.isEmpty(this.form.data[element.name].value)
+        ) {
+          if (!this.validateEmail(this.form.data[element.name].value)) {
+            this.errors.push({
+              type: element.name,
+              message: "<em>" + element.display + "</em> field is not a valid email address"
+            });
+          }
         }
       });
     },
