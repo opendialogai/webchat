@@ -389,10 +389,15 @@ export default {
                     this.ctaText.push(message.data.text);
                   }
                 });
+
+                if (this.ctaText.length) {
+                  sessionStorage.ctaText = JSON.stringify(this.ctaText);
+                }
               } else if (response.data) {
                 const message = response.data;
                 if (message.data && message.data.text) {
                   this.ctaText.push(message.data.text);
+                  sessionStorage.ctaText = JSON.stringify(this.ctaText);
                 }
               }
             } else if (response.data instanceof Array) {
@@ -841,6 +846,11 @@ export default {
       }, 3000);
     },
     sendChatOpenMessage(open = true) {
+      if (!open && sessionStorage.ctaText) {
+        this.ctaText = JSON.parse(sessionStorage.ctaText);
+        return;
+      }
+
       const callback = (open) ? this.openIntent : this.closedIntent;
 
       if (callback) {
