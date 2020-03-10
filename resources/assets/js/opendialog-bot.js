@@ -3,7 +3,7 @@ import 'whatwg-fetch';
 import 'url-search-params-polyfill';
 import 'core-js/es/object';
 
-let query = 'open=true';
+let query = '';
 
 // startsWith polyfill
 if (!String.prototype.startsWith) {
@@ -232,17 +232,7 @@ if (window.openDialogSettings) {
                 addCssToPage(window.openDialogSettings.general.pageCssPath);
             }
 
-            if (urlParams.has('chat_open') && urlParams.get('chat_open') === 'true') {
-                openChatWindow(url);
-            } else if ((window.openDialogSettings.general.open && window.innerWidth <= mobileWidth)
-                || settings.general.startMinimized) {
-                query = `${query}&hide=true`;
-                openChatWindow(url);
-
-                document.body.classList.remove('chatbot-no-scroll');
-            } else if (window.openDialogSettings.general.open) {
-                openChatWindow(url);
-            }
+            openChatWindow(url);
         }
     });
 }
