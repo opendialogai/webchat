@@ -125,6 +125,11 @@
         v-if="!message.data.auto_submit"
         @click="_handleClick"
       >{{ message.data.submit_text }}</button>
+
+        <button
+            class="mt-fp-form__submit"
+            @click="_handleCancel"
+        >{{ message.data.cancel_text }}</button>
     </div>
 
     <template v-if="showLoader">
@@ -147,6 +152,10 @@ export default {
     onSubmit: {
       type: Function,
       required: true
+    },
+    onCancel: {
+        type: Function,
+        required: true
     },
     message: {
       type: Object,
@@ -173,6 +182,9 @@ export default {
         this._handleClick();
       }
     },
+    _handleCancel() {
+        this.onCancel(this.form.data);
+    },
     _handleClick() {
       this.validateForm();
       if (!this.errors.length) {
@@ -181,7 +193,13 @@ export default {
         this.showLoader = true;
       }
     },
+    validateEmail(emailAddress) {
+      if (/^[^\s@]+@[^\s@]+$/.test(emailAddress)) {
+        return true;
+      }
 
+      return false;
+    },
     validateForm() {
       this.errors = [];
 
@@ -194,6 +212,18 @@ export default {
             type: element.name,
             message: "<em>" + element.display + "</em> is required"
           });
+        }
+
+        if (
+          element.element_type === 'email' &&
+          !this.isEmpty(this.form.data[element.name].value)
+        ) {
+          if (!this.validateEmail(this.form.data[element.name].value)) {
+            this.errors.push({
+              type: element.name,
+              message: "<em>" + element.display + "</em> field is not a valid email address"
+            });
+          }
         }
       });
     },
@@ -226,6 +256,7 @@ export default {
   background-color: var(--messageListBg);
   overflow-x: hidden;
   position: relative;
+  flex: 1;
 }
 
 .mt-fp-form__elements {

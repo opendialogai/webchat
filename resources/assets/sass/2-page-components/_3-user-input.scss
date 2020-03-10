@@ -13,7 +13,6 @@
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
-
 }
 
 .user-input__form.active {
@@ -51,6 +50,7 @@
   display: block; /* For Firefox */
   filter: contrast(15%);
   outline: none;
+  cursor: text;
 }
 
 // Form Buttons --- Form Buttons --- Form Buttons ---

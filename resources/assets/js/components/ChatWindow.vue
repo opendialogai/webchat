@@ -42,6 +42,7 @@
       <FullPageFormInput
         :message="fpFormInputMessage"
         :onSubmit="onFullPageFormInputSubmit"
+        :onCancel="onFullPageFormInputCancel"
         :colors="colors" />
     </template>
     <template v-else-if="showFullPageRichInput">
@@ -123,6 +124,10 @@ export default {
     onFullPageFormInputSubmit: {
       type: Function,
       required: true
+    },
+    onFullPageFormInputCancel: {
+        type: Function,
+        required: true
     },
     onFullPageRichInputSubmit: {
       type: Function,
