@@ -23,12 +23,8 @@ iframe#opendialog-chatwindow {
   right: 10px;
   border: none;
 
-  width: 100%;
-
-  @media (min-width: 450px) {
-    height: 770px;
-    width: 463px;
-  }
+  height: 70%;
+  width: 463px;
 
   // 👇🏻 turned off for Avaya
   //   border-radius: 10px;
