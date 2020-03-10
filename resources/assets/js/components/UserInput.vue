@@ -40,6 +40,16 @@
         <div class="user-input__button">
           <button @click.prevent="_submitText" class="send-btn"></button>
         </div>
+
+        <div
+          class="user-input__button"
+        >
+          <button v-if="!confirmCloseChat" @click.stop="toggleConfirmCloseChat" class="end-chat-btn">End chat</button>
+          <div v-if="confirmCloseChat">
+            <span>Are you sure?</span>
+            <button @click.stop="closeChat">Yes</button> / <button @click.stop="toggleConfirmCloseChat">No</button>
+          </div>
+        </div>
       </div>
     </form>
   </div>
@@ -92,7 +102,8 @@ export default {
     return {
       file: null,
       inputActive: false,
-      textEntered: false
+      textEntered: false,
+      confirmCloseChat: false,
     };
   },
   methods: {
@@ -168,7 +179,10 @@ export default {
     },
     _handleFileSubmit(file) {
       this.file = file;
-    }
+    },
+    toggleConfirmCloseChat() {
+      this.confirmCloseChat = !this.confirmCloseChat;
+    },
   }
 };
 </script>
