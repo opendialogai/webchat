@@ -217,11 +217,12 @@ export default {
 } */
 
 .fp-loader {
-  position: absolute;
+  position: sticky;
   width: 100%;
   height: 100%;
   text-align: center;
   top: 0;
+  bottom: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.3);
 }
