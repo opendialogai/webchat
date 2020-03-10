@@ -47,6 +47,12 @@
         >{{button.text}}</button>
       </div>
     </template>
+
+    <template v-if="showLoader">
+      <div class="fp-loader">
+        <img src="./assets/fp-loader.svg" />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -66,10 +72,16 @@ export default {
       required: true
     }
   },
-
+  data() {
+    return {
+      showLoader: false
+    };
+  },
   methods: {
     _handleClick(button) {
       this.onSubmit(button);
+
+      this.showLoader = true;
     }
   }
 };
@@ -84,6 +96,7 @@ export default {
   align-items: center;
   justify-content: flex-start;
   padding-top: 20px;
+  position: relative;
 }
 
 /* Title/Subtitle */
@@ -202,4 +215,23 @@ export default {
 .sc-message--fp-rich .sc-message--fp-rich--image img {
   max-width: 100%;
 } */
+
+.fp-loader {
+  position: sticky;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+.fp-loader img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
 </style>
