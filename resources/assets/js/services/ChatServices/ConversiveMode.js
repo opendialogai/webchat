@@ -72,6 +72,10 @@ ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest,
       case 2:
         this.handleNewTypingMessage(message, isFirstRequest, webChatComponent);
         break;
+
+      case 8:
+        this.handleNewLeaveMessage(message, isFirstRequest, webChatComponent);
+        break;
     }
   });
 };
@@ -114,6 +118,19 @@ ConversiveMode.prototype.handleNewTypingMessage = function(typingMessage, isFirs
       this.typingIndicatorIndex = null;
     }
   }, 5000);
+};
+
+ConversiveMode.prototype.handleNewLeaveMessage = function(leaveMessage, isFirstRequest, webChatComponent) {
+  if (leaveMessage.source !== 2 || isFirstRequest) {
+    return;
+  }
+
+  webChatComponent.$emit('setChatMode', {
+    mode: 'webchat',
+    options: {
+      'callback_id': webChatComponent.modeData.options.callback_id
+    }
+  });
 };
 
 ConversiveMode.prototype.addAuthorMessage = function(message, webChatComponent) {
