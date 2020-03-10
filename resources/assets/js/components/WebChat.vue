@@ -888,15 +888,6 @@ export default {
               currentMessage.author = "them";
             }
 
-            // Convert to the right message type for display
-            if (
-              currentMessage.type === "button" ||
-              currentMessage.type === "long_text" ||
-              currentMessage.type === "form"
-            ) {
-              currentMessage.type = "text";
-            }
-
             if (
               i === 0 &&
               currentMessage.data &&
@@ -919,6 +910,15 @@ export default {
             }
 
             if (i < messages.length - 1) {
+              // Convert to the right message type for display
+              if (
+                currentMessage.type === "button" ||
+                currentMessage.type === "long_text" ||
+                currentMessage.type === "form"
+              ) {
+                currentMessage.type = "text";
+              }
+
               this.dateTimezoneFormat(currentMessage);
             }
 
@@ -933,6 +933,18 @@ export default {
               const authorMsg = this.newAuthorMessage(currentMessage);
 
               this.messageList.push(authorMsg);
+            }
+
+            if (i === messages.length - 1) {
+              this.contentEditable = !currentMessage.data.disable_text;
+
+              if (currentMessage.type === "fp-form") {
+                this.showFullPageFormInputMessage(currentMessage);
+              }
+
+              if (currentMessage.type === "fp-rich") {
+                this.showFullPageRichInputMessage(currentMessage);
+              }
             }
 
             this.messageList.push(currentMessage);
