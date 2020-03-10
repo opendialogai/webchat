@@ -23,6 +23,7 @@ iframe#opendialog-chatwindow {
   right: 10px;
   border: none;
 
+  max-height: 700px;
   height: 70%;
   width: 463px;
 
@@ -82,6 +83,7 @@ iframe.open#opendialog-chatwindow {
 
 @media (max-width: 480px) {
   iframe#opendialog-chatwindow {
+    max-height: 100%;
     width: 100%;
     height: 100%;
     bottom: 0;
