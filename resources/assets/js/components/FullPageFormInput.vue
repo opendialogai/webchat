@@ -1,6 +1,7 @@
 <template>
   <div
     class="mt-fp-form"
+    :class="{ loader: showLoader }"
     :style="{
             '--messageListBg': colors.messageList.bg,
             '--btn-bg': colors.button.bg,
@@ -257,6 +258,9 @@ export default {
   overflow-x: hidden;
   position: relative;
   flex: 1;
+}
+.mt-fp-form.loader {
+  overflow-y: hidden;
 }
 
 .mt-fp-form__elements {
