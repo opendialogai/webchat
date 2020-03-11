@@ -748,7 +748,12 @@ export default {
       }
 
       if (msg.type === "fp-rich") {
-        this.messageList.splice(this.messageList.indexOf(msg), 1);
+        const index = this.messageList.indexOf(msg);
+        this.messageList.splice(index, 1);
+
+        if (this.messageList[index - 1].type === "author") {
+          this.messageList.splice(index - 1, 1);
+        }
       } else {
         this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
       }
