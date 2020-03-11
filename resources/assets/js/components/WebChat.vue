@@ -524,23 +524,8 @@ export default {
     },
     onFormButtonClick(data, msg) {
       this.messageList[this.messageList.indexOf(msg)].type = "text";
-
       const responseData = {};
-      const newMessageText = [];
-
-      msg.data.elements.forEach(element => {
-        responseData[element.name] = data[element.name].value;
-
-        if (element.display) {
-          newMessageText.push(
-            `${element.display}: ${data[element.name].value}`
-          );
-        } else {
-          newMessageText.push(data[element.name].value);
-        }
-      });
-
-      responseData.text = newMessageText.join("\n");
+      responseData.text = "Form submitted";
 
       this.sendMessage({
         type: "form_response",
