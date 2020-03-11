@@ -128,4 +128,11 @@ ConversiveClient.prototype.sendTypingMessage = function(text, sessionToken) {
   });
 };
 
+ConversiveClient.prototype.logout = function(sessionToken) {
+  return this.makeRequest("logout", {
+    t: sessionToken,
+    rsn: this.requestSerialNumber,
+  });
+};
+
 export default ConversiveClient;

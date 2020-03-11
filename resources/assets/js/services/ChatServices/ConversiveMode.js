@@ -57,8 +57,9 @@ ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
     });
 };
 
-ConversiveMode.prototype.destroyChat = function(webChatComponent) {
+ConversiveMode.prototype.destroyChat = async function(webChatComponent) {
   clearInterval(this.pollingInterval);
+  this.client.logout(await this.client.getSessionId(webChatComponent.uuid));
 };
 
 ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest, webChatComponent) {
