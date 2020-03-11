@@ -80,6 +80,11 @@ export default {
       showLoader: false
     };
   },
+  watch: {
+    message() {
+      this.showLoader = false;
+    },
+  },
   methods: {
     _handleClick(button) {
       this.onSubmit(button);

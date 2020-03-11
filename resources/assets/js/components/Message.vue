@@ -113,6 +113,16 @@
       :colors="colors"
     />
 
+    <HandToHumanMessage
+      v-else-if="message.type === 'hand-to-human'"
+      :data="message.data"
+      :author="message.author"
+      :type="message.type"
+      :messageColors="determineMessageColors()"
+      :mode-data="modeData"
+      @setChatMode="setChatMode"
+    />
+
     <DatetimeFakeMessage v-else-if="message.type === 'datetime'" :message="message" />
 
     <span
@@ -128,21 +138,22 @@
 </template>
 
 <script>
-import DatetimeFakeMessage from "./DatetimeFakeMessage.vue";
-import CarouselListMessage from "./CarouselListMessage.vue";
-import ListMessage from "./ListMessage.vue";
-import ImageMessage from "./ImageMessage.vue";
-import FormMessage from "./FormMessage.vue";
-import FormResponseMessage from "./FormResponseMessage.vue";
-import FpRichMessage from "./FpRichMessage.vue";
-import ButtonMessage from "./ButtonMessage.vue";
-import ButtonResponseMessage from "./ButtonResponseMessage.vue";
-import RichMessage from "./RichMessage.vue";
-import TextMessage from "./TextMessage.vue";
-import LongTextMessage from "./LongTextMessage.vue";
-import TypingMessage from "./TypingMessage.vue";
-import AuthorMessage from "./AuthorMessage.vue";
-import chatIcon from "./assets/chat-icon.svg";
+  import DatetimeFakeMessage from "./DatetimeFakeMessage.vue";
+  import CarouselListMessage from "./CarouselListMessage.vue";
+  import ListMessage from "./ListMessage.vue";
+  import ImageMessage from "./ImageMessage.vue";
+  import FormMessage from "./FormMessage.vue";
+  import FormResponseMessage from "./FormResponseMessage.vue";
+  import FpRichMessage from "./FpRichMessage.vue";
+  import ButtonMessage from "./ButtonMessage.vue";
+  import ButtonResponseMessage from "./ButtonResponseMessage.vue";
+  import RichMessage from "./RichMessage.vue";
+  import TextMessage from "./TextMessage.vue";
+  import LongTextMessage from "./LongTextMessage.vue";
+  import TypingMessage from "./TypingMessage.vue";
+  import AuthorMessage from "./AuthorMessage.vue";
+  import chatIcon from "./assets/chat-icon.svg";
+  import HandToHumanMessage from "./HandToHumanMessage";
 
 export default {
   data() {
@@ -164,7 +175,8 @@ export default {
     TextMessage,
     LongTextMessage,
     TypingMessage,
-    AuthorMessage
+    AuthorMessage,
+    HandToHumanMessage
   },
   props: {
     message: {
@@ -197,6 +209,10 @@ export default {
     },
     read: {
       type: Boolean
+    },
+    modeData: {
+      type: Object,
+      required: true
     }
   },
 
@@ -229,6 +245,9 @@ export default {
       return this.message.author === "me"
         ? this.sentColorsStyle()
         : this.receivedColorsStyle();
+    },
+    setChatMode(mode) {
+      this.$emit('setChatMode', mode);
     }
   }
 };

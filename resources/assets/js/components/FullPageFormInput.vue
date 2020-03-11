@@ -181,6 +181,11 @@ export default {
       showLoader: false
     };
   },
+  watch: {
+    message() {
+      this.showLoader = false;
+    },
+  },
   methods: {
     onSelectChange() {
       if (this.message.data.auto_submit) {
