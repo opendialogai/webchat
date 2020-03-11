@@ -37,9 +37,7 @@
       ></div>
 
       <div class="user-input__buttons">
-        <div class="user-input__button">
-          <button @click.prevent="_submitText" class="send-btn"></button>
-        </div>
+        <button @click.prevent="_submitText" class="send-btn"></button>
 
         <EndChatButton
           @close-chat="closeChat"
@@ -55,7 +53,7 @@
   import ExternalButtons from "./ExternalButtons.vue";
   import EndChatButton from "./EndChatButton";
 
-  export default {
+export default {
   components: {
     EndChatButton,
     ExternalButtons
@@ -193,7 +191,10 @@
           type: "button_response",
           author: "me",
           callback_id: "intent.app.end_chat",
-          data: {}
+          data: {
+            text: 'End chat',
+            value: ''
+          }
         });
       }
     }
