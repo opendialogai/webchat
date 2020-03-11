@@ -41,16 +41,10 @@
           <button @click.prevent="_submitText" class="send-btn"></button>
         </div>
 
-        <div
-          class="user-input__button"
+        <EndChatButton
           v-if="modeData.mode === 'custom'"
-        >
-          <button v-if="!confirmCloseChat" @click.stop="toggleConfirmCloseChat" class="end-chat-btn">End chat</button>
-          <div v-if="confirmCloseChat">
-            <span>Are you sure?</span>
-            <button @click.stop="closeChat">Yes</button> / <button @click.stop="toggleConfirmCloseChat">No</button>
-          </div>
-        </div>
+          @close-chat="closeChat"
+        />
       </div>
     </form>
   </div>
@@ -60,9 +54,11 @@
 <script>
 
   import ExternalButtons from "./ExternalButtons.vue";
+  import EndChatButton from "./EndChatButton";
 
   export default {
   components: {
+    EndChatButton,
     ExternalButtons
   },
   props: {
@@ -108,7 +104,6 @@
       file: null,
       inputActive: false,
       textEntered: false,
-      confirmCloseChat: false,
     };
   },
   created() {
@@ -186,12 +181,7 @@
     _handleFileSubmit(file) {
       this.file = file;
     },
-    toggleConfirmCloseChat() {
-      this.confirmCloseChat = !this.confirmCloseChat;
-    },
     closeChat() {
-      this.confirmCloseChat = false;
-
       this.$emit('setChatMode', {
         mode: 'webchat',
         options: {
