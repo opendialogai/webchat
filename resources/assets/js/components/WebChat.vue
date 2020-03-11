@@ -747,7 +747,9 @@ export default {
         this.$emit("expandChat");
       }
 
-      if (msg.type !== "fp-rich") {
+      if (msg.type === "fp-rich") {
+        this.messageList.splice(this.messageList.indexOf(msg), 1);
+      } else {
         this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
       }
 
@@ -888,6 +890,11 @@ export default {
 
             // Ignore 'trigger' messages.
             if (message.type === "trigger") {
+              return;
+            }
+
+            // Ignore 'fp-rich' messages.
+            if (message.type === "fp-rich") {
               return;
             }
 
