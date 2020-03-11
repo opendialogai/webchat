@@ -26,6 +26,7 @@
       :onListButtonClick="onListButtonClick"
       :onLinkClick="onLinkClick"
       :mode-data="modeData"
+      :isOpen="isOpen"
       @setChatMode="setChatMode"
     />
 
@@ -45,13 +46,15 @@
         :message="fpFormInputMessage"
         :onSubmit="onFullPageFormInputSubmit"
         :onCancel="onFullPageFormInputCancel"
-        :colors="colors" />
+        :colors="colors"
+        :isOpen="isOpen" />
     </template>
     <template v-else-if="showFullPageRichInput">
       <FullPageRichInput
         :message="fpRichInputMessage"
         :onSubmit="onFullPageRichInputSubmit"
-        :colors="colors" />
+        :colors="colors"
+        :isOpen="isOpen" />
     </template>
     <template v-else>
       <UserInput

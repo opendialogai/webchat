@@ -1,7 +1,7 @@
 <template>
   <div
     class="mt-fpri"
-    :class="{ loader: showLoader }"
+    :class="{ loader: showLoader, isOpen: isOpen }"
     :style="{
             '--background': colors.messageList.bg,
             '--btn-bg': colors.button.bg,
@@ -73,7 +73,11 @@ export default {
     colors: {
       type: Object,
       required: true
-    }
+    },
+    isOpen: {
+      type: Boolean,
+      default: () => false
+    },
   },
   data() {
     return {

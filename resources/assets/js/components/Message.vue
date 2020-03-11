@@ -111,6 +111,7 @@
       :data="message.data"
       :messageColors="determineMessageColors()"
       :colors="colors"
+      :isOpemn="isOpen"
     />
 
     <HandToHumanMessage
@@ -213,7 +214,11 @@ export default {
     modeData: {
       type: Object,
       required: true
-    }
+    },
+    isOpen: {
+      type: Boolean,
+      default: () => false
+    },
   },
 
   myFn() {},

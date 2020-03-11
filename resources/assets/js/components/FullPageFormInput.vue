@@ -165,7 +165,11 @@ export default {
     colors: {
       type: Object,
       required: true
-    }
+    },
+    isOpen: {
+      type: Boolean,
+      default: () => false
+    },
   },
   data() {
     return {
