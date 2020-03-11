@@ -63,7 +63,10 @@ ConversiveMode.prototype.destroyChat = async function(webChatComponent) {
 };
 
 ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest, webChatComponent) {
-  let incomingTextMessages = messages.filter((message) => message.source === 2 && message.type === 1);
+  let incomingTextMessages = messages.filter(message => message.source === 2 && message.type === 1);
+
+  // Filter out any typing messages besides the final one
+  messages = messages.slice(0, -1).filter(message => message.type !== 2).concat(messages.slice(-1));
 
   if (this.typingIndicatorIndex !== null && incomingTextMessages.length > 0) {
     let firstMessage = incomingTextMessages[0];
@@ -79,6 +82,13 @@ ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest,
     if (message.skip) {
       return;
     }
+
+    let types = {
+      1: "text",
+      2: "typing",
+      8: "leave",
+    };
+    console.log("[" + btoa(JSON.stringify(messages)).substr(-8) + "] New " + types[message.type] + " message");
 
     switch (message.type) {
       case 1:
@@ -106,7 +116,7 @@ ConversiveMode.prototype.handleNewTextMessage = function(textMessage, isFirstReq
 };
 
 ConversiveMode.prototype.handleNewTypingMessage = function(typingMessage, isFirstRequest, webChatComponent) {
-  if (typingMessage.source !== 2 || isFirstRequest) {
+  if (typingMessage.source !== 2 || isFirstRequest || this.typingIndicatorIndex !== null) {
     return;
   }
 
