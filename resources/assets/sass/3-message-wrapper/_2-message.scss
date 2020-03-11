@@ -1,6 +1,7 @@
-// Old CSS still being used by some components
-// Old CSS still being used by some components
-// Old CSS still being used by some components
+// Old CSS may still being used by some components
+// Old CSS may still being used by some components
+// Old CSS may still being used by some components
+
 .sc-message {
   width: 300px;
   margin: 0 auto;
@@ -151,4 +152,23 @@
 // Time meta data hidden
 .sc-message--time-read {
   display: none;
+}
+
+/// Style text --- Style text --- Style text ---
+
+.linkified,
+.linkified:link,
+.linkified:visited,
+.linkified:hover,
+.linkified:active {
+  text-decoration: none;
+  font-weight: bold;
+  color: white;
+  border-bottom: dashed 1px white;
+  padding-bottom: 3px;
+  position: relative;
+}
+
+.linkified:after {
+  content: " >";
 }
