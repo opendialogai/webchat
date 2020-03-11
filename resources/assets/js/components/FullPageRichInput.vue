@@ -1,6 +1,7 @@
 <template>
   <div
     class="mt-fpri"
+    :class="{ loader: showLoader }"
     :style="{
             '--background': colors.messageList.bg,
             '--btn-bg': colors.button.bg,
@@ -10,43 +11,45 @@
             '--btn-border-color':colors.button.border,
             '--btn-border-color-hover':colors.button.hoverBorder }"
   >
-    <div v-if="message.data.title">
-      <div class="mt-fpri__title">{{ message.data.title }}</div>
-    </div>
-    <div v-if="message.data.subtitle">
-      <div class="mt-fpri__subtitle">{{ message.data.subtitle }}</div>
-    </div>
+    <div class="mt-fpri-wrapper">
+      <div v-if="message.data.title">
+        <div class="mt-fpri__title">{{ message.data.title }}</div>
+      </div>
+      <div v-if="message.data.subtitle">
+        <div class="mt-fpri__subtitle">{{ message.data.subtitle }}</div>
+      </div>
 
-    <div v-if="message.data.text">
-      <p class="mt-fpri__text" v-linkified>
-        <span v-html="message.data.text"></span>
-      </p>
-    </div>
-    <template v-if="message.data.image">
-      <div class="mt-fpri__image">
-        <template v-if="message.data.image.url">
-          <a
-            :href="message.data.image.url"
-            :target="message.data.image.link_new_tab ? '_blank' : '_parent'"
-          >
+      <div v-if="message.data.text">
+        <p class="mt-fpri__text" v-linkified>
+          <span v-html="message.data.text"></span>
+        </p>
+      </div>
+      <template v-if="message.data.image">
+        <div class="mt-fpri__image">
+          <template v-if="message.data.image.url">
+            <a
+              :href="message.data.image.url"
+              :target="message.data.image.link_new_tab ? '_blank' : '_parent'"
+            >
+              <img :src="message.data.image.src" />
+            </a>
+          </template>
+          <template v-else>
             <img :src="message.data.image.src" />
-          </a>
-        </template>
-        <template v-else>
-          <img :src="message.data.image.src" />
-        </template>
-      </div>
-    </template>
+          </template>
+        </div>
+      </template>
 
-    <template v-if="message.data.buttons.length">
-      <div class="mt-fpri__buttons">
-        <button
-          v-for="(button, idx) in message.data.buttons"
-          :key="idx"
-          @click="_handleClick(button)"
-        >{{button.text}}</button>
-      </div>
-    </template>
+      <template v-if="message.data.buttons.length">
+        <div class="mt-fpri__buttons">
+          <button
+            v-for="(button, idx) in message.data.buttons"
+            :key="idx"
+            @click="_handleClick(button)"
+          >{{button.text}}</button>
+        </div>
+      </template>
+    </div>
 
     <template v-if="showLoader">
       <div class="fp-loader">
@@ -91,12 +94,15 @@ export default {
 .mt-fpri {
   background-color: var(--background);
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding-top: 20px;
+  text-align: center;
   position: relative;
+  overflow-x: hidden;
+}
+.mt-fpri .mt-fpri-wrapper {
+  padding: 20px 0;
+}
+.mt-fpri.loader {
+  overflow-y: hidden;
 }
 
 /* Title/Subtitle */
