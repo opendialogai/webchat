@@ -16,7 +16,7 @@
       </div>
 
       <div class="header-nav">
-        <div class="header-nav__team-name">
+        <div class="header-nav__team-name" v-if="!showFullPageFormInput && !showFullPageRichInput">
           <span v-if="teamName" v-html="teamName"></span>
         </div>
 
@@ -93,7 +93,15 @@ export default {
     isOpen: {
       type: Boolean,
       default: () => false
-    }
+    },
+    showFullPageFormInput: {
+      type: Boolean,
+      default: true
+    },
+    showFullPageRichInput: {
+      type: Boolean,
+      default: true
+    },
   }
 };
 </script>
