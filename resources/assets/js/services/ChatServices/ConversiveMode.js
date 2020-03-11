@@ -111,8 +111,10 @@ ConversiveMode.prototype.handleNewTypingMessage = function(typingMessage, isFirs
   }
 
   let previousMessage = webChatComponent.messageList[webChatComponent.messageList.length-1];
+
+  let authorIndex = null;
   if (previousMessage.mode !== "custom" || previousMessage.author !== "them") {
-    this.addAuthorMessage(typingMessage, webChatComponent);
+    authorIndex = this.addAuthorMessage(typingMessage, webChatComponent) - 1;
   }
 
   let newTypingIndicatorMessage = {
@@ -130,7 +132,12 @@ ConversiveMode.prototype.handleNewTypingMessage = function(typingMessage, isFirs
   setTimeout(() => {
     let typingIndicatorMessage = webChatComponent.messageList[index];
     if (typingIndicatorMessage.type === "typing") {
+      // We should remove this prior to the author message as removing the authorIndex first would alter all indexes after it
       webChatComponent.messageList.splice(index, 1);
+
+      if (authorIndex !== null) {
+        webChatComponent.messageList.splice(authorIndex, 1);
+      }
       this.typingIndicatorIndex = null;
     }
   }, 5000);
@@ -150,7 +157,7 @@ ConversiveMode.prototype.handleNewLeaveMessage = function(leaveMessage, isFirstR
 };
 
 ConversiveMode.prototype.addAuthorMessage = function(message, webChatComponent) {
-  webChatComponent.messageList.push(webChatComponent.newAuthorMessage({
+  return webChatComponent.messageList.push(webChatComponent.newAuthorMessage({
     author: message.source === 1 ? "me" : "them",
     data: {
       time: (new Date()).toLocaleTimeString(),
