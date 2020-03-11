@@ -60,7 +60,11 @@
         @vbc-user-input-blur="userInputBlur"
       />
       <div class="close-chat">
-        <div class="close-chat__button" @click="toggleChatOpen"  >
+        <div
+          class="close-chat__button"
+          :class="{closeChatButtonAnimate: isOpen}"
+          @click="toggleChatOpen"
+        >
           <img src="/images/close-btn.svg" class="close-chat__img" />
         </div>
       </div>
@@ -468,7 +472,10 @@ export default {
                       this.showFullPageRichInputMessage(message);
                     }
 
-                    if (message.type !== "fp-form" && message.type !== "fp-rich") {
+                    if (
+                      message.type !== "fp-form" &&
+                      message.type !== "fp-rich"
+                    ) {
                       this.showFullPageFormInput = false;
                       this.showFullPageRichInput = false;
                       this.showMessages = true;
@@ -598,7 +605,10 @@ export default {
                     this.showFullPageRichInputMessage(message);
                   }
 
-                  if (message.type !== "fp-form" && message.type !== "fp-rich") {
+                  if (
+                    message.type !== "fp-form" &&
+                    message.type !== "fp-rich"
+                  ) {
                     this.showFullPageFormInput = false;
                     this.showFullPageRichInput = false;
                     this.showMessages = true;
@@ -715,8 +725,8 @@ export default {
       this.onFormButtonClick(data, msg);
     },
     onFullPageFormInputCancel() {
-        const msg = this.messageList[this.messageList.length - 1];
-        this.onFormCancelClick(msg);
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onFormCancelClick(msg);
     },
     onFullPageRichInputSubmit(button) {
       const msg = this.messageList[this.messageList.length - 1];
@@ -822,14 +832,14 @@ export default {
       });
     },
     onFormCancelClick(msg) {
-        console.log(msg);
-        this.messageList[this.messageList.indexOf(msg)].type = "text";
-        this.sendMessage({
-            type: "form_response",
-            author: "me",
-            callback_id: msg.data.cancel_callback,
-            data:{text: msg.data.cancel_text}
-        });
+      console.log(msg);
+      this.messageList[this.messageList.indexOf(msg)].type = "text";
+      this.sendMessage({
+        type: "form_response",
+        author: "me",
+        callback_id: msg.data.cancel_callback,
+        data: { text: msg.data.cancel_text }
+      });
     },
     onRestartButtonClick() {
       this.sendMessage({
@@ -877,7 +887,7 @@ export default {
           type: "chat_open",
           callback_id: callback,
           data: {
-            value: this.parentUrl,
+            value: this.parentUrl
           }
         };
 
