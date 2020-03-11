@@ -112,20 +112,13 @@
 .mt {
   border-radius: 30px;
   box-shadow: none;
-
   max-width: 90%;
-  margin-bottom: 30px;
+  padding: 15px 20px;
   line-height: 1.6;
   font-size: 14px;
   @media (min-width: $media-sml) {
     font-size: 16px;
   }
-
-  padding: 20px;
-  @media (min-width: 450px) {
-    padding: 20px;
-  }
-  //   position: relative;
 }
 
 // 🧘🏻‍♂️ User Sends Emits 🧘🏻‍♂️
