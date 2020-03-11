@@ -31,7 +31,10 @@
         mode: 'custom',
         options: {
           callback_id: this.data.elements.callback_id,
-          teamName: ''
+          teamName: '',
+          markupData: {
+            ...this.data.elements
+          }
         }
       });
     }

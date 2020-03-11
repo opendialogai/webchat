@@ -34,7 +34,7 @@ ConversiveClient.prototype.makeRequest = function(apiFunction, options) {
     ...options,
     f: apiFunction,
   };
-  let encodedData = Object.keys(data).map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])).join("&");
+  let encodedData = Object.keys(data).map((key) => this.encodeKeyValuePair(key, data[key])).join("&");
 
   return axios.post(this.buildUrl("/CLA_API/FrontendChatAPI.aspx", {
     sbid: this.getServerBindId()
@@ -75,12 +75,37 @@ ConversiveClient.prototype.setSerialNumber = function(number) {
 };
 
 ConversiveClient.prototype.getSession = function(uuid) {
-  return this.makeRequest("getSession", {
+  let options = {
     v: this.version,
     sc: this.siteCode,
     n: "",
     tc: uuid,
     iad: false,
+  };
+
+  return this.makeRequest("getSession", options);
+};
+
+ConversiveClient.prototype.setEngineData = async function(sessionToken, chatData) {
+  let data = this.prepareChatData(chatData);
+  let engineData = {};
+  data.forEach((item) => engineData[item.n] = item.v);
+  engineData = Object.keys(engineData).map((key) => this.encodeKeyValuePair(key, engineData[key])).join("&")
+
+  return this.makeRequest("setEngineData", {
+    b: engineData,
+    t: sessionToken,
+    rsn: this.requestSerialNumber,
+  });
+};
+
+ConversiveClient.prototype.setChatData = async function(sessionToken, chatData) {
+  let data = this.prepareChatData(chatData);
+
+  return this.makeRequest("setChatData", {
+    data,
+    t: sessionToken,
+    rsn: this.requestSerialNumber,
   });
 };
 
@@ -133,6 +158,33 @@ ConversiveClient.prototype.logout = function(sessionToken) {
     t: sessionToken,
     rsn: this.requestSerialNumber,
   });
+};
+
+ConversiveClient.prototype.prepareChatData = function(chatData) {
+  let data = Object.keys(chatData).filter((key) => {
+    return ['history', 'email', 'fullname', 'loc', 'phone'].includes(key);
+  }).map((key) => {
+    return {
+      n: key,
+      v: chatData[key]
+    }
+  });
+
+  data.push({
+    n: 'sitecode',
+    v: this.siteCode
+  });
+  return data;
+};
+
+ConversiveClient.prototype.encodeKeyValuePair = function(key, value) {
+  if (typeof value === "object") {
+    value = JSON.stringify(value);
+  } else {
+    value = encodeURIComponent(value);
+  }
+
+  return encodeURIComponent(key) + "=" + value;
 };
 
 export default ConversiveClient;

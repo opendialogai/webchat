@@ -40,11 +40,14 @@ ConversiveMode.prototype.sendTypingResponseError = function(error, webChatCompon
 ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
   return this.client.getSessionId(webChatComponent.uuid)
     .then((sessionToken) => {
-      return this.client.sendAutoText(sessionToken);
+      return Promise.all([
+        this.client.setEngineData(sessionToken, webChatComponent.modeData.options.markupData),
+        this.client.setChatData(sessionToken, webChatComponent.modeData.options.markupData),
+      ]);
     })
-    .then((response) => {
-      return this.client.getSessionId(webChatComponent.uuid);
-    })
+    .then((response) => this.client.getSessionId(webChatComponent.uuid))
+    .then((sessionToken) => this.client.sendAutoText(sessionToken))
+    .then((response) => this.client.getSessionId(webChatComponent.uuid))
     .then((sessionToken) => {
       this.pollingInterval = setInterval(async () => {
         let isFirstRequest = this.client.serialNumber < 1;
@@ -88,7 +91,6 @@ ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest,
       2: "typing",
       8: "leave",
     };
-    console.log("[" + btoa(JSON.stringify(messages)).substr(-8) + "] New " + types[message.type] + " message");
 
     switch (message.type) {
       case 1:
