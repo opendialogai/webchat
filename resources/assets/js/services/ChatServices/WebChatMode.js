@@ -36,25 +36,22 @@ WebChatMode.prototype.sendRequest = function(message, webChatComponent) {
 };
 
 WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
-  if (sentMessage.type === "chat_open" && !sentMessage.data.open) {
     if (response.data instanceof Array) {
-      response.data.forEach((message) => {
-        if (message.data && message.data.text && webChatComponent.ctaText.length < 2) {
-          webChatComponent.ctaText.push(message.data.text);
-        }
-      });
-    } else if (response.data) {
-      const message = response.data;
-      if (message.data && message.data.text) {
-        webChatComponent.ctaText.push(message.data.text);
-      }
-    }
-  } else if (response.data instanceof Array) {
+    let index = 0;
+    let totalMessages = response.data.length;
+
     response.data.forEach((message, i) => {
-      if (!message) {
+      if (message && message.type === "cta") {
+        if (webChatComponent.ctaText.length === 2) {
+          webChatComponent.ctaText.splice(0, 1);
+        }
+        webChatComponent.ctaText.push(message.data.text);
+
+        totalMessages -= 1;
+      } else if (!message) {
         webChatComponent.contentEditable = true;
       } else {
-        if (i === 0) {
+        if (index === 0) {
           if (
             (webChatComponent.useBotName || webChatComponent.useBotAvatar) &&
             !message.data.hideavatar
@@ -81,7 +78,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           message.data.animate = webChatComponent.messageAnimation;
 
           if (
-            i === 0 ||
+            index === 0 ||
             !webChatComponent.hideTypingIndicatorOnInternalMessages
           ) {
             const lastMessage = webChatComponent.messageList[
@@ -90,15 +87,15 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             lastMessage.type = message.type;
             lastMessage.data = message.data;
 
-            if (i === 0 && response.data.length > 1) {
+            if (index === 0 && totalMessages > 1) {
               lastMessage.data.first = true;
             }
 
-            if (i > 0 && i < response.data.length - 1) {
+            if (index > 0 && index < totalMessages - 1) {
               lastMessage.data.middle = true;
             }
 
-            if (i > 0 && i === response.data.length - 1) {
+            if (index > 0 && index === totalMessages - 1) {
               lastMessage.data.last = true;
             }
 
@@ -107,7 +104,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               webChatComponent.$root.$emit("scroll-down-message-list");
             }, 50);
           } else {
-            if (i > 0 && i === response.data.length - 1) {
+            if (index > 0 && index === totalMessages - 1) {
               /* eslint-disable no-param-reassign */
               message.data.lastInternal = true;
             }
@@ -128,8 +125,14 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             webChatComponent.showFullPageRichInputMessage(message);
           }
 
+          if (message.type !== "fp-form" && message.type !== "fp-rich") {
+            webChatComponent.showFullPageFormInput = false;
+            webChatComponent.showFullPageRichInput = false;
+            webChatComponent.showMessages = true;
+          }
+
           if (!webChatComponent.hideTypingIndicatorOnInternalMessages) {
-            if (i < response.data.length - 1) {
+            if (index < totalMessages - 1) {
               webChatComponent.$nextTick(() => {
                 webChatComponent.$nextTick(() => {
                   webChatComponent.messageList.push({
@@ -144,12 +147,14 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               });
             }
           }
-        }, (i + 1) * webChatComponent.messageDelay);
+        }, (index + 1) * webChatComponent.messageDelay);
 
         window.parent.postMessage(
           { dataLayerEvent: "message_received_from_chatbot" },
           "*"
         );
+
+        index += 1;
       }
     });
   } else if (response.data) {
@@ -251,6 +256,12 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
 
         if (message.type === "fp-rich") {
           webChatComponent.showFullPageRichInputMessage(message);
+        }
+
+        if (message.type !== "fp-form" && message.type !== "fp-rich") {
+          webChatComponent.showFullPageFormInput = false;
+          webChatComponent.showFullPageRichInput = false;
+          webChatComponent.showMessages = true;
         }
 
         if (message.type === "longtext") {

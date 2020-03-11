@@ -4,6 +4,7 @@
       :messageList="messageList"
       :onUserInputSubmit="onMessageWasSent"
       :onFullPageFormInputSubmit="onFullPageFormInputSubmit"
+      :onFullPageFormInputCancel="onFullPageFormInputCancel"
       :onFullPageRichInputSubmit="onFullPageRichInputSubmit"
       :agentProfile="agentProfile"
       :isOpen="isOpen"
@@ -12,6 +13,7 @@
       :onExpand="expand"
       :onButtonClick="onButtonClick"
       :onFormButtonClick="onFormButtonClick"
+      :onFormCancelClick="onFormCancelClick"
       :onListButtonClick="onListButtonClick"
       :onRestartButtonClick="onRestartButtonClick"
       :onLinkClick="onLinkClick"
@@ -90,6 +92,10 @@ export default {
       type: Function,
       required: true
     },
+    onFullPageFormInputCancel: {
+        type: Function,
+        required: true
+    },
     onFullPageRichInputSubmit: {
       type: Function,
       required: true
@@ -161,6 +167,10 @@ export default {
     onFormButtonClick: {
       type: Function,
       required: true
+    },
+    onFormCancelClick: {
+        type: Function,
+        required: true
     },
     onListButtonClick: {
       type: Function,

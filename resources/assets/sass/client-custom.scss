@@ -140,6 +140,12 @@
   margin-bottom: 20px;
 }
 
+.first-message,
+.middle-message,
+.last-message {
+  margin-bottom: 5px;
+}
+
 .reap {
   margin-left: 45px;
 
@@ -176,26 +182,12 @@
 /* User Input --- User Input --- User Input ---  */
 
 .user-input__form {
-  min-height: 195px;
-  height: 195px;
   flex-direction: column;
   padding: 20px;
 }
 
-.user-input__form::before {
-  content: "Enter your message here";
-  margin: 0;
-  padding: 0;
-  height: 10px;
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.57;
-  color: #38383a;
-}
-
 .user-input__form-text-input {
   flex: unset;
-  /* border: 1px solid green; */
   width: 100%;
   caret-color: #da291c;
   font-family: Gotham;
@@ -207,16 +199,9 @@
 
   padding: 0;
   margin: 0;
-  margin-top: 15px;
+  margin-bottom: 15px;
 
   height: 100%;
-}
-
-.user-input__form-text-input::before {
-  /* border: 1px solid blue; */
-  //   margin-top: -30px;
-  display: none;
-  color: transparent;
 }
 
 .user-input__buttons {

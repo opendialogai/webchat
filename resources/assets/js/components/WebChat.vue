@@ -28,11 +28,13 @@
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
         :on-full-page-form-input-submit="onFullPageFormInputSubmit"
+        :on-full-page-form-input-cancel="onFullPageFormInputCancel"
         :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
         :open="openChat"
         :on-button-click="onButtonClick"
         :on-form-button-click="onFormButtonClick"
+        :on-form-cancel-click="onFormCancelClick"
         :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
@@ -75,7 +77,7 @@
   import axios from "axios";
   import chatService from "../services/ChatService"
 
-  const moment = require("moment-timezone");
+const moment = require("moment-timezone");
 
 export default {
   name: "WebChat",
@@ -384,9 +386,6 @@ export default {
         this.headerText = "";
         this.maxInputCharacters = 0;
         this.showLongTextInput = false;
-        this.showFullPageFormInput = false;
-        this.showFullPageRichInput = false;
-        this.showMessages = true;
         this.messageList.push(newMsg);
       }
 
@@ -443,6 +442,10 @@ export default {
       const msg = this.messageList[this.messageList.length - 1];
       this.onFormButtonClick(data, msg);
     },
+    onFullPageFormInputCancel() {
+        const msg = this.messageList[this.messageList.length - 1];
+        this.onFormCancelClick(msg);
+    },
     onFullPageRichInputSubmit(button) {
       const msg = this.messageList[this.messageList.length - 1];
       this.onButtonClick(button, msg);
@@ -481,7 +484,16 @@ export default {
         this.$emit("expandChat");
       }
 
-      this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
+      if (msg.type === "fp-rich") {
+        const index = this.messageList.indexOf(msg);
+        this.messageList.splice(index, 1);
+
+        if (this.messageList[index - 1].type === "author") {
+          this.messageList.splice(index - 1, 1);
+        }
+      } else {
+        this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
+      }
 
       this.sendMessage({
         type: "button_response",
@@ -537,6 +549,16 @@ export default {
         data: responseData
       });
     },
+    onFormCancelClick(msg) {
+        console.log(msg);
+        this.messageList[this.messageList.indexOf(msg)].type = "text";
+        this.sendMessage({
+            type: "form_response",
+            author: "me",
+            callback_id: msg.data.cancel_callback,
+            data:{text: msg.data.cancel_text}
+        });
+    },
     onRestartButtonClick() {
       this.sendMessage({
         type: "trigger",
@@ -573,14 +595,10 @@ export default {
 
       const isOpen = this.isOpen;
 
-      this.sendChatOpenMessage(isOpen);
-
-      setTimeout(() => {
-        this.sendChatOpenMessage(!isOpen);
-      }, 3000);
+      this.sendChatOpenMessage();
     },
-    sendChatOpenMessage(open = true) {
-      const callback = (open) ? this.openIntent : this.closedIntent;
+    sendChatOpenMessage() {
+      const callback = this.openIntent;
 
       if (callback) {
         const message = {
@@ -588,7 +606,6 @@ export default {
           callback_id: callback,
           data: {
             value: this.parentUrl,
-            open
           }
         };
 
@@ -600,7 +617,7 @@ export default {
 
       const userId = this.user && this.user.email ? this.user.email : this.uuid;
 
-      const ignoreTypes = "chat_open,trigger";
+      const ignoreTypes = "chat_open,trigger,cta";
 
       return axios
         .get(
@@ -618,6 +635,11 @@ export default {
               return;
             }
 
+            // Ignore 'fp-rich' messages.
+            if (message.type === "fp-rich") {
+              return;
+            }
+
             const currentMessage = message;
 
             // Sets the author to 'me' for messages from the current user
@@ -628,17 +650,9 @@ export default {
             }
 
             // Convert to the right message type for display
-            if (
-              currentMessage.type === "button" ||
-              currentMessage.type === "long_text" ||
-              currentMessage.type === "form" ||
-              currentMessage.type === "hand-to-human"
-            ) {
-              if (currentMessage.type === "hand-to-human") {
+            if (currentMessage.type === "hand-to-human") {
                 currentMessage.data.text = currentMessage.data.elements.text;
-              }
-
-              currentMessage.type = "text";
+                currentMessage.type = "text";
             }
 
             if (
@@ -663,6 +677,15 @@ export default {
             }
 
             if (i < messages.length - 1) {
+              // Convert to the right message type for display
+              if (
+                currentMessage.type === "button" ||
+                currentMessage.type === "long_text" ||
+                currentMessage.type === "form"
+              ) {
+                currentMessage.type = "text";
+              }
+
               this.dateTimezoneFormat(currentMessage);
             }
 
@@ -677,6 +700,18 @@ export default {
               const authorMsg = this.newAuthorMessage(currentMessage);
 
               this.messageList.push(authorMsg);
+            }
+
+            if (i === messages.length - 1) {
+              this.contentEditable = !currentMessage.data.disable_text;
+
+              if (currentMessage.type === "fp-form") {
+                this.showFullPageFormInputMessage(currentMessage);
+              }
+
+              if (currentMessage.type === "fp-rich") {
+                this.showFullPageRichInputMessage(currentMessage);
+              }
             }
 
             currentMessage.mode = this.modeData.mode;
@@ -748,12 +783,14 @@ export default {
       this.fpFormInputMessage = message;
 
       this.showMessages = false;
+      this.showFullPageRichInput = false;
       this.showFullPageFormInput = true;
     },
     showFullPageRichInputMessage(message) {
       this.fpRichInputMessage = message;
 
       this.showMessages = false;
+      this.showFullPageFormInput = false;
       this.showFullPageRichInput = true;
     },
     createUuid() {

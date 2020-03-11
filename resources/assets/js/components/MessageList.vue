@@ -78,26 +78,30 @@
     }
   },
   methods: {
-    _scrollDown() {
+    _scrollDown(animate = true) {
       if (this.$refs.scrollList) {
         if (
           this.$refs.scrollList.scrollHeight >
           this.$refs.scrollList.offsetHeight
         ) {
-          const scrollStep =
-            (this.$refs.scrollList.scrollHeight -
-              this.$refs.scrollList.offsetHeight -
-              this.$refs.scrollList.scrollTop) /
-            15;
+          if (animate) {
+            const scrollStep =
+              (this.$refs.scrollList.scrollHeight -
+                this.$refs.scrollList.offsetHeight -
+                this.$refs.scrollList.scrollTop) /
+              15;
 
-          let i = 0;
-          const scrollInterval = setInterval(() => {
-            if (this.$refs.scrollList) {
-              this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollTop + scrollStep;
-            }
-            i = i + 1;
-            if (i == 15) clearInterval(scrollInterval);
-          }, 30);
+            let i = 0;
+            const scrollInterval = setInterval(() => {
+              if (this.$refs.scrollList) {
+                this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollTop + scrollStep;
+              }
+              i = i + 1;
+              if (i == 15) clearInterval(scrollInterval);
+            }, 30);
+          } else {
+            this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
+          }
         }
       }
     },
@@ -113,7 +117,7 @@
     }
   },
   mounted() {
-    this._scrollDown();
+    this._scrollDown(false);
     this.$root.$on("scroll-down-message-list", () => {
       this._scrollDown();
     });

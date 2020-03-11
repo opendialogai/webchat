@@ -1,6 +1,7 @@
 <template>
   <div
     class="mt-fp-form"
+    :class="{ loader: showLoader }"
     :style="{
             '--messageListBg': colors.messageList.bg,
             '--btn-bg': colors.button.bg,
@@ -125,7 +126,18 @@
         v-if="!message.data.auto_submit"
         @click="_handleClick"
       >{{ message.data.submit_text }}</button>
+
+      <button
+        class="mt-fp-form__submit"
+        @click="_handleCancel"
+      >{{ message.data.cancel_text }}</button>
     </div>
+
+    <template v-if="showLoader">
+      <div class="fp-loader">
+        <img src="./assets/fp-loader.svg" />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -139,6 +151,10 @@ export default {
   },
   props: {
     onSubmit: {
+      type: Function,
+      required: true
+    },
+    onCancel: {
       type: Function,
       required: true
     },
@@ -157,8 +173,14 @@ export default {
       form: {
         data: []
       },
-      errors: []
+      errors: [],
+      showLoader: false
     };
+  },
+  watch: {
+    message() {
+      this.showLoader = false;
+    },
   },
   methods: {
     onSelectChange() {
@@ -166,13 +188,24 @@ export default {
         this._handleClick();
       }
     },
+    _handleCancel() {
+      this.onCancel(this.form.data);
+    },
     _handleClick() {
       this.validateForm();
       if (!this.errors.length) {
         this.onSubmit(this.form.data);
+
+        this.showLoader = true;
       }
     },
+    validateEmail(emailAddress) {
+      if (/^[^\s@]+@[^\s@]+$/.test(emailAddress)) {
+        return true;
+      }
 
+      return false;
+    },
     validateForm() {
       this.errors = [];
 
@@ -185,6 +218,18 @@ export default {
             type: element.name,
             message: "<em>" + element.display + "</em> is required"
           });
+        }
+
+        if (
+          element.element_type === 'email' &&
+          !this.isEmpty(this.form.data[element.name].value)
+        ) {
+          if (!this.validateEmail(this.form.data[element.name].value)) {
+            this.errors.push({
+              type: element.name,
+              message: "<em>" + element.display + "</em> field is not a valid email address"
+            });
+          }
         }
       });
     },
@@ -216,6 +261,11 @@ export default {
 .mt-fp-form {
   background-color: var(--messageListBg);
   overflow-x: hidden;
+  position: relative;
+  flex: 1;
+}
+.mt-fp-form.loader {
+  overflow-y: hidden;
 }
 
 .mt-fp-form__elements {
@@ -568,4 +618,23 @@ doesnt work though 🤦🏻‍♂️
 .sc-message--fp-form--element .vs--single.vs--open .vs__selected {
   position: relative;
 } */
+
+.fp-loader {
+  position: sticky;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+.fp-loader img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
 </style>
