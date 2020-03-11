@@ -42,7 +42,6 @@
         </div>
 
         <EndChatButton
-          v-if="modeData.mode === 'custom'"
           @close-chat="closeChat"
         />
       </div>
@@ -182,12 +181,21 @@
       this.file = file;
     },
     closeChat() {
-      this.$emit('setChatMode', {
-        mode: 'webchat',
-        options: {
-          'callback_id': this.modeData.options.callback_id
-        }
-      });
+      if (this.modeData.mode === 'custom') {
+        this.$emit('setChatMode', {
+          mode: 'webchat',
+          options: {
+            'callback_id': this.modeData.options.callback_id
+          }
+        });
+      } else {
+        this.$parent.$parent.$parent.sendMessage({
+          type: "button_response",
+          author: "me",
+          callback_id: "intent.app.end_chat",
+          data: {}
+        });
+      }
     }
   }
 };
