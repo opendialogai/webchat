@@ -53,11 +53,14 @@
         :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
+        :mode-data="modeData"
         :fp-form-input-message="fpFormInputMessage"
         :fp-rich-input-message="fpRichInputMessage"
         :cta-text="ctaText"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
+        @vbc-user-typing="userTyping"
+        @setChatMode="setChatMode"
       />
       <div class="close-chat">
         <div class="close-chat__button" @click="toggleChatOpen"  >
@@ -71,7 +74,8 @@
 
 
 <script>
-import axios from "axios";
+  import axios from "axios";
+  import chatService from "../services/ChatService"
 
 const moment = require("moment-timezone");
 
@@ -159,6 +163,10 @@ export default {
     userUuid: {
       type: String,
       required: true
+    },
+    modeData: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -185,7 +193,9 @@ export default {
       showTypingIndicator: false,
       users: [],
       userName: "",
-      uuid: this.userUuid
+      chatbotAvatar: this.chatbotAvatarPath,
+      uuid: this.userUuid,
+      chatMode: "webchat"
     };
   },
   watch: {
@@ -229,6 +239,39 @@ export default {
             this.headerHeight = header.offsetHeight;
           }
         }, 1000);
+      }
+    },
+    modeData(newValue, oldValue) {
+      if (oldValue.mode === 'custom') {
+        this.destroyCustomMode();
+      } else if (oldValue.mode === 'webchat') {
+        this.destroyWebchatMode();
+      }
+
+      chatService.setModeData(newValue);
+
+      if (oldValue.mode === "custom" && newValue.mode === "webchat") {
+        // Convert the Hand-to-Human message to a text message
+        let filteredMessageList = this.messageList.filter((message) => message.mode === "webchat" && message.type === 'hand-to-human');
+        let handToHumanMessage = filteredMessageList[filteredMessageList.length-1];
+
+        if (handToHumanMessage) {
+          handToHumanMessage.type = 'text';
+          handToHumanMessage.data.text = handToHumanMessage.data.elements.text;
+        }
+
+        this.sendMessage({
+          type: "trigger",
+          author: "me",
+          callback_id: newValue.options.callback_id,
+          data: {}
+        });
+      }
+
+      if (newValue.mode === 'custom') {
+        this.setupCustomMode();
+      } else if (newValue.mode === 'webchat') {
+        this.setupWebchatMode();
       }
     }
   },
@@ -300,6 +343,9 @@ export default {
     },
     sendMessage(msg) {
       const newMsg = msg;
+
+      newMsg.mode = this.modeData.mode;
+
       newMsg.data.date = moment()
         .tz("UTC")
         .format("ddd D MMM");
@@ -356,327 +402,9 @@ export default {
         );
       }
 
-      if (
-        newMsg.type === "chat_open" ||
-        newMsg.type === "url_click" ||
-        newMsg.type === "trigger" ||
-        newMsg.type === "form_response" ||
-        newMsg.type === "webchat_list_response" ||
-        newMsg.data.text.length > 0
-      ) {
-        // Make a copy of the message to send to the backend.
-        // This is needed so that the author change will not affect this.messageList.
-        const msgCopy = Object.assign({}, newMsg);
-
-        // Set the message author ID.
-        msgCopy.author = msgCopy.user_id;
-        const webchatMessage = {
-          notification: "message",
-          user_id: msgCopy.user_id,
-          author: msgCopy.author,
-          message_id: msgCopy.id,
-          content: msgCopy
-        };
-
-        // Need to add error handling here
-        axios.post("/incoming/webchat", webchatMessage).then(
-          response => {
-            if (response.data instanceof Array) {
-              let index = 0;
-              let totalMessages = response.data.length;
-
-              response.data.forEach((message, i) => {
-                if (message && message.type === "cta") {
-                  if (this.ctaText.length === 2) {
-                    this.ctaText.splice(0, 1);
-                  }
-                  this.ctaText.push(message.data.text);
-
-                  totalMessages -= 1;
-                } else if (!message) {
-                  this.contentEditable = true;
-                } else {
-                  if (index === 0) {
-                    if (
-                      (this.useBotName || this.useBotAvatar) &&
-                      !message.data.hideavatar
-                    ) {
-                      const authorMsg = this.newAuthorMessage(message);
-
-                      this.messageList.push(authorMsg);
-                    }
-
-                    this.messageList.push({
-                      author: "them",
-                      type: "typing",
-                      data: {
-                        animate: this.messageAnimation
-                      }
-                    });
-                  }
-
-                  setTimeout(() => {
-                    this.$emit("newMessage", message);
-
-                    /* eslint-disable no-param-reassign */
-                    message.data.animate = this.messageAnimation;
-
-                    if (
-                      index === 0 ||
-                      !this.hideTypingIndicatorOnInternalMessages
-                    ) {
-                      const lastMessage = this.messageList[
-                        this.messageList.length - 1
-                      ];
-                      lastMessage.type = message.type;
-                      lastMessage.data = message.data;
-
-                      if (index === 0 && totalMessages > 1) {
-                        lastMessage.data.first = true;
-                      }
-
-                      if (index > 0 && index < totalMessages - 1) {
-                        lastMessage.data.middle = true;
-                      }
-
-                      if (index > 0 && index === totalMessages - 1) {
-                        lastMessage.data.last = true;
-                      }
-
-                      this.$root.$emit("scroll-down-message-list");
-                      setTimeout(() => {
-                        this.$root.$emit("scroll-down-message-list");
-                      }, 50);
-                    } else {
-                      if (index > 0 && index === totalMessages - 1) {
-                        /* eslint-disable no-param-reassign */
-                        message.data.lastInternal = true;
-                      }
-
-                      this.messageList.push(message);
-                    }
-
-                    if (message.data) {
-                      this.contentEditable = !message.data.disable_text;
-                    }
-
-                    if (message.type === "fp-form") {
-                      this.showFullPageFormInputMessage(message);
-                    }
-
-                    if (message.type === "fp-rich") {
-                      this.showFullPageRichInputMessage(message);
-                    }
-
-                    if (message.type !== "fp-form" && message.type !== "fp-rich") {
-                      this.showFullPageFormInput = false;
-                      this.showFullPageRichInput = false;
-                      this.showMessages = true;
-                    }
-
-                    if (!this.hideTypingIndicatorOnInternalMessages) {
-                      if (index < totalMessages - 1) {
-                        this.$nextTick(() => {
-                          this.$nextTick(() => {
-                            this.messageList.push({
-                              author: "them",
-                              type: "typing",
-                              data: {
-                                animate: this.messageAnimation
-                              }
-                            });
-                          });
-                        });
-                      }
-                    }
-                  }, (index + 1) * this.messageDelay);
-
-                  window.parent.postMessage(
-                    { dataLayerEvent: "message_received_from_chatbot" },
-                    "*"
-                  );
-
-                  index += 1;
-                }
-              });
-            } else if (response.data) {
-              const message = response.data;
-
-              if (newMsg.type === "chat_open") {
-                if (message && message.data) {
-                  if (
-                    (this.useBotName || this.useBotAvatar) &&
-                    !message.data.hideavatar
-                  ) {
-                    const authorMsg = this.newAuthorMessage(message);
-
-                    this.messageList.push(authorMsg);
-                  }
-
-                  this.messageList.push({
-                    author: "them",
-                    type: "typing",
-                    data: {
-                      animate: this.messageAnimation
-                    }
-                  });
-
-                  setTimeout(() => {
-                    const lastMessage = this.messageList[
-                      this.messageList.length - 1
-                    ];
-
-                    this.$emit("newMessage", message);
-
-                    message.data.animate = this.messageAnimation;
-
-                    lastMessage.type = message.type;
-                    lastMessage.data = message.data;
-
-                    if (message.type === "fp-form") {
-                      this.showFullPageFormInputMessage(message);
-                    }
-
-                    if (message.type === "fp-rich") {
-                      this.showFullPageRichInputMessage(message);
-                    }
-
-                    this.contentEditable = !message.data.disable_text;
-                  }, this.messageDelay);
-                } else {
-                  // If we don't get data about whether to disable the editor, turn it on
-                  this.contentEditable = true;
-                }
-              } else {
-                if (message.data) {
-                  if (
-                    (this.useBotName || this.useBotAvatar) &&
-                    !message.data.hideavatar
-                  ) {
-                    const authorMsg = this.newAuthorMessage(message);
-
-                    this.messageList.push(authorMsg);
-                  }
-
-                  this.messageList.push({
-                    author: "them",
-                    type: "typing",
-                    data: {
-                      animate: this.messageAnimation
-                    }
-                  });
-                }
-                setTimeout(() => {
-                  // Only add a message to the list if it is a message object
-                  if (typeof message === "object" && message !== null) {
-                    const lastMessage = this.messageList[
-                      this.messageList.length - 1
-                    ];
-
-                    this.$emit("newMessage", message);
-
-                    message.data.animate = this.messageAnimation;
-
-                    lastMessage.type = message.type;
-                    lastMessage.data = message.data;
-
-                    this.$root.$emit("scroll-down-message-list");
-                    setTimeout(() => {
-                      this.$root.$emit("scroll-down-message-list");
-                    }, 50);
-                  }
-
-                  if (message.data) {
-                    this.contentEditable = !message.data.disable_text;
-                  }
-
-                  if (message.type === "fp-form") {
-                    this.showFullPageFormInputMessage(message);
-                  }
-
-                  if (message.type === "fp-rich") {
-                    this.showFullPageRichInputMessage(message);
-                  }
-
-                  if (message.type !== "fp-form" && message.type !== "fp-rich") {
-                    this.showFullPageFormInput = false;
-                    this.showFullPageRichInput = false;
-                    this.showMessages = true;
-                  }
-
-                  if (message.type === "longtext") {
-                    if (message.data.character_limit) {
-                      this.maxInputCharacters = message.data.character_limit;
-                    }
-
-                    if (message.data.submit_text) {
-                      this.buttonText = message.data.submit_text;
-                    }
-
-                    if (message.data.text) {
-                      this.headerText = message.data.text;
-                    }
-
-                    if (message.data.placeholder) {
-                      this.placeholder = message.data.placeholder;
-                    }
-
-                    if (message.data.initial_text) {
-                      this.initialText = message.data.initial_text;
-                    } else {
-                      this.initialText = null;
-                    }
-
-                    if (message.data.confirmation_text) {
-                      this.confirmationMessage = message.data.confirmation_text;
-                    } else {
-                      this.confirmationMessage = null;
-                    }
-
-                    this.showLongTextInput = true;
-                    this.showMessages = false;
-                  }
-                }, this.messageDelay);
-
-                window.parent.postMessage(
-                  { dataLayerEvent: "message_received_from_chatbot" },
-                  "*"
-                );
-              }
-            }
-          },
-          // Axios error handler.
-          () => {
-            setTimeout(() => {
-              const message = {
-                type: "text",
-                author: "them",
-                data: {
-                  date: moment()
-                    .tz("UTC")
-                    .format("ddd D MMM"),
-                  time: moment()
-                    .tz("UTC")
-                    .format("hh:mm A"),
-                  text: "We're sorry, that didn't work, please try again"
-                }
-              };
-
-              const lastMessage = this.messageList[this.messageList.length - 1];
-
-              if (this.useBotName || this.useBotAvatar) {
-                const authorMsg = this.newAuthorMessage(message);
-                this.messageList.push(authorMsg);
-              }
-
-              lastMessage.type = message.type;
-              lastMessage.data = message.data;
-
-              this.$root.$emit("scroll-down-message-list");
-            }, this.messageDelay);
-          }
-        );
-      }
+      chatService.sendRequest(newMsg, this).then(
+          response => chatService.sendResponseSuccess(response, newMsg, this),
+          () => chatService.sendResponseError(null, newMsg, this));
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {
@@ -921,6 +649,12 @@ export default {
               currentMessage.author = "them";
             }
 
+            // Convert to the right message type for display
+            if (currentMessage.type === "hand-to-human") {
+                currentMessage.data.text = currentMessage.data.elements.text;
+                currentMessage.type = "text";
+            }
+
             if (
               i === 0 &&
               currentMessage.data &&
@@ -980,6 +714,7 @@ export default {
               }
             }
 
+            currentMessage.mode = this.modeData.mode;
             this.messageList.push(currentMessage);
           });
 
@@ -992,6 +727,7 @@ export default {
         const authorMsg = {
           type: "author",
           author: "them",
+          mode: this.modeData.mode,
           data: {
             author: "them",
             animate: this.messageAnimation,
@@ -1002,7 +738,7 @@ export default {
         };
 
         if (this.useBotAvatar) {
-          authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+          authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatar}" />`;
         }
 
         return authorMsg;
@@ -1011,6 +747,7 @@ export default {
       const authorMsg = {
         type: "author",
         author: "me",
+        mode: this.modeData.mode,
         data: {
           animate: this.messageAnimation,
           author: "me",
@@ -1070,6 +807,32 @@ export default {
           this.createUuid();
         }
       }
+    },
+    setChatMode(data) {
+      this.$emit('setChatMode', data);
+    },
+    destroyCustomMode() {
+      chatService.destroyChat(this);
+    },
+    destroyWebchatMode() {
+      chatService.destroyChat(this);
+    },
+    async setupCustomMode() {
+      this.contentEditable = true;
+      this.chatbotAvatar = "/vendor/webchat/images/agent.svg";
+
+      await chatService.initialiseChat(this);
+    },
+    async setupWebchatMode() {
+      this.contentEditable = false;
+      this.chatbotAvatar = this.chatbotAvatarPath;
+
+      await chatService.initialiseChat(this);
+    },
+    userTyping(text) {
+      chatService.sendTypingRequest(text, this)
+        .then((response) => chatService.sendTypingResponseSuccess(response, this))
+        .catch(() => chatService.sendTypingResponseError(null, this));
     }
   }
 };
