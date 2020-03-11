@@ -1,11 +1,19 @@
 <template>
-  <div
-    class="user-input__button"
-  >
-    <button v-if="!confirmCloseChat" @click.stop="toggleConfirmCloseChat" class="end-chat-btn">End chat</button>
-    <div v-if="confirmCloseChat">
+  <div>
+    <button
+      v-if="!confirmCloseChat"
+      @click.stop="toggleConfirmCloseChat"
+      class="end-chat-btn"
+      :class="{confirmCloseChatAnimate: !confirmCloseChat}"
+    >End chat</button>
+    <div
+      v-if="confirmCloseChat"
+      class="confirmCloseChat"
+      :class="{confirmCloseChatAnimate: confirmCloseChat}"
+    >
       <span>Are you sure?</span>
-      <button @click.stop="closeChat">Yes</button> / <button @click.stop="toggleConfirmCloseChat">No</button>
+      <button class="end-chat-btn" @click.stop="closeChat">Yes</button> /
+      <button class="end-chat-btn" @click.stop="toggleConfirmCloseChat">No</button>
     </div>
   </div>
 </template>
@@ -21,7 +29,6 @@
     methods: {
       toggleConfirmCloseChat() {
         this.confirmCloseChat = !this.confirmCloseChat;
-        console.log("toggle");
       },
       closeChat(event) {
         this.confirmCloseChat = false;
