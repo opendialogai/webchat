@@ -2,7 +2,7 @@ import ConversiveClient from "../clients/ConversiveClient";
 
 let ConversiveMode = function() {
   this.name = "custom";
-  this.client = new ConversiveClient();
+  this.client = null;
   this.pollingInterval = null;
   this.typingIndicatorIndex = null;
 };
@@ -38,6 +38,8 @@ ConversiveMode.prototype.sendTypingResponseError = function(error, webChatCompon
 };
 
 ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
+  this.client = new ConversiveClient();
+
   return this.client.getSessionId(webChatComponent.uuid)
     .then((sessionToken) => {
       return Promise.all([
@@ -63,6 +65,7 @@ ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
 ConversiveMode.prototype.destroyChat = async function(webChatComponent) {
   clearInterval(this.pollingInterval);
   this.client.logout(await this.client.getSessionId(webChatComponent.uuid));
+  this.client = null;
 };
 
 ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest, webChatComponent) {
