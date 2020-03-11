@@ -382,14 +382,21 @@ export default {
         axios.post("/incoming/webchat", webchatMessage).then(
           response => {
             if (response.data instanceof Array) {
+              let index = 0;
+              let totalMessages = response.data.length;
+
               response.data.forEach((message, i) => {
-                if (!message) {
+                if (message && message.type === "cta") {
+                  if (this.ctaText.length === 2) {
+                    this.ctaText.splice(0, 1);
+                  }
+                  this.ctaText.push(message.data.text);
+
+                  totalMessages -= 1;
+                } else if (!message) {
                   this.contentEditable = true;
                 } else {
-                    if (message.type === "cta") {
-                        this.ctaText.push(message.data.text);
-                    }
-                  if (i === 0) {
+                  if (index === 0) {
                     if (
                       (this.useBotName || this.useBotAvatar) &&
                       !message.data.hideavatar
@@ -415,7 +422,7 @@ export default {
                     message.data.animate = this.messageAnimation;
 
                     if (
-                      i === 0 ||
+                      index === 0 ||
                       !this.hideTypingIndicatorOnInternalMessages
                     ) {
                       const lastMessage = this.messageList[
@@ -424,15 +431,15 @@ export default {
                       lastMessage.type = message.type;
                       lastMessage.data = message.data;
 
-                      if (i === 0 && response.data.length > 1) {
+                      if (index === 0 && totalMessages > 1) {
                         lastMessage.data.first = true;
                       }
 
-                      if (i > 0 && i < response.data.length - 1) {
+                      if (index > 0 && index < totalMessages - 1) {
                         lastMessage.data.middle = true;
                       }
 
-                      if (i > 0 && i === response.data.length - 1) {
+                      if (index > 0 && index === totalMessages - 1) {
                         lastMessage.data.last = true;
                       }
 
@@ -441,7 +448,7 @@ export default {
                         this.$root.$emit("scroll-down-message-list");
                       }, 50);
                     } else {
-                      if (i > 0 && i === response.data.length - 1) {
+                      if (index > 0 && index === totalMessages - 1) {
                         /* eslint-disable no-param-reassign */
                         message.data.lastInternal = true;
                       }
@@ -468,7 +475,7 @@ export default {
                     }
 
                     if (!this.hideTypingIndicatorOnInternalMessages) {
-                      if (i < response.data.length - 1) {
+                      if (index < totalMessages - 1) {
                         this.$nextTick(() => {
                           this.$nextTick(() => {
                             this.messageList.push({
@@ -482,12 +489,14 @@ export default {
                         });
                       }
                     }
-                  }, (i + 1) * this.messageDelay);
+                  }, (index + 1) * this.messageDelay);
 
                   window.parent.postMessage(
                     { dataLayerEvent: "message_received_from_chatbot" },
                     "*"
                   );
+
+                  index += 1;
                 }
               });
             } else if (response.data) {
