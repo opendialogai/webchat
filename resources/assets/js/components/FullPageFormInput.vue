@@ -127,10 +127,10 @@
         @click="_handleClick"
       >{{ message.data.submit_text }}</button>
 
-        <button
-            class="mt-fp-form__submit"
-            @click="_handleCancel"
-        >{{ message.data.cancel_text }}</button>
+      <button
+        class="mt-fp-form__submit"
+        @click="_handleCancel"
+      >{{ message.data.cancel_text }}</button>
     </div>
 
     <template v-if="showLoader">
@@ -155,8 +155,8 @@ export default {
       required: true
     },
     onCancel: {
-        type: Function,
-        required: true
+      type: Function,
+      required: true
     },
     message: {
       type: Object,
@@ -184,7 +184,7 @@ export default {
       }
     },
     _handleCancel() {
-        this.onCancel(this.form.data);
+      this.onCancel(this.form.data);
     },
     _handleClick() {
       this.validateForm();
