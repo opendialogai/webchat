@@ -15,28 +15,28 @@
       <div v-if="message.data.title">
         <div
           class="mt-fpri__title animateStartingState animateDelay1"
-          :class="{animateSlideFromBottom : isOpen}"
+          :class="{animateSlideUp: isOpen}"
         >{{ message.data.title }}</div>
       </div>
 
       <div v-if="message.data.subtitle">
         <div
           class="mt-fpri__subtitle animateStartingState animateDelay2"
-          :class="{animateSlideFromBottom : isOpen}"
+          :class="{animateSlideUp: isOpen}"
         >{{ message.data.subtitle }}</div>
       </div>
 
       <div v-if="message.data.text">
         <p
           class="mt-fpri__text animateStartingState animateDelay2"
-          :class="{animateSlideFromBottom : isOpen}"
+          :class="{animateSlideUp: isOpen}"
           v-linkified
         >
           <span v-html="message.data.text"></span>
         </p>
       </div>
       <template v-if="message.data.image">
-        <div class="mt-fpri__image animateStartingState" :class="{animateSlideFromBottom : isOpen}">
+        <div class="mt-fpri__image animateStartingState" :class="{animateSlideUp: isOpen}">
           <template v-if="message.data.image.url">
             <a
               :href="message.data.image.url"
@@ -57,7 +57,7 @@
         <div class="mt-fpri__buttons">
           <button
             class="animateStartingState animateDelay3"
-            :class="{animateSlideFromBottom : isOpen}"
+            :class="{animateSlideUp: isOpen}"
             v-for="(button, idx) in message.data.buttons"
             :key="idx"
             @click="_handleClick(button)"
@@ -202,38 +202,6 @@ export default {
   background-color: var(--btn-bg-hover);
   color: var(--btn-color-hover);
   border: 2px solid var(--btn-border-color-hover);
-}
-
-@keyframes mt-fpri__button-fade-in {
-  from {
-    transform: translate(0px, 30px);
-    opacity: 0;
-  }
-  to {
-    transform: translate(0px, 0px);
-    opacity: 1;
-  }
-}
-
-.animateStartingState {
-  opacity: 0;
-}
-
-.animateSlideFromBottom {
-  animation: mt-fpri__button-fade-in 0.8s forwards;
-}
-
-.animateDelay1 {
-  animation-delay: 0.2s;
-}
-.animateDelay2 {
-  animation-delay: 0.5s;
-}
-.animateDelay3 {
-  animation-delay: 0.8s;
-}
-.animateDelay4 {
-  animation-delay: 2s;
 }
 
 /* loader --- loader --- loader ---  */

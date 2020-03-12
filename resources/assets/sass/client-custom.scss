@@ -294,3 +294,40 @@
   transition: transform 0.5s;
   // background-color: #ffffff;
 }
+
+// ANIMATIONS --- ANIMATIONS --- ANIMATIONS ---
+// ANIMATIONS --- ANIMATIONS --- ANIMATIONS ---
+// ANIMATIONS --- ANIMATIONS --- ANIMATIONS ---
+
+@keyframes slide-up {
+  from {
+    transform: translate(0px, 30px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0px, 0px);
+    opacity: 1;
+  }
+}
+
+.animateStartingState {
+  opacity: 0;
+}
+
+.animateSlideUp {
+  animation: slide-up 0.8s forwards;
+  //   animation: slide-up 3s forwards;
+}
+
+.animateDelay1 {
+  animation-delay: 0.2s;
+}
+.animateDelay2 {
+  animation-delay: 0.5s;
+}
+.animateDelay3 {
+  animation-delay: 0.8s;
+}
+.animateDelay4 {
+  animation-delay: 2s;
+}
