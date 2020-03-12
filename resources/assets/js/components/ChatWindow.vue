@@ -260,6 +260,8 @@
     "modeData.mode": function(newValue, oldValue) {
       if (newValue.mode !== 'custom') {
         this.agentProfile.teamName = this.originalTeamName;
+      } else {
+        this.agentProfile.teamName = 'Waiting for agent...';
       }
     },
     "modeData.options.teamName": function(newValue, oldValue) {
