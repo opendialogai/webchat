@@ -20,7 +20,7 @@
       </div>
 
       <div v-if="message.data.text">
-        <p class="mt-fpri__text" v-linkified>
+        <p class="mt-fpri__text">
           <span v-html="message.data.text"></span>
         </p>
       </div>
@@ -82,6 +82,7 @@ export default {
   },
   watch: {
     message() {
+        console.log(this.message.data.text);
       this.showLoader = false;
     },
   },
