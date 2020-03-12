@@ -178,6 +178,15 @@ export default {
           border: "#da291c",
           hoverBorder: "#c01a1e"
         },
+        // 👇🏻 new
+        messageButton: {
+          bg: "transparent",
+          hoverbg: "#575759",
+          text: "#313133",
+          hoverText: "#ffffff",
+          border: "#575759",
+          hoverBorder: "#575759"
+        },
         externalButton: {
           bg: "#ffffff",
           hoverbg: "#575759",
@@ -825,8 +834,10 @@ export default {
         this.isOpen = !this.isOpen;
         this.isMinimized = !this.isOpen;
 
-        if (!this.isOpen) {
-          this.$root.$emit("scroll-down-message-list");
+        if (this.isOpen) {
+          setTimeout(() => {
+            this.$root.$emit("scroll-down-message-list", false);
+          }, 10);
         }
 
         if (window.self !== window.top) {

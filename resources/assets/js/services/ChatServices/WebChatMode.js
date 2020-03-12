@@ -41,6 +41,8 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
     let totalMessages = response.data.length;
 
     response.data.forEach((message, i) => {
+      const messageIndex = index;
+
       if (message && message.type === "cta") {
         if (webChatComponent.ctaText.length === 2) {
           webChatComponent.ctaText.splice(0, 1);
@@ -51,7 +53,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
       } else if (!message) {
         webChatComponent.contentEditable = true;
       } else {
-        if (index === 0) {
+        if (messageIndex === 0) {
           if (
             (webChatComponent.useBotName || webChatComponent.useBotAvatar) &&
             !message.data.hideavatar
@@ -78,7 +80,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           message.data.animate = webChatComponent.messageAnimation;
 
           if (
-            index === 0 ||
+            messageIndex === 0 ||
             !webChatComponent.hideTypingIndicatorOnInternalMessages
           ) {
             const lastMessage = webChatComponent.messageList[
@@ -87,15 +89,15 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             lastMessage.type = message.type;
             lastMessage.data = message.data;
 
-            if (index === 0 && totalMessages > 1) {
+            if (messageIndex === 0 && totalMessages > 1) {
               lastMessage.data.first = true;
             }
 
-            if (index > 0 && index < totalMessages - 1) {
+            if (messageIndex > 0 && messageIndex < totalMessages - 1) {
               lastMessage.data.middle = true;
             }
 
-            if (index > 0 && index === totalMessages - 1) {
+            if (messageIndex > 0 && messageIndex === totalMessages - 1) {
               lastMessage.data.last = true;
             }
 
@@ -104,7 +106,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               webChatComponent.$root.$emit("scroll-down-message-list");
             }, 50);
           } else {
-            if (index > 0 && index === totalMessages - 1) {
+            if (messageIndex > 0 && messageIndex === totalMessages - 1) {
               /* eslint-disable no-param-reassign */
               message.data.lastInternal = true;
             }
@@ -132,7 +134,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           }
 
           if (!webChatComponent.hideTypingIndicatorOnInternalMessages) {
-            if (index < totalMessages - 1) {
+            if (messageIndex < totalMessages - 1) {
               webChatComponent.$nextTick(() => {
                 webChatComponent.$nextTick(() => {
                   webChatComponent.messageList.push({
@@ -147,7 +149,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               });
             }
           }
-        }, (index + 1) * webChatComponent.messageDelay);
+        }, (messageIndex + 1) * webChatComponent.messageDelay);
 
         window.parent.postMessage(
           { dataLayerEvent: "message_received_from_chatbot" },

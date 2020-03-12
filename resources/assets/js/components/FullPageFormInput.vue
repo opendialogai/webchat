@@ -196,11 +196,13 @@ export default {
       this.onCancel(this.form.data);
     },
     _handleClick() {
-      this.validateForm();
-      if (!this.errors.length) {
-        this.onSubmit(this.form.data);
+      if (!this.showLoader) {
+        this.validateForm();
+        if (!this.errors.length) {
+          this.onSubmit(this.form.data);
 
-        this.showLoader = true;
+          this.showLoader = true;
+        }
       }
     },
     validateEmail(emailAddress) {

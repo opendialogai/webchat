@@ -12,6 +12,8 @@
       :colors="colors"
       :isOpen="isOpen"
       :ctaText="ctaText"
+      :showFullPageFormInput="showFullPageFormInput"
+      :showFullPageRichInput="showFullPageRichInput"
     />
     <MessageList
       v-if="showMessages"

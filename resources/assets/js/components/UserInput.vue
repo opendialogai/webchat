@@ -37,12 +37,9 @@
       ></div>
 
       <div class="user-input__buttons">
-        <div class="user-input__button">
-          <button @click.prevent="_submitText" class="send-btn"></button>
-        </div>
+        <button @click.prevent="_submitText" class="send-btn"></button>
 
         <EndChatButton
-          v-if="modeData.mode === 'custom'"
           @close-chat="closeChat"
         />
       </div>
@@ -56,7 +53,7 @@
   import ExternalButtons from "./ExternalButtons.vue";
   import EndChatButton from "./EndChatButton";
 
-  export default {
+export default {
   components: {
     EndChatButton,
     ExternalButtons
@@ -182,12 +179,24 @@
       this.file = file;
     },
     closeChat() {
-      this.$emit('setChatMode', {
-        mode: 'webchat',
-        options: {
-          'callback_id': this.modeData.options.callback_id
-        }
-      });
+      if (this.modeData.mode === 'custom') {
+        this.$emit('setChatMode', {
+          mode: 'webchat',
+          options: {
+            'callback_id': this.modeData.options.callback_id
+          }
+        });
+      } else {
+        this.$parent.$parent.$parent.sendMessage({
+          type: "button_response",
+          author: "me",
+          callback_id: "intent.app.end_chat",
+          data: {
+            text: 'End chat',
+            value: ''
+          }
+        });
+      }
     }
   }
 };

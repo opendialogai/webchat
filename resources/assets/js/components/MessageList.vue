@@ -123,8 +123,8 @@
   },
   mounted() {
     this._scrollDown(false);
-    this.$root.$on("scroll-down-message-list", () => {
-      this._scrollDown();
+    this.$root.$on("scroll-down-message-list", (animate = true) => {
+      this._scrollDown(animate);
     });
   },
   updated() {

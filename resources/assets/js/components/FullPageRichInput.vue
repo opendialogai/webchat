@@ -30,7 +30,6 @@
         <p
           class="mt-fpri__text animateStartingState animateDelay1"
           :class="{animateSlideUp: isOpen}"
-          v-linkified
         >
           <span v-html="message.data.text"></span>
         </p>
@@ -51,7 +50,6 @@
         </div>
       </template>
 
-      <!-- buttons --- buttons --- buttons --- buttons ---  -->
 
       <template v-if="message.data.buttons.length">
         <div class="mt-fpri__buttons">
@@ -107,9 +105,11 @@ export default {
   },
   methods: {
     _handleClick(button) {
-      this.onSubmit(button);
+      if (!this.showLoader) {
+        this.onSubmit(button);
 
-      this.showLoader = true;
+        this.showLoader = true;
+      }
     }
   }
 };
@@ -206,6 +206,63 @@ export default {
 }
 
 /* loader --- loader --- loader ---  */
+@keyframes mt-fpri__button-fade-in {
+  from {
+    transform: translate(0px, 30px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0px, 0px);
+    opacity: 1;
+  }
+}
+
+.mt-fpri__button--animate {
+  animation: mt-fpri__button-fade-in 1s forwards;
+}
+
+/* .sc-message--fp-rich {
+  background: #eaeaea;
+  border-radius: 6px;
+  padding: 0 12px;
+  max-width: calc(100% - 40px);
+  border: 1px solid blue;
+} */
+/*
+.sc-message--fp-rich .sc-message--fp-rich--text {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.sc-message--fp-rich button {
+  cursor: pointer;
+  border-radius: 30px;
+  border: none;
+  font-size: 14px;
+  padding: 12px 17px;
+  margin: 0 10px 10px 0;
+}
+.sc-message--fp-rich button:hover {
+  background-color: var(--button-hover) !important;
+}
+
+.sc-message--fp-rich button:last-child {
+  margin-right: 0;
+}
+
+.sc-message--fp-rich .sc-message--fp-rich--image {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.sc-message--fp-rich .sc-message--fp-rich--image img {
+  max-width: 100%;
+} */
+
 .fp-loader {
   position: sticky;
   width: 100%;

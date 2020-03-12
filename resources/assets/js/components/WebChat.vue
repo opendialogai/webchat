@@ -31,7 +31,6 @@
         :on-full-page-form-input-cancel="onFullPageFormInputCancel"
         :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
-        :open="openChat"
         :on-button-click="onButtonClick"
         :on-form-button-click="onFormButtonClick"
         :on-form-cancel-click="onFormCancelClick"
@@ -459,7 +458,6 @@ export default {
       const msg = this.messageList[this.messageList.length - 1];
       this.onButtonClick(button, msg);
     },
-    openChat() {},
     async onButtonClick(button, msg) {
       if (msg.data.external) {
         await new Promise(resolve => setTimeout(resolve, 300));
@@ -533,23 +531,8 @@ export default {
     },
     onFormButtonClick(data, msg) {
       this.messageList[this.messageList.indexOf(msg)].type = "text";
-
       const responseData = {};
-      const newMessageText = [];
-
-      msg.data.elements.forEach(element => {
-        responseData[element.name] = data[element.name].value;
-
-        if (element.display) {
-          newMessageText.push(
-            `${element.display}: ${data[element.name].value}`
-          );
-        } else {
-          newMessageText.push(data[element.name].value);
-        }
-      });
-
-      responseData.text = newMessageText.join("\n");
+      responseData.text = "Form submitted";
 
       this.sendMessage({
         type: "form_response",
@@ -559,14 +542,13 @@ export default {
       });
     },
     onFormCancelClick(msg) {
-      console.log(msg);
-      this.messageList[this.messageList.indexOf(msg)].type = "text";
-      this.sendMessage({
-        type: "form_response",
-        author: "me",
-        callback_id: msg.data.cancel_callback,
-        data: { text: msg.data.cancel_text }
-      });
+        this.messageList[this.messageList.indexOf(msg)].type = "text";
+        this.sendMessage({
+            type: "form_response",
+            author: "me",
+            callback_id: msg.data.cancel_callback,
+            data:{text: msg.data.cancel_text}
+        });
     },
     onRestartButtonClick() {
       this.sendMessage({

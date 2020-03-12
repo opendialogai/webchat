@@ -207,10 +207,14 @@
 .user-input__buttons {
   width: 100%;
   margin: 0;
+
+  display: flex;
+  justify-content: space-between;
 }
 
 .user-input__button {
-  align-items: flex-start;
+  //   align-items: flex-start;
+  border: 1px solid blue;
 }
 
 .send-btn {
@@ -231,9 +235,31 @@
   color: white;
 }
 
-// .send-btn:hover:before{
-//     background-color: #c01a1e;
-// }
+.end-chat-btn,
+.end-chat-btn:hover,
+.end-chat-btn:focus {
+  border: none;
+  outline: none;
+  background: none;
+  text-decoration: underline;
+}
+
+@keyframes confirmCloseChatAnim {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.confirmCloseChat {
+  opacity: 0;
+}
+
+.confirmCloseChatAnimate {
+  animation: confirmCloseChatAnim 0.6s forwards;
+}
 
 // close-chat --- close-chat --- close-chat ---
 // close-chat --- close-chat --- close-chat ---
