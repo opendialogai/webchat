@@ -498,7 +498,7 @@ export default {
         if (this.messageList[index - 1].type === "author") {
           this.messageList.splice(index - 1, 1);
         }
-      } else {
+      } else if (msg.data.clear_after_interaction) {
         this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
       }
 
