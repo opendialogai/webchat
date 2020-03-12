@@ -31,7 +31,6 @@
         :on-full-page-form-input-cancel="onFullPageFormInputCancel"
         :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
-        :open="openChat"
         :on-button-click="onButtonClick"
         :on-form-button-click="onFormButtonClick"
         :on-form-cancel-click="onFormCancelClick"
@@ -450,7 +449,6 @@ export default {
       const msg = this.messageList[this.messageList.length - 1];
       this.onButtonClick(button, msg);
     },
-    openChat() {},
     async onButtonClick(button, msg) {
       if (msg.data.external) {
         await new Promise(resolve => setTimeout(resolve, 300));
