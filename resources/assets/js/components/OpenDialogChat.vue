@@ -178,6 +178,15 @@ export default {
           border: "#da291c",
           hoverBorder: "#c01a1e"
         },
+        // 👇🏻 new
+        messageButton: {
+          bg: "transparent",
+          hoverbg: "#575759",
+          text: "#313133",
+          hoverText: "#ffffff",
+          border: "#575759",
+          hoverBorder: "#575759"
+        },
         externalButton: {
           bg: "#ffffff",
           hoverbg: "#575759",

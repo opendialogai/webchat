@@ -1,35 +1,33 @@
 <template>
   <div
     ref="message"
-    class="mt mt-message-with-button"
-
+    class="mt-message-with-button"
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
-        reap: this.author === 'them',
     }]"
   >
-    <!-- 👇🏻 this was an attr in the above div -->
-    <!-- :style="messageColors" -->
-
-    <div class="mt-message-with-button__text fade-enter-active" v-linkified>
+    <div
+      class="mt reap mt-message-with-button__text fade-enter-active"
+      :style="messageColors"
+      v-linkified>
       <span v-html="data.text"></span>
     </div>
 
     <template v-if="data.buttons.length && !data.external">
       <div
-        class="mt-message-with-button__buttons-wrapper"
+        class="mt-message-with-button__buttons-wrapper reap"
            :style="{
             '--background': colors.messageList.bg,
 
-            '--btn-bg': colors.button.bg,
-            '--btn-bg-hover': colors.button.hoverbg,
+            '--btn-bg': colors.messageButton.bg,
+            '--btn-bg-hover': colors.messageButton.hoverbg,
 
-            '--btn-color': colors.button.text,
-            '--btn-color-hover':  colors.button.hoverText,
+            '--btn-color': colors.messageButton.text,
+            '--btn-color-hover':  colors.messageButton.hoverText,
 
-            '--btn-border-color':colors.button.border,
-            '--btn-border-color-hover':colors.button.hoverBorder }"
+            '--btn-border-color':colors.messageButton.border,
+            '--btn-border-color-hover':colors.messageButton.hoverBorder }"
       >
         <button
           v-for="(button, idx) in data.buttons"
