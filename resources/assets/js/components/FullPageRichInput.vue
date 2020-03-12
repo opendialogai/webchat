@@ -89,9 +89,11 @@ export default {
   },
   methods: {
     _handleClick(button) {
-      this.onSubmit(button);
+      if (!this.showLoader) {
+        this.onSubmit(button);
 
-      this.showLoader = true;
+        this.showLoader = true;
+      }
     }
   }
 };
