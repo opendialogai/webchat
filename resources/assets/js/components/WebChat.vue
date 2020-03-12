@@ -498,7 +498,7 @@ export default {
         if (this.messageList[index - 1].type === "author") {
           this.messageList.splice(index - 1, 1);
         }
-      } else {
+      } else if (msg.data.clear_after_interaction) {
         this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
       }
 
@@ -615,6 +615,7 @@ export default {
           `/user/${userId}/history?limit=${this.numberOfMessages}&ignore=${ignoreTypes}`
         )
         .then(response => {
+          const total = response.data.length;
           response.data.reverse().forEach((message, i, messages) => {
             // Ignore 'url_click' messages.
             if (message.type === "url_click") {
@@ -627,7 +628,7 @@ export default {
             }
 
             // Ignore 'fp-rich' messages.
-            if (message.type === "fp-rich") {
+            if (message.type === "fp-rich" && i+1 !== total) {
               return;
             }
 
