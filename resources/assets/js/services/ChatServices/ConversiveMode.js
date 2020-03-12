@@ -8,18 +8,14 @@ let ConversiveMode = function() {
 };
 
 ConversiveMode.prototype.sendRequest = function(message, webChatComponent) {
-  console.log("Sending:", message);
-
   return this.client.getSessionId(webChatComponent.uuid)
     .then(sessionId => this.client.sendMessage(message, sessionId));
 };
 
 ConversiveMode.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
-  console.log("Conversive mode response success", response);
 };
 
 ConversiveMode.prototype.sendResponseError = function(error, sentMessage, webChatComponent) {
-  console.log("Conversive mode response error", error);
 };
 
 ConversiveMode.prototype.sendTypingRequest = function(message, webChatComponent) {
@@ -30,11 +26,9 @@ ConversiveMode.prototype.sendTypingRequest = function(message, webChatComponent)
 };
 
 ConversiveMode.prototype.sendTypingResponseSuccess = function(response, webChatComponent) {
-  console.log("Conversive mode typing response success", response);
 };
 
 ConversiveMode.prototype.sendTypingResponseError = function(error, webChatComponent) {
-  console.log("Conversive mode typing response error", error);
 };
 
 ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
