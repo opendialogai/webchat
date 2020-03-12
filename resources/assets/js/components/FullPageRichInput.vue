@@ -21,14 +21,14 @@
 
       <div v-if="message.data.subtitle">
         <div
-          class="mt-fpri__subtitle animateStartingState animateDelay2"
+          class="mt-fpri__subtitle animateStartingState animateDelay1"
           :class="{animateSlideUp: isOpen}"
         >{{ message.data.subtitle }}</div>
       </div>
 
       <div v-if="message.data.text">
         <p
-          class="mt-fpri__text animateStartingState animateDelay2"
+          class="mt-fpri__text animateStartingState animateDelay1"
           :class="{animateSlideUp: isOpen}"
           v-linkified
         >
@@ -51,15 +51,16 @@
         </div>
       </template>
 
-      <!-- add this class to <button>  when isOpen == true -->
-      <!-- class="mtFprButtonAnimate"  -->
+      <!-- buttons --- buttons --- buttons --- buttons ---  -->
+
       <template v-if="message.data.buttons.length">
         <div class="mt-fpri__buttons">
           <button
-            class="animateStartingState animateDelay3"
-            :class="{animateSlideUp: isOpen}"
+            class="animateStartingState"
+            :class="[{animateSlideUp: isOpen, [`button-delay${idx + 1}`]: true}] "
             v-for="(button, idx) in message.data.buttons"
             :key="idx"
+            :myAttr="idx"
             @click="_handleClick(button)"
           >{{button.text}}</button>
         </div>
