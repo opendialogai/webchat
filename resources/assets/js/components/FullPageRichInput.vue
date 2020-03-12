@@ -82,7 +82,6 @@ export default {
   },
   watch: {
     message() {
-        console.log(this.message.data.text);
       this.showLoader = false;
     },
   },

@@ -535,7 +535,6 @@ export default {
       });
     },
     onFormCancelClick(msg) {
-        console.log(msg);
         this.messageList[this.messageList.indexOf(msg)].type = "text";
         this.sendMessage({
             type: "form_response",
