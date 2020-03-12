@@ -78,14 +78,14 @@
 </template>
 
 <script>
-import Header from './Header.vue'
-import MessageList from './MessageList.vue'
-import UserInput from './UserInput.vue'
-import FullPageFormInput from './FullPageFormInput.vue'
-import FullPageRichInput from './FullPageRichInput.vue'
-import LongTextUserInput from './LongTextUserInput.vue'
+    import Header from './Header.vue'
+    import MessageList from './MessageList.vue'
+    import UserInput from './UserInput.vue'
+    import FullPageFormInput from './FullPageFormInput.vue'
+    import FullPageRichInput from './FullPageRichInput.vue'
+    import LongTextUserInput from './LongTextUserInput.vue'
 
-export default {
+    export default {
   components: {
     Header,
     MessageList,
@@ -249,12 +249,17 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+        originalTeamName: ''
+    }
+  },
+  created () {
+      this.originalTeamName = this.agentProfile.teamName;
   },
   watch: {
     "modeData.mode": function(newValue, oldValue) {
       if (newValue.mode !== 'custom') {
-        this.agentProfile.teamName = '';
+        this.agentProfile.teamName = this.originalTeamName;
       }
     },
     "modeData.options.teamName": function(newValue, oldValue) {
