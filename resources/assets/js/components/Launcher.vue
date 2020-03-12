@@ -13,7 +13,6 @@
       :onExpand="expand"
       :onButtonClick="onButtonClick"
       :onFormButtonClick="onFormButtonClick"
-      :onFormCancelClick="onFormCancelClick"
       :onListButtonClick="onListButtonClick"
       :onRestartButtonClick="onRestartButtonClick"
       :onLinkClick="onLinkClick"
@@ -163,10 +162,6 @@ export default {
     onFormButtonClick: {
       type: Function,
       required: true
-    },
-    onFormCancelClick: {
-        type: Function,
-        required: true
     },
     onListButtonClick: {
       type: Function,

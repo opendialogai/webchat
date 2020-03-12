@@ -33,7 +33,6 @@
         :message-list="messageList"
         :on-button-click="onButtonClick"
         :on-form-button-click="onFormButtonClick"
-        :on-form-cancel-click="onFormCancelClick"
         :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
@@ -64,7 +63,10 @@
       <div class="close-chat">
         <div
           class="close-chat__button"
-          :class="{closeChatButtonAnimate: isOpen}"
+          :class="{
+            closeChatButtonAnimate: isOpen,
+            closeChatButtonReverseAnimate: closeChatButtonReverseAnimate,
+          }"
           @click="toggleChatOpen"
         >
           <img src="/images/close-btn.svg" class="close-chat__img" />
@@ -175,6 +177,7 @@ export default {
   data() {
     return {
       buttonText: "Submit",
+      closeChatButtonReverseAnimate: false,
       confirmationMessage: null,
       contentEditable: false,
       ctaText: [],
@@ -542,13 +545,13 @@ export default {
       });
     },
     onFormCancelClick(msg) {
-        this.messageList[this.messageList.indexOf(msg)].type = "text";
-        this.sendMessage({
-            type: "form_response",
-            author: "me",
-            callback_id: msg.data.cancel_callback,
-            data:{text: msg.data.cancel_text}
-        });
+      this.messageList[this.messageList.indexOf(msg)].type = "text";
+      this.sendMessage({
+        type: "form_response",
+        author: "me",
+        callback_id: msg.data.cancel_callback,
+        data:{text: msg.data.cancel_text}
+      });
     },
     onRestartButtonClick() {
       this.sendMessage({
@@ -562,8 +565,17 @@ export default {
       this.$emit("expandChat");
     },
     toggleChatOpen() {
-      this.isOpen = !this.isOpen;
-      this.$emit("toggleChatOpen", this.headerHeight);
+      if (this.isOpen) {
+        this.closeChatButtonReverseAnimate = true;
+        setTimeout(() => {
+          this.closeChatButtonReverseAnimate = false;
+          this.isOpen = !this.isOpen;
+          this.$emit("toggleChatOpen", this.headerHeight);
+        }, 300);
+      } else {
+        this.isOpen = !this.isOpen;
+        this.$emit("toggleChatOpen", this.headerHeight);
+      }
     },
     wildcardToRegExp(string) {
       return new RegExp(
