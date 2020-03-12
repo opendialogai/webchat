@@ -825,8 +825,10 @@ export default {
         this.isOpen = !this.isOpen;
         this.isMinimized = !this.isOpen;
 
-        if (!this.isOpen) {
-          this.$root.$emit("scroll-down-message-list");
+        if (this.isOpen) {
+          setTimeout(() => {
+            this.$root.$emit("scroll-down-message-list", false);
+          }, 10);
         }
 
         if (window.self !== window.top) {

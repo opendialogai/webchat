@@ -64,10 +64,6 @@ export default {
       type: Boolean,
       required: true
     },
-    open: {
-      type: Function,
-      required: true
-    },
     close: {
       type: Function,
       required: true
