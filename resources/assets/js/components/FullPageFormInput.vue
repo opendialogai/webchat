@@ -193,10 +193,10 @@ export default {
       }
     },
     _handleCancel() {
-        if (!this.showLoader) {
-            this.onCancel(this.form.data);
-            this.showLoader = true;
-        }
+      if (!this.showLoader) {
+        this.onCancel(this.form.data);
+        this.showLoader = true;
+      }
     },
     _handleClick() {
       if (!this.showLoader) {
