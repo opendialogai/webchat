@@ -121,16 +121,20 @@
         </template>
       </div>
 
-      <button
-        class="mt-fp-form__submit"
-        v-if="!message.data.auto_submit"
-        @click="_handleClick"
-      >{{ message.data.submit_text }}</button>
+      <div class="mt-fp-form__submit-wrapper">
+        <button
+          class="mt-fp-form__submit"
+          v-if="!message.data.auto_submit"
+          @click="_handleClick"
+        >{{ message.data.submit_text }}</button>
+      </div>
 
-      <button
-        class="mt-fp-form__submit"
-        @click="_handleCancel"
-      >{{ message.data.cancel_text }}</button>
+      <div
+        v-if="message.data.cancel_text && message.data.cancel_callback"
+        class="mt-fp-form__cancel-wrapper"
+      >
+        <button class="mt-fp-form__cancel" @click="_handleCancel">{{ message.data.cancel_text }}</button>
+      </div>
     </div>
 
     <template v-if="showLoader">
@@ -165,11 +169,7 @@ export default {
     colors: {
       type: Object,
       required: true
-    },
-    isOpen: {
-      type: Boolean,
-      default: () => false
-    },
+    }
   },
   data() {
     return {
@@ -184,7 +184,7 @@ export default {
   watch: {
     message() {
       this.showLoader = false;
-    },
+    }
   },
   methods: {
     onSelectChange() {
@@ -225,13 +225,16 @@ export default {
         }
 
         if (
-          element.element_type === 'email' &&
+          element.element_type === "email" &&
           !this.isEmpty(this.form.data[element.name].value)
         ) {
           if (!this.validateEmail(this.form.data[element.name].value)) {
             this.errors.push({
               type: element.name,
-              message: "<em>" + element.display + "</em> field is not a valid email address"
+              message:
+                "<em>" +
+                element.display +
+                "</em> field is not a valid email address"
             });
           }
         }
@@ -481,14 +484,14 @@ doesnt work though 🤦🏻‍♂️
   height: 32px;
   border-radius: 16px;
   border: 1px solid #979797;
-  /* background-color: #da291c; */
-}
-
-.mt-fp-form__radio-btn input[type="radio"] {
-  /* opacity: 0; */
 }
 
 /* submit --- submit --- submit ---  */
+
+.mt-fp-form__submit-wrapper {
+  width: 100%;
+  text-align: center;
+}
 
 .mt-fp-form__submit {
   color: var(--btn-text-color);
@@ -511,117 +514,42 @@ doesnt work though 🤦🏻‍♂️
   border: 1px solid var(--btn-bg-hover);
 }
 
-/*
+/* cancel --- cancel --- cancel ---  */
 
-.sc-full-page-form-input--container {
-  flex: 1;
-}
-.sc-full-page-form-input .sc-message--fp-form--errors {
-  background: #f55555;
-  color: white;
-  padding: 2px 7px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-
-.sc-full-page-form-input button {
-  cursor: pointer;
-  border-radius: 15px;
-  border: none;
-  font-size: 14px;
-  padding: 12px 17px;
-  margin-top: 5px;
-  transition: 0.4s;
-  color: var(--btn-text-color);
-  background-color: var(--btn-bg);
-}
-
-.sc-full-page-form-input button:hover {
-  background-color: var(--button-hover) !important;
-  color: #0000ff;
-  border: 1px solid #0000ff;
-}
-
-.sc-full-page-form-input .sc-message--fp-form--text {
-  margin-bottom: 10px;
-}
-
-.sc-full-page-form-input .sc-message--fp-form--element {
-  margin-bottom: 10px;
-}
-
-.sc-full-page-form-input .sc-message--fp-form--element-label {
-  margin-right: 5px;
-  vertical-align: middle;
-}
-.sc-full-page-form-input .sc-message--fp-form--element-input {
-  font-size: 13px;
-  border-radius: 5px;
-  border: 1px solid #a9a9a9;
-  padding: 2px 7px;
-}
-.sc-full-page-form-input .sc-message--fp-form--element-textarea {
-  font-size: 13px;
-  border-radius: 5px;
-  border: 1px solid #a9a9a9;
-  padding: 4px 7px;
+.mt-fp-form__cancel-wrapper {
   width: 100%;
-  min-height: 60px;
-}
-.sc-full-page-form-input .sc-message--fp-form--element-select {
-  font-size: 13px;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
-.sc-full-page-form-input .sc-message--fp-form--errors {
-  background: #f55555;
-  color: white;
-  padding: 2px 7px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-} */
-/*
-.sc-message--fp-form--element .vs__dropdown-toggle {
-  background: white;
+.mt-fp-form__cancel,
+.mt-fp-form__cancel:hover,
+.mt-fp-form__cancel:focus {
+  border: none;
+  outline: none;
+  background: none;
+  text-decoration: underline;
 }
-.sc-message--fp-form--element .vs__dropdown-toggle .vs__selected-options {
-  min-height: 27px;
+
+@keyframes confirmCloseChatAnim {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
-.sc-message--fp-form--element
-  .vs__dropdown-toggle
-  .vs__selected-options
-  .vs__selected {
-  max-width: calc(100% - 5px);
+
+.confirmCloseChat {
+  opacity: 0;
 }
-.sc-message--fp-form--element
-  .vs__dropdown-toggle
-  .vs__selected-options
-  .vs__search {
-  padding: 0;
-  margin: 0;
+
+.confirmCloseChatAnimate {
+  animation: confirmCloseChatAnim 0.6s forwards;
 }
-.sc-message--fp-form--element
-  .vs__dropdown-toggle
-  .vs__selected-options
-  .vs__search:focus {
-  min-width: 160px;
-  margin: 4px 0 0;
-  padding: 0 7px;
-}
-.sc-message--fp-form--element .vs__dropdown-menu {
-  min-width: 260px;
-}
-.sc-message--fp-form--element .vs__dropdown-menu .vs__dropdown-option {
-  white-space: normal;
-  border-bottom: 1px solid lightgray;
-}
-.sc-message--fp-form--element
-  .vs__dropdown-menu
-  .vs__dropdown-option:last-child {
-  border-bottom: none;
-}
-.sc-message--fp-form--element .vs--single.vs--open .vs__selected {
-  position: relative;
-} */
+
+/* fp-loader --- fp-loader --- fp-loader ---  */
+/* fp-loader --- fp-loader --- fp-loader ---  */
 
 .fp-loader {
   position: sticky;
@@ -642,3 +570,4 @@ doesnt work though 🤦🏻‍♂️
   margin: auto;
 }
 </style>
+
