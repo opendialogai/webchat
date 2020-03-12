@@ -111,7 +111,7 @@
       :data="message.data"
       :messageColors="determineMessageColors()"
       :colors="colors"
-      :isOpemn="isOpen"
+      :isOpen="isOpen"
     />
 
     <HandToHumanMessage
@@ -139,22 +139,22 @@
 </template>
 
 <script>
-  import DatetimeFakeMessage from "./DatetimeFakeMessage.vue";
-  import CarouselListMessage from "./CarouselListMessage.vue";
-  import ListMessage from "./ListMessage.vue";
-  import ImageMessage from "./ImageMessage.vue";
-  import FormMessage from "./FormMessage.vue";
-  import FormResponseMessage from "./FormResponseMessage.vue";
-  import FpRichMessage from "./FpRichMessage.vue";
-  import ButtonMessage from "./ButtonMessage.vue";
-  import ButtonResponseMessage from "./ButtonResponseMessage.vue";
-  import RichMessage from "./RichMessage.vue";
-  import TextMessage from "./TextMessage.vue";
-  import LongTextMessage from "./LongTextMessage.vue";
-  import TypingMessage from "./TypingMessage.vue";
-  import AuthorMessage from "./AuthorMessage.vue";
-  import chatIcon from "./assets/chat-icon.svg";
-  import HandToHumanMessage from "./HandToHumanMessage";
+import DatetimeFakeMessage from "./DatetimeFakeMessage.vue";
+import CarouselListMessage from "./CarouselListMessage.vue";
+import ListMessage from "./ListMessage.vue";
+import ImageMessage from "./ImageMessage.vue";
+import FormMessage from "./FormMessage.vue";
+import FormResponseMessage from "./FormResponseMessage.vue";
+import FpRichMessage from "./FpRichMessage.vue";
+import ButtonMessage from "./ButtonMessage.vue";
+import ButtonResponseMessage from "./ButtonResponseMessage.vue";
+import RichMessage from "./RichMessage.vue";
+import TextMessage from "./TextMessage.vue";
+import LongTextMessage from "./LongTextMessage.vue";
+import TypingMessage from "./TypingMessage.vue";
+import AuthorMessage from "./AuthorMessage.vue";
+import chatIcon from "./assets/chat-icon.svg";
+import HandToHumanMessage from "./HandToHumanMessage";
 
 export default {
   data() {
@@ -218,7 +218,7 @@ export default {
     isOpen: {
       type: Boolean,
       default: () => false
-    },
+    }
   },
 
   myFn() {},
@@ -252,7 +252,7 @@ export default {
         : this.receivedColorsStyle();
     },
     setChatMode(mode) {
-      this.$emit('setChatMode', mode);
+      this.$emit("setChatMode", mode);
     }
   }
 };

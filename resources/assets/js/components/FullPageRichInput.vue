@@ -1,7 +1,7 @@
 <template>
   <div
     class="mt-fpri"
-    :class="{ loader: showLoader }"
+    :class="{ loader: showLoader, isOpen: isOpen }"
     :style="{
             '--background': colors.messageList.bg,
             '--btn-bg': colors.button.bg,
@@ -13,19 +13,30 @@
   >
     <div class="mt-fpri-wrapper">
       <div v-if="message.data.title">
-        <div class="mt-fpri__title">{{ message.data.title }}</div>
+        <div
+          class="mt-fpri__title animateStartingState animateDelay1"
+          :class="{animateSlideFromBottom : isOpen}"
+        >{{ message.data.title }}</div>
       </div>
+
       <div v-if="message.data.subtitle">
-        <div class="mt-fpri__subtitle">{{ message.data.subtitle }}</div>
+        <div
+          class="mt-fpri__subtitle animateStartingState animateDelay2"
+          :class="{animateSlideFromBottom : isOpen}"
+        >{{ message.data.subtitle }}</div>
       </div>
 
       <div v-if="message.data.text">
-        <p class="mt-fpri__text" v-linkified>
+        <p
+          class="mt-fpri__text animateStartingState animateDelay2"
+          :class="{animateSlideFromBottom : isOpen}"
+          v-linkified
+        >
           <span v-html="message.data.text"></span>
         </p>
       </div>
       <template v-if="message.data.image">
-        <div class="mt-fpri__image">
+        <div class="mt-fpri__image animateStartingState" :class="{animateSlideFromBottom : isOpen}">
           <template v-if="message.data.image.url">
             <a
               :href="message.data.image.url"
@@ -41,10 +52,12 @@
       </template>
 
       <!-- add this class to <button>  when isOpen == true -->
-      <!-- class="mt-fpri__button--animate"  -->
+      <!-- class="mtFprButtonAnimate"  -->
       <template v-if="message.data.buttons.length">
         <div class="mt-fpri__buttons">
           <button
+            class="animateStartingState animateDelay3"
+            :class="{animateSlideFromBottom : isOpen}"
             v-for="(button, idx) in message.data.buttons"
             :key="idx"
             @click="_handleClick(button)"
@@ -75,6 +88,10 @@ export default {
     colors: {
       type: Object,
       required: true
+    },
+    isOpen: {
+      type: Boolean,
+      default: () => false
     }
   },
   data() {
@@ -121,7 +138,7 @@ export default {
   line-height: 1.5;
   text-align: center;
   color: #000000;
-  margin-bottom: 20px;
+  margin-bottom: 17px;
   letter-spacing: 1px;
 }
 .mt-fpri__subtitle {
@@ -129,7 +146,7 @@ export default {
 }
 
 .mt-fpri__text {
-  margin: 0 0 20px 0;
+  margin: 0 0 25px 0;
 }
 
 /* image */
@@ -198,52 +215,28 @@ export default {
   }
 }
 
-.mt-fpri__button--animate {
-  animation: mt-fpri__button-fade-in 1s forwards;
+.animateStartingState {
+  opacity: 0;
 }
 
-/* .sc-message--fp-rich {
-  background: #eaeaea;
-  border-radius: 6px;
-  padding: 0 12px;
-  max-width: calc(100% - 40px);
-  border: 1px solid blue;
-} */
-/*
-.sc-message--fp-rich .sc-message--fp-rich--text {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  -webkit-font-smoothing: subpixel-antialiased;
+.animateSlideFromBottom {
+  animation: mt-fpri__button-fade-in 0.8s forwards;
 }
 
-.sc-message--fp-rich button {
-  cursor: pointer;
-  border-radius: 30px;
-  border: none;
-  font-size: 14px;
-  padding: 12px 17px;
-  margin: 0 10px 10px 0;
+.animateDelay1 {
+  animation-delay: 0.2s;
 }
-.sc-message--fp-rich button:hover {
-  background-color: var(--button-hover) !important;
+.animateDelay2 {
+  animation-delay: 0.5s;
 }
-
-.sc-message--fp-rich button:last-child {
-  margin-right: 0;
+.animateDelay3 {
+  animation-delay: 0.8s;
+}
+.animateDelay4 {
+  animation-delay: 2s;
 }
 
-.sc-message--fp-rich .sc-message--fp-rich--image {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.sc-message--fp-rich .sc-message--fp-rich--image img {
-  max-width: 100%;
-} */
-
+/* loader --- loader --- loader ---  */
 .fp-loader {
   position: sticky;
   width: 100%;
