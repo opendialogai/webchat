@@ -13,6 +13,7 @@
       :onListButtonClick="onListButtonClick"
       :onFormButtonClick="onFormButtonClick"
       :mode-data="modeData"
+      :isOpen="isOpen"
       @setChatMode="setChatMode"
     />
     <Message
@@ -75,7 +76,11 @@
     modeData: {
       type: Object,
       required: true
-    }
+    },
+    isOpen: {
+        type: Boolean,
+        default: () => false
+    },
   },
   methods: {
     _scrollDown(animate = true) {

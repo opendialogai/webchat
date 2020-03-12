@@ -15,12 +15,17 @@
             '--inputBorderColor' :colors.form.inputBorderColor }"
   >
     <div class="mt-fp-form__elements">
-      <div class="mt-fp-form__title" v-html="message.data.text"></div>
+      <div
+        class="mt-fp-form__title animateStartingState animateDelay1"
+        :class="{animateSlideUp: isOpen}"
+        v-html="message.data.text"
+      ></div>
 
       <div
         v-for="element in message.data.elements"
-        class="mt-fp-form__element"
-        :class="element.name"
+        class="mt-fp-form__element animateStartingState animateDelay2"
+        :class="[{animateSlideUp: isOpen}, element.name]"
+        v-bind:key="element.id"
       >
         <span
           v-if="element.display"
@@ -31,10 +36,6 @@
           ]"
         >{{ element.display }}</span>
 
-        <!-- <div v-if="errors.length"> -->
-
-        <!-- </div> -->
-
         <template v-if="element.element_type == 'text'">
           <input
             type="text"
@@ -43,11 +44,6 @@
             v-on:keyup.enter="_handleClick"
             :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
           />
-
-          <!-- 👇🏻 This creates an error element if you need it  -->
-          <!-- <div v-for="error in errors">
-            <div v-if="error.type == element.name" v-html="error.message" class="mt-fp-form__error"></div>
-          </div>-->
         </template>
 
         <template v-if="element.element_type == 'textarea'">
@@ -169,6 +165,10 @@ export default {
     colors: {
       type: Object,
       required: true
+    },
+    isOpen: {
+      type: Boolean,
+      default: () => false
     }
   },
   data() {
@@ -184,7 +184,7 @@ export default {
   watch: {
     message() {
       this.showLoader = false;
-    },
+    }
   },
   methods: {
     onSelectChange() {
@@ -572,3 +572,4 @@ doesnt work though 🤦🏻‍♂️
   margin: auto;
 }
 </style>
+

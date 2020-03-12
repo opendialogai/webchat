@@ -1,7 +1,7 @@
 <template>
   <div
     class="mt-fpri"
-    :class="{ loader: showLoader }"
+    :class="{ loader: showLoader, isOpen: isOpen }"
     :style="{
             '--background': colors.messageList.bg,
             '--btn-bg': colors.button.bg,
@@ -13,19 +13,29 @@
   >
     <div class="mt-fpri-wrapper">
       <div v-if="message.data.title">
-        <div class="mt-fpri__title">{{ message.data.title }}</div>
+        <div
+          class="mt-fpri__title animateStartingState animateDelay1"
+          :class="{animateSlideUp: isOpen}"
+        >{{ message.data.title }}</div>
       </div>
+
       <div v-if="message.data.subtitle">
-        <div class="mt-fpri__subtitle">{{ message.data.subtitle }}</div>
+        <div
+          class="mt-fpri__subtitle animateStartingState animateDelay1"
+          :class="{animateSlideUp: isOpen}"
+        >{{ message.data.subtitle }}</div>
       </div>
 
       <div v-if="message.data.text">
-        <p class="mt-fpri__text">
+        <p
+          class="mt-fpri__text animateStartingState animateDelay1"
+          :class="{animateSlideUp: isOpen}"
+        >
           <span v-html="message.data.text"></span>
         </p>
       </div>
       <template v-if="message.data.image">
-        <div class="mt-fpri__image">
+        <div class="mt-fpri__image animateStartingState" :class="{animateSlideUp: isOpen}">
           <template v-if="message.data.image.url">
             <a
               :href="message.data.image.url"
@@ -40,13 +50,15 @@
         </div>
       </template>
 
-      <!-- add this class to <button>  when isOpen == true -->
-      <!-- class="mt-fpri__button--animate"  -->
+
       <template v-if="message.data.buttons.length">
         <div class="mt-fpri__buttons">
           <button
+            class="animateStartingState"
+            :class="[{animateSlideUp: isOpen, [`button-delay${idx + 1}`]: true}] "
             v-for="(button, idx) in message.data.buttons"
             :key="idx"
+            :myAttr="idx"
             @click="_handleClick(button)"
           >{{button.text}}</button>
         </div>
@@ -75,6 +87,10 @@ export default {
     colors: {
       type: Object,
       required: true
+    },
+    isOpen: {
+      type: Boolean,
+      default: () => false
     }
   },
   data() {
@@ -123,7 +139,7 @@ export default {
   line-height: 1.5;
   text-align: center;
   color: #000000;
-  margin-bottom: 20px;
+  margin-bottom: 17px;
   letter-spacing: 1px;
 }
 .mt-fpri__subtitle {
@@ -131,7 +147,7 @@ export default {
 }
 
 .mt-fpri__text {
-  margin: 0 0 20px 0;
+  margin: 0 0 25px 0;
 }
 
 /* image */
@@ -189,6 +205,7 @@ export default {
   border: 2px solid var(--btn-border-color-hover);
 }
 
+/* loader --- loader --- loader ---  */
 @keyframes mt-fpri__button-fade-in {
   from {
     transform: translate(0px, 30px);

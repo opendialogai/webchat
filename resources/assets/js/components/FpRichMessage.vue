@@ -24,7 +24,11 @@ export default {
     messageColors: {
       type: Object,
       required: true
-    }
+    },
+    isOpen: {
+      type: Boolean,
+      default: () => false
+    },
   }
 };
 </script>

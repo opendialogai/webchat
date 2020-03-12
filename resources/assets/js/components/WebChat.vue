@@ -77,8 +77,8 @@
 
 
 <script>
-  import axios from "axios";
-  import chatService from "../services/ChatService"
+import axios from "axios";
+import chatService from "../services/ChatService";
 
 const moment = require("moment-timezone");
 
@@ -245,9 +245,9 @@ export default {
       }
     },
     modeData(newValue, oldValue) {
-      if (oldValue.mode === 'custom') {
+      if (oldValue.mode === "custom") {
         this.destroyCustomMode();
-      } else if (oldValue.mode === 'webchat') {
+      } else if (oldValue.mode === "webchat") {
         this.destroyWebchatMode();
       }
 
@@ -255,11 +255,15 @@ export default {
 
       if (oldValue.mode === "custom" && newValue.mode === "webchat") {
         // Convert the Hand-to-Human message to a text message
-        let filteredMessageList = this.messageList.filter((message) => message.mode === "webchat" && message.type === 'hand-to-human');
-        let handToHumanMessage = filteredMessageList[filteredMessageList.length-1];
+        let filteredMessageList = this.messageList.filter(
+          message =>
+            message.mode === "webchat" && message.type === "hand-to-human"
+        );
+        let handToHumanMessage =
+          filteredMessageList[filteredMessageList.length - 1];
 
         if (handToHumanMessage) {
-          handToHumanMessage.type = 'text';
+          handToHumanMessage.type = "text";
           handToHumanMessage.data.text = handToHumanMessage.data.elements.text;
         }
 
@@ -271,9 +275,9 @@ export default {
         });
       }
 
-      if (newValue.mode === 'custom') {
+      if (newValue.mode === "custom") {
         this.setupCustomMode();
-      } else if (newValue.mode === 'webchat') {
+      } else if (newValue.mode === "webchat") {
         this.setupWebchatMode();
       }
     }
@@ -406,8 +410,9 @@ export default {
       }
 
       chatService.sendRequest(newMsg, this).then(
-          response => chatService.sendResponseSuccess(response, newMsg, this),
-          () => chatService.sendResponseError(null, newMsg, this));
+        response => chatService.sendResponseSuccess(response, newMsg, this),
+        () => chatService.sendResponseError(null, newMsg, this)
+      );
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {
@@ -446,8 +451,8 @@ export default {
       this.onFormButtonClick(data, msg);
     },
     onFullPageFormInputCancel() {
-        const msg = this.messageList[this.messageList.length - 1];
-        this.onFormCancelClick(msg);
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onFormCancelClick(msg);
     },
     onFullPageRichInputSubmit(button) {
       const msg = this.messageList[this.messageList.length - 1];
@@ -591,7 +596,7 @@ export default {
           type: "chat_open",
           callback_id: callback,
           data: {
-            value: this.parentUrl,
+            value: this.parentUrl
           }
         };
 
@@ -637,8 +642,8 @@ export default {
 
             // Convert to the right message type for display
             if (currentMessage.type === "hand-to-human") {
-                currentMessage.data.text = currentMessage.data.elements.text;
-                currentMessage.type = "text";
+              currentMessage.data.text = currentMessage.data.elements.text;
+              currentMessage.type = "text";
             }
 
             if (
@@ -795,7 +800,7 @@ export default {
       }
     },
     setChatMode(data) {
-      this.$emit('setChatMode', data);
+      this.$emit("setChatMode", data);
     },
     destroyCustomMode() {
       chatService.destroyChat(this);
@@ -816,8 +821,9 @@ export default {
       await chatService.initialiseChat(this);
     },
     userTyping(text) {
-      chatService.sendTypingRequest(text, this)
-        .then((response) => chatService.sendTypingResponseSuccess(response, this))
+      chatService
+        .sendTypingRequest(text, this)
+        .then(response => chatService.sendTypingResponseSuccess(response, this))
         .catch(() => chatService.sendTypingResponseError(null, this));
     }
   }
