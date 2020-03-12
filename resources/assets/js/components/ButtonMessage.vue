@@ -1,14 +1,14 @@
 <template>
   <div
     ref="message"
-    class="mt-message-with-button"
+    class="mt-message-with-button fade-enter-active"
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
     }]"
   >
     <div
-      class="mt reap mt-message-with-button__text fade-enter-active"
+      class="mt reap mt-message-with-button__text"
       :style="messageColors"
       v-linkified>
       <span v-html="data.text"></span>
@@ -16,7 +16,7 @@
 
     <template v-if="data.buttons.length && !data.external">
       <div
-        class="mt-message-with-button__buttons-wrapper reap"
+        class="mt-message-with-button__buttons-wrapper reap fade-enter-active"
            :style="{
             '--background': colors.messageList.bg,
 
@@ -34,7 +34,7 @@
           :key="idx"
           @click="_handleClick(button)"
           v-html="button.text"
-          class="mt-message-with-button__buttons-wrapper__button"
+          class="mt-message-with-button__buttons-wrapper__button fade-enter-active"
         ></button>
       </div>
     </template>
