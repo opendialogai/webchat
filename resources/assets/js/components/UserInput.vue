@@ -37,9 +37,11 @@
       ></div>
 
       <div class="user-input__buttons">
-        <div class="user-input__button">
-          <button @click.prevent="_submitText" class="send-btn"></button>
-        </div>
+        <button @click.prevent="_submitText" class="send-btn"></button>
+
+        <EndChatButton
+          @close-chat="closeChat"
+        />
       </div>
     </form>
   </div>
@@ -48,10 +50,12 @@
 
 <script>
 
-import ExternalButtons from "./ExternalButtons.vue";
+  import ExternalButtons from "./ExternalButtons.vue";
+  import EndChatButton from "./EndChatButton";
 
 export default {
   components: {
+    EndChatButton,
     ExternalButtons
   },
   props: {
@@ -86,14 +90,21 @@ export default {
     colors: {
       type: Object,
       required: true
+    },
+    modeData: {
+      type: Object,
+      required: true
     }
   },
   data() {
     return {
       file: null,
       inputActive: false,
-      textEntered: false
+      textEntered: false,
     };
+  },
+  created() {
+    this.onTextChange = _.debounce(this.onTextChangeForDebouncing, 500);
   },
   methods: {
     cancelFile() {
@@ -116,7 +127,7 @@ export default {
         event.preventDefault();
       }
     },
-    onTextChange(event) {
+    onTextChangeForDebouncing(event) {
       if (event.target.innerHTML === "" || event.target.innerHTML === "<br>") {
         // Input is empty, turn off the typing indicator.
         if (this.textEntered === true) {
@@ -126,10 +137,8 @@ export default {
       } else {
         // Input is not empty, turn on the typing indicator if
         // it's not already.
-        if (this.textEntered === false) {
-          this.$parent.$parent.$emit("vbc-user-typing");
-          this.textEntered = true;
-        }
+        this.$parent.$parent.$emit("vbc-user-typing", event.target.innerHTML);
+        this.textEntered = true;
       }
     },
     _submitExternalButton(button) {
@@ -168,6 +177,26 @@ export default {
     },
     _handleFileSubmit(file) {
       this.file = file;
+    },
+    closeChat() {
+      if (this.modeData.mode === 'custom') {
+        this.$emit('setChatMode', {
+          mode: 'webchat',
+          options: {
+            'callback_id': this.modeData.options.callback_id
+          }
+        });
+      } else {
+        this.$parent.$parent.$parent.sendMessage({
+          type: "button_response",
+          author: "me",
+          callback_id: "intent.app.end_chat",
+          data: {
+            text: 'End chat',
+            value: ''
+          }
+        });
+      }
     }
   }
 };

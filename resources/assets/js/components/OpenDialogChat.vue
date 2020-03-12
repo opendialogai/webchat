@@ -100,12 +100,14 @@
         :user-timezone="userTimezone"
         :user-uuid="userUuid"
         :user-external-id="userExternalId"
+        :mode-data="modeData"
         :closed-intent="closedIntent"
         :open-intent="openIntent"
         @expandChat="expandChat"
         @toggleChatOpen="toggleChatOpen"
         @newMessage="newWebChatMessage"
         @switchToCommentsTab="switchToCommentsTab"
+        @setChatMode="setChatMode"
       />
     </div>
   </div>
@@ -119,6 +121,7 @@ import cssVars from "css-vars-ponyfill";
 
 import Comments from "@/components/Comments";
 import WebChat from "@/components/WebChat";
+import SessionStorageMixin from "../mixins/SessionStorageMixin";
 
 const { detect } = require("detect-browser");
 const jstz = require("jstz");
@@ -129,6 +132,7 @@ export default {
     Comments,
     WebChat
   },
+  mixins: [SessionStorageMixin],
   data() {
     return {
       activeTab: "webchat",
@@ -174,6 +178,15 @@ export default {
           border: "#da291c",
           hoverBorder: "#c01a1e"
         },
+        // 👇🏻 new
+        messageButton: {
+          bg: "transparent",
+          hoverbg: "#575759",
+          text: "#313133",
+          hoverText: "#ffffff",
+          border: "#575759",
+          hoverBorder: "#575759"
+        },
         externalButton: {
           bg: "#ffffff",
           hoverbg: "#575759",
@@ -183,7 +196,6 @@ export default {
           border: "#575759",
           hoverBorder: "#575759"
         },
-
         form: {
           labelTextColor: "#575759",
           formHighlightColor: "#da291c",
@@ -234,7 +246,11 @@ export default {
       userFirstName: "",
       userLastName: "",
       userExternalId: "",
-      userUuid: ""
+      userUuid: "",
+      modeData: {
+        mode: 'webchat',
+        options: {}
+      }
     };
   },
   computed: {
@@ -818,8 +834,10 @@ export default {
         this.isOpen = !this.isOpen;
         this.isMinimized = !this.isOpen;
 
-        if (!this.isOpen) {
-          this.$root.$emit("scroll-down-message-list");
+        if (this.isOpen) {
+          setTimeout(() => {
+            this.$root.$emit("scroll-down-message-list", false);
+          }, 10);
         }
 
         if (window.self !== window.top) {
@@ -851,6 +869,10 @@ export default {
       this.isMinimized = false;
       this.isOpen = true;
       window.parent.postMessage({ height: "auto" }, "*");
+    },
+    setChatMode(data) {
+      this.modeData = data;
+      this.setModeDataInSession(data);
     }
   }
 };

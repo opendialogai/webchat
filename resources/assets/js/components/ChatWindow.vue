@@ -12,6 +12,8 @@
       :colors="colors"
       :isOpen="isOpen"
       :ctaText="ctaText"
+      :showFullPageFormInput="showFullPageFormInput"
+      :showFullPageRichInput="showFullPageRichInput"
     />
     <MessageList
       v-if="showMessages"
@@ -25,6 +27,8 @@
       :onFormButtonClick="onFormButtonClick"
       :onListButtonClick="onListButtonClick"
       :onLinkClick="onLinkClick"
+      :mode-data="modeData"
+      @setChatMode="setChatMode"
     />
 
     <template v-if="showLongTextInput">
@@ -62,7 +66,10 @@
         :lastMessage="lastMessage"
         :showFile="showFile"
         :placeholder="placeholder"
-        :colors="colors" />
+        :colors="colors"
+        :mode-data="modeData"
+        @setChatMode="setChatMode"
+      />
     </template>
   </div>
 </template>
@@ -232,10 +239,26 @@ export default {
     initialText: {
       type: String,
       default: null
+    },
+    modeData: {
+      type: Object,
+      required: true
     }
   },
   data() {
     return {}
+  },
+  watch: {
+    "modeData.mode": function(newValue, oldValue) {
+      if (newValue.mode !== 'custom') {
+        this.agentProfile.teamName = '';
+      }
+    },
+    "modeData.options.teamName": function(newValue, oldValue) {
+      if (newValue) {
+        this.agentProfile.teamName = 'You are now speaking to ' + newValue;
+      }
+    }
   },
   computed: {
     messages() {
@@ -266,6 +289,11 @@ export default {
     lastMessage() {
       if (this.messages.length == 0) return {}
       return this.messages[this.messages.length - 1]
+    }
+  },
+  methods: {
+    setChatMode(mode) {
+      this.$emit('setChatMode', mode);
     }
   }
 }
