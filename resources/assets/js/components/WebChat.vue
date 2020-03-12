@@ -62,7 +62,11 @@
         @setChatMode="setChatMode"
       />
       <div class="close-chat">
-        <div class="close-chat__button" @click="toggleChatOpen"  >
+        <div
+          class="close-chat__button"
+          :class="{closeChatButtonAnimate: isOpen}"
+          @click="toggleChatOpen"
+        >
           <img src="/images/close-btn.svg" class="close-chat__img" />
         </div>
       </div>

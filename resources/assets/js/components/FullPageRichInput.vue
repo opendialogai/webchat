@@ -40,6 +40,8 @@
         </div>
       </template>
 
+      <!-- add this class to <button>  when isOpen == true -->
+      <!-- class="mt-fpri__button--animate"  -->
       <template v-if="message.data.buttons.length">
         <div class="mt-fpri__buttons">
           <button
@@ -83,7 +85,7 @@ export default {
   watch: {
     message() {
       this.showLoader = false;
-    },
+    }
   },
   methods: {
     _handleClick(button) {
@@ -183,6 +185,21 @@ export default {
   background-color: var(--btn-bg-hover);
   color: var(--btn-color-hover);
   border: 2px solid var(--btn-border-color-hover);
+}
+
+@keyframes mt-fpri__button-fade-in {
+  from {
+    transform: translate(0px, 30px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0px, 0px);
+    opacity: 1;
+  }
+}
+
+.mt-fpri__button--animate {
+  animation: mt-fpri__button-fade-in 1s forwards;
 }
 
 /* .sc-message--fp-rich {

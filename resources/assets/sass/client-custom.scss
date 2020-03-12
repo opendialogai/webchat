@@ -277,6 +277,17 @@
   }
 }
 
+@keyframes close-chat-spin {
+  from {
+    transform: rotate(0deg) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(180deg) scale(1);
+    opacity: 1;
+  }
+}
+
 .close-chat__button {
   position: relative;
   z-index: 1;
@@ -296,6 +307,10 @@
   &:hover {
     background-color: #000000;
   }
+}
+
+.closeChatButtonAnimate {
+  animation: close-chat-spin 0.5s forwards;
 }
 
 .close-chat__img {
