@@ -181,7 +181,7 @@
 }
 
 .user-input__form-text-input {
-  flex: unset;
+  display: inline-block;
   width: 100%;
   caret-color: #da291c;
   font-family: Gotham;
