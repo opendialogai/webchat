@@ -139,15 +139,16 @@ export default {
   line-height: 1.5;
   text-align: center;
   color: #000000;
-  margin-bottom: 17px;
+  margin: 0 10px 20px 10px;
   letter-spacing: 1px;
 }
 .mt-fpri__subtitle {
-  margin: 0 0 20px 0;
+  margin: 0 10px 20px 10px;
 }
 
 .mt-fpri__text {
-  margin: 0 0 25px 0;
+  margin: 0 10px 35px 10px;
+  line-height: 1.3em;
 }
 
 /* image */
