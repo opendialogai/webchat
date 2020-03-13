@@ -139,6 +139,8 @@ background-color: var(--btn-bg-hover);
   border: 2px solid var(--btn-border-color-hover);
 }
 
-
+button:focus {
+    outline:0;
+}
 
 </style>
