@@ -81,7 +81,7 @@
         "emoji-js": "^3.4.1",
         "vue-linkify": "^1.0.1",
         "vue-plain-slider": "^1.1.1",
-        "vue-select": "^3.4.0",
+        "vue-select": "^3.9.0",
         "vue2-animate": "^2.1.3"
     }
 }
