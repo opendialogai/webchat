@@ -79,10 +79,10 @@
 
 
 <script>
-import axios from "axios";
-import chatService from "../services/ChatService";
+  import axios from "axios";
+  import chatService from "../services/ChatService";
 
-const moment = require("moment-timezone");
+  const moment = require("moment-timezone");
 
 export default {
   name: "WebChat",
@@ -536,6 +536,10 @@ export default {
       this.messageList[this.messageList.indexOf(msg)].type = "text";
       const responseData = {};
       responseData.text = "Form submitted";
+
+      msg.data.elements.forEach(element => {
+        responseData[element.name] = data[element.name].value;
+      });
 
       this.sendMessage({
         type: "form_response",
