@@ -1,3 +1,17 @@
-.sc-full-page-form-input {
-  padding: 20px;
+.mt-fp-form {
+  .vs__search {
+    font-size: 16px;
+  }
+
+  .vs__dropdown-toggle {
+    border-radius: 4px;
+    border: 1px solid #979797;
+    height: 40px;
+    width: 100%;
+    background: white;
+  }
+
+  .vs__dropdown-menu {
+    font-size: 16px;
+  }
 }

@@ -26,6 +26,7 @@
         class="mt-fp-form__element animateStartingState animateDelay2"
         :class="[{animateSlideUp: isOpen}, element.name]"
         v-bind:key="element.id"
+        :ref="element.name"
       >
         <span
           v-if="element.display"
@@ -91,6 +92,8 @@
           <v-select
             class="mt-fp-form__auto-select style-chooser"
             @input="onSelectChange"
+            @open="onSelectOpen(element.name)"
+            @close="onSelectClose(element.name)"
             v-model="form.data[element.name].value"
             :options="element.options"
             :reduce="option => option.key"
@@ -191,6 +194,12 @@ export default {
       if (this.message.data.auto_submit) {
         this._handleClick();
       }
+    },
+    onSelectOpen(element) {
+      this.$refs[element][0].style.zIndex = 1;
+    },
+    onSelectClose(element) {
+      this.$refs[element][0].style.zIndex = '';
     },
     _handleCancel() {
         if (!this.showLoader) {
@@ -313,6 +322,7 @@ export default {
 /* labels --- labels --- labels ---  */
 
 .mt-fp-form__label {
+  z-index: 1;
   position: absolute;
   top: -5px;
   left: 10px;
@@ -349,7 +359,7 @@ export default {
 
 .mt-fp-form__input {
   border-radius: 4px;
-  border: solid 1px #979797;
+  border: 1px solid #979797;
   height: 40px;
   padding: 0 10px;
   width: 100%;
@@ -380,7 +390,7 @@ maybe look into https://cdnjs.com/libraries/bootstrap-select
   width: 100%;
   display: block;
   padding: 0.6em 1.4em 0.5em 0.8em;
-  font-style: 20px;
+  font-size: 20px;
   line-height: 2.5;
   height: 40px;
 }
@@ -405,7 +415,7 @@ doesnt work though 🤦🏻‍♂️
 .mt-fp-form__auto-select {
   width: 100%;
   display: block;
-  font-style: 20px;
+  font-size: 20px;
   line-height: 2.5;
   height: 40px;
   margin: 0;
