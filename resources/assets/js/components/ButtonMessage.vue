@@ -109,15 +109,16 @@ export default {
       setTimeout(() => {
         this.$root.$emit("scroll-down-message-list");
       }, 450);
-      setTimeout(() => {
-        this.$root.$emit("scroll-down-message-list");
-      }, 900);
 
       window.addEventListener("resize", () => {
         this.$refs.message.style.width = null;
         this.$refs.message.style.height = null;
       });
     }
+
+    setTimeout(() => {
+      this.$root.$emit("scroll-down-message-list");
+    }, 900);
   }
 };
 </script>
