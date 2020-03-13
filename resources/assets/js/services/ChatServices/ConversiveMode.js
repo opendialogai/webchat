@@ -83,12 +83,6 @@ ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest,
       return;
     }
 
-    let types = {
-      1: "text",
-      2: "typing",
-      8: "leave",
-    };
-
     switch (message.type) {
       case 1:
         this.handleNewTextMessage(message, isFirstRequest, webChatComponent);
@@ -157,12 +151,14 @@ ConversiveMode.prototype.handleNewLeaveMessage = function(leaveMessage, isFirstR
     return;
   }
 
-  webChatComponent.$emit('setChatMode', {
-    mode: 'webchat',
-    options: {
-      'callback_id': webChatComponent.modeData.options.callback_id
-    }
-  });
+  let authorMessage = {source: 2};
+  this.addAuthorMessage(authorMessage, webChatComponent);
+
+  let message = {
+    source: 2,
+    b: "The agent left the chat.",
+  };
+  this.addMessageToMessageList(message, webChatComponent);
 };
 
 ConversiveMode.prototype.addAuthorMessage = function(message, webChatComponent) {
