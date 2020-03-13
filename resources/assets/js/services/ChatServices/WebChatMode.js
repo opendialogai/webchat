@@ -39,11 +39,16 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
     if (response.data instanceof Array) {
     let index = 0;
     let totalMessages = response.data.length;
+    let clearCtaText = true;
 
     response.data.forEach((message, i) => {
       const messageIndex = index;
 
       if (message && message.type === "cta") {
+        if (clearCtaText) {
+          webChatComponent.ctaText = [];
+          clearCtaText = false;
+        }
         if (webChatComponent.ctaText.length === 2) {
           webChatComponent.ctaText.splice(0, 1);
         }
