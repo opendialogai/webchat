@@ -281,6 +281,16 @@
     opacity: 1;
   }
 }
+@keyframes reverse-close-chat-spin {
+  from {
+    transform: rotate(180deg) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: rotate(0deg) scale(0);
+    opacity: 0;
+  }
+}
 
 .close-chat__button {
   position: relative;
@@ -305,6 +315,9 @@
 
 .closeChatButtonAnimate {
   animation: close-chat-spin 0.5s forwards;
+}
+.closeChatButtonReverseAnimate {
+  animation: reverse-close-chat-spin 0.5s forwards;
 }
 
 .close-chat__img {
