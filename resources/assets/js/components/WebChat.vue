@@ -1,6 +1,7 @@
 <template>
   <div
     :id="id"
+    class="web-chat"
     :class="[
       isMobile ? 'mobile' : '',
       canCloseChat ? '' : 'no-close',
@@ -856,5 +857,8 @@ export default {
   justify-content: center;
   height: calc(100vh - var(--header-height));
 } */
-</style>
 
+.web-chat {
+  height: 100vh;
+}
+</style>

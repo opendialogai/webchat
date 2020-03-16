@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="chat-window-container">
     <ChatWindow
       :messageList="messageList"
       :onUserInputSubmit="onMessageWasSent"
@@ -262,6 +262,9 @@ export default {
   }
 }
 </script>
-<style scoped>
 
+<style scoped>
+.chat-window-container {
+  display: inline;
+}
 </style>
