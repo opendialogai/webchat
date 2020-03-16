@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const moment = require("moment-timezone");
+
 let WebChatMode = function() {
   this.name = "webchat";
 };
