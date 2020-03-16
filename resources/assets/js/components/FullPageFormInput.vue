@@ -511,6 +511,7 @@ doesnt work though 🤦🏻‍♂️
 .mt-fp-form__submit {
   color: var(--btn-text-color);
   background-color: var(--btn-bg);
+  border: 1px solid var(--btn-border-color);
   min-height: 60px;
   width: 280px;
   padding: 0 20px;
