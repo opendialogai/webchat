@@ -407,7 +407,7 @@ export default {
       }
       if (newMsg.type === "button_response") {
         window.parent.postMessage(
-          { dataLayerEvent: "user_clicked_button_in_chatbot" },
+          { dataLayerEvent: {user_clicked_button_in_chatbot: newMsg.data.text} },
           "*"
         );
       }
@@ -524,6 +524,10 @@ export default {
       });
     },
     onLinkClick(url) {
+      window.parent.postMessage(
+          { dataLayerEvent: {url_clicked: url} },
+          "*"
+      );
       this.sendMessage({
         type: "url_click",
         author: this.uuid,
@@ -533,6 +537,10 @@ export default {
       });
     },
     onFormButtonClick(data, msg) {
+      window.parent.postMessage(
+          { dataLayerEvent: {form_submitted: msg.data.callback_id} },
+          "*"
+      );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
       const responseData = {};
       responseData.text = "Form submitted";
@@ -549,6 +557,10 @@ export default {
       });
     },
     onFormCancelClick(msg) {
+      window.parent.postMessage(
+          { dataLayerEvent: {form_cancelled: msg.data.callback_id} },
+          "*"
+      );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
       this.sendMessage({
         type: "form_response",
@@ -571,6 +583,10 @@ export default {
     toggleChatOpen() {
       if (this.isOpen) {
         this.closeChatButtonReverseAnimate = true;
+          window.parent.postMessage(
+              { dataLayerEvent: "chat_closed" },
+              "*"
+          );
         setTimeout(() => {
           this.closeChatButtonReverseAnimate = false;
           this.isOpen = !this.isOpen;
@@ -579,6 +595,10 @@ export default {
       } else {
         this.isOpen = !this.isOpen;
         this.$emit("toggleChatOpen", this.headerHeight);
+          window.parent.postMessage(
+              { dataLayerEvent: "chat_opened" },
+              "*"
+          );
       }
     },
     wildcardToRegExp(string) {
