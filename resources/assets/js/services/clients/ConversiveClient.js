@@ -99,6 +99,20 @@ ConversiveClient.prototype.setEngineData = async function(sessionToken, chatData
   });
 };
 
+ConversiveClient.prototype.setEngineDataHistory = async function(sessionToken, chatData) {
+  let data = this.prepareChatData(chatData, true);
+  let engineData = {
+    "dialogflow_history": data[0].v.substr(-1000)
+  };
+  engineData = Object.keys(engineData).map((key) => encodeURIComponent(key) + "=" + engineData[key]).join("&")
+
+  return this.makeRequest("setEngineData", {
+    b: engineData,
+    t: sessionToken,
+    rsn: this.requestSerialNumber,
+  });
+};
+
 ConversiveClient.prototype.setChatData = async function(sessionToken, chatData) {
   let data = this.prepareChatData(chatData);
 
@@ -109,9 +123,9 @@ ConversiveClient.prototype.setChatData = async function(sessionToken, chatData) 
   });
 };
 
-ConversiveClient.prototype.sendAutoText = async function(sessionToken) {
+ConversiveClient.prototype.sendAutoText = async function(sessionToken, method) {
   return this.makeRequest("sendAutoText", {
-    b: "_startup",
+    b: method,
     t: sessionToken,
     rsn: this.requestSerialNumber,
   });
@@ -160,9 +174,17 @@ ConversiveClient.prototype.logout = function(sessionToken) {
   });
 };
 
-ConversiveClient.prototype.prepareChatData = function(chatData) {
+ConversiveClient.prototype.prepareChatData = function(chatData, historyDataOnly = false) {
+  let keys;
+
+  if (historyDataOnly) {
+    keys = ['history'];
+  } else {
+    keys = ['email', 'fullname', 'loc', 'phone']
+  }
+
   let data = Object.keys(chatData).filter((key) => {
-    return ['history', 'email', 'fullname', 'loc', 'phone'].includes(key);
+    return keys.includes(key);
   }).map((key) => {
     return {
       n: key,
@@ -170,10 +192,14 @@ ConversiveClient.prototype.prepareChatData = function(chatData) {
     }
   });
 
-  data.push({
-    n: 'sitecode',
-    v: this.siteCode
-  });
+
+  if (!historyDataOnly) {
+    data.push({
+      n: 'sitecode',
+      v: this.siteCode
+    });
+  }
+
   return data;
 };
 
