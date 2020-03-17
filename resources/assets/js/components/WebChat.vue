@@ -114,6 +114,8 @@ export default {
       type: Object,
       required: true
     },
+    conversiveUrl: String,
+    conversiveSiteCode: String,
     hideDatetimeMessage: Boolean,
     hideTypingIndicatorOnInternalMessages: Boolean,
     isExpand: Boolean,

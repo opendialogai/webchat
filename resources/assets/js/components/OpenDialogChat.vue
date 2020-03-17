@@ -77,6 +77,8 @@
         :chatbot-avatar-path="chatbotAvatarPath"
         :chatbot-name="chatbotName"
         :colours="colours"
+        :conversive-url="conversiveURL"
+        :conversive-site-code="conversiveSiteCode"
         :hide-datetime-message="hideDatetimeMessage"
         :hide-typing-indicator-on-internal-messages="hideTypingIndOnInternalMessages"
         :is-expand="isExpand"
@@ -114,16 +116,16 @@
 </template>
 
 <script>
-import axios from "axios";
-import { mapState } from "vuex";
+  import axios from "axios";
+  import {mapState} from "vuex";
 
-import cssVars from "css-vars-ponyfill";
+  import cssVars from "css-vars-ponyfill";
 
-import Comments from "@/components/Comments";
-import WebChat from "@/components/WebChat";
-import SessionStorageMixin from "../mixins/SessionStorageMixin";
+  import Comments from "@/components/Comments";
+  import WebChat from "@/components/WebChat";
+  import SessionStorageMixin from "../mixins/SessionStorageMixin";
 
-const { detect } = require("detect-browser");
+  const { detect } = require("detect-browser");
 const jstz = require("jstz");
 
 export default {
@@ -146,6 +148,8 @@ export default {
       chatbotName: "OD Bot",
       closedIntent: "",
       collectUserIp: true,
+      conversiveURL: "",
+      conversiveSiteCode: "",
       colours: {
         header: {
           bg: "#da291c",
@@ -683,6 +687,14 @@ export default {
 
         if (general.messageAnimation) {
           this.messageAnimation = general.messageAnimation;
+        }
+
+        if (general.conversiveURL) {
+          this.conversiveURL = general.conversiveURL;
+        }
+
+        if (general.conversiveSiteCode) {
+          this.conversiveSiteCode = general.conversiveSiteCode;
         }
 
         if (config.disableExpandChat) {

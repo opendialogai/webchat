@@ -1,10 +1,10 @@
 import axios from "axios";
 import SessionStorageMixin from "../../mixins/SessionStorageMixin";
 
-let ConversiveClient = function() {
-  this.baseUrl = "https://avayatest.conversive.com";
+let ConversiveClient = function(baseUrl, siteCode) {
+  this.baseUrl = baseUrl;
+  this.siteCode = siteCode;
   this.version = 2;
-  this.siteCode = "yuk1mj2spx61";
   this.requestSerialNumber = 0;
   this.serialNumber = 0;
 };
