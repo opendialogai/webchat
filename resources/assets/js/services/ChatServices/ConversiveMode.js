@@ -34,7 +34,8 @@ ConversiveMode.prototype.sendTypingResponseError = function(error, webChatCompon
 ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
   this.client = new ConversiveClient();
 
-  return this.client.getSessionId(webChatComponent.uuid)
+  let name = webChatComponent.modeData.options.markupData.fullname;
+  return this.client.getSessionId(webChatComponent.uuid, name)
     .then((sessionToken) => {
       return Promise.all([
         this.client.setEngineData(sessionToken, webChatComponent.modeData.options.markupData),

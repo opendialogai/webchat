@@ -50,13 +50,13 @@ ConversiveClient.prototype.makeRequest = function(apiFunction, options) {
     });
 };
 
-ConversiveClient.prototype.getSessionId = async function(uuid) {
+ConversiveClient.prototype.getSessionId = async function(uuid, name = null) {
   let modeDataInSession = SessionStorageMixin.methods.getModeDataInSession();
 
   if (modeDataInSession.options.sessionId) {
     return Promise.resolve(modeDataInSession.options.sessionId);
   } else {
-    return this.getSession(uuid).then((response) => {
+    return this.getSession(uuid, name).then((response) => {
       let sessionId = response.t;
       modeDataInSession = SessionStorageMixin.methods.getModeDataInSession();
       modeDataInSession.options.sessionId = sessionId;
@@ -74,11 +74,11 @@ ConversiveClient.prototype.setSerialNumber = function(number) {
   this.serialNumber = number;
 };
 
-ConversiveClient.prototype.getSession = function(uuid) {
+ConversiveClient.prototype.getSession = function(uuid, name = null) {
   let options = {
     v: this.version,
     sc: this.siteCode,
-    n: "",
+    n: name || "",
     tc: uuid,
     iad: false,
   };
