@@ -97,6 +97,7 @@
             v-model="form.data[element.name].value"
             :options="element.options"
             :reduce="option => option.key"
+            :select-on-tab="true"
             label="value"
           ></v-select>
         </template>
