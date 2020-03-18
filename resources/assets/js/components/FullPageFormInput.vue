@@ -29,7 +29,7 @@
         :ref="element.name"
       >
         <span
-          v-if="element.display"
+          v-if="element.display && element.element_type == 'radio'"
           class="mt-fp-form__label"
           :class="[
           { 'mt-fp-form__label--radio' : element.element_type == 'radio'},
@@ -43,6 +43,7 @@
             class="mt-fp-form__input"
             v-model="form.data[element.name].value"
             v-on:keyup.enter="_handleClick"
+            :placeholder="element.display"
             :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
           />
         </template>
@@ -51,6 +52,7 @@
           <textarea
             class="mt-fp-form__input mt-fp-form__textarea"
             v-model="form.data[element.name].value"
+            :placeholder="element.display"
           />
         </template>
 
@@ -60,7 +62,7 @@
             class="mt-fp-form__select"
             v-model="form.data[element.name].value"
           >
-            <option value>-- Please choose an option --</option>
+            <option value>{{ element.display }}</option>
             <option
               v-for="(option_text, option_value) in element.options"
               v-bind:value="option_value"
@@ -97,8 +99,10 @@
             v-model="form.data[element.name].value"
             :options="element.options"
             :reduce="option => option.key"
+            :placeholder="element.display"
             :select-on-tab="true"
             label="value"
+            :class="{ 'mt-fp-form__v-select--error' : errors.find(x => x.type === element.name)}"
           ></v-select>
         </template>
 
@@ -108,6 +112,8 @@
             class="mt-fp-form__input"
             v-model="form.data[element.name].value"
             v-on:keyup.enter="_handleClick"
+            :placeholder="element.display"
+            :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
           />
         </template>
 
@@ -117,6 +123,8 @@
             class="mt-fp-form__input"
             v-model="form.data[element.name].value"
             v-on:keyup.enter="_handleClick"
+            :placeholder="element.display"
+            :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
           />
         </template>
       </div>
@@ -367,8 +375,8 @@ export default {
 }
 
 .mt-fp-form__input--error {
-  /* outline: none; */
-  /* border: 1px solid var(--btn-bg); */
+  outline: none;
+  border: 1px solid var(--btn-bg);
 }
 
 .mt-fp-form__input:focus {
@@ -587,4 +595,3 @@ doesnt work though 🤦🏻‍♂️
   margin: auto;
 }
 </style>
-

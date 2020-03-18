@@ -114,6 +114,8 @@ export default {
       type: Object,
       required: true
     },
+    conversiveUrl: String,
+    conversiveSiteCode: String,
     hideDatetimeMessage: Boolean,
     hideTypingIndicatorOnInternalMessages: Boolean,
     isExpand: Boolean,
@@ -594,6 +596,8 @@ export default {
           this.$emit("toggleChatOpen", this.headerHeight);
         }, 300);
       } else {
+        this.ctaText = [];
+
         this.isOpen = !this.isOpen;
         this.$emit("toggleChatOpen", this.headerHeight);
           window.parent.postMessage(

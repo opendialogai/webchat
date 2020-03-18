@@ -46,10 +46,11 @@ export default {
   watch: {
     ctaText() {
       if (this.ctaText.length) {
-        //   this.$refs.headerCta.classList.add("header-cta-expand");
         setTimeout(() => {
           this.$refs.headerCta.classList.add("header-cta-expand");
         }, 1000);
+      } else {
+        this.$refs.headerCta.classList.remove("header-cta-expand");
       }
     }
   },

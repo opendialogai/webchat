@@ -32,24 +32,22 @@ ConversiveMode.prototype.sendTypingResponseError = function(error, webChatCompon
 };
 
 ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
-  this.client = new ConversiveClient();
+  this.client = new ConversiveClient(webChatComponent.conversiveUrl, webChatComponent.conversiveSiteCode);
 
   return this.client.getSessionId(webChatComponent.uuid)
     .then((sessionToken) => {
-      return Promise.all([
-        this.client.setEngineData(sessionToken, webChatComponent.modeData.options.markupData),
-        this.client.setChatData(sessionToken, webChatComponent.modeData.options.markupData),
-      ]);
-    })
-    .then((response) => this.client.getSessionId(webChatComponent.uuid))
-    .then((sessionToken) => this.client.sendAutoText(sessionToken))
-    .then((response) => this.client.getSessionId(webChatComponent.uuid))
-    .then((sessionToken) => {
-      this.pollingInterval = setInterval(async () => {
-        let isFirstRequest = this.client.serialNumber < 1;
-        let messages = await this.client.getMessagesAfter(sessionToken);
-        this.handleNewMessages(messages, isFirstRequest, webChatComponent);
-      }, 1000);
+      return this.client.setEngineData(sessionToken, webChatComponent.modeData.options.markupData)
+        .then(() => this.client.setEngineDataHistory(sessionToken, webChatComponent.modeData.options.markupData))
+        .then(() => this.client.setChatData(sessionToken, webChatComponent.modeData.options.markupData))
+        .then(() => this.client.sendAutoText(sessionToken, "_startup"))
+        .then(() => {
+          this.pollingInterval = setInterval(async () => {
+            let isFirstRequest = this.client.serialNumber < 1;
+            let messages = await this.client.getMessagesAfter(sessionToken);
+            this.handleNewMessages(messages, isFirstRequest, webChatComponent);
+          }, 1000);
+        })
+        .then(() => this.client.sendAutoText(sessionToken, "_show_bot_history"));
     })
     .catch((error) => {
       console.error(error);
