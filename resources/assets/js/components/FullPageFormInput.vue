@@ -100,6 +100,7 @@
             :options="element.options"
             :reduce="option => option.key"
             :placeholder="element.display"
+            :select-on-tab="true"
             label="value"
             :class="{ 'mt-fp-form__v-select--error' : errors.find(x => x.type === element.name)}"
           ></v-select>
