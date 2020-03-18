@@ -4,10 +4,14 @@ let ConversiveMode = function() {
   this.name = "custom";
   this.client = null;
   this.pollingInterval = null;
-  this.typingIndicatorIndex = null;
+  this.typingIndicatorIndices = null;
 };
 
 ConversiveMode.prototype.sendRequest = function(message, webChatComponent) {
+  if (this.typingIndicatorIndices) {
+    this.clearTypingIndicator(webChatComponent);
+  }
+
   return this.client.getSessionId(webChatComponent.uuid)
     .then(sessionId => this.client.sendMessage(message, sessionId));
 };
@@ -67,7 +71,7 @@ ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest,
   // Filter out any typing messages besides the final one
   messages = messages.slice(0, -1).filter(message => message.type !== 2).concat(messages.slice(-1));
 
-  if (this.typingIndicatorIndex !== null && incomingTextMessages.length > 0) {
+  if (this.typingIndicatorIndices !== null && incomingTextMessages.length > 0) {
     let firstMessage = incomingTextMessages[0];
     this.convertTypingIndicatorToFirstMessage(firstMessage, webChatComponent);
     firstMessage.skip = true;
@@ -103,12 +107,16 @@ ConversiveMode.prototype.handleNewTextMessage = function(textMessage, isFirstReq
     return;
   }
 
+  if (this.typingIndicatorIndices) {
+    this.clearTypingIndicator(webChatComponent);
+  }
+
   this.addAuthorMessage(textMessage, webChatComponent);
   this.addMessageToMessageList(textMessage, webChatComponent);
 };
 
 ConversiveMode.prototype.handleNewTypingMessage = function(typingMessage, isFirstRequest, webChatComponent) {
-  if (typingMessage.source !== 2 || isFirstRequest || this.typingIndicatorIndex !== null) {
+  if (typingMessage.source !== 2 || isFirstRequest || this.typingIndicatorIndices !== null) {
     return;
   }
 
@@ -129,25 +137,19 @@ ConversiveMode.prototype.handleNewTypingMessage = function(typingMessage, isFirs
   };
 
   let index = webChatComponent.messageList.push(newTypingIndicatorMessage) - 1;
-  this.typingIndicatorIndex = index;
-
-  setTimeout(() => {
-    let typingIndicatorMessage = webChatComponent.messageList[index];
-    if (typingIndicatorMessage.type === "typing") {
-      // We should remove this prior to the author message as removing the authorIndex first would alter all indexes after it
-      webChatComponent.messageList.splice(index, 1);
-
-      if (authorIndex !== null) {
-        webChatComponent.messageList.splice(authorIndex, 1);
-      }
-      this.typingIndicatorIndex = null;
-    }
-  }, 5000);
+  this.typingIndicatorIndices = {
+    author: authorIndex,
+    typing: index
+  };
 };
 
 ConversiveMode.prototype.handleNewLeaveMessage = function(leaveMessage, isFirstRequest, webChatComponent) {
   if (leaveMessage.source !== 2 || isFirstRequest) {
     return;
+  }
+
+  if (this.typingIndicatorIndices) {
+    this.clearTypingIndicator(webChatComponent);
   }
 
   let authorMessage = {source: 2};
@@ -171,10 +173,10 @@ ConversiveMode.prototype.addAuthorMessage = function(message, webChatComponent) 
 };
 
 ConversiveMode.prototype.convertTypingIndicatorToFirstMessage = function(firstMessage, webChatComponent) {
-  let typingIndicatorIndex = this.typingIndicatorIndex;
-  this.typingIndicatorIndex = null;
+  let typingIndicatorIndices = this.typingIndicatorIndices;
+  this.typingIndicatorIndices = null;
 
-  let typingIndicatorMessage = webChatComponent.messageList[typingIndicatorIndex];
+  let typingIndicatorMessage = webChatComponent.messageList[typingIndicatorIndices.typing];
   typingIndicatorMessage.type = "text";
   typingIndicatorMessage.data = {
     text: firstMessage.b,
@@ -201,6 +203,21 @@ ConversiveMode.prototype.setTeamName = function(textMessages, webChatComponent) 
   let updatedModeData = webChatComponent.modeData;
   updatedModeData.options.teamName = lastMessage.n;
   webChatComponent.setChatMode(updatedModeData);
+};
+
+ConversiveMode.prototype.clearTypingIndicator = function(webChatComponent) {
+  let typingIndicatorIndices = this.typingIndicatorIndices;
+  let typingIndicatorMessage = webChatComponent.messageList[typingIndicatorIndices.typing];
+  if (typingIndicatorMessage.type === "typing") {
+    // We should remove this prior to the author message as removing the authorIndex first would alter all indexes after it
+    webChatComponent.messageList.splice(typingIndicatorIndices.typing, 1);
+
+    if (typingIndicatorIndices.author !== null) {
+      webChatComponent.messageList.splice(typingIndicatorIndices.author, 1);
+    }
+
+    this.typingIndicatorIndices = null;
+  }
 };
 
 export default ConversiveMode;
