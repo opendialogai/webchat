@@ -160,7 +160,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
 
         window.parent.postMessage(
           { dataLayerEvent: {message_received_from_chatbot: message.intent} },
-          "*"
+          document.referrer.match(/^.+:\/\/[^\/]+/)[0]
         );
 
         index += 1;
@@ -309,7 +309,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
 
       window.parent.postMessage(
         { dataLayerEvent: "message_received_from_chatbot" },
-        "*"
+        document.referrer.match(/^.+:\/\/[^\/]+/)[0]
       );
     }
   }

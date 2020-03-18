@@ -193,6 +193,7 @@ export default {
       maxInputCharacters: 0,
       messageList: [],
       placeholder: "Enter your message",
+      referrerUrl: '',
       showLongTextInput: false,
       showFullPageFormInput: false,
       showFullPageRichInput: false,
@@ -287,6 +288,8 @@ export default {
     }
   },
   created() {
+    this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
+
     this.id = `webchat-${this.$uuid.v4()}`;
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -403,13 +406,13 @@ export default {
       if (newMsg.type === "text" && newMsg.data.text.length > 0) {
         window.parent.postMessage(
           { dataLayerEvent: "message_sent_to_chatbot" },
-          "*"
+          this.referrerUrl
         );
       }
       if (newMsg.type === "button_response") {
         window.parent.postMessage(
           { dataLayerEvent: {user_clicked_button_in_chatbot: newMsg.data.text} },
-          "*"
+          this.referrerUrl
         );
       }
 
@@ -527,7 +530,7 @@ export default {
     onLinkClick(url) {
       window.parent.postMessage(
           { dataLayerEvent: {url_clicked: url} },
-          "*"
+          this.referrerUrl
       );
       this.sendMessage({
         type: "url_click",
@@ -540,7 +543,7 @@ export default {
     onFormButtonClick(data, msg) {
       window.parent.postMessage(
           { dataLayerEvent: {form_submitted: msg.data.callback_id} },
-          "*"
+          this.referrerUrl
       );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
       const responseData = {};
@@ -559,8 +562,8 @@ export default {
     },
     onFormCancelClick(msg) {
       window.parent.postMessage(
-          { dataLayerEvent: {form_cancelled: msg.data.callback_id} },
-          "*"
+        { dataLayerEvent: {form_cancelled: msg.data.callback_id} },
+        this.referrerUrl
       );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
       this.sendMessage({
@@ -585,8 +588,8 @@ export default {
       if (this.isOpen) {
         this.closeChatButtonReverseAnimate = true;
           window.parent.postMessage(
-              { dataLayerEvent: "chat_closed" },
-              "*"
+            { dataLayerEvent: "chat_closed" },
+            this.referrerUrl
           );
         setTimeout(() => {
           this.closeChatButtonReverseAnimate = false;
@@ -597,8 +600,8 @@ export default {
         this.isOpen = !this.isOpen;
         this.$emit("toggleChatOpen", this.headerHeight);
           window.parent.postMessage(
-              { dataLayerEvent: "chat_opened" },
-              "*"
+            { dataLayerEvent: "chat_opened" },
+            this.referrerUrl
           );
       }
     },
