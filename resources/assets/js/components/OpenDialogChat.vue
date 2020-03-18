@@ -229,6 +229,7 @@ export default {
       openIntent: "",
       parentUrl: "",
       pathInitialised: false,
+      referrerUrl: '',
       restartButtonCallback: "",
       sectionCustomFilters: {},
       sectionFilterPathPattern: "",
@@ -312,6 +313,8 @@ export default {
     }
   },
   created() {
+    this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
+
     const urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.has("mobile")) {
@@ -349,9 +352,15 @@ export default {
       this.isExpand = !this.isExpand;
 
       if (this.isExpand) {
-        window.parent.postMessage({ dataLayerEvent: "chatbot_maximized" }, "*");
+        window.parent.postMessage(
+          { dataLayerEvent: "chatbot_maximized" },
+          this.referrerUrl
+        );
       } else {
-        window.parent.postMessage({ dataLayerEvent: "chatbot_minimized" }, "*");
+        window.parent.postMessage(
+          { dataLayerEvent: "chatbot_minimized" },
+          this.referrerUrl
+        );
       }
 
       if (!this.isOpen) {
@@ -361,10 +370,16 @@ export default {
       // Only add the expanded class on non-mobile devices
       if (window.self !== window.top && !this.isMobile) {
         if (!this.isExpand) {
-          window.parent.postMessage({ removeClass: "expanded" }, "*");
+          window.parent.postMessage(
+            { removeClass: "expanded" },
+            this.referrerUrl
+          );
           this.$root.$emit("scroll-down-message-list");
         } else {
-          window.parent.postMessage({ addClass: "expanded" }, "*");
+          window.parent.postMessage(
+            { addClass: "expanded" },
+            this.referrerUrl
+          );
           this.$root.$emit("scroll-down-message-list");
         }
       }
@@ -855,14 +870,14 @@ export default {
         if (window.self !== window.top) {
           if (!this.isOpen) {
             if (headerHeight) {
-              window.parent.postMessage({ height: `140px` }, "*");
+              window.parent.postMessage({ height: `140px` }, this.referrerUrl);
             } else if (this.commentsEnabled) {
               const height = document.querySelector(".nav").offsetHeight;
 
-              window.parent.postMessage({ height: `140px` }, "*");
+              window.parent.postMessage({ height: `140px` }, this.referrerUrl);
             }
           } else {
-            window.parent.postMessage({ height: "auto" }, "*");
+            window.parent.postMessage({ height: "auto" }, this.referrerUrl);
           }
         }
       }
@@ -875,12 +890,12 @@ export default {
     minimizeChat() {
       this.isMinimized = true;
       this.isOpen = false;
-      window.parent.postMessage({ height: "50px" }, "*");
+      window.parent.postMessage({ height: "50px" }, this.referrerUrl);
     },
     maximizeChat() {
       this.isMinimized = false;
       this.isOpen = true;
-      window.parent.postMessage({ height: "auto" }, "*");
+      window.parent.postMessage({ height: "auto" }, this.referrerUrl);
     },
     setChatMode(data) {
       this.modeData = data;
