@@ -147,7 +147,7 @@ ConversiveClient.prototype.sendMessage = function(message, sessionToken) {
 
 ConversiveClient.prototype.sendTypingMessage = function(text, sessionToken) {
   return this.makeRequest("sendTypingMessage", {
-    b: text,
+    b: "=" + text,
     t: sessionToken,
     rsn: this.requestSerialNumber,
   });
