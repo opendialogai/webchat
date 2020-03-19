@@ -78,7 +78,8 @@ ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest,
   }
 
   if (incomingTextMessages.length > 0) {
-    this.setTeamName(incomingTextMessages, webChatComponent);
+    let lastMessage = incomingTextMessages[incomingTextMessages.length-1];
+    this.setTeamName(lastMessage.n, webChatComponent);
   }
 
   messages.forEach((message) => {
@@ -93,6 +94,10 @@ ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest,
 
       case 2:
         this.handleNewTypingMessage(message, isFirstRequest, webChatComponent);
+        break;
+
+      case 7:
+        this.handleNewJoinMessage(message, isFirstRequest, webChatComponent);
         break;
 
       case 8:
@@ -141,6 +146,16 @@ ConversiveMode.prototype.handleNewTypingMessage = function(typingMessage, isFirs
     author: authorIndex,
     typing: index
   };
+};
+
+ConversiveMode.prototype.handleNewJoinMessage = function(joinMessage, isFirstRequest, webChatComponent) {
+  if (joinMessage.source !== 2 || !isFirstRequest) {
+    return;
+  }
+
+  if (joinMessage.n) {
+    this.setTeamName(joinMessage.n, webChatComponent);
+  }
 };
 
 ConversiveMode.prototype.handleNewLeaveMessage = function(leaveMessage, isFirstRequest, webChatComponent) {
@@ -198,10 +213,9 @@ ConversiveMode.prototype.addMessageToMessageList = function(textMessage, webChat
   });
 };
 
-ConversiveMode.prototype.setTeamName = function(textMessages, webChatComponent) {
-  let lastMessage = textMessages[textMessages.length-1];
+ConversiveMode.prototype.setTeamName = function(teamName, webChatComponent) {
   let updatedModeData = webChatComponent.modeData;
-  updatedModeData.options.teamName = lastMessage.n;
+  updatedModeData.options.teamName = teamName;
   webChatComponent.setChatMode(updatedModeData);
 };
 
