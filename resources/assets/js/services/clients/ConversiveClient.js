@@ -21,12 +21,12 @@ ConversiveClient.prototype.getServerBindId = function () {
   return sessionData.options.serverBindId;
 };
 
-ConversiveClient.prototype.buildUrl = function(endpoint, parameters) {
+ConversiveClient.prototype.buildUrl = function(parameters) {
   let keys = Object.keys(parameters);
   let parametersFormatted = "?" + keys.map((key) => key + "=" + parameters[key]).join("&");
   let parameterStr = keys.length ? parametersFormatted : "";
 
-  return this.baseUrl + endpoint + parameterStr;
+  return this.baseUrl + parameterStr;
 };
 
 ConversiveClient.prototype.makeRequest = function(apiFunction, options) {
@@ -36,7 +36,7 @@ ConversiveClient.prototype.makeRequest = function(apiFunction, options) {
   };
   let encodedData = Object.keys(data).map((key) => this.encodeKeyValuePair(key, data[key])).join("&");
 
-  return axios.post(this.buildUrl("/CLA_API/FrontendChatAPI.aspx", {
+  return axios.post(this.buildUrl({
     sbid: this.getServerBindId()
   }), encodedData, {
     headers: {
