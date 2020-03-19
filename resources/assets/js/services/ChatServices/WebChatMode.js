@@ -316,27 +316,36 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
 };
 
 WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatComponent) {
-  setTimeout(() => {
-    const message = {
-      type: "text",
-      author: "them",
-      data: {
-        date: moment()
-          .tz("UTC")
-          .format("ddd D MMM"),
-        time: moment()
-          .tz("UTC")
-          .format("hh:mm A"),
-        text: "We're sorry, that didn't work, please try again"
-      }
-    };
-
-    const lastMessage = webChatComponent.messageList[webChatComponent.messageList.length - 1];
-
-    if (webChatComponent.useBotName || webChatComponent.useBotAvatar) {
-      const authorMsg = webChatComponent.newAuthorMessage(message);
-      webChatComponent.messageList.push(authorMsg);
+  const message = {
+    type: "text",
+    author: "them",
+    data: {
+      date: moment()
+        .tz("UTC")
+        .format("ddd D MMM"),
+      time: moment()
+        .tz("UTC")
+        .format("hh:mm A"),
+      text: "We're sorry, that didn't work, please try again"
     }
+  };
+
+  if (webChatComponent.useBotName || webChatComponent.useBotAvatar) {
+    const authorMsg = webChatComponent.newAuthorMessage(message);
+    webChatComponent.messageList.push(authorMsg);
+  }
+
+  webChatComponent.messageList.push({
+    author: "them",
+    type: "typing",
+    mode: webChatComponent.modeData.mode,
+    data: {
+      animate: webChatComponent.messageAnimation
+    }
+  });
+
+  setTimeout(() => {
+    const lastMessage = webChatComponent.messageList[webChatComponent.messageList.length - 1];
 
     lastMessage.type = message.type;
     lastMessage.data = message.data;
