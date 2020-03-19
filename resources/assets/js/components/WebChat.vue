@@ -672,7 +672,7 @@ export default {
             }
 
             // Ignore 'fp-rich' messages.
-            if (message.type === "fp-rich" && i+1 !== total) {
+            if (message.type === "fp-rich" && (i+1 !== total || this.openIntent)) {
               return;
             }
 
