@@ -180,7 +180,7 @@ ConversiveClient.prototype.prepareChatData = function(chatData, historyDataOnly 
   if (historyDataOnly) {
     keys = ['history'];
   } else {
-    keys = ['email', 'fullname', 'loc', 'phone']
+    keys = ['email', 'fullname', 'loc', 'phone', 'company', 'headcount']
   }
 
   let data = Object.keys(chatData).filter((key) => {
