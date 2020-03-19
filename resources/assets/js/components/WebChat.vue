@@ -509,23 +509,30 @@ export default {
           },
           // Axios error handler.
           () => {
+            const message = {
+              type: 'text',
+              author: 'them',
+              data: {
+                date: moment().tz('UTC').format('ddd D MMM'),
+                time: moment().tz('UTC').format('hh:mm A'),
+                text: "We're sorry, that didn't work, please try again",
+                animate: this.messageAnimation,
+              },
+            };
+
+            if (this.useBotName || this.useBotAvatar) {
+              const authorMsg = this.newAuthorMessage(message);
+              this.messageList.push(authorMsg);
+            }
+
+            this.messageList.push({
+              author: 'them',
+              type: 'typing',
+              data: {},
+            });
+
             setTimeout(() => {
-              const message = {
-                type: 'text',
-                author: 'them',
-                data: {
-                  date: moment().tz('UTC').format('ddd D MMM'),
-                  time: moment().tz('UTC').format('hh:mm A'),
-                  text: "We're sorry, that didn't work, please try again",
-                },
-              };
-
               const lastMessage = this.messageList[this.messageList.length - 1];
-
-              if (this.useBotName || this.useBotAvatar) {
-                const authorMsg = this.newAuthorMessage(message);
-                this.messageList.push(authorMsg);
-              }
 
               lastMessage.type = message.type;
               lastMessage.data = message.data;
