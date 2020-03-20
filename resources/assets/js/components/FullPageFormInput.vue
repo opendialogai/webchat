@@ -195,10 +195,22 @@ export default {
   },
   watch: {
     message() {
-      this.showLoader = false;
+      this.setUp();
     }
   },
   methods: {
+    setUp() {
+        this.showLoader = false;
+
+        this.form.data = [];
+
+        this.message.data.elements.forEach(element => {
+            this.form.data[element.name] = {
+                name: element.name,
+                value: ""
+            };
+        });
+    },
     onSelectChange() {
       if (this.message.data.auto_submit) {
         this._handleClick();
@@ -269,12 +281,7 @@ export default {
   },
 
   created() {
-    this.message.data.elements.forEach(element => {
-      this.form.data[element.name] = {
-        name: element.name,
-        value: ""
-      };
-    });
+    this.setUp();
   }
 };
 </script>
