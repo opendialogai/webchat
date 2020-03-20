@@ -12,12 +12,10 @@
 
   @media (min-width: 450px) {
     width: 423px;
-    height: calc(100% - 140px);
   }
 }
 
 .chat-window.opened {
-  //   box-shadow: 0 3px 26px 3px rgba(0, 0, 0, 0.3);
   box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
   margin: 0px auto 0;
 
@@ -263,11 +261,6 @@
   justify-content: center;
   margin-top: -45px;
   margin-bottom: 10px;
-
-  @media (min-width: 450px) {
-    margin-top: 18px;
-    margin-bottom: 10px;
-  }
 }
 
 @keyframes close-chat-spin {
@@ -302,11 +295,6 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  @media (min-width: 450px) {
-    width: 90px;
-    height: 90px;
-    box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
-  }
   &:hover {
     background-color: #000000;
   }
@@ -348,7 +336,6 @@
 
 .animateSlideUp {
   animation: slide-up 0.8s forwards;
-  //   animation: slide-up 3s forwards;
 }
 
 .animateDelay1 {
