@@ -274,6 +274,10 @@ export default {
         name: element.name,
         value: ""
       };
+
+      if (element.default_value) {
+        this.form.data[element.name].value = element.default_value;
+      }
     });
   }
 };
