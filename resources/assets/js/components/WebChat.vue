@@ -209,6 +209,13 @@ export default {
     };
   },
   watch: {
+    ctaText() {
+      if (this.ctaText.length) {
+        setTimeout(() => {
+          this.ctaText = [];
+        }, 5500);
+      }
+    },
     messageList() {
       let spliceIndex = 1;
       let previousMessage = this.messageList[this.messageList.length - 2];

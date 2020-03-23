@@ -38,9 +38,10 @@ WebChatMode.prototype.sendRequest = function(message, webChatComponent) {
 };
 
 WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
-    if (response.data instanceof Array) {
+  if (response.data instanceof Array) {
     let index = 0;
     let totalMessages = response.data.length;
+    let lastMessageIndex = webChatComponent.messageList.length - 1;
     let clearCtaText = true;
 
     response.data.forEach((message, i) => {
@@ -80,6 +81,8 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           });
         }
 
+        lastMessageIndex = webChatComponent.messageList.length - 1;
+
         setTimeout(() => {
           webChatComponent.$emit("newMessage", message);
 
@@ -90,9 +93,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             messageIndex === 0 ||
             !webChatComponent.hideTypingIndicatorOnInternalMessages
           ) {
-            const lastMessage = webChatComponent.messageList[
-              webChatComponent.messageList.length - 1
-            ];
+            const lastMessage = webChatComponent.messageList[lastMessageIndex];
             lastMessage.type = message.type;
             lastMessage.data = message.data;
 
@@ -152,6 +153,8 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
                       animate: webChatComponent.messageAnimation
                     }
                   });
+
+                  lastMessageIndex = webChatComponent.messageList.length - 1;
                 });
               });
             }
@@ -189,10 +192,10 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           }
         });
 
+        const lastMessageIndex = webChatComponent.messageList.length - 1;
+
         setTimeout(() => {
-          const lastMessage = webChatComponent.messageList[
-            webChatComponent.messageList.length - 1
-          ];
+          const lastMessage = webChatComponent.messageList[lastMessageIndex];
 
           webChatComponent.$emit("newMessage", message);
 
@@ -235,12 +238,13 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           }
         });
       }
+
+      const lastMessageIndex = webChatComponent.messageList.length - 1;
+
       setTimeout(() => {
         // Only add a message to the list if it is a message object
         if (typeof message === "object" && message !== null) {
-          const lastMessage = webChatComponent.messageList[
-            webChatComponent.messageList.length - 1
-          ];
+          const lastMessage = webChatComponent.messageList[lastMessageIndex];
 
           webChatComponent.$emit("newMessage", message);
 
