@@ -78,14 +78,14 @@
 </template>
 
 <script>
-    import Header from './Header.vue'
-    import MessageList from './MessageList.vue'
-    import UserInput from './UserInput.vue'
-    import FullPageFormInput from './FullPageFormInput.vue'
-    import FullPageRichInput from './FullPageRichInput.vue'
-    import LongTextUserInput from './LongTextUserInput.vue'
+  import Header from './Header.vue'
+  import MessageList from './MessageList.vue'
+  import UserInput from './UserInput.vue'
+  import FullPageFormInput from './FullPageFormInput.vue'
+  import FullPageRichInput from './FullPageRichInput.vue'
+  import LongTextUserInput from './LongTextUserInput.vue'
 
-    export default {
+  export default {
   components: {
     Header,
     MessageList,
@@ -266,7 +266,7 @@
     },
     "modeData.options.teamName": function(newValue, oldValue) {
       if (newValue) {
-        this.agentProfile.teamName = 'You are now speaking to ' + newValue;
+        this.agentProfile.teamName = 'You’re talking with ' + newValue;
       }
     }
   },
