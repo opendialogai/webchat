@@ -683,6 +683,11 @@ export default {
               return;
             }
 
+            // Ignore 'fp-form' messages.
+            if (message.type === "fp-form" && (i+1 !== total || this.openIntent)) {
+              return;
+            }
+
             const currentMessage = message;
 
             // Sets the author to 'me' for messages from the current user
