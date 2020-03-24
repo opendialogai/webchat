@@ -33,6 +33,7 @@
           callback_id: this.data.elements.callback_id,
           teamName: '',
           markupData: {
+            starting_url: document.referrer || document.location.href || "",
             ...this.data.elements
           }
         }
