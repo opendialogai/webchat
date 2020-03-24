@@ -254,6 +254,7 @@ export default {
       userUuid: "",
       modeData: {
         mode: 'webchat',
+        modeInstance: 0,
         options: {}
       }
     };
@@ -898,6 +899,8 @@ export default {
       window.parent.postMessage({ height: "auto" }, this.referrerUrl);
     },
     setChatMode(data) {
+      let currentModeData = this.getModeDataInSession();
+      data.modeInstance = data.modeInstance || currentModeData.modeInstance || 0;
       this.modeData = data;
       this.setModeDataInSession(data);
     }

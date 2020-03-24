@@ -5,6 +5,7 @@ let ConversiveMode = function() {
   this.client = null;
   this.pollingInterval = null;
   this.typingIndicatorIndices = null;
+  this.modeInstance = 0;
 };
 
 ConversiveMode.prototype.sendRequest = function(message, webChatComponent) {
@@ -49,13 +50,18 @@ ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
           this.pollingInterval = setInterval(async () => {
             let isFirstRequest = this.client.serialNumber < 1;
             let messages = await this.client.getMessagesAfter(sessionToken);
-            this.handleNewMessages(messages, isFirstRequest, webChatComponent);
+            if (messages !== null) {
+              this.handleNewMessages(messages, isFirstRequest, webChatComponent);
+            } else {
+              console.error("Failed to connect to chat agent.")
+              this.destroyChat(webChatComponent);
+            }
           }, 1000);
         })
         .then(() => this.client.sendAutoText(sessionToken, "_show_bot_history"));
     })
     .catch((error) => {
-      console.error(error);
+      console.error("Conversive error", error);
     });
 };
 
@@ -66,6 +72,10 @@ ConversiveMode.prototype.destroyChat = async function(webChatComponent) {
 };
 
 ConversiveMode.prototype.handleNewMessages = function (messages, isFirstRequest, webChatComponent) {
+  if (messages.length < 1) {
+    return;
+  }
+
   let incomingTextMessages = messages.filter(message => message.source === 2 && message.type === 1);
 
   // Filter out any typing messages besides the final one
@@ -136,6 +146,7 @@ ConversiveMode.prototype.handleNewTypingMessage = function(typingMessage, isFirs
     author: "them",
     type: "typing",
     mode: "custom",
+    modeInstance: this.modeInstance,
     data: {
       animate: true,
     }
@@ -204,6 +215,7 @@ ConversiveMode.prototype.addMessageToMessageList = function(textMessage, webChat
   webChatComponent.messageList.push({
     author: textMessage.source === 1 ? "me" : "them",
     mode: "custom",
+    modeInstance: this.modeInstance,
     type: "text",
     data: {
       text: textMessage.b,
@@ -232,6 +244,10 @@ ConversiveMode.prototype.clearTypingIndicator = function(webChatComponent) {
 
     this.typingIndicatorIndices = null;
   }
+};
+
+ConversiveMode.prototype.setModeInstance = function(number) {
+  this.modeInstance = number;
 };
 
 export default ConversiveMode;
