@@ -900,7 +900,7 @@ export default {
     },
     setChatMode(data) {
       let currentModeData = this.getModeDataInSession();
-      data.modeInstance = data.modeInstance || currentModeData.modeInstance || 0;
+      data.modeInstance = data.modeInstance || (currentModeData && currentModeData.modeInstance) || 0;
       this.modeData = data;
       this.setModeDataInSession(data);
     }
