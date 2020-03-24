@@ -19,6 +19,7 @@ ChatService.prototype.getModeData = function() {
 
 ChatService.prototype.setModeData = function(modeData) {
   this.modeData = modeData;
+  this.getActiveService().setModeInstance(modeData.modeInstance);
 };
 
 ChatService.prototype.getMode = function() {
@@ -59,6 +60,10 @@ ChatService.prototype.initialiseChat = function(webChatComponent) {
 
 ChatService.prototype.destroyChat = function(webChatComponent) {
   return this.getActiveService().destroyChat(webChatComponent);
+};
+
+ChatService.prototype.setModeInstance = function(number) {
+  this.getActiveService().setModeInstance(number);
 };
 
 export default new ChatService();

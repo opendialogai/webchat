@@ -46,7 +46,12 @@ ConversiveClient.prototype.makeRequest = function(apiFunction, options) {
   })
     .then((response) => {
       this.requestSerialNumber++;
-      return Promise.resolve(response.data);
+
+      if (response.data.s) {
+        return Promise.resolve(response.data);
+      } else {
+        return Promise.reject(response.data);
+      }
     });
 };
 
@@ -137,10 +142,16 @@ ConversiveClient.prototype.getMessagesAfter = async function(sessionToken) {
     sn: this.getSerialNumber(),
   })
     .then((response) => {
-      let messages = response.m;
-      if (messages.length > 0) {
-        let finalMessage = messages[messages.length - 1];
-        this.setSerialNumber(finalMessage.sn);
+      let messages;
+      if (response.m !== undefined) {
+        messages = response.m;
+
+        if (messages.length > 0) {
+          let finalMessage = messages[messages.length - 1];
+          this.setSerialNumber(finalMessage.sn);
+        }
+      } else {
+        messages = null;
       }
 
       return messages;

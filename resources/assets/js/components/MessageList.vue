@@ -2,7 +2,7 @@
   <div class="message-list" ref="scrollList" :style="{'--messageList-bkg': colors.messageList.bg}">
     <Message
       v-for="(message, idx) in messages"
-      v-show="message.mode === modeData.mode"
+      v-show="shouldShowMessage(message)"
       :message="message"
       :read="message.read"
       :chatImageUrl="chatImageUrl"
@@ -119,7 +119,14 @@
     },
     setChatMode(mode) {
       this.$emit('setChatMode', mode);
-    }
+    },
+    shouldShowMessage(message) {
+      let isModeSame = message.mode === this.modeData.mode;
+      let isWebchatMode = message.mode === 'webchat';
+      let isCustomMode = message.mode === 'custom';
+      let isFromSameInstance = message.modeInstance === this.modeData.modeInstance;
+      return (isModeSame && isWebchatMode) || (isModeSame && isCustomMode && isFromSameInstance);
+    },
   },
   mounted() {
     this._scrollDown(false);

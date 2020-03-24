@@ -82,6 +82,7 @@
 <script>
   import axios from "axios";
   import chatService from "../services/ChatService";
+  import SessionStorageMixin from "../mixins/SessionStorageMixin";
 
   const moment = require("moment-timezone");
 
@@ -177,6 +178,7 @@ export default {
       required: true
     }
   },
+  mixins: [SessionStorageMixin],
   data() {
     return {
       buttonText: "Submit",
@@ -259,10 +261,12 @@ export default {
       }
     },
     modeData(newValue, oldValue) {
-      if (oldValue.mode === "custom") {
-        this.destroyCustomMode();
-      } else if (oldValue.mode === "webchat") {
-        this.destroyWebchatMode();
+      if (newValue.mode !== oldValue.mode) {
+        if (oldValue.mode === "custom") {
+          this.destroyCustomMode();
+        } else if (oldValue.mode === "webchat") {
+          this.destroyWebchatMode();
+        }
       }
 
       chatService.setModeData(newValue);
@@ -290,7 +294,9 @@ export default {
       }
 
       if (newValue.mode === "custom") {
-        this.setupCustomMode();
+        if (oldValue.mode !== "custom") {
+          this.setupCustomMode();
+        }
       } else if (newValue.mode === "webchat") {
         this.setupWebchatMode();
       }
@@ -368,6 +374,7 @@ export default {
       const newMsg = msg;
 
       newMsg.mode = this.modeData.mode;
+      newMsg.modeInstance = this.modeData.modeInstance;
 
       newMsg.data.date = moment()
         .tz("UTC")
@@ -776,6 +783,7 @@ export default {
           type: "author",
           author: "them",
           mode: this.modeData.mode,
+          modeInstance: this.modeData.modeInstance,
           data: {
             author: "them",
             animate: this.messageAnimation,
@@ -796,6 +804,7 @@ export default {
         type: "author",
         author: "me",
         mode: this.modeData.mode,
+        modeInstance: this.modeData.modeInstance,
         data: {
           animate: this.messageAnimation,
           author: "me",
@@ -861,6 +870,10 @@ export default {
     },
     destroyCustomMode() {
       chatService.destroyChat(this);
+
+      let modeDataInSession = this.getModeDataInSession();
+      modeDataInSession.modeInstance++;
+      this.setChatMode(modeDataInSession);
     },
     destroyWebchatMode() {
       chatService.destroyChat(this);

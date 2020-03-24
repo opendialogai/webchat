@@ -376,4 +376,8 @@ WebChatMode.prototype.initialiseChat = function(webChatComponent) {
 
 WebChatMode.prototype.destroyChat = function(webChatComponent) {};
 
+WebChatMode.prototype.setModeInstance = function(number) {
+  this.modeInstance = number;
+};
+
 export default WebChatMode;
