@@ -162,7 +162,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
         }, (messageIndex + 1) * webChatComponent.messageDelay);
 
         window.parent.postMessage(
-          { dataLayerEvent: {message_received_from_chatbot: message.intent} },
+          { dataLayerEvent: "message_received_from_chatbot" },
           document.referrer.match(/^.+:\/\/[^\/]+/)[0]
         );
 
