@@ -670,7 +670,7 @@ export default {
         }).then(() => {
           setTimeout(() => {
             this.canRestart = true;
-          }, 2500);
+          }, 5000);
         });
       }
     },
