@@ -661,7 +661,7 @@ export default {
     },
     onRestartButtonClick() {
       if (this.canRestart) {
-        this.canRestart = true;
+        this.canRestart = false;
         this.sendMessage({
           type: 'trigger',
           author: 'me',
