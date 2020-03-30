@@ -668,7 +668,9 @@ export default {
           callback_id: this.restartButtonCallback,
           data: {},
         }).then(() => {
-          this.canRestart = true;
+          setTimeout(() => {
+            this.canRestart = true;
+          }, 2500);
         });
       }
     },
