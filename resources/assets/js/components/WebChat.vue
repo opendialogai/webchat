@@ -161,6 +161,7 @@ export default {
       users: [],
       userName: '',
       uuid: this.userUuid,
+      canRestart: true,
     };
   },
   watch: {
@@ -325,7 +326,7 @@ export default {
         };
 
         // Need to add error handling here
-        axios.post('/incoming/webchat', webchatMessage).then(
+        return axios.post('/incoming/webchat', webchatMessage).then(
           (response) => {
             if (response.data instanceof Array) {
               response.data.forEach((message, i) => {
@@ -535,6 +536,7 @@ export default {
           },
         );
       }
+      return Promise.resolve();
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {
@@ -658,12 +660,17 @@ export default {
       });
     },
     onRestartButtonClick() {
-      this.sendMessage({
-        type: 'trigger',
-        author: 'me',
-        callback_id: this.restartButtonCallback,
-        data: {},
-      });
+      if (this.canRestart) {
+        this.canRestart = true;
+        this.sendMessage({
+          type: 'trigger',
+          author: 'me',
+          callback_id: this.restartButtonCallback,
+          data: {},
+        }).then(() => {
+          this.canRestart = true;
+        });
+      }
     },
     expandChat() {
       this.$emit('expandChat');
