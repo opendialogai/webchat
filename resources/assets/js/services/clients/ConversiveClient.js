@@ -197,9 +197,11 @@ ConversiveClient.prototype.prepareChatData = function(chatData, historyDataOnly 
   let data = Object.keys(chatData).filter((key) => {
     return keys.includes(key);
   }).map((key) => {
+    let value = chatData[key].replace("=", "-");
+
     return {
       n: key,
-      v: chatData[key]
+      v: value
     }
   });
 
