@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2b722813795251b0eded758b3c606bc",
+    "content-hash": "a0997ef332f37e3518fa12529bd75145",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -3529,16 +3529,16 @@
         },
         {
             "name": "opendialogai/core",
-            "version": "dev-develop",
+            "version": "0.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opendialogai/core.git",
-                "reference": "3b951dfb06e2fad93e4441e0cc4afebda261fe2c"
+                "reference": "d1d72e26da7a2e0ff20144ae1af38a57c2c70e5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opendialogai/core/zipball/3b951dfb06e2fad93e4441e0cc4afebda261fe2c",
-                "reference": "3b951dfb06e2fad93e4441e0cc4afebda261fe2c",
+                "url": "https://api.github.com/repos/opendialogai/core/zipball/d1d72e26da7a2e0ff20144ae1af38a57c2c70e5c",
+                "reference": "d1d72e26da7a2e0ff20144ae1af38a57c2c70e5c",
                 "shasum": ""
             },
             "require": {
@@ -3617,7 +3617,7 @@
                 }
             ],
             "description": "The OpenDialog core package",
-            "time": "2020-02-27T10:22:24+00:00"
+            "time": "2020-03-23T15:34:28+00:00"
         },
         {
             "name": "opendialogai/dgraph-docker",
@@ -5561,9 +5561,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "opendialogai/core": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
