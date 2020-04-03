@@ -1,5 +1,5 @@
 {
-    "name": "opendialog/avaya-webchat",
+    "name": "opendialogai/avaya-webchat",
     "license": "proprietary",
     "description": "Webchat front end component for the Open Dialog project",
     "type": "library",
