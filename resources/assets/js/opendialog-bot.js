@@ -74,7 +74,8 @@ function openChatWindow(url, div = null) {
 
     // set height on page load
     ifrm.style.backgroundColor= 'transparent';
-    ifrm.style.height = '140px';
+    ifrm.style.height = '120px';
+    ifrm.style.width = '130px';
     window.document.body.appendChild(ifrm);
 
     //if you want a full iframe on page load turn this on
@@ -105,6 +106,10 @@ function openChatWindow(url, div = null) {
             } else {
                 document.body.classList.remove('chatbot-no-scroll');
             }
+        }
+
+        if (event.data && typeof event.data.width !== 'undefined') {
+            ifrm.style.width = (event.data.width === 'auto') ? '' : event.data.width;
         }
 
         if (event.data && typeof event.data.addClass !== 'undefined') {

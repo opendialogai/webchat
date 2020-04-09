@@ -42,8 +42,8 @@
   .header-nav {
     display: none;
   }
-  height: 140px;
-  margin: 30px 0;
+  height: 110px;
+  margin: 10px 0;
 }
 
 //When the header is open fully - full chat box
@@ -60,19 +60,13 @@
   justify-content: center;
   cursor: pointer;
   white-space: nowrap;
-  height: 60px;
-  width: 60px;
+  height: 90px;
+  width: 90px;
   border-radius: 45px;
   background-color: #da291c;
   transition: width 0.45s;
-  margin: 0 auto;
+  margin: 0 10px 0 0;
   box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
-
-  @media (min-width: 450px) {
-    height: 90px;
-    width: 90px;
-    margin: 0 10px 0 0;
-  }
 }
 
 .header-cta-expand {
@@ -95,31 +89,23 @@
 }
 
 .header-cta__icon {
-  min-height: 40px;
-  min-width: 40px;
-  @media (min-width: 450px) {
-    min-height: 50px;
-    min-width: 50px;
-  }
+  min-height: 50px;
+  min-width: 50px;
 }
 
 .header-cta__text {
   margin-left: 20px;
-  span {
-    font-size: 16px;
-    @media (min-width: 450px) {
-      font-size: 20px;
-    }
-    display: block;
+  display: none;
+  overflow: hidden;
+  white-space: nowrap;
 
+  span {
+    font-size: 20px;
+    display: block;
     font-weight: 500;
     line-height: 1.5;
     color: #ffffff;
   }
-
-  display: none;
-  overflow: hidden;
-  white-space: nowrap;
 }
 
 //   <MessageList />

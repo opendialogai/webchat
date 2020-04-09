@@ -44,13 +44,17 @@
 <script>
 export default {
   watch: {
-    ctaText() {
+    ctaText(newVal, oldVal) {
       if (this.ctaText.length) {
+        window.parent.postMessage({ width: "auto" }, this.referrerUrl);
         setTimeout(() => {
           this.$refs.headerCta.classList.add("header-cta-expand");
         }, 1000);
       } else {
         this.$refs.headerCta.classList.remove("header-cta-expand");
+          if (newVal.length !== oldVal.length && !this.isOpen) {
+              window.parent.postMessage({ width: "130px" }, this.referrerUrl);
+          }
       }
     }
   },
