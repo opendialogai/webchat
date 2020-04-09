@@ -873,7 +873,7 @@ export default {
             window.parent.postMessage({ height: `120px` }, this.referrerUrl);
             setTimeout(() => {
               window.parent.postMessage({ width: `130px` }, this.referrerUrl);
-            }, 1000);
+            }, 200);
           } else {
             window.parent.postMessage({ height: "auto" }, this.referrerUrl);
             window.parent.postMessage({ width: "auto" }, this.referrerUrl);
