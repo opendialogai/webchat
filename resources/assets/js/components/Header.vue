@@ -43,6 +43,11 @@
 
 <script>
 export default {
+  data() {
+    return {
+      referrerUrl: document.referrer.match(/^.+:\/\/[^\/]+/)[0]
+    }
+  },
   watch: {
     ctaText(newVal, oldVal) {
       if (this.ctaText.length) {
