@@ -870,15 +870,13 @@ export default {
 
         if (window.self !== window.top) {
           if (!this.isOpen) {
-            if (headerHeight) {
-              window.parent.postMessage({ height: `140px` }, this.referrerUrl);
-            } else if (this.commentsEnabled) {
-              const height = document.querySelector(".nav").offsetHeight;
-
-              window.parent.postMessage({ height: `140px` }, this.referrerUrl);
-            }
+            window.parent.postMessage({ height: `120px` }, this.referrerUrl);
+            setTimeout(() => {
+              window.parent.postMessage({ width: `130px` }, this.referrerUrl);
+            }, 200);
           } else {
             window.parent.postMessage({ height: "auto" }, this.referrerUrl);
+            window.parent.postMessage({ width: "auto" }, this.referrerUrl);
           }
         }
       }

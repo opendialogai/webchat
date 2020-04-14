@@ -24,6 +24,11 @@
 
 .chat-window.closed {
   height: auto;
+  padding-right: 20px;
+  transition: none;
+  @media (min-width: 450px) {
+    padding-right: 0;
+  }
 }
 
 // 👇🏻👇🏻👇🏻 OLD style you might need for the comments tab and max/min buttons👇🏻👇🏻👇🏻
