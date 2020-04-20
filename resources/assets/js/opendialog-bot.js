@@ -2,6 +2,7 @@ import 'promise-polyfill/src/polyfill';
 import 'whatwg-fetch';
 import 'url-search-params-polyfill';
 import 'core-js/es/object';
+import {uuid} from 'vue-uuid';
 
 let query = '';
 
@@ -207,11 +208,17 @@ function isValidPath() {
 }
 
 if (window.openDialogSettings) {
-    const { url } = window.openDialogSettings;
-    const userId = (window.openDialogSettings.user && window.openDialogSettings.user.email) ?
+  const { url } = window.openDialogSettings;
+  const userId = (window.openDialogSettings.user && window.openDialogSettings.user.email) ?
         window.openDialogSettings.user.email : '';
 
-    getSettings(url, userId).then((settings) => {
+  if (userId) {
+    sessionStorage.uuid = userId;
+  } else {
+    sessionStorage.uuid = uuid.v4();
+  }
+
+  getSettings(url, userId).then((settings) => {
         mergeSettings(settings);
 
         const mobileWidth = (window.openDialogSettings.mobileWidth)

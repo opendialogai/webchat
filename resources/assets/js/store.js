@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
-import { resourceModule } from '@reststate/vuex';
+import {resourceModule} from '@reststate/vuex';
 
 Vue.use(Vuex);
 
@@ -9,12 +9,15 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     apiReady: false,
+    uuid: sessionStorage.uuid || null,
   },
   mutations: {
     setApiReady(state, val) {
       state.apiReady = val;
     },
   },
+  actions: {},
+  getters: {},
 });
 
 const commentConfig = {};
