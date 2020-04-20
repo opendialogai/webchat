@@ -10,6 +10,7 @@ const store = new Vuex.Store({
   state: {
     apiReady: false,
     uuid: sessionStorage.uuid || null,
+    settings: sessionStorage.openDialogSettings ? JSON.parse(sessionStorage.openDialogSettings) : null
   },
   mutations: {
     setApiReady(state, val) {
