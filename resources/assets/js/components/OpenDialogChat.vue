@@ -114,16 +114,16 @@
 </template>
 
 <script>
-    import axios from "axios";
-    import {mapState} from "vuex";
+  import axios from "axios";
+  import {mapState} from "vuex";
 
-    import cssVars from "css-vars-ponyfill";
+  import cssVars from "css-vars-ponyfill";
 
-    import Comments from "@/components/Comments";
-    import WebChat from "@/components/WebChat";
-    import SessionStorageMixin from "../mixins/SessionStorageMixin";
+  import Comments from "@/components/Comments";
+  import WebChat from "@/components/WebChat";
+  import SessionStorageMixin from "../mixins/SessionStorageMixin";
 
-    const { detect } = require("detect-browser");
+  const { detect } = require("detect-browser");
 const jstz = require("jstz");
 
 export default {
@@ -439,10 +439,8 @@ export default {
       // Add event listener for custom open dialog settings.
       window.addEventListener("message", event => {
         if (event.data) {
-          if (event.data.openDialogSettings) {
-            const customConfig = event.data.openDialogSettings;
-            customConfig.newPathname = event.data.newPathname;
-            this.initialiseSettings(customConfig);
+          if (event.data.loadSettings) {
+            this.initialiseSettings();
           }
 
           // Handle path changes.
@@ -467,18 +465,11 @@ export default {
         }
       });
     },
-    initialiseSettings(customConfig) {
-      const userId = (customConfig.user && customConfig.user.email) ? customConfig.user.email : "";
-
+    initialiseSettings() {
       // Get default settings from the config endpoint.
-      this.getWebchatConfig(userId)
+      this.getWebchatConfig()
         .then(config => {
           this.setConfig(config);
-          return true;
-        })
-        .then(() => {
-          // Over-ride default config with any custom settings.
-          this.setConfig(customConfig);
 
           if (!this.settingsInitialised) {
             this.settingsInitialised = true;
@@ -557,18 +548,8 @@ export default {
         this.cssProps = this.getCssProps();
       });
     },
-    async getWebchatConfig(userId) {
-      let configUrl = `${window.location.origin}/webchat-config`;
-
-      if (userId) {
-        configUrl = `${configUrl}?user_id=${userId}`;
-      } else if (sessionStorage.uuid) {
-        configUrl = `${configUrl}?user_id=${sessionStorage.uuid}`;
-      }
-
-      const response = await fetch(configUrl);
-      const json = await response.json();
-      return json;
+    async getWebchatConfig() {
+      return Promise.resolve(this.$store.state.settings);
     },
     handleHistoryChange(e) {
       if (this.comments.commentsEnabledPathPattern) {
