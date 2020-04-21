@@ -176,9 +176,6 @@ function getSettings(url, userId = '', customSettings = null, callbackId = null,
     return fetch(configUrl, {
       url: configUrl,
       method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-      },
       body: JSON.stringify({
         custom_settings: customSettings
       }),
