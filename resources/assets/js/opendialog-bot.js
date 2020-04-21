@@ -194,14 +194,19 @@ function getSettings(url, userId = '', customSettings = null, callbackId = null,
 
 function checkValidPath(testPath) {
     const currentUrl = window.location.href;
-    if (testPath.endsWith('$')) {
-        return currentUrl.endsWith(testPath.replace('$', ''));
-    }
-    if (currentUrl.indexOf(testPath) >= 0) {
-        return true;
+
+    if (testPath === '') {
+      return false;
     }
 
-    return false;
+    if (testPath === '*') {
+      return true;
+    }
+
+    let formattedTestPath = testPath.replace(/\*/, '(.*)');
+    let regex = new RegExp(formattedTestPath);
+
+    return regex.test(currentUrl);
 }
 
 /**
@@ -214,7 +219,7 @@ function isValidPath() {
     const { validPath } = window.openDialogSettings.general;
 
     if (typeof validPath === 'undefined') {
-        return true;
+        return false;
     }
 
     let retVal = false;
