@@ -3,6 +3,7 @@ import 'whatwg-fetch';
 import 'url-search-params-polyfill';
 import 'core-js/es/object';
 import {uuid} from 'vue-uuid';
+import defaultWebchatSettings from './default-webchat-settings';
 
 let query = '';
 
@@ -152,19 +153,40 @@ function openChatWindow(url, div = null) {
 
 /**
  * Gets the webchat settings from the database
- * @returns {Promise<any>}
+ * @returns {Promise<Response>}
  */
-async function getSettings(url, userId = '') {
-    let configUrl = `${url}/webchat-config`;
+function getSettings(url, userId = '', customSettings = null, callbackId = null, width = null) {
+    let configUrlObj = new URLSearchParams();
+
     if (userId) {
-        configUrl = `${configUrl}?user_id=${userId}`;
+      configUrlObj.append('user_id', userId);
     } else if (sessionStorage.uuid) {
-        configUrl = `${configUrl}?user_id=${sessionStorage.uuid}`;
+      configUrlObj.append('user_id', sessionStorage.uuid);
     }
 
-    const response = await fetch(configUrl);
-    const json = await response.json();
-    return json;
+    if (callbackId) {
+      configUrlObj.append('callback_id', callbackId);
+    }
+
+    if (width) {
+      configUrlObj.append('width', width);
+    }
+
+    let configUrl = `${url}/webchat-config?${configUrlObj.toString()}`;
+    return fetch(configUrl, {
+      url: configUrl,
+      method: 'POST',
+      body: JSON.stringify({
+        custom_settings: customSettings
+      }),
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          return Promise.reject(response.statusText);
+        } else {
+          return response.json();
+        }
+      });
 }
 
 function checkValidPath(testPath) {
@@ -207,6 +229,50 @@ function isValidPath() {
     return retVal;
 }
 
+async function setupWebchat(url, userId) {
+  const urlParams = new URLSearchParams(window.location.search);
+
+  let callbackId = null;
+  if (urlParams.has('callback_id')) {
+    callbackId = urlParams.get('callback_id');
+  }
+
+  try {
+    let response = await getSettings(url, userId, window.openDialogSettings, callbackId, window.innerWidth);
+    mergeSettings(response);
+  } catch (error) {
+    console.error("Call to OpenDialog webchat settings failed:", error);
+    console.log("Using default OpenDialog webchat settings");
+    mergeSettings(defaultWebchatSettings);
+  }
+
+  sessionStorage.openDialogSettings = JSON.stringify(window.openDialogSettings);
+
+  const mobileWidth = (window.openDialogSettings.mobileWidth)
+    ? window.openDialogSettings.mobileWidth : 480;
+
+  // Set the current url of the parent to pass into the iFrame
+  window.openDialogSettings.parentUrl = window.location.pathname;
+
+  if (callbackId) {
+    query = `${query}&callback_id=${callbackId}`;
+  }
+
+  if (window.innerWidth <= mobileWidth) {
+    query = `${query}&mobile=true`;
+  }
+
+  if (isValidPath()) {
+    addCssToPage(`${url}/vendor/webchat/css/app-iframe.css`);
+
+    if (window.openDialogSettings.general.pageCssPath) {
+      addCssToPage(window.openDialogSettings.general.pageCssPath);
+    }
+
+    openChatWindow(url);
+  }
+}
+
 if (window.openDialogSettings) {
   const { url } = window.openDialogSettings;
   const userId = (window.openDialogSettings.user && window.openDialogSettings.user.email) ?
@@ -218,33 +284,5 @@ if (window.openDialogSettings) {
     sessionStorage.uuid = uuid.v4();
   }
 
-  getSettings(url, userId).then((settings) => {
-        mergeSettings(settings);
-
-        const mobileWidth = (window.openDialogSettings.mobileWidth)
-            ? window.openDialogSettings.mobileWidth : 480;
-
-        // Set the current url of the parent to pass into the iFrame
-        window.openDialogSettings.parentUrl = window.location.pathname;
-
-        const urlParams = new URLSearchParams(window.location.search);
-
-        if (urlParams.has('callback_id')) {
-            query = `${query}&callback_id=${urlParams.get('callback_id')}`;
-        }
-
-        if (window.innerWidth <= mobileWidth) {
-            query = `${query}&mobile=true`;
-        }
-
-        if (isValidPath()) {
-            addCssToPage(`${url}/vendor/webchat/css/app-iframe.css`);
-
-            if (window.openDialogSettings.general.pageCssPath) {
-                addCssToPage(window.openDialogSettings.general.pageCssPath);
-            }
-
-            openChatWindow(url);
-        }
-    });
+  setupWebchat(url, userId);
 }
