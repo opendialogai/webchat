@@ -80,11 +80,11 @@
 
 
 <script>
-  import axios from "axios";
-  import chatService from "../services/ChatService";
-  import SessionStorageMixin from "../mixins/SessionStorageMixin";
+    import axios from "axios";
+    import chatService from "../services/ChatService";
+    import SessionStorageMixin from "../mixins/SessionStorageMixin";
 
-  const moment = require("moment-timezone");
+    const moment = require("moment-timezone");
 
 export default {
   name: "WebChat",
@@ -169,10 +169,6 @@ export default {
       type: String,
       required: true
     },
-    userUuid: {
-      type: String,
-      required: true
-    },
     modeData: {
       type: Object,
       required: true
@@ -206,7 +202,6 @@ export default {
       users: [],
       userName: "",
       chatbotAvatar: this.chatbotAvatarPath,
-      uuid: this.userUuid,
       chatMode: "webchat"
     };
   },
@@ -316,7 +311,6 @@ export default {
       }
     }
 
-    this.initChat();
     this.userName = `${this.user.first_name} ${this.user.last_name}`;
     this.fetchMessages();
 
@@ -383,7 +377,7 @@ export default {
         .tz("UTC")
         .format("hh:mm A");
 
-      newMsg.user_id = this.user.email ? this.user.email : this.uuid;
+      newMsg.user_id = this.user.email ? this.user.email : this.$store.state.uuid;
       newMsg.user = this.user;
 
       if (
@@ -447,8 +441,8 @@ export default {
       // Create the message object to send to our endpoint.
       const pusherMsg = {
         notification: "read_receipt", // Is mapped to the broadcast event type.
-        user_id: this.uuid, // UUID of the webchat end user.
-        author: this.uuid, // UUID of the webchat end user.
+        user_id: this.$store.state.uuid, // UUID of the webchat end user.
+        author: this.$store.state.uuid, // UUID of the webchat end user.
         message_id: newMessage.id // Unique id for this message.
       };
 
@@ -550,7 +544,7 @@ export default {
       );
       this.sendMessage({
         type: "url_click",
-        author: this.uuid,
+        author: this.$store.state.uuid,
         data: {
           url
         }
@@ -669,7 +663,7 @@ export default {
     getChatHistory() {
       this.loading = true;
 
-      const userId = this.user && this.user.email ? this.user.email : this.uuid;
+      const userId = this.user && this.user.email ? this.user.email : this.$store.state.uuid;
 
       const ignoreTypes = "chat_open,trigger,cta";
 
@@ -854,21 +848,6 @@ export default {
       this.showMessages = false;
       this.showFullPageFormInput = false;
       this.showFullPageRichInput = true;
-    },
-    createUuid() {
-      const uuid = this.$uuid.v4();
-      this.uuid = uuid;
-      sessionStorage.uuid = uuid;
-    },
-    initChat() {
-      // The uuid might have already been set to the user's email address
-      if (!this.uuid) {
-        if (sessionStorage.uuid) {
-          this.uuid = sessionStorage.uuid;
-        } else {
-          this.createUuid();
-        }
-      }
     },
     setChatMode(data) {
       this.$emit("setChatMode", data);

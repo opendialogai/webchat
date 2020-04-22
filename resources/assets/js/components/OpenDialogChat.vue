@@ -64,7 +64,6 @@
         :use-human-avatar="useHumanAvatar"
         :user="user"
         :user-timezone="userTimezone"
-        :user-uuid="userUuid"
         :user-external-id="userExternalId"
       />
     </div>
@@ -100,7 +99,6 @@
         :user="user"
         :user-info="userInfo"
         :user-timezone="userTimezone"
-        :user-uuid="userUuid"
         :user-external-id="userExternalId"
         :mode-data="modeData"
         :closed-intent="closedIntent"
@@ -116,16 +114,16 @@
 </template>
 
 <script>
-  import axios from "axios";
-  import {mapState} from "vuex";
+    import axios from "axios";
+    import {mapState} from "vuex";
 
-  import cssVars from "css-vars-ponyfill";
+    import cssVars from "css-vars-ponyfill";
 
-  import Comments from "@/components/Comments";
-  import WebChat from "@/components/WebChat";
-  import SessionStorageMixin from "../mixins/SessionStorageMixin";
+    import Comments from "@/components/Comments";
+    import WebChat from "@/components/WebChat";
+    import SessionStorageMixin from "../mixins/SessionStorageMixin";
 
-  const { detect } = require("detect-browser");
+    const { detect } = require("detect-browser");
 const jstz = require("jstz");
 
 export default {
@@ -251,7 +249,6 @@ export default {
       userFirstName: "",
       userLastName: "",
       userExternalId: "",
-      userUuid: "",
       modeData: {
         mode: 'webchat',
         modeInstance: 0,
@@ -778,10 +775,6 @@ export default {
       if (config.user && !window._.isEmpty(config.user)) {
         this.user = config.user;
 
-        if (config.user.email) {
-          this.userUuid = config.user.email;
-        }
-
         if (config.user.first_name) {
           this.userFirstName = config.user.first_name;
         }
@@ -822,7 +815,7 @@ export default {
         // FIXME pass this to child component.
         this.sendMessage({
           type: "trigger",
-          author: this.userUuid,
+          author: this.$store.state.uuid,
           callback_id: config.triggerConversation.callback_id,
           data: {}
         });
