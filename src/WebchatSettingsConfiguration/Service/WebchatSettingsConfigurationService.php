@@ -29,13 +29,13 @@ class WebchatSettingsConfigurationService implements WebchatSettingsConfiguratio
     /**
      * @inheritDoc
      */
-    public function runConfigurations(array $settings): array
+    public function runConfigurations(array $settings, WebchatSettingsConfigurationPageInformation $pageInfo = null): array
     {
         $configuredSettings = $settings;
 
         /** @var WebchatSettingsConfiguratorInterface $configurator */
         foreach ($this->configurators as $configurator) {
-            $configuredSettings = $configurator->configure($configuredSettings);
+            $configuredSettings = $configurator->configure($configuredSettings, $pageInfo);
         }
 
         return $configuredSettings;

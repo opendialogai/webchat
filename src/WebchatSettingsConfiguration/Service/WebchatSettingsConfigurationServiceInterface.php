@@ -16,7 +16,8 @@ interface WebchatSettingsConfigurationServiceInterface
 
     /**
      * @param array $settings
+     * @param WebchatSettingsConfigurationPageInformation|null $pageInfo
      * @return array
      */
-    public function runConfigurations(array $settings): array;
+    public function runConfigurations(array $settings, WebchatSettingsConfigurationPageInformation $pageInfo = null): array;
 }
