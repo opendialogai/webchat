@@ -510,6 +510,12 @@ export default {
         return;
       }
 
+      if (button.download) {
+        const userId = this.user && this.user.email ? this.user.email : this.uuid;
+        window.open(`/download/${userId}/webchat`);
+        return;
+      }
+
       if (!this.isExpand) {
         this.$emit("expandChat");
       }
