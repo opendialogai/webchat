@@ -86,7 +86,7 @@ function openChatWindow(url, div = null) {
     ifrm.addEventListener('load', () => {
         // Send settings and initial path to the chat widget.
         ifrm.contentWindow.postMessage({
-            openDialogSettings: window.openDialogSettings,
+            loadSettings: true,
             newPathname: window.location.pathname,
         }, '*');
 
