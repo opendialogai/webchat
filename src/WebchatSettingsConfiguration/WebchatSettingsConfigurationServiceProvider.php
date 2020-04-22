@@ -11,7 +11,7 @@ class WebchatSettingsConfigurationServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/config/opendialog-webchat-settings-configuration.php' => config_path('opendialog/webchat-settings-configuration.php')
+            __DIR__ . '/config/opendialog-webchat-settings-configuration.php' => config_path('opendialog/webchat_settings_configuration.php')
         ], 'opendialog-config');
     }
 
