@@ -21,7 +21,7 @@ class WebchatSettingsConfigurationServiceProvider extends ServiceProvider
             $service = new WebchatSettingsConfigurationService();
 
             if (config('opendialog.webchat_settings_configuration.configurators')) {
-                $service->registerConfigurators(config('opendialog.webchat_settings_manipulation.manipulators'));
+                $service->registerConfigurators(config('opendialog.webchat_settings_configuration.configurators'));
             }
 
             return $service;
