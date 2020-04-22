@@ -420,14 +420,19 @@ export default {
       }
 
       if (newMsg.type === "text" && newMsg.data.text.length > 0) {
+        console.log(chatService.getMode());
+
+
         window.parent.postMessage(
           { dataLayerEvent: "message_sent_to_chatbot" },
           this.referrerUrl
         );
       }
+
+
       if (newMsg.type === "button_response") {
         window.parent.postMessage(
-          { dataLayerEvent: "user_clicked_button_in_chatbot" },
+          { dataLayerEvent: {user_clicked_button_in_chatbot: newMsg.data.text} },
           this.referrerUrl
         );
       }
@@ -545,7 +550,7 @@ export default {
     },
     onLinkClick(url) {
       window.parent.postMessage(
-          { dataLayerEvent: "url_clicked" },
+          { dataLayerEvent: { url_clicked: url } },
           this.referrerUrl
       );
       this.sendMessage({
@@ -558,7 +563,7 @@ export default {
     },
     onFormButtonClick(data, msg) {
       window.parent.postMessage(
-          { dataLayerEvent: "form_submitted" },
+          { dataLayerEvent: { form_submitted: msg.data.callback_id}},
           this.referrerUrl
       );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
@@ -578,7 +583,7 @@ export default {
     },
     onFormCancelClick(msg) {
       window.parent.postMessage(
-        { dataLayerEvent: "form_cancelled" },
+        { dataLayerEvent: { form_cancelled: msg.data.cancel_callback }},
         this.referrerUrl
       );
       this.messageList[this.messageList.indexOf(msg)].type = "text";

@@ -223,6 +223,16 @@ ConversiveMode.prototype.addMessageToMessageList = function(textMessage, webChat
       date: (new Date()).toLocaleDateString(),
     }
   });
+
+  let event = "message_sent_to_agent";
+  if (textMessage.source === 2) {
+      event = "message_received_from_agent";
+  }
+
+  window.parent.postMessage(
+      { dataLayerEvent: event },
+      this.referrerUrl
+  );
 };
 
 ConversiveMode.prototype.setTeamName = function(teamName, webChatComponent) {
