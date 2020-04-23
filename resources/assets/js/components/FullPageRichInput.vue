@@ -122,6 +122,7 @@ export default {
   text-align: center;
   position: relative;
   overflow-x: hidden;
+  min-height: 30px;
 }
 .mt-fpri .mt-fpri-wrapper {
   padding: 20px 0;
