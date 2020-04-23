@@ -432,7 +432,7 @@ export default {
 
       if (newMsg.type === "button_response") {
         window.parent.postMessage(
-          { dataLayerEvent: {user_clicked_button_in_chatbot: newMsg.data.text} },
+          { dataLayerEvent: { event: 'user_clicked_button_in_chatbot', label: newMsg.data.text} },
           this.referrerUrl
         );
       }
