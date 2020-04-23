@@ -123,10 +123,7 @@ function openChatWindow(url, div = null) {
         if (event.data && typeof event.data.dataLayerEvent !== 'undefined') {
             let eventData = { event: event.data.dataLayerEvent };
             if (typeof event.data.dataLayerEvent === 'object') {
-                eventData = {
-                    event: Object.keys(event.data.dataLayerEvent)[0],
-                    value: Object.entries(event.data.dataLayerEvent)[0][1],
-                };
+                eventData = event.data.dataLayerEvent;
             }
 
             if (window.dataLayer !== undefined) {
