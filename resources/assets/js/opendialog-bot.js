@@ -54,6 +54,12 @@ function mergeSettings(webchatSettings) {
     }
 }
 
+function pushToDataLayer (eventData) {
+    if (window.dataLayer !== undefined) {
+        window.dataLayer.push(eventData)
+    }
+}
+
 /**
  * Creates the chat window iFrame on the parent page
  *
@@ -125,10 +131,7 @@ function openChatWindow(url, div = null) {
             if (typeof event.data.dataLayerEvent === 'object') {
                 eventData = event.data.dataLayerEvent;
             }
-
-            if (window.dataLayer !== undefined) {
-                window.dataLayer.push(eventData);
-            }
+            pushToDataLayer(eventData)
         }
     });
 
@@ -150,6 +153,8 @@ function openChatWindow(url, div = null) {
     window.addEventListener('openDialogCommentSectionChange', () => {
         ifrm.contentWindow.postMessage({ newPathname: window.location.pathname }, '*');
     });
+
+    pushToDataLayer({event: 'chat_displayed'});
 
     return ifrm;
 }
@@ -243,6 +248,8 @@ if (window.openDialogSettings) {
             }
 
             openChatWindow(url);
+        } else {
+            pushToDataLayer({ event: 'chat_not_displayed' });
         }
     });
 }

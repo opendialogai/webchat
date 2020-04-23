@@ -563,7 +563,7 @@ export default {
     },
     onFormButtonClick(data, msg) {
       window.parent.postMessage(
-          { dataLayerEvent: { form_submitted: msg.data.callback_id}},
+          { dataLayerEvent: { event: 'form_submitted', form_id: msg.data.callback_id, form_text: msg.data.text }},
           this.referrerUrl
       );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
@@ -611,7 +611,7 @@ export default {
       if (this.isOpen) {
         this.closeChatButtonReverseAnimate = true;
           window.parent.postMessage(
-            { dataLayerEvent: "chat_closed" },
+            { dataLayerEvent: "chat_minimized" },
             this.referrerUrl
           );
         setTimeout(() => {
@@ -623,7 +623,7 @@ export default {
         this.isOpen = !this.isOpen;
         this.$emit("toggleChatOpen", this.headerHeight);
           window.parent.postMessage(
-            { dataLayerEvent: "chat_opened" },
+            { dataLayerEvent: "chat_maximized" },
             this.referrerUrl
           );
       }
