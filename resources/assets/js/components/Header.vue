@@ -34,6 +34,11 @@
         </div>
 
         <div v-else class="header-nav__restart-button"></div>
+
+        <div class="header-nav__download-button" @click="onDownload">
+          <img class="header-nav__download-image" src="./assets/download.svg" />
+          <img class="header-nav__download-image-hover" src="./assets/download-hover.svg" />
+        </div>
       </div>
 
       <div class="header__btm-fade"></div>
@@ -84,6 +89,10 @@ export default {
       required: true
     },
     onRestartButtonClick: {
+      type: Function,
+      required: true
+    },
+    onDownload: {
       type: Function,
       required: true
     },

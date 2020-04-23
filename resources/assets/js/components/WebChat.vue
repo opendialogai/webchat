@@ -37,6 +37,7 @@
         :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
+        :on-download="download"
         :content-editable="contentEditable"
         :show-expand-button="false"
         :show-restart-button="showRestartButton"
@@ -511,8 +512,7 @@ export default {
       }
 
       if (button.download) {
-        const userId = this.user && this.user.email ? this.user.email : this.uuid;
-        window.open(`/download/${userId}/webchat`);
+        this.download();
         return;
       }
 
@@ -540,6 +540,10 @@ export default {
           value: button.value
         }
       });
+    },
+    download() {
+      const userId = this.user && this.user.email ? this.user.email : this.uuid;
+      window.open(`/download/${userId}/webchat`);
     },
     onListButtonClick(callback) {
       this.sendMessage({
