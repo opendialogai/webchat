@@ -494,7 +494,7 @@ export default {
       if (button.phone_number) {
         const telephone = `tel:${button.phone_number}`;
 
-        this.onLinkClick(telephone);
+        this.onLinkClick(telephone, button.phone_number);
         window.open(telephone);
         return;
       }
@@ -505,7 +505,7 @@ export default {
       }
 
       if (button.link) {
-        this.onLinkClick(button.link);
+        this.onLinkClick(button.link, button.text);
 
         if (button.link_new_tab) {
           window.open(button.link, "_blank");
@@ -548,9 +548,9 @@ export default {
         data: {}
       });
     },
-    onLinkClick(url) {
+    onLinkClick(url, text) {
       window.parent.postMessage(
-          { dataLayerEvent: { url_clicked: url } },
+          { dataLayerEvent: { event: 'url_clicked', url: url, text: text } },
           this.referrerUrl
       );
       this.sendMessage({
