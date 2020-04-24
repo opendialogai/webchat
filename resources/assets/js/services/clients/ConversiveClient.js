@@ -178,14 +178,14 @@ ConversiveClient.prototype.sendTypingMessage = function(text, sessionToken) {
   });
 };
 
-ConversiveClient.prototype.sendMessageToHistory = function(message) {
+ConversiveClient.prototype.sendMessageToHistory = function(message, agentName = false) {
   const data = JSON.stringify({
     date: message.data.date,
     time: message.data.time,
-    author: message.author,
+    author: (agentName) ? agentName : message.author,
     text: message.data.text,
   });
-  return axios.post("/user/" + message.user_id + "/history", data, {
+  axios.post("/user/" + message.user_id + "/history", data, {
     headers: {
       "Accept": "application/json",
     }

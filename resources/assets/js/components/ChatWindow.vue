@@ -259,7 +259,7 @@
     }
   },
   created () {
-      this.originalTeamName = this.agentProfile.teamName;
+    this.originalTeamName = this.agentProfile.teamName;
   },
   watch: {
     "modeData.mode": function(newValue, oldValue) {
