@@ -148,10 +148,10 @@ function openChatWindow(url, div = null) {
           window.innerWidth
         );
 
-        if (!response.bot || typeof response.bot.bot_name === 'undefined' || response.bot.bot_name === '') {
+        if (!response.bot || typeof response.bot.botName === 'undefined' || response.bot.botName === '') {
           console.log("Response did not contain a bot name. Removing chat window.");
           removeChatWindow();
-        } else if (response.bot.bot_name !== JSON.parse(sessionStorage.openDialogSettings).bot.bot_name) {
+        } else if (response.bot.botName !== JSON.parse(sessionStorage.openDialogSettings).bot.botName) {
           console.log("Response's bot name was different to the current bot. Reloading chat window.");
           removeChatWindow();
           window.openDialogSettings = window.originalOpenDialogSettings;

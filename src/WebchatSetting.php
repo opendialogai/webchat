@@ -114,7 +114,7 @@ class WebchatSetting extends Model
 
     // Bots
     public const BOT = 'bot';
-    public const BOT_NAME = 'bot_name';
+    public const BOT_NAME = 'botName';
 
     protected $fillable = ['name', 'type', 'value'];
 
