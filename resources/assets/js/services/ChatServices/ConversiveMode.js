@@ -13,6 +13,8 @@ ConversiveMode.prototype.sendRequest = function(message, webChatComponent) {
     this.clearTypingIndicator(webChatComponent);
   }
 
+  this.client.sendMessageToHistory(message);
+
   return this.client.getSessionId(webChatComponent.uuid)
     .then(sessionId => this.client.sendMessage(message, sessionId));
 };
@@ -212,17 +214,21 @@ ConversiveMode.prototype.convertTypingIndicatorToFirstMessage = function(firstMe
 };
 
 ConversiveMode.prototype.addMessageToMessageList = function(textMessage, webChatComponent) {
-  webChatComponent.messageList.push({
+  const message = {
     author: textMessage.source === 1 ? "me" : "them",
     mode: "custom",
     modeInstance: this.modeInstance,
     type: "text",
+    user_id: webChatComponent.user.email ? webChatComponent.user.email : webChatComponent.uuid,
     data: {
       text: textMessage.b,
       time: (new Date()).toLocaleTimeString(),
       date: (new Date()).toLocaleDateString(),
     }
-  });
+  };
+
+  this.client.sendMessageToHistory(message);
+  webChatComponent.messageList.push(message);
 };
 
 ConversiveMode.prototype.setTeamName = function(teamName, webChatComponent) {
