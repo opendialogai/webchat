@@ -7,6 +7,8 @@ import defaultWebchatSettings from './default-webchat-settings';
 
 let query = '';
 
+window.originalOpenDialogSettings = Object.assign({}, window.openDialogSettings);
+
 // startsWith polyfill
 if (!String.prototype.startsWith) {
     // eslint-disable-next-line no-extend-native
@@ -99,7 +101,7 @@ function openChatWindow(url, div = null) {
     }
   };
 
-  let messageListener = (event) => {
+  let messageListener = async (event) => {
     if (event.data && typeof event.data.height !== 'undefined') {
       ifrm.style.height = (event.data.height === 'auto') ? '' : event.data.height;
 
@@ -127,22 +129,8 @@ function openChatWindow(url, div = null) {
         window.dataLayer.push({ event: event.data.dataLayerEvent });
       }
     }
-  };
 
-  let mouseUpListener = () => {
-    if (ifrm.contentWindow) {
-      ifrm.contentWindow.postMessage({ collapseChat: true }, '*');
-    }
-  };
-
-  // Listen for back/forward button presses in SPAs.
-  let onPopStateListener = async (e) => {
-    console.log(e);
-    if (e.state !== null) {
-      if (hasChatWindow()) {
-        ifrm.contentWindow.postMessage({newPathname: window.location.pathname}, '*');
-      }
-
+    if (event.data && typeof event.data.urlUpdated !== 'undefined') {
       if (!isValidPath()) {
         // Get new settings
         const urlParams = new URLSearchParams(window.location.search);
@@ -160,18 +148,37 @@ function openChatWindow(url, div = null) {
           window.innerWidth
         );
 
-        if (!response.bot || !response.bot.bot_name || response.bot.bot_name === '') {
+        if (!response.bot || typeof response.bot.bot_name === 'undefined' || response.bot.bot_name === '') {
           console.log("Response did not contain a bot name. Removing chat window.");
           removeChatWindow();
-        } else if (response.bot.bot_name !== sessionStorage.openDialogSettings.bot.bot_name) {
+        } else if (response.bot.bot_name !== JSON.parse(sessionStorage.openDialogSettings).bot.bot_name) {
           console.log("Response's bot name was different to the current bot. Reloading chat window.");
           removeChatWindow();
-          window.openDialogSettings = response;
+          window.openDialogSettings = window.originalOpenDialogSettings;
+          mergeSettings(response);
           await setupWebchat(window.openDialogSettings.url, sessionStorage.uuid, false);
         }
       } else if (!hasChatWindow()) {
         console.log("Path was valid but there was no chat window. Setting up chat window.");
         await setupWebchat(window.openDialogSettings.url, sessionStorage.uuid);
+      } else {
+        console.log("Path was valid and the chat window did not need to be reloaded.")
+      }
+    }
+  };
+
+  let mouseUpListener = () => {
+    if (ifrm.contentWindow) {
+      ifrm.contentWindow.postMessage({ collapseChat: true }, '*');
+    }
+  };
+
+  // Listen for back/forward button presses in SPAs.
+  let onPopStateListener = (e) => {
+    console.log(e);
+    if (e.state !== null) {
+      if (hasChatWindow()) {
+        ifrm.contentWindow.postMessage({newPathname: window.location.pathname}, '*');
       }
     }
   };
