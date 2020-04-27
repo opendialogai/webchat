@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use OpenDialogAi\ConversationLog\ChatbotUser;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Http\Request;
+use OpenDialogAi\ConversationLog\Message;
 
 class HistoryController
 {
@@ -62,5 +64,33 @@ class HistoryController
         $response->headers->set('Content-Type', 'text/plain');
 
         return $response;
+    }
+
+    /**
+     * Handle the incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $user_id
+     * @return \Illuminate\Http\Response
+     */
+    public function add(Request $request, $user_id)
+    {
+        $message = json_decode($request->getContent());
+
+        $microtime = Carbon::parse($message->datetime)->format('Y-m-d H:i:s.u');
+        $type = 'text';
+        $author = $message->author;
+        $messageText = $message->text;
+
+        $historyMessage = Message::create(
+            $microtime,
+            $type,
+            $user_id,
+            $author,
+            $messageText,
+        );
+        $historyMessage->save();
+
+        return response()->noContent(200);
     }
 }

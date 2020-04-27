@@ -543,7 +543,7 @@ export default {
     },
     download() {
       const userId = this.user && this.user.email ? this.user.email : this.uuid;
-      window.open(`/download/${userId}/webchat`);
+      window.open(`/user/${userId}/history`);
     },
     onListButtonClick(callback) {
       this.sendMessage({
