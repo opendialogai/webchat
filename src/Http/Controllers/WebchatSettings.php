@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use OpenDialogAi\ContextEngine\Contexts\User\UserService;
 use OpenDialogAi\Core\Conversation\ChatbotUser;
 use OpenDialogAi\Webchat\WebchatSetting;
+use OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service\WebchatSettingsConfigurationPageInformation;
+use OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service\WebchatSettingsConfigurationServiceInterface;
 
 class WebchatSettings
 {
@@ -85,8 +87,19 @@ class WebchatSettings
                 break;
         }
 
+        /** @var WebchatSettingsConfigurationServiceInterface $configurationService */
+        $configurationService = resolve(WebchatSettingsConfigurationServiceInterface::class);
+
+        $pageInfo = new WebchatSettingsConfigurationPageInformation(
+            $request->header('referer'),
+            $request->get('user_id') ?? null,
+            $request->get('width') ?? null,
+            $request->get('callback_id') ?? null
+        );
+        $settings = $configurationService->runConfigurations($config, $pageInfo);
+
         // Return the config as JSON.
-        return json_encode($config);
+        return json_encode($settings);
     }
 
     /**

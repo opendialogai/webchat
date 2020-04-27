@@ -33,7 +33,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "OpenDialogAi\\Webchat\\PackageServiceProvider"
+                "OpenDialogAi\\Webchat\\PackageServiceProvider",
+                "OpenDialogAi\\Webchat\\WebchatSettingsConfiguration\\WebchatSettingsConfigurationServiceProvider"
             ]
         }
     }
