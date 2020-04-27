@@ -35,7 +35,10 @@
 
         <div v-else class="header-nav__restart-button"></div>
 
-        <div class="header-nav__download-button" @click="onDownload">
+        <div
+          v-if="!showFullPageFormInput && !showFullPageRichInput"
+          class="header-nav__download-button" @click="onDownload"
+        >
           <img class="header-nav__download-image" src="/vendor/webchat/images/download.svg" />
           <img class="header-nav__download-image-hover" src="/vendor/webchat/images/download-hover.svg" />
         </div>
