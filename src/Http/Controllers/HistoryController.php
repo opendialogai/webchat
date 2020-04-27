@@ -3,6 +3,7 @@
 namespace OpenDialogAi\Webchat\Http\Controllers;
 
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 use OpenDialogAi\ConversationLog\ChatbotUser;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -11,6 +12,12 @@ use OpenDialogAi\ConversationLog\Message;
 
 class HistoryController
 {
+    const TEXT_EXTERNAL = 'text_external';
+    const CHATBOT = 'chatbot';
+    const CHATBOT_USER = 'chatbot_user';
+    const BUTTON_RESPONSE = 'button_response';
+    const FORM_RESPONSE = 'form_response';
+
     /**
      * @param string $user_id
      * @return
@@ -24,34 +31,20 @@ class HistoryController
         $text = '';
         foreach ($chatbotUser->messages->reverse() as $message) {
             if (!in_array($message->type, $ignoredMessageTypes)) {
-                if ($message->author == 'them') {
-                    $text .= 'chatbot';
-                } elseif ($message->author == $message->user_id) {
-                    $text .= 'chatbot_user';
-                } else {
-                    $text .= $message->author;
-                }
-                $text .= ' - ';
+                $author = $this->getMessageAuthor($message);
 
-                if ($message->type == 'button_response') {
-                    $text .= $message->data['text'];
-                } elseif ($message->type == 'form_response') {
-                    $formData = [];
-                    foreach ($message->data as $key => $value) {
-                        if ($key != 'text' && $key != 'date' && $key != 'time') {
-                            $formData[] = $key . ': ' . $value;
-                        }
-                    }
-                    $text .= 'Form submitted: ' . implode(', ', $formData);
+                if ($message->type == self::BUTTON_RESPONSE) {
+                    $messageText = $message->data['text'];
+                } elseif ($message->type == self::FORM_RESPONSE) {
+                    $messageText = 'Form submitted';
                 } else {
-                    $text .= $message->message;
+                    $messageText = $message->message;
                 }
-                $text .= ' - ';
 
-                $text .= Carbon::createFromFormat('Y-m-d H:i:s.u', $message->microtime)
+                $date = Carbon::createFromFormat('Y-m-d H:i:s.u', $message->microtime)
                   ->format('Y-m-d H:i');
 
-                $text .= "\n";
+                $text .= sprintf("%s - %s: %s\n", $date, $author, $messageText);
             }
         }
 
@@ -69,31 +62,43 @@ class HistoryController
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  string  $user_id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function add(Request $request, $user_id)
     {
-        $user_id = 'nicolo@istos.it';
         $message = json_decode($request->getContent());
 
         $date = sprintf('%s %s %s', $message->date, date('Y'), $message->time);
-
         $microtime = Carbon::createFromFormat('D j M Y g:i A', $date)->format('Y-m-d H:i:s.u');
-        $type = 'text';
+
         $author = ($message->author == 'me') ? $user_id : $message->author;
-        $messageText = $message->text;
 
         $historyMessage = Message::create(
             $microtime,
-            $type,
+            self::TEXT_EXTERNAL,
             $user_id,
             $author,
-            $messageText,
+            $message->text,
         );
         $historyMessage->save();
 
         return response()->noContent(200);
+    }
+
+    /**
+     * @param $message
+     * @return string
+     */
+    private function getMessageAuthor($message): string
+    {
+        $text = $message->author;
+        if ($message->author == 'them') {
+            $text = self::CHATBOT;
+        } elseif ($message->author == $message->user_id) {
+            $text = self::CHATBOT_USER;
+        }
+        return $text;
     }
 }

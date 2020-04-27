@@ -703,7 +703,7 @@ export default {
 
       const userId = this.user && this.user.email ? this.user.email : this.uuid;
 
-      const ignoreTypes = "chat_open,trigger,cta";
+      const ignoreTypes = "chat_open,trigger,cta,text_external";
 
       return axios
         .get(
