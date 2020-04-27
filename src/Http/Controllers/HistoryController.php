@@ -75,11 +75,14 @@ class HistoryController
      */
     public function add(Request $request, $user_id)
     {
+        $user_id = 'nicolo@istos.it';
         $message = json_decode($request->getContent());
 
-        $microtime = Carbon::parse($message->datetime)->format('Y-m-d H:i:s.u');
+        $date = sprintf('%s %s %s', $message->date, date('Y'), $message->time);
+
+        $microtime = Carbon::createFromFormat('D j M Y g:i A', $date)->format('Y-m-d H:i:s.u');
         $type = 'text';
-        $author = $message->author;
+        $author = ($message->author == 'me') ? $user_id : $message->author;
         $messageText = $message->text;
 
         $historyMessage = Message::create(
