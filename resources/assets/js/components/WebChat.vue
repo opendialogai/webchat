@@ -550,7 +550,22 @@ export default {
     },
     download() {
       const userId = this.user && this.user.email ? this.user.email : this.uuid;
-      window.open(`/user/${userId}/history/file`);
+      axios({
+        method: 'get',
+        url: `/user/${userId}/history/file`,
+        responseType: 'arraybuffer'
+      })
+      .then(response => {
+        this.forceFileDownload(response)
+      }).catch(() => console.log('Error occurred downloading chat history'))
+    },
+    forceFileDownload(response){
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', 'history.txt')
+      document.body.appendChild(link)
+      link.click()
     },
     onListButtonClick(callback) {
       this.sendMessage({

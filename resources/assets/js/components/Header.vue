@@ -37,7 +37,7 @@
 
         <div
           v-if="!showFullPageFormInput && !showFullPageRichInput"
-          class="header-nav__download-button" @click="onDownload"
+          class="header-nav__download-button" @click.stop="onDownload"
         >
           <img class="header-nav__download-image" src="/vendor/webchat/images/download.svg" />
           <img class="header-nav__download-image-hover" src="/vendor/webchat/images/download-hover.svg" />
