@@ -523,8 +523,13 @@ export default {
       if (this.sectionFilterPathPattern) {
         const matches = e.match(this.sectionFilterPathPattern);
         if (matches && matches.length > 0) {
-          // eslint-disable-next-line prefer-destructuring
-          this.sectionQueryString = matches[1];
+          if (this.sectionQueryString !== matches[1]) {
+            this.sectionId = '';
+            // eslint-disable-next-line prefer-destructuring
+            this.sectionQueryString = matches[1];
+          } else {
+            this.sectionId = (this.sectionOptions.length > 0) ? this.sectionOptions[0].value : '';
+          }
         } else {
           this.sectionQueryString = '';
         }
