@@ -49,7 +49,9 @@ export default {
   methods: {
     _handleClick(e) {
       if (e.target.tagName === "A") {
-        this.onLinkClick(e.target.href);
+        this.onLinkClick(e.target.href, e.target.offsetParent.textContent);
+      } else if (e.target.offsetParent.tagName === 'A') {
+          this.onLinkClick(e.target.offsetParent.href, e.target.offsetParent.textContent);
       }
     }
   },

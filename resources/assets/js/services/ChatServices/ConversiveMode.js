@@ -236,6 +236,16 @@ ConversiveMode.prototype.addMessageToMessageList = function(textMessage, isFirst
   }
 
   webChatComponent.messageList.push(message);
+
+  let event = "message_sent_to_agent";
+  if (textMessage.source === 2) {
+      event = "message_received_from_agent";
+  }
+
+  window.parent.postMessage(
+      { dataLayerEvent: event },
+      this.referrerUrl
+  );
 };
 
 ConversiveMode.prototype.setTeamName = function(teamName, webChatComponent) {

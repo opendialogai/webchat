@@ -421,14 +421,21 @@ export default {
       }
 
       if (newMsg.type === "text" && newMsg.data.text.length > 0) {
+        console.log(chatService.getMode());
+
+        let event = 'message_sent_to_chatbot';
+        if (chatService.getMode() === "custom") {
+            event = 'message_sent_to_live_agent';
+        }
         window.parent.postMessage(
-          { dataLayerEvent: "message_sent_to_chatbot" },
+          { dataLayerEvent: event },
           this.referrerUrl
         );
       }
+
       if (newMsg.type === "button_response") {
         window.parent.postMessage(
-          { dataLayerEvent: "user_clicked_button_in_chatbot" },
+          { dataLayerEvent: { event: 'user_clicked_button_in_chatbot', label: newMsg.data.text} },
           this.referrerUrl
         );
       }
@@ -490,7 +497,7 @@ export default {
       if (button.phone_number) {
         const telephone = `tel:${button.phone_number}`;
 
-        this.onLinkClick(telephone);
+        this.onLinkClick(telephone, button.phone_number);
         window.open(telephone);
         return;
       }
@@ -501,7 +508,7 @@ export default {
       }
 
       if (button.link) {
-        this.onLinkClick(button.link);
+        this.onLinkClick(button.link, button.text);
 
         if (button.link_new_tab) {
           window.open(button.link, "_blank");
@@ -553,9 +560,9 @@ export default {
         data: {}
       });
     },
-    onLinkClick(url) {
+    onLinkClick(url, text) {
       window.parent.postMessage(
-          { dataLayerEvent: "url_clicked" },
+          { dataLayerEvent: { event: 'url_clicked', url: url, text: text } },
           this.referrerUrl
       );
       this.sendMessage({
@@ -568,7 +575,7 @@ export default {
     },
     onFormButtonClick(data, msg) {
       window.parent.postMessage(
-          { dataLayerEvent: "form_submitted" },
+          { dataLayerEvent: { event: 'form_submitted', form_id: msg.data.callback_id, form_text: msg.data.text }},
           this.referrerUrl
       );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
@@ -588,7 +595,7 @@ export default {
     },
     onFormCancelClick(msg) {
       window.parent.postMessage(
-        { dataLayerEvent: "form_cancelled" },
+        { dataLayerEvent: { event: 'form_cancelled', 'callback_id': msg.data.cancel_callback }},
         this.referrerUrl
       );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
@@ -621,7 +628,7 @@ export default {
       if (this.isOpen) {
         this.closeChatButtonReverseAnimate = true;
           window.parent.postMessage(
-            { dataLayerEvent: "chat_closed" },
+            { dataLayerEvent: "chat_minimized" },
             this.referrerUrl
           );
         setTimeout(() => {
@@ -633,7 +640,7 @@ export default {
         this.isOpen = !this.isOpen;
         this.$emit("toggleChatOpen", this.headerHeight);
           window.parent.postMessage(
-            { dataLayerEvent: "chat_opened" },
+            { dataLayerEvent: "chat_maximized" },
             this.referrerUrl
           );
       }
