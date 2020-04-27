@@ -88,6 +88,11 @@ ConversiveClient.prototype.getSession = function(uuid, name = null) {
     iad: false,
   };
 
+  window.parent.postMessage(
+    { dataLayerEvent: { event: "conversation_started_live_agent", site_code: this.siteCode }},
+    document.referrer.match(/^.+:\/\/[^\/]+/)[0]
+  );
+
   return this.makeRequest("getSession", options);
 };
 
