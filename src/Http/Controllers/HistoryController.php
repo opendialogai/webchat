@@ -73,7 +73,7 @@ class HistoryController
      * @param  string  $user_id
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request, $user_id)
+    public function add(Request $request, $user_id)
     {
         $message = json_decode($request->getContent());
 
