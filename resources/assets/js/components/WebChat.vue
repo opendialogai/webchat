@@ -422,13 +422,15 @@ export default {
       if (newMsg.type === "text" && newMsg.data.text.length > 0) {
         console.log(chatService.getMode());
 
-
+        let event = 'message_sent_to_chatbot';
+        if (chatService.getMode() === "custom") {
+            event = 'message_sent_to_live_agent';
+        }
         window.parent.postMessage(
-          { dataLayerEvent: "message_sent_to_chatbot" },
+          { dataLayerEvent: event },
           this.referrerUrl
         );
       }
-
 
       if (newMsg.type === "button_response") {
         window.parent.postMessage(
@@ -583,7 +585,7 @@ export default {
     },
     onFormCancelClick(msg) {
       window.parent.postMessage(
-        { dataLayerEvent: { form_cancelled: msg.data.cancel_callback }},
+        { dataLayerEvent: { event: 'form_cancelled', 'callback_id': msg.data.cancel_callback }},
         this.referrerUrl
       );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
