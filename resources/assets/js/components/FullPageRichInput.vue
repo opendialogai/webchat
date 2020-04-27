@@ -218,10 +218,21 @@ export default {
   border: none !important;
   color: var(--labelTextColor) !important;
   text-decoration: underline;
+  font-size: 16px;
   width: auto;
   padding: 0;
   min-height: 0;
-  margin-top: 15px;
+  margin-top: 30px;
+}
+.mt-fpri__buttons button.downloadButton:before {
+  content: "";
+  width: 13px;
+  height: 19px;
+  background: red;
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: middle;
+  background: url("/vendor/webchat/images/download-button.svg");
 }
 
 /* loader --- loader --- loader ---  */
