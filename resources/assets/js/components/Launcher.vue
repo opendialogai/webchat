@@ -15,6 +15,7 @@
       :onFormButtonClick="onFormButtonClick"
       :onListButtonClick="onListButtonClick"
       :onRestartButtonClick="onRestartButtonClick"
+      :onDownload="onDownload"
       :onLinkClick="onLinkClick"
       :contentEditable="contentEditable"
       :showExpandButton="showExpandButton"
@@ -172,6 +173,10 @@ export default {
       required: true
     },
     onRestartButtonClick: {
+      type: Function,
+      required: true
+    },
+    onDownload: {
       type: Function,
       required: true
     },

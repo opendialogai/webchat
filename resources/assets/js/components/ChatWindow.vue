@@ -9,6 +9,7 @@
       :showExpandButton="showExpandButton"
       :showRestartButton="showRestartButton"
       :onRestartButtonClick="onRestartButtonClick"
+      :onDownload="onDownload"
       :colors="colors"
       :isOpen="isOpen"
       :ctaText="ctaText"
@@ -168,6 +169,10 @@
       required: true
     },
     onRestartButtonClick: {
+      type: Function,
+      required: true
+    },
+    onDownload: {
       type: Function,
       required: true
     },
