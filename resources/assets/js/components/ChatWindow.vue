@@ -9,6 +9,7 @@
       :showExpandButton="showExpandButton"
       :showRestartButton="showRestartButton"
       :onRestartButtonClick="onRestartButtonClick"
+      :onDownload="onDownload"
       :colors="colors"
       :isOpen="isOpen"
       :ctaText="ctaText"
@@ -171,6 +172,10 @@
       type: Function,
       required: true
     },
+    onDownload: {
+      type: Function,
+      required: true
+    },
     ctaText: {
       type: Array,
       default: () => []
@@ -254,7 +259,7 @@
     }
   },
   created () {
-      this.originalTeamName = this.agentProfile.teamName;
+    this.originalTeamName = this.agentProfile.teamName;
   },
   watch: {
     "modeData.mode": function(newValue, oldValue) {

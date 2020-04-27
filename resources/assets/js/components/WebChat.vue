@@ -23,7 +23,7 @@
     <template v-else>
       <beautiful-chat
         :agent-profile="agentProfile"
-        :close="toggleChatOpen"
+        :close="onClose"
         :expand="expandChat"
         :is-open="isOpen"
         :is-expand="isExpand"
@@ -37,6 +37,7 @@
         :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
+        :on-download="download"
         :content-editable="contentEditable"
         :show-expand-button="false"
         :show-restart-button="showRestartButton"
@@ -517,6 +518,11 @@ export default {
         return;
       }
 
+      if (button.download) {
+        this.download();
+        return;
+      }
+
       if (!this.isExpand) {
         this.$emit("expandChat");
       }
@@ -541,6 +547,10 @@ export default {
           value: button.value
         }
       });
+    },
+    download() {
+      const userId = this.user && this.user.email ? this.user.email : this.uuid;
+      window.open(`/user/${userId}/history`);
     },
     onListButtonClick(callback) {
       this.sendMessage({
@@ -606,6 +616,11 @@ export default {
     },
     expandChat() {
       this.$emit("expandChat");
+    },
+    onClose() {
+      if (!this.closeChatButtonReverseAnimate) {
+        this.toggleChatOpen();
+      }
     },
     toggleChatOpen() {
       this.ctaText = [];

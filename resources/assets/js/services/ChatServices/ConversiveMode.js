@@ -1,5 +1,7 @@
 import ConversiveClient from "../clients/ConversiveClient";
 
+const moment = require('moment-timezone');
+
 let ConversiveMode = function() {
   this.name = "custom";
   this.client = null;
@@ -12,6 +14,8 @@ ConversiveMode.prototype.sendRequest = function(message, webChatComponent) {
   if (this.typingIndicatorIndices) {
     this.clearTypingIndicator(webChatComponent);
   }
+
+  this.client.sendMessageToHistory(message);
 
   return this.client.getSessionId(webChatComponent.uuid)
     .then(sessionId => this.client.sendMessage(message, sessionId));
@@ -127,7 +131,7 @@ ConversiveMode.prototype.handleNewTextMessage = function(textMessage, isFirstReq
   }
 
   this.addAuthorMessage(textMessage, webChatComponent);
-  this.addMessageToMessageList(textMessage, webChatComponent);
+  this.addMessageToMessageList(textMessage, isFirstRequest, webChatComponent);
 };
 
 ConversiveMode.prototype.handleNewTypingMessage = function(typingMessage, isFirstRequest, webChatComponent) {
@@ -185,15 +189,15 @@ ConversiveMode.prototype.handleNewLeaveMessage = function(leaveMessage, isFirstR
     source: 2,
     b: "The agent left the chat.",
   };
-  this.addMessageToMessageList(message, webChatComponent);
+  this.addMessageToMessageList(message, isFirstRequest, webChatComponent);
 };
 
 ConversiveMode.prototype.addAuthorMessage = function(message, webChatComponent) {
   return webChatComponent.messageList.push(webChatComponent.newAuthorMessage({
     author: message.source === 1 ? "me" : "them",
     data: {
-      time: (new Date()).toLocaleTimeString(),
-      date: (new Date()).toLocaleDateString(),
+      time: moment().tz("UTC").format("hh:mm A"),
+      date: moment().tz("UTC").format("ddd D MMM"),
     }
   }));
 };
@@ -206,23 +210,32 @@ ConversiveMode.prototype.convertTypingIndicatorToFirstMessage = function(firstMe
   typingIndicatorMessage.type = "text";
   typingIndicatorMessage.data = {
     text: firstMessage.b,
-    time: (new Date()).toLocaleTimeString(),
-    date: (new Date()).toLocaleDateString(),
+    time: moment().tz("UTC").format("hh:mm A"),
+    date: moment().tz("UTC").format("ddd D MMM"),
   };
+
+  this.client.sendMessageToHistory(typingIndicatorMessage, webChatComponent.modeData.options.teamName);
 };
 
-ConversiveMode.prototype.addMessageToMessageList = function(textMessage, webChatComponent) {
-  webChatComponent.messageList.push({
+ConversiveMode.prototype.addMessageToMessageList = function(textMessage, isFirstRequest, webChatComponent) {
+  const message = {
     author: textMessage.source === 1 ? "me" : "them",
     mode: "custom",
     modeInstance: this.modeInstance,
     type: "text",
+    user_id: webChatComponent.user.email ? webChatComponent.user.email : webChatComponent.uuid,
     data: {
       text: textMessage.b,
-      time: (new Date()).toLocaleTimeString(),
-      date: (new Date()).toLocaleDateString(),
+      time: moment().tz("UTC").format("hh:mm A"),
+      date: moment().tz("UTC").format("ddd D MMM"),
     }
-  });
+  };
+
+  if (!isFirstRequest) {
+    this.client.sendMessageToHistory(message, webChatComponent.modeData.options.teamName);
+  }
+
+  webChatComponent.messageList.push(message);
 
   let event = "message_sent_to_agent";
   if (textMessage.source === 2) {
