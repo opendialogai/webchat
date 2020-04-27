@@ -13,4 +13,6 @@ Route::group(['middleware' => 'web'], function() {
     Route::get('/webchat-config', 'OpenDialogAi\Webchat\Http\Controllers\WebchatSettings');
 
     Route::post('/user/{user_id}/history', 'OpenDialogAi\Webchat\Http\Controllers\HistoryController');
+
+    Route::get('/download/{user_id}/webchat', 'OpenDialogAi\Webchat\Http\Controllers\HistoryController@export');
 });
