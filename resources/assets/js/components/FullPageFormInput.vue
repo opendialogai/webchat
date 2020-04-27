@@ -304,6 +304,7 @@ export default {
   overflow-x: hidden;
   position: relative;
   flex: 1;
+  min-height: 30px;
 }
 .mt-fp-form.loader {
   overflow-y: hidden;
