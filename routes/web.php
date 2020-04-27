@@ -14,5 +14,5 @@ Route::group(['middleware' => 'web'], function() {
 
     Route::post('/user/{user_id}/history', 'OpenDialogAi\Webchat\Http\Controllers\HistoryController@add');
 
-    Route::get('/user/{user_id}/history', 'OpenDialogAi\Webchat\Http\Controllers\HistoryController@export');
+    Route::get('/user/{user_id}/history/file', 'OpenDialogAi\Webchat\Http\Controllers\HistoryController@export');
 });

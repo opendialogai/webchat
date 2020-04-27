@@ -543,7 +543,7 @@ export default {
     },
     download() {
       const userId = this.user && this.user.email ? this.user.email : this.uuid;
-      window.open(`/user/${userId}/history`);
+      window.open(`/user/${userId}/history/file`);
     },
     onListButtonClick(callback) {
       this.sendMessage({
