@@ -21,11 +21,11 @@
     "rules": {
         "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
         "no-param-reassign": ["error", {
-          "props": true,
-          "ignorePropertyModificationsFor": ["state"]
+            "props": true,
+            "ignorePropertyModificationsFor": ["state"]
         }],
         "no-underscore-dangle": ["error", {
-          "allow": ["_mutations"]
+            "allow": ["_mutations"]
         }]
     }
 }

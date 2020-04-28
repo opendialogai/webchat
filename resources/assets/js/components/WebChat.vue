@@ -313,6 +313,7 @@ export default {
       if (newMsg.type === 'chat_open' || newMsg.type === 'url_click' || newMsg.type === 'trigger' || newMsg.type === 'form_response' || newMsg.type === 'webchat_list_response' || newMsg.data.text.length > 0) {
         // Make a copy of the message to send to the backend.
         // This is needed so that the author change will not affect this.messageList.
+        // eslint-disable-next-line prefer-object-spread
         const msgCopy = Object.assign({}, newMsg);
 
         // Set the message author ID.
@@ -570,7 +571,7 @@ export default {
     },
     async onButtonClick(button, msg) {
       if (msg.data.external) {
-        await new Promise(resolve => setTimeout(resolve, 300));
+        await new Promise((resolve) => setTimeout(resolve, 300));
       }
 
       if (button.phone_number) {
@@ -819,7 +820,7 @@ export default {
 
       if (this.useHumanAvatar) {
         const avatarName = this.userName
-          .split(' ').map(n => n[0]).join('').toUpperCase();
+          .split(' ').map((n) => n[0]).join('').toUpperCase();
         authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
       }
 

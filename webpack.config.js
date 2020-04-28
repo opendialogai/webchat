@@ -8,7 +8,7 @@ module.exports = {
         rules: [
             {
                 enforce: 'pre',
-                exclude: ['/node_modules/', '/resources/images/'],
+                exclude: new RegExp('/node_modules/|/resources/images/'),
                 loader: 'eslint-loader',
                 test: /\.(js|vue)?$/
             },

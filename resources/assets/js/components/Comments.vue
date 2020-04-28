@@ -228,7 +228,7 @@ export default {
 
           if (this.useHumanAvatar) {
             const avatarName = newComment.relationships[this.authorMapping].meta.name
-              .split(' ').map(n => n[0]).join('').toUpperCase();
+              .split(' ').map((n) => n[0]).join('').toUpperCase();
 
             authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
           }
@@ -285,7 +285,7 @@ export default {
 
           if (this.useBotAvatar) {
             const avatarName = comment.relationships[this.authorMapping].meta.name
-              .split(' ').map(n => n[0]).join('').toUpperCase();
+              .split(' ').map((n) => n[0]).join('').toUpperCase();
             authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
           }
 
