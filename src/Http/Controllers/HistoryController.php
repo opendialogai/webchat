@@ -13,8 +13,8 @@ use OpenDialogAi\ConversationLog\Message;
 class HistoryController
 {
     const TEXT_EXTERNAL = 'text_external';
-    const CHATBOT = 'chatbot';
-    const CHATBOT_USER = 'chatbot_user';
+    const CHATBOT = 'AvayaBot';
+    const CHATBOT_USER = 'You';
     const BUTTON_RESPONSE = 'button_response';
     const FORM_RESPONSE = 'form_response';
 
@@ -52,7 +52,10 @@ class HistoryController
         $response->setCallBack(function() use($text) {
             echo $text;
         });
-        $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'history.txt');
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $this->generateFileName()
+        );
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-Type', 'text/plain');
 
@@ -100,5 +103,13 @@ class HistoryController
             $text = self::CHATBOT_USER;
         }
         return $text;
+    }
+
+    private function generateFileName()
+    {
+        $fileName = env('HISTORY_FILE_NAME', 'Avaya Chat Transcript %s');
+        $datetime = \Carbon\Carbon::now()->format('Y-m-d h:i:s');
+
+        return sprintf($fileName, $datetime);
     }
 }

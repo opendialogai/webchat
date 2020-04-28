@@ -563,9 +563,20 @@ export default {
       const url = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
       link.href = url
-      link.setAttribute('download', 'history.txt')
-      document.body.appendChild(link)
-      link.click()
+      let fileName = 'Chatbot User History.txt';
+      const contentDisposition = response.headers['content-disposition'];
+      if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename=(.+)/);
+        if (fileNameMatch.length === 2) {
+          fileName = fileNameMatch[1];
+        }
+      }
+      console.log(fileName);
+      link.setAttribute('download',fileName + '.txt');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
     },
     onListButtonClick(callback) {
       this.sendMessage({
