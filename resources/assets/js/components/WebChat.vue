@@ -421,8 +421,6 @@ export default {
       }
 
       if (newMsg.type === "text" && newMsg.data.text.length > 0) {
-        console.log(chatService.getMode());
-
         let event = 'message_sent_to_chatbot';
         if (chatService.getMode() === "custom") {
             event = 'message_sent_to_live_agent';
@@ -568,7 +566,7 @@ export default {
       if (contentDisposition) {
         const fileNameMatch = contentDisposition.match(/filename=(.+)/);
         if (fileNameMatch.length === 2) {
-          fileName = fileNameMatch[1];
+          fileName = fileNameMatch[1].replace(/(^"|"$)/g, '');
         }
       }
       console.log(fileName);

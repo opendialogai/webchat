@@ -196,7 +196,7 @@ ConversiveMode.prototype.addAuthorMessage = function(message, webChatComponent) 
   return webChatComponent.messageList.push(webChatComponent.newAuthorMessage({
     author: message.source === 1 ? "me" : "them",
     data: {
-      time: moment().tz("UTC").format("hh:mm:ss A"),
+      time: moment().tz("UTC").format("hh:mm:ss"),
       date: moment().tz("UTC").format("ddd D MMM"),
     }
   }));
@@ -210,7 +210,7 @@ ConversiveMode.prototype.convertTypingIndicatorToFirstMessage = function(firstMe
   typingIndicatorMessage.type = "text";
   typingIndicatorMessage.data = {
     text: firstMessage.b,
-    time: moment().tz("UTC").format("hh:mm A"),
+    time: moment().tz("UTC").format("hh:mm ss"),
     date: moment().tz("UTC").format("ddd D MMM"),
   };
 
@@ -223,10 +223,10 @@ ConversiveMode.prototype.addMessageToMessageList = function(textMessage, isFirst
     mode: "custom",
     modeInstance: this.modeInstance,
     type: "text",
-    user_id: webChatComponent.user.email ? webChatComponent.user.email : webChatComponent.uuid,
+    user_id: webChatComponent.uuid,
     data: {
       text: textMessage.b,
-      time: moment().tz("UTC").format("hh:mm:ss A"),
+      time: moment().tz("UTC").format("hh:mm:ss"),
       date: moment().tz("UTC").format("ddd D MMM"),
     }
   };
@@ -236,7 +236,6 @@ ConversiveMode.prototype.addMessageToMessageList = function(textMessage, isFirst
   }
 
   webChatComponent.messageList.push(message);
-
   let event = "message_sent_to_agent";
   if (textMessage.source === 2) {
       event = "message_received_from_agent";

@@ -33,13 +33,7 @@ class HistoryController
             if (!in_array($message->type, $ignoredMessageTypes)) {
                 $author = $this->getMessageAuthor($message);
 
-                if ($message->type == self::BUTTON_RESPONSE) {
-                    $messageText = $message->data['text'];
-                } elseif ($message->type == self::FORM_RESPONSE) {
-                    $messageText = 'Form submitted';
-                } else {
-                    $messageText = $message->message;
-                }
+                $messageText = $this->getMessageText($message);
 
                 $date = Carbon::createFromFormat('Y-m-d H:i:s.u', $message->microtime)
                   ->format('Y-m-d H:i');
@@ -107,9 +101,38 @@ class HistoryController
 
     private function generateFileName()
     {
-        $fileName = env('HISTORY_FILE_NAME', 'Avaya Chat Transcript %s');
+        $fileName = env('HISTORY_FILE_NAME', 'Avaya Chat Transcript %s.txt');
         $datetime = \Carbon\Carbon::now()->format('Y-m-d h:i:s');
 
         return sprintf($fileName, $datetime);
+    }
+
+    /**
+     * @param $message
+     * @return mixed|string
+     */
+    private function getMessageText($message)
+    {
+        $this->stripTags($message->message);
+
+        if ($message->type == self::BUTTON_RESPONSE) {
+            $messageText = $message->data['text'];
+        } elseif ($message->type == self::FORM_RESPONSE) {
+            $messageText = 'Form submitted';
+        } else {
+            $messageText = $this->stripTags($message->message);
+        }
+        return $messageText;
+    }
+
+    /**
+     * First extracts hrefs from anchor tags, then strips all HTML tags
+     * @param $message
+     * @return string
+     */
+    private function stripTags($message)
+    {
+        $message = preg_replace('#<a[^>]*href="((?!/)[^"]+)">[^<]+</a>#', '$1', $message);
+        return strip_tags($message);
     }
 }
