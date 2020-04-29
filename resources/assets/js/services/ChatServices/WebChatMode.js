@@ -342,7 +342,7 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
         .format("ddd D MMM"),
       time: moment()
         .tz("UTC")
-        .format("hh:mm A"),
+        .format("hh:mm:ss A"),
       text: "We're sorry, that didn't work, please try again"
     }
   };

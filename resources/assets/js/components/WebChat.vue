@@ -360,14 +360,14 @@ export default {
         const date = moment
           .tz(
             `${message.data.date} ${message.data.time}`,
-            "ddd D MMM hh:mm A",
+            "ddd D MMM hh:mm:ss A",
             "utc"
           )
           .tz(this.userTimezone);
 
         /* eslint-disable no-param-reassign */
         message.data.date = date.format("ddd D MMM");
-        message.data.time = date.format("hh:mm A");
+        message.data.time = date.format("hh:mm:ss A");
         /* eslint-enable no-param-reassign */
       }
     },
@@ -382,7 +382,7 @@ export default {
         .format("ddd D MMM");
       newMsg.data.time = moment()
         .tz("UTC")
-        .format("hh:mm A");
+        .format("hh:mm:ss A");
 
       newMsg.user_id = this.user.email ? this.user.email : this.uuid;
       newMsg.user = this.user;
