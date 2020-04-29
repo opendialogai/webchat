@@ -196,7 +196,7 @@ ConversiveMode.prototype.addAuthorMessage = function(message, webChatComponent) 
   return webChatComponent.messageList.push(webChatComponent.newAuthorMessage({
     author: message.source === 1 ? "me" : "them",
     data: {
-      time: moment().tz("UTC").format("hh:mm:ss"),
+      time: moment().tz("UTC").format("hh:mm:ss A"),
       date: moment().tz("UTC").format("ddd D MMM"),
     }
   }));
@@ -210,7 +210,7 @@ ConversiveMode.prototype.convertTypingIndicatorToFirstMessage = function(firstMe
   typingIndicatorMessage.type = "text";
   typingIndicatorMessage.data = {
     text: firstMessage.b,
-    time: moment().tz("UTC").format("hh:mm ss"),
+    time: moment().tz("UTC").format("hh:mm:ss A"),
     date: moment().tz("UTC").format("ddd D MMM"),
   };
 
@@ -226,7 +226,7 @@ ConversiveMode.prototype.addMessageToMessageList = function(textMessage, isFirst
     user_id: webChatComponent.uuid,
     data: {
       text: textMessage.b,
-      time: moment().tz("UTC").format("hh:mm:ss"),
+      time: moment().tz("UTC").format("hh:mm:ss A"),
       date: moment().tz("UTC").format("ddd D MMM"),
     }
   };

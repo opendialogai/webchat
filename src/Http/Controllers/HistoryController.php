@@ -68,7 +68,7 @@ class HistoryController
         $message = json_decode($request->getContent());
 
         $date = sprintf('%s %s %s', $message->date, date('Y'), $message->time);
-        $microtime = Carbon::createFromFormat('D j M Y g:i A', $date)->format('Y-m-d H:i:s.u');
+        $microtime = Carbon::createFromFormat('D j M Y g:i:s A', $date)->format('Y-m-d H:i:s.u');
 
         $author = ($message->author == 'me') ? $user_id : $message->author;
 
