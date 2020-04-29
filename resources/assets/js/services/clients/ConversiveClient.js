@@ -191,7 +191,6 @@ ConversiveClient.prototype.sendMessageToHistory = function(message, agentName = 
     text: message.data.text,
   });
   if (uuid) {
-    console.log(uuid);
     message.user_id = uuid;
   }
   axios.post("/user/" + message.user_id + "/history", data, {
