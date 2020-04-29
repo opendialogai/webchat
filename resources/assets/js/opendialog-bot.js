@@ -230,6 +230,10 @@ function checkValidPath(testPath) {
  * @returns {boolean}
  */
 function isValidPath() {
+    if (typeof window.openDialogSettings.general === 'undefined') {
+      return false;
+    }
+
     const { validPath } = window.openDialogSettings.general;
 
     if (typeof validPath === 'undefined') {
