@@ -232,7 +232,8 @@ ConversiveMode.prototype.addMessageToMessageList = function(textMessage, isFirst
   };
 
   if (!isFirstRequest) {
-    this.client.sendMessageToHistory(message, webChatComponent.modeData.options.teamName);
+    console.log(webChatComponent.uuid);
+    this.client.sendMessageToHistory(message, webChatComponent.modeData.options.teamName, webChatComponent.uuid);
   }
 
   webChatComponent.messageList.push(message);

@@ -183,7 +183,7 @@ ConversiveClient.prototype.sendTypingMessage = function(text, sessionToken) {
   });
 };
 
-ConversiveClient.prototype.sendMessageToHistory = function(message, agentName = false) {
+ConversiveClient.prototype.sendMessageToHistory = function(message, agentName = false, uuid = null) {
   const data = JSON.stringify({
     date: message.data.date,
     time: message.data.time,
