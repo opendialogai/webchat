@@ -86,7 +86,8 @@ function openChatWindow(url, div = null) {
     ifrm.addEventListener('load', () => {
         // Send settings and initial path to the chat widget.
         ifrm.contentWindow.postMessage({
-            loadSettings: true,
+            loadUuid: sessionStorage.uuid,
+            loadSettings: window.openDialogSettings,
             newPathname: window.location.pathname,
         }, '*');
 
@@ -250,8 +251,6 @@ async function setupWebchat(url, userId) {
     console.log("Using default OpenDialog webchat settings");
     mergeSettings(defaultWebchatSettings);
   }
-
-  sessionStorage.openDialogSettings = JSON.stringify(window.openDialogSettings);
 
   const mobileWidth = (window.openDialogSettings.mobileWidth)
     ? window.openDialogSettings.mobileWidth : 480;

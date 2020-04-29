@@ -16,6 +16,12 @@ const store = new Vuex.Store({
     setApiReady(state, val) {
       state.apiReady = val;
     },
+    setUuid(state, uuid) {
+      state.uuid = uuid;
+    },
+    setSettings(state, settings) {
+      state.settings = settings;
+    }
   },
   actions: {},
   getters: {},
