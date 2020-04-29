@@ -32,7 +32,7 @@
     "dependencies": {
         "@babel/core": "^7.9.0",
         "@babel/preset-env": "^7.9.5",
-        "@opendialogai/vue-beautiful-chat": "git://github.com/opendialogai/vue-beautiful-chat.git#0.5.3",
+        "@opendialogai/vue-beautiful-chat": "git://github.com/opendialogai/vue-beautiful-chat.git#feature/updates",
         "@reststate/vuex": "0.2.1",
         "bootstrap-vue": "^2.13.0",
         "core-js": "^3.6.5",

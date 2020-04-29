@@ -29,6 +29,9 @@
         :is-open="isOpen"
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
+        :on-full-page-form-input-submit="onFullPageFormInputSubmit"
+        :on-full-page-form-input-cancel="onFullPageFormInputCancel"
+        :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
         :open="openChat"
         :on-button-click="onButtonClick"
@@ -43,6 +46,8 @@
         :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
         :show-long-text-input="showLongTextInput"
+        :show-full-page-form-input="showFullPageFormInput"
+        :show-full-page-rich-input="showFullPageRichInput"
         :show-messages="showMessages"
         :max-input-characters="maxInputCharacters"
         :button-text="buttonText"
@@ -51,6 +56,8 @@
         :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
+        :fp-form-input-message="fpFormInputMessage"
+        :fp-rich-input-message="fpRichInputMessage"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
       />
@@ -146,6 +153,8 @@ export default {
       buttonText: 'Submit',
       confirmationMessage: null,
       contentEditable: false,
+      fpFormInputMessage: {},
+      fpRichInputMessage: {},
       headerHeight: 0,
       headerText: '',
       id: '',
@@ -157,6 +166,8 @@ export default {
       placeholder: 'Type a message',
       showLongTextInput: false,
       showMessages: true,
+      showFullPageFormInput: false,
+      showFullPageRichInput: false,
       showTypingIndicator: false,
       users: [],
       userName: '',
@@ -299,7 +310,11 @@ export default {
         this.headerText = '';
         this.maxInputCharacters = 0;
         this.showLongTextInput = false;
-        this.showMessages = true;
+
+        if (!this.showFullPageFormInput && !this.showFullPageRichInput) {
+          this.showMessages = true;
+        }
+
         this.messageList.push(newMsg);
       }
 
@@ -384,6 +399,20 @@ export default {
                       this.contentEditable = !message.data.disable_text;
                     }
 
+                    if (message.type === 'fp-form') {
+                      this.showFullPageFormInputMessage(message);
+                    }
+
+                    if (message.type === 'fp-rich') {
+                      this.showFullPageRichInputMessage(message);
+                    }
+
+                    if (message.type !== 'fp-form' && message.type !== 'fp-rich') {
+                      this.showFullPageFormInput = false;
+                      this.showFullPageRichInput = false;
+                      this.showMessages = true;
+                    }
+
                     if (!this.hideTypingIndicatorOnInternalMessages) {
                       if (i < (response.data.length - 1)) {
                         this.$nextTick(() => {
@@ -429,6 +458,14 @@ export default {
                     lastMessage.type = message.type;
                     lastMessage.data = message.data;
 
+                    if (message.type === 'fp-form') {
+                      this.showFullPageFormInputMessage(message);
+                    }
+
+                    if (message.type === 'fp-rich') {
+                      this.showFullPageRichInputMessage(message);
+                    }
+
                     this.contentEditable = !message.data.disable_text;
                   }, this.messageDelay);
                 } else {
@@ -469,6 +506,20 @@ export default {
 
                   if (message.data) {
                     this.contentEditable = !message.data.disable_text;
+                  }
+
+                  if (message.type === 'fp-form') {
+                    this.showFullPageFormInputMessage(message);
+                  }
+
+                  if (message.type === 'fp-rich') {
+                    this.showFullPageRichInputMessage(message);
+                  }
+
+                  if (message.type !== 'fp-form' && message.type !== 'fp-rich') {
+                    this.showFullPageFormInput = false;
+                    this.showFullPageRichInput = false;
+                    this.showMessages = true;
                   }
 
                   if (message.type === 'longtext') {
@@ -567,6 +618,18 @@ export default {
       this.sendMessage(msgToSend);
       this.placeholder = 'Write a reply';
     },
+    onFullPageFormInputSubmit(data) {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onFormButtonClick(data, msg);
+    },
+    onFullPageFormInputCancel() {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onFormCancelClick(msg);
+    },
+    onFullPageRichInputSubmit(button) {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onButtonClick(button, msg);
+    },
     openChat() {
     },
     async onButtonClick(button, msg) {
@@ -660,6 +723,19 @@ export default {
         data: responseData,
       });
     },
+    onFormCancelClick(msg) {
+      window.parent.postMessage(
+        { dataLayerEvent: 'form_cancelled' },
+        this.referrerUrl,
+      );
+      this.messageList[this.messageList.indexOf(msg)].type = 'text';
+      this.sendMessage({
+        type: 'form_response',
+        author: 'me',
+        callback_id: msg.data.cancel_callback,
+        data: { text: msg.data.cancel_text },
+      });
+    },
     onRestartButtonClick() {
       if (this.canRestart) {
         this.canRestart = false;
@@ -731,6 +807,7 @@ export default {
 
       return axios.get(`/user/${userId}/history?limit=${this.numberOfMessages}&ignore=${ignoreTypes}`)
         .then((response) => {
+          const total = response.data.length;
           response.data.reverse().forEach((message, i, messages) => {
             // Ignore 'url_click' messages.
             if (message.type === 'url_click') {
@@ -739,6 +816,16 @@ export default {
 
             // Ignore 'trigger' messages.
             if (message.type === 'trigger') {
+              return;
+            }
+
+            // Ignore 'fp-rich' messages.
+            if (message.type === 'fp-rich' && i + 1 !== total) {
+              return;
+            }
+
+            // Ignore 'fp-form' messages.
+            if (message.type === 'fp-form' && i + 1 !== total) {
               return;
             }
 
@@ -780,6 +867,16 @@ export default {
               const authorMsg = this.newAuthorMessage(currentMessage);
 
               this.messageList.push(authorMsg);
+            }
+
+            if (i === messages.length - 1) {
+              if (currentMessage.type === 'fp-form') {
+                this.showFullPageFormInputMessage(currentMessage);
+              }
+
+              if (currentMessage.type === 'fp-rich') {
+                this.showFullPageRichInputMessage(currentMessage);
+              }
             }
 
             this.messageList.push(currentMessage);
@@ -836,6 +933,20 @@ export default {
           });
         }
       }
+    },
+    showFullPageFormInputMessage(message) {
+      this.fpFormInputMessage = message;
+
+      this.showMessages = false;
+      this.showFullPageRichInput = false;
+      this.showFullPageFormInput = true;
+    },
+    showFullPageRichInputMessage(message) {
+      this.fpRichInputMessage = message;
+
+      this.showMessages = false;
+      this.showFullPageFormInput = false;
+      this.showFullPageRichInput = true;
     },
     createUuid() {
       const uuid = this.$uuid.v4();

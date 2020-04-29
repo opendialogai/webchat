@@ -190,6 +190,11 @@ export default {
           hoverbg: '#0000ff',
           text: '#ffffff',
         },
+        form: {
+          labelTextColor: '#575759',
+          formHighlightColor: '#da291c',
+          inputBorderColor: '#979797',
+        },
         minimizeButton: {
           bg: '#000000',
         },
