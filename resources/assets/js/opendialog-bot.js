@@ -341,7 +341,8 @@ function addUrlUpdatedListener() {
           console.log("Response did not contain a bot name. Removing chat window.");
           window.openDialogSettings = Object.assign({}, window.originalOpenDialogSettings);
           removeChatWindow();
-        } else if (response.bot.botName !== window.openDialogSettings.bot.botName) {
+        } else if (typeof window.openDialogSettings.bot == 'undefined'
+          || response.bot.botName !== window.openDialogSettings.bot.botName) {
           console.log("Response's bot name was different to the current bot. Reloading chat window.");
           removeChatWindow();
           window.openDialogSettings = Object.assign({}, window.originalOpenDialogSettings);
