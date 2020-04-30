@@ -255,7 +255,7 @@ function isValidPath() {
     return retVal;
 }
 
-async function setupWebchat(url, userId, callSettings = true) {
+async function setupWebchat(url, userId, useSettings = null) {
   const urlParams = new URLSearchParams(window.location.search);
 
   let callbackId = null;
@@ -263,7 +263,7 @@ async function setupWebchat(url, userId, callSettings = true) {
     callbackId = urlParams.get('callback_id');
   }
 
-  if (callSettings) {
+  if (useSettings === null) {
     try {
       let response = await getSettings(url, userId, window.openDialogSettings, callbackId, window.innerWidth);
       mergeSettings(response);
@@ -272,6 +272,8 @@ async function setupWebchat(url, userId, callSettings = true) {
       console.log("Using default OpenDialog webchat settings");
       mergeSettings(defaultWebchatSettings);
     }
+  } else {
+    mergeSettings(useSettings);
   }
 
   const mobileWidth = (window.openDialogSettings.mobileWidth)
@@ -346,8 +348,7 @@ function addUrlUpdatedListener() {
           console.log("Response's bot name was different to the current bot. Reloading chat window.");
           removeChatWindow();
           window.openDialogSettings = Object.assign({}, window.originalOpenDialogSettings);
-          mergeSettings(response);
-          await setupWebchat(window.openDialogSettings.url, sessionStorage.uuid, false);
+          await setupWebchat(window.openDialogSettings.url, sessionStorage.uuid, response);
         }
       } else if (!hasChatWindow()) {
         console.log("Path was valid but there was no chat window. Setting up chat window.");
