@@ -112,7 +112,7 @@ class WebchatSetting extends Model
     public const BOOLEAN = 'boolean';
     public const OBJECT  = 'object';
 
-    // Bots
+    // Bot
     public const BOT = 'bot';
     public const BOT_NAME = 'botName';
 

@@ -23,7 +23,7 @@
     <template v-else>
       <beautiful-chat
         :agent-profile="agentProfile"
-        :close="toggleChatOpen"
+        :close="onClose"
         :expand="expandChat"
         :is-open="isOpen"
         :is-expand="isExpand"
@@ -593,6 +593,11 @@ export default {
     },
     expandChat() {
       this.$emit("expandChat");
+    },
+    onClose() {
+      if (!this.closeChatButtonReverseAnimate) {
+        this.toggleChatOpen();
+      }
     },
     toggleChatOpen() {
       this.ctaText = [];
