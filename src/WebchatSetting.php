@@ -239,7 +239,7 @@ class WebchatSetting extends Model
             ],
             WebchatSetting::BOT => [
                 WebchatSetting::STRING => [
-                    WebchatSetting::BOT_NAME
+                    WebchatSetting::BOT_NAME,
                 ]
             ]
         ];

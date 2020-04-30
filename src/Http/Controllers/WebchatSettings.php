@@ -91,7 +91,7 @@ class WebchatSettings
         $configurationService = resolve(WebchatSettingsConfigurationServiceInterface::class);
 
         $pageInfo = new WebchatSettingsConfigurationPageInformation(
-            $request->header('referer'),
+            $request->get('url') ?? $request->header('referer'),
             $request->get('user_id') ?? null,
             $request->get('width') ?? null,
             $request->get('callback_id') ?? null
