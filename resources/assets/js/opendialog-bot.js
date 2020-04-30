@@ -84,10 +84,6 @@ function openChatWindow(url, div = null) {
     ifrm.style.width = '130px';
     window.document.body.appendChild(ifrm);
 
-    //if you want a full iframe on page load turn this on
-    // document.body.classList.add('chatbot-no-scroll');
-
-
    listeners.load = () => {
         // Send settings and initial path to the chat widget.
         ifrm.contentWindow.postMessage({
@@ -143,7 +139,6 @@ function openChatWindow(url, div = null) {
 
   // Listen for back/forward button presses in SPAs.
   listeners.onPopState = (e) => {
-    console.log(e);
     if (e.state !== null) {
       if (hasChatWindow()) {
         ifrm.contentWindow.postMessage({newPathname: window.location.pathname}, '*');
@@ -255,7 +250,7 @@ function isValidPath() {
     return retVal;
 }
 
-async function setupWebchat(url, userId, useSettings = null) {
+async function setupWebchat(url, userId, preloadedSettings = null) {
   const urlParams = new URLSearchParams(window.location.search);
 
   let callbackId = null;
@@ -263,7 +258,7 @@ async function setupWebchat(url, userId, useSettings = null) {
     callbackId = urlParams.get('callback_id');
   }
 
-  if (useSettings === null) {
+  if (preloadedSettings === null) {
     try {
       let response = await getSettings(url, userId, window.openDialogSettings, callbackId, window.innerWidth);
       mergeSettings(response);
@@ -273,7 +268,7 @@ async function setupWebchat(url, userId, useSettings = null) {
       mergeSettings(defaultWebchatSettings);
     }
   } else {
-    mergeSettings(useSettings);
+    mergeSettings(preloadedSettings);
   }
 
   const mobileWidth = (window.openDialogSettings.mobileWidth)
