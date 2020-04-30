@@ -440,7 +440,14 @@ export default {
       window.addEventListener("message", event => {
         if (event.data) {
           if (event.data.loadSettings) {
+            sessionStorage.openDialogSettings = JSON.stringify(event.data.loadSettings);
+            this.$store.commit('setSettings', event.data.loadSettings);
             this.initialiseSettings();
+          }
+
+          if (event.data.loadUuid) {
+            sessionStorage.uuid = event.data.loadUuid;
+            this.$store.commit('setUuid', event.data.loadUuid);
           }
 
           // Handle path changes.
