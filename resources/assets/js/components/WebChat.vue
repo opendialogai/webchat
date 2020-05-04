@@ -443,11 +443,7 @@ export default {
         () => chatService.sendResponseError(null, newMsg, this)
       );
     },
-    userInputFocus() {
-      if (!this.isExpand && !this.isMobile) {
-        this.$emit("expandChat");
-      }
-    },
+    userInputFocus() {},
     userInputBlur() {},
     sendReadReceipt(newMessage) {
       // Create the message object to send to our endpoint.
@@ -547,6 +543,10 @@ export default {
       });
     },
     download() {
+      window.parent.postMessage(
+        { dataLayerEvent: { event: 'download_chat_transcript'} },
+        this.referrerUrl
+      );
       const userId = this.user && this.user.email ? this.user.email : this.uuid;
       axios({
         method: 'get',
@@ -554,7 +554,7 @@ export default {
         responseType: 'arraybuffer'
       })
       .then(response => {
-        this.forceFileDownload(response)
+        this.forceFileDownload(response);
       }).catch(() => console.log('Error occurred downloading chat history'))
     },
     forceFileDownload(response){

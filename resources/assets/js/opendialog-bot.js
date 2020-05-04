@@ -55,6 +55,7 @@ function mergeSettings(webchatSettings) {
 }
 
 function pushToDataLayer (eventData) {
+    eventData.scenario_name = 'ACO Bot'
     if (window.dataLayer !== undefined) {
         window.dataLayer.push(eventData)
     }
@@ -132,12 +133,6 @@ function openChatWindow(url, div = null) {
                 eventData = event.data.dataLayerEvent;
             }
             pushToDataLayer(eventData)
-        }
-    });
-
-    window.addEventListener('mouseup', () => {
-        if (ifrm.contentWindow) {
-            ifrm.contentWindow.postMessage({ collapseChat: true }, '*');
         }
     });
 
