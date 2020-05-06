@@ -11,6 +11,12 @@ class WebchatSettingsConfigurationPageInformation
     private $width;
     private $callbackId;
 
+    /** @var array */
+    private $queryParameters;
+
+    /** @var array */
+    private $tags;
+
     /**
      * @param $pageUrl
      * @param null $userId
@@ -55,5 +61,37 @@ class WebchatSettingsConfigurationPageInformation
     public function getCallbackId()
     {
         return $this->callbackId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getQueryParameters(): array
+    {
+        return $this->queryParameters;
+    }
+
+    /**
+     * @param array $queryParameters
+     */
+    public function setQueryParameters(array $queryParameters): void
+    {
+        $this->queryParameters = $queryParameters;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param array $tags
+     */
+    public function setTags(array $tags): void
+    {
+        $this->tags = $tags;
     }
 }
