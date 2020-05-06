@@ -74,6 +74,7 @@ class WebchatSettings
             $request->get('width') ?? null,
             $request->get('callback_id') ?? null
         );
+        $pageInfo->setTags($request->json('tags'));
         $settings = $configurationService->runConfigurations($config, $pageInfo);
 
         $general = $settings[WebchatSetting::GENERAL];
