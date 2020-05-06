@@ -64,7 +64,6 @@
         :use-human-avatar="useHumanAvatar"
         :user="user"
         :user-timezone="userTimezone"
-        :user-uuid="userUuid"
         :user-external-id="userExternalId"
       />
     </div>
@@ -100,7 +99,6 @@
         :user="user"
         :user-info="userInfo"
         :user-timezone="userTimezone"
-        :user-uuid="userUuid"
         :user-external-id="userExternalId"
         :mode-data="modeData"
         :closed-intent="closedIntent"
@@ -251,7 +249,6 @@ export default {
       userFirstName: "",
       userLastName: "",
       userExternalId: "",
-      userUuid: "",
       modeData: {
         mode: 'webchat',
         modeInstance: 0,
@@ -442,10 +439,15 @@ export default {
       // Add event listener for custom open dialog settings.
       window.addEventListener("message", event => {
         if (event.data) {
-          if (event.data.openDialogSettings) {
-            const customConfig = event.data.openDialogSettings;
-            customConfig.newPathname = event.data.newPathname;
-            this.initialiseSettings(customConfig);
+          if (event.data.loadSettings) {
+            sessionStorage.openDialogSettings = JSON.stringify(event.data.loadSettings);
+            this.$store.commit('setSettings', event.data.loadSettings);
+            this.initialiseSettings();
+          }
+
+          if (event.data.loadUuid) {
+            sessionStorage.uuid = event.data.loadUuid;
+            this.$store.commit('setUuid', event.data.loadUuid);
           }
 
           // Handle path changes.
@@ -470,18 +472,11 @@ export default {
         }
       });
     },
-    initialiseSettings(customConfig) {
-      const userId = (customConfig.user && customConfig.user.email) ? customConfig.user.email : "";
-
+    initialiseSettings() {
       // Get default settings from the config endpoint.
-      this.getWebchatConfig(userId)
+      this.getWebchatConfig()
         .then(config => {
           this.setConfig(config);
-          return true;
-        })
-        .then(() => {
-          // Over-ride default config with any custom settings.
-          this.setConfig(customConfig);
 
           if (!this.settingsInitialised) {
             this.settingsInitialised = true;
@@ -560,18 +555,8 @@ export default {
         this.cssProps = this.getCssProps();
       });
     },
-    async getWebchatConfig(userId) {
-      let configUrl = `${window.location.origin}/webchat-config`;
-
-      if (userId) {
-        configUrl = `${configUrl}?user_id=${userId}`;
-      } else if (sessionStorage.uuid) {
-        configUrl = `${configUrl}?user_id=${sessionStorage.uuid}`;
-      }
-
-      const response = await fetch(configUrl);
-      const json = await response.json();
-      return json;
+    async getWebchatConfig() {
+      return Promise.resolve(this.$store.state.settings);
     },
     handleHistoryChange(e) {
       if (this.comments.commentsEnabledPathPattern) {
@@ -778,10 +763,6 @@ export default {
       if (config.user && !window._.isEmpty(config.user)) {
         this.user = config.user;
 
-        if (config.user.email) {
-          this.userUuid = config.user.email;
-        }
-
         if (config.user.first_name) {
           this.userFirstName = config.user.first_name;
         }
@@ -822,7 +803,7 @@ export default {
         // FIXME pass this to child component.
         this.sendMessage({
           type: "trigger",
-          author: this.userUuid,
+          author: this.$store.state.uuid,
           callback_id: config.triggerConversation.callback_id,
           data: {}
         });

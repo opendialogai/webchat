@@ -112,6 +112,10 @@ class WebchatSetting extends Model
     public const BOOLEAN = 'boolean';
     public const OBJECT  = 'object';
 
+    // Bot
+    public const BOT = 'bot';
+    public const BOT_NAME = 'botName';
+
     protected $fillable = ['name', 'type', 'value'];
 
     /**
@@ -233,6 +237,11 @@ class WebchatSetting extends Model
                     WebchatSetting::NUMBER_OF_MESSAGES,
                 ],
             ],
+            WebchatSetting::BOT => [
+                WebchatSetting::STRING => [
+                    WebchatSetting::BOT_NAME,
+                ]
+            ]
         ];
         return $settings;
     }

@@ -2,8 +2,14 @@ import 'promise-polyfill/src/polyfill';
 import 'whatwg-fetch';
 import 'url-search-params-polyfill';
 import 'core-js/es/object';
+import {uuid} from 'vue-uuid';
+import defaultWebchatSettings from './default-webchat-settings';
 
 let query = '';
+
+window.originalOpenDialogSettings = Object.assign({}, window.openDialogSettings);
+
+let listeners = {};
 
 // startsWith polyfill
 if (!String.prototype.startsWith) {
@@ -54,6 +60,9 @@ function mergeSettings(webchatSettings) {
     }
 }
 
+/**
+ * Push events to the GA datalayer
+ */
 function pushToDataLayer (eventData) {
     eventData.scenario_name = 'ACO Bot'
     if (window.dataLayer !== undefined) {
@@ -85,13 +94,11 @@ function openChatWindow(url, div = null) {
     ifrm.style.width = '130px';
     window.document.body.appendChild(ifrm);
 
-    //if you want a full iframe on page load turn this on
-    // document.body.classList.add('chatbot-no-scroll');
-
-    ifrm.addEventListener('load', () => {
+   listeners.load = () => {
         // Send settings and initial path to the chat widget.
         ifrm.contentWindow.postMessage({
-            openDialogSettings: window.openDialogSettings,
+            loadUuid: sessionStorage.uuid,
+            loadSettings: window.openDialogSettings,
             newPathname: window.location.pathname,
         }, '*');
 
@@ -102,85 +109,127 @@ function openChatWindow(url, div = null) {
             link.setAttribute('href', window.openDialogSettings.general.chatbotCssPath);
             ifrm.contentWindow.document.getElementsByTagName('head')[0].appendChild(link);
         }
-    });
-
-    window.addEventListener('message', (event) => {
-        if (event.data && typeof event.data.height !== 'undefined') {
-            ifrm.style.height = (event.data.height === 'auto') ? '' : event.data.height;
-
-            if (event.data.height === 'auto') {
-                document.body.classList.add('chatbot-no-scroll');
-            } else {
-                document.body.classList.remove('chatbot-no-scroll');
-            }
-        }
-
-        if (event.data && typeof event.data.width !== 'undefined') {
-            ifrm.style.width = (event.data.width === 'auto') ? '' : event.data.width;
-        }
-
-        if (event.data && typeof event.data.addClass !== 'undefined') {
-            ifrm.classList.add(event.data.addClass);
-        }
-
-        if (event.data && typeof event.data.removeClass !== 'undefined') {
-            ifrm.classList.remove(event.data.removeClass);
-        }
-
-        if (event.data && typeof event.data.dataLayerEvent !== 'undefined') {
-            let eventData = { event: event.data.dataLayerEvent };
-            if (typeof event.data.dataLayerEvent === 'object') {
-                eventData = event.data.dataLayerEvent;
-            }
-            pushToDataLayer(eventData)
-        }
-    });
-
-    // Listen for back/forward button presses in SPAs.
-    window.onpopstate = (e) => {
-        if (e.state !== null) {
-            ifrm.contentWindow.postMessage({ newPathname: window.location.pathname }, '*');
-        }
     };
 
-    // Handle navigation events. SPAs must broadcast this event for
-    // the comment section to be updated.
-    window.addEventListener('openDialogCommentSectionChange', () => {
-        ifrm.contentWindow.postMessage({ newPathname: window.location.pathname }, '*');
-    });
+  listeners.message = async (event) => {
+    if (event.data && typeof event.data.height !== 'undefined') {
+      ifrm.style.height = (event.data.height === 'auto') ? '' : event.data.height;
 
-    pushToDataLayer({event: 'chat_displayed'});
+      if (event.data.height === 'auto') {
+        document.body.classList.add('chatbot-no-scroll');
+      } else {
+        document.body.classList.remove('chatbot-no-scroll');
+      }
+    }
 
-    return ifrm;
+    if (event.data && typeof event.data.width !== 'undefined') {
+      ifrm.style.width = (event.data.width === 'auto') ? '' : event.data.width;
+    }
+
+    if (event.data && typeof event.data.addClass !== 'undefined') {
+      ifrm.classList.add(event.data.addClass);
+    }
+
+    if (event.data && typeof event.data.removeClass !== 'undefined') {
+      ifrm.classList.remove(event.data.removeClass);
+    }
+
+      if (event.data && typeof event.data.dataLayerEvent !== 'undefined') {
+          let eventData = { event: event.data.dataLayerEvent };
+          if (typeof event.data.dataLayerEvent === 'object') {
+              eventData = event.data.dataLayerEvent;
+          }
+          pushToDataLayer(eventData)
+      }
+  };
+
+  listeners.mouseUp = () => {
+    if (ifrm.contentWindow) {
+      ifrm.contentWindow.postMessage({ collapseChat: true }, '*');
+    }
+  };
+
+  // Listen for back/forward button presses in SPAs.
+  listeners.onPopState = (e) => {
+    if (e.state !== null) {
+      if (hasChatWindow()) {
+        ifrm.contentWindow.postMessage({newPathname: window.location.pathname}, '*');
+      }
+    }
+  };
+
+  // Handle navigation events. SPAs must broadcast this event for
+  // the comment section to be updated.
+  listeners.comment = () => {
+    ifrm.contentWindow.postMessage({ newPathname: window.location.pathname }, '*');
+  };
+
+  ifrm.addEventListener('load', listeners.load);
+  window.addEventListener('message', listeners.message);
+  window.addEventListener('mouseup', listeners.mouseUp);
+  window.onpopstate = listeners.onPopState;
+  window.addEventListener('openDialogCommentSectionChange', listeners.comment);
+
+  pushToDataLayer({event: 'chat_displayed'});
+
+  return ifrm;
 }
 
 /**
  * Gets the webchat settings from the database
- * @returns {Promise<any>}
+ * @returns {Promise<Response>}
  */
-async function getSettings(url, userId = '') {
-    let configUrl = `${url}/webchat-config`;
+function getSettings(url, userId = '', customSettings = null, callbackId = null, width = null) {
+    let configUrlObj = new URLSearchParams();
+
+    configUrlObj.append('url', window.location.href);
+
     if (userId) {
-        configUrl = `${configUrl}?user_id=${userId}`;
+      configUrlObj.append('user_id', userId);
     } else if (sessionStorage.uuid) {
-        configUrl = `${configUrl}?user_id=${sessionStorage.uuid}`;
+      configUrlObj.append('user_id', sessionStorage.uuid);
     }
 
-    const response = await fetch(configUrl);
-    const json = await response.json();
-    return json;
+    if (callbackId) {
+      configUrlObj.append('callback_id', callbackId);
+    }
+
+    if (width) {
+      configUrlObj.append('width', width);
+    }
+
+    let configUrl = `${url}/webchat-config?${configUrlObj.toString()}`;
+    return fetch(configUrl, {
+      url: configUrl,
+      method: 'POST',
+      body: JSON.stringify({
+        custom_settings: customSettings
+      }),
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          return Promise.reject(response.statusText);
+        } else {
+          return response.json();
+        }
+      });
 }
 
 function checkValidPath(testPath) {
     const currentUrl = window.location.href;
-    if (testPath.endsWith('$')) {
-        return currentUrl.endsWith(testPath.replace('$', ''));
-    }
-    if (currentUrl.indexOf(testPath) >= 0) {
-        return true;
+
+    if (testPath === '') {
+      return false;
     }
 
-    return false;
+    if (testPath === '*') {
+      return true;
+    }
+
+    let formattedTestPath = testPath.replace(/\*/, '(.*)');
+    let regex = new RegExp(formattedTestPath);
+
+    return regex.test(currentUrl);
 }
 
 /**
@@ -190,10 +239,14 @@ function checkValidPath(testPath) {
  * @returns {boolean}
  */
 function isValidPath() {
+    if (typeof window.openDialogSettings.general === 'undefined') {
+      return false;
+    }
+
     const { validPath } = window.openDialogSettings.general;
 
     if (typeof validPath === 'undefined') {
-        return true;
+        return false;
     }
 
     let retVal = false;
@@ -211,40 +264,125 @@ function isValidPath() {
     return retVal;
 }
 
-if (window.openDialogSettings) {
-    const { url } = window.openDialogSettings;
-    const userId = (window.openDialogSettings.user && window.openDialogSettings.user.email) ?
-        window.openDialogSettings.user.email : '';
+async function setupWebchat(url, userId, preloadedSettings = null) {
+  const urlParams = new URLSearchParams(window.location.search);
 
-    getSettings(url, userId).then((settings) => {
-        mergeSettings(settings);
+  let callbackId = null;
+  if (urlParams.has('callback_id')) {
+    callbackId = urlParams.get('callback_id');
+  }
 
-        const mobileWidth = (window.openDialogSettings.mobileWidth)
-            ? window.openDialogSettings.mobileWidth : 480;
+  if (preloadedSettings === null) {
+    try {
+      let response = await getSettings(url, userId, window.openDialogSettings, callbackId, window.innerWidth);
+      mergeSettings(response);
+    } catch (error) {
+      console.error("Call to OpenDialog webchat settings failed:", error);
+      console.log("Using default OpenDialog webchat settings");
+      mergeSettings(defaultWebchatSettings);
+    }
+  } else {
+    mergeSettings(preloadedSettings);
+  }
 
-        // Set the current url of the parent to pass into the iFrame
-        window.openDialogSettings.parentUrl = window.location.pathname;
+  const mobileWidth = (window.openDialogSettings.mobileWidth)
+    ? window.openDialogSettings.mobileWidth : 480;
 
+  // Set the current url of the parent to pass into the iFrame
+  window.openDialogSettings.parentUrl = window.location.pathname;
+
+  if (callbackId) {
+    query = `${query}&callback_id=${callbackId}`;
+  }
+
+  if (window.innerWidth <= mobileWidth) {
+    query = `${query}&mobile=true`;
+  }
+
+  if (isValidPath()) {
+    addCssToPage(`${url}/vendor/webchat/css/app-iframe.css`);
+
+    if (window.openDialogSettings.general.pageCssPath) {
+      addCssToPage(window.openDialogSettings.general.pageCssPath);
+    }
+
+    openChatWindow(url);
+  } else {
+      pushToDataLayer({ event: 'chat_not_displayed' });
+  }
+}
+
+let hasChatWindow = () => {
+  return window.document.getElementById('opendialog-chatwindow') !== null;
+};
+
+let removeChatWindow = () => {
+  console.log("Removing webchat");
+
+  if (hasChatWindow()) {
+    window.document.getElementById('opendialog-chatwindow').removeEventListener('load', listeners.load);
+    window.removeEventListener('message', listeners.message);
+    window.removeEventListener('mouseup', listeners.mouseUp);
+    window.removeEventListener('openDialogCommentSectionChange', listeners.comment);
+    window.document.getElementById('opendialog-chatwindow').remove();
+  }
+};
+
+function addUrlUpdatedListener() {
+  window.addEventListener('message', async (event) => {
+    // This event listener is attached once and never removed as it will need to track URL changes even when there
+    // is no chat window
+    if (event.data && typeof event.data.urlUpdated !== 'undefined') {
+      if (!isValidPath()) {
+        // Get new settings
         const urlParams = new URLSearchParams(window.location.search);
 
+        let callbackId = null;
         if (urlParams.has('callback_id')) {
-            query = `${query}&callback_id=${urlParams.get('callback_id')}`;
+          callbackId = urlParams.get('callback_id');
         }
 
-        if (window.innerWidth <= mobileWidth) {
-            query = `${query}&mobile=true`;
+        let response = await getSettings(
+          window.openDialogSettings.url,
+          sessionStorage.uuid,
+          window.openDialogSettings,
+          callbackId,
+          window.innerWidth
+        );
+
+        if (!response.bot || typeof response.bot.botName === 'undefined' || response.bot.botName === '') {
+          console.log("Response did not contain a bot name. Removing chat window.");
+          window.openDialogSettings = Object.assign({}, window.originalOpenDialogSettings);
+          removeChatWindow();
+        } else if (typeof window.openDialogSettings.bot == 'undefined'
+          || response.bot.botName !== window.openDialogSettings.bot.botName) {
+          console.log("Response's bot name was different to the current bot. Reloading chat window.");
+          removeChatWindow();
+          window.openDialogSettings = Object.assign({}, window.originalOpenDialogSettings);
+          await setupWebchat(window.openDialogSettings.url, sessionStorage.uuid, response);
         }
+      } else if (!hasChatWindow()) {
+        console.log("Path was valid but there was no chat window. Setting up chat window.");
+        await setupWebchat(window.openDialogSettings.url, sessionStorage.uuid);
+      } else {
+        console.log("Path was valid and the chat window did not need to be reloaded.")
+      }
+    }
+  });
+}
 
-        if (isValidPath()) {
-            addCssToPage(`${url}/vendor/webchat/css/app-iframe.css`);
+if (window.openDialogSettings) {
+  const { url } = window.openDialogSettings;
+  const userId = (window.openDialogSettings.user && window.openDialogSettings.user.email) ?
+        window.openDialogSettings.user.email : '';
 
-            if (window.openDialogSettings.general.pageCssPath) {
-                addCssToPage(window.openDialogSettings.general.pageCssPath);
-            }
+  if (userId) {
+    sessionStorage.uuid = userId;
+  } else {
+    sessionStorage.uuid = uuid.v4();
+  }
 
-            openChatWindow(url);
-        } else {
-            pushToDataLayer({ event: 'chat_not_displayed' });
-        }
-    });
+  addUrlUpdatedListener();
+
+  setupWebchat(url, userId);
 }
