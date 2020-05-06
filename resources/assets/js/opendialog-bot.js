@@ -185,11 +185,13 @@ function getSettings(url, userId = '', customSettings = null, callbackId = null,
     }
 
     let configUrl = `${url}/webchat-config?${configUrlObj.toString()}`;
-    return fetch(configUrl, {
+
+  return fetch(configUrl, {
       url: configUrl,
       method: 'POST',
       body: JSON.stringify({
-        custom_settings: customSettings
+        custom_settings: customSettings,
+        tags: getTags(),
       }),
     })
       .then((response) => {
@@ -199,6 +201,18 @@ function getSettings(url, userId = '', customSettings = null, callbackId = null,
           return response.json();
         }
       });
+}
+
+function getTags() {
+  let tags = {};
+
+  Array.from(document.getElementsByTagName('meta')).forEach((item) => {
+    if (item.name) {
+      tags[item.name] = item.content;
+    }
+  });
+
+  return tags;
 }
 
 function checkValidPath(testPath) {
