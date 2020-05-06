@@ -68,13 +68,25 @@ class WebchatSettings
         /** @var WebchatSettingsConfigurationServiceInterface $configurationService */
         $configurationService = resolve(WebchatSettingsConfigurationServiceInterface::class);
 
+        $pageUrl = $request->get('url') ?? $request->header('referer');
+
+        $queryParameters = [];
+        $queryParametersString = parse_url($pageUrl, PHP_URL_QUERY);
+
+        if (!is_null($queryParametersString)) {
+            $pageUrl = str_replace('?' . $queryParametersString, '', $pageUrl);
+            parse_str($queryParametersString, $queryParameters);
+        }
+
         $pageInfo = new WebchatSettingsConfigurationPageInformation(
-            $request->get('url') ?? $request->header('referer'),
+            $pageUrl,
             $request->get('user_id') ?? null,
             $request->get('width') ?? null,
             $request->get('callback_id') ?? null
         );
+        $pageInfo->setQueryParameters($queryParameters);
         $pageInfo->setTags($request->json('tags'));
+
         $settings = $configurationService->runConfigurations($config, $pageInfo);
 
         $general = $settings[WebchatSetting::GENERAL];
