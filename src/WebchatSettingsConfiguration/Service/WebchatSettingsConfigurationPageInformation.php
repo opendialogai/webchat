@@ -12,10 +12,10 @@ class WebchatSettingsConfigurationPageInformation
     private $callbackId;
 
     /** @var array */
-    private $queryParameters;
+    private $queryParameters = [];
 
     /** @var array */
-    private $tags;
+    private $tags = [];
 
     /**
      * @param $pageUrl
@@ -74,9 +74,11 @@ class WebchatSettingsConfigurationPageInformation
     /**
      * @param array $queryParameters
      */
-    public function setQueryParameters(array $queryParameters): void
+    public function setQueryParameters(?array $queryParameters): void
     {
-        $this->queryParameters = $queryParameters;
+        if (!is_null($queryParameters)) {
+            $this->queryParameters = $queryParameters;
+        }
     }
 
     /**
@@ -90,8 +92,10 @@ class WebchatSettingsConfigurationPageInformation
     /**
      * @param array $tags
      */
-    public function setTags(array $tags): void
+    public function setTags(?array $tags): void
     {
-        $this->tags = $tags;
+        if (!is_null($tags)) {
+            $this->tags = $tags;
+        }
     }
 }
