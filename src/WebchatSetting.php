@@ -24,6 +24,7 @@ class WebchatSetting extends Model
     public const CHATBOT_CSS_PATH          = 'chatbotCssPath';
     public const CHATBOT_FULLPAGE_CSS_PATH = 'chatbotFullpageCssPath';
     public const PAGE_CSS_PATH             = 'pageCssPath';
+    public const HIDE_USER_INPUT           = 'hideUserInput';
     public const HIDE_OPEN_CLOSE_ICONS     = 'hideOpenCloseIcons';
     public const HIDE_DATETIME_MESSAGE     = 'hideDatetimeMessage';
     public const CALLBACK_MAP              = 'callbackMap';
@@ -132,6 +133,7 @@ class WebchatSetting extends Model
                 ],
                 WebchatSetting::BOOLEAN => [
                     WebchatSetting::OPEN,
+                    WebchatSetting::HIDE_USER_INPUT,
                     WebchatSetting::HIDE_OPEN_CLOSE_ICONS,
                     WebchatSetting::HIDE_DATETIME_MESSAGE,
                     WebchatSetting::DISABLE_CLOSE_CHAT,

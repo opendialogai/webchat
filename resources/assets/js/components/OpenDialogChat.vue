@@ -97,6 +97,7 @@
         :colours="colours"
         :hide-datetime-message="hideDatetimeMessage"
         :hide-typing-indicator-on-internal-messages="hideTypingIndOnInternalMessages"
+        :hide-user-input="hideUserInput"
         :is-expand="isExpand"
         :is-mobile="isMobile"
         :chat-is-open="isOpen"
@@ -200,6 +201,7 @@ export default {
       cssProps: {},
       hideDatetimeMessage: false,
       hideTypingIndOnInternalMessages: false,
+      hideUserInput: false,
       ipAddressInitialised: false,
       isExpand: false,
       isMinimized: false,
@@ -623,6 +625,10 @@ export default {
 
         if (general.restartButtonCallback) {
           this.restartButtonCallback = general.restartButtonCallback;
+        }
+
+        if (general.hideUserInput) {
+          this.hideUserInput = general.hideUserInput;
         }
 
         if (general.hideDatetimeMessage) {

@@ -26,6 +26,7 @@
         :agent-profile="agentProfile"
         :close="toggleChatOpen"
         :expand="expandChat"
+        :hide-user-input="hideUserInput"
         :is-open="isOpen"
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
@@ -90,6 +91,7 @@ export default {
     },
     hideDatetimeMessage: Boolean,
     hideTypingIndicatorOnInternalMessages: Boolean,
+    hideUserInput: Boolean,
     isExpand: Boolean,
     isMobile: Boolean,
     messageAnimation: Boolean,
