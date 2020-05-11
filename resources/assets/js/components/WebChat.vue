@@ -755,10 +755,6 @@ export default {
               currentMessage.type = 'text';
             }
 
-            if (i === 0 && currentMessage.data && currentMessage.data.internal) {
-              delete currentMessage.data.internal;
-            }
-
             if (!this.hideDatetimeMessage) {
               if ((i === 0 && currentMessage.data)
                 || this.messageList[this.messageList.length - 1].data.date
@@ -775,7 +771,7 @@ export default {
             }
 
             if ((currentMessage.author === 'me' && (this.useHumanName || this.useHumanAvatar))
-                || (currentMessage.author === 'them' && !currentMessage.data.hideavatar && !currentMessage.data.internal && (this.useBotName || this.useBotAvatar))) {
+                || (currentMessage.author === 'them' && !currentMessage.data.hideavatar && (i === 0 || !messages[i - 1].data.internal) && (this.useBotName || this.useBotAvatar))) {
               const authorMsg = this.newAuthorMessage(currentMessage);
 
               this.messageList.push(authorMsg);
