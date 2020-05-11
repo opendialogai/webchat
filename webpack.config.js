@@ -1,5 +1,6 @@
 // This is the webpack builder for the opendialog-bot.js file
 
+const CompressionPlugin = require('compression-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
@@ -28,6 +29,7 @@ module.exports = {
         path: path.resolve(__dirname, '.')
     },
     plugins: [
+        new CompressionPlugin(),
         new CopyWebpackPlugin([
             { from : 'node_modules/@opendialogai/vue-beautiful-chat/src/assets', to: 'images/vendor/vue-beautiful-chat' },
         ]),

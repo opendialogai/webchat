@@ -13,6 +13,12 @@ let mix = require('laravel-mix');
 
 mix.webpackConfig(require('./webpack.config'));
 
+mix.options({
+  terser: {
+    extractComments: false,
+  }
+});
+
 mix.js('resources/assets/js/app.js', './public/js')
     .js('resources/assets/js/opendialog-bot.js', './public/js')
     .js('resources/assets/js/opendialog-bot-full.js', './public/js')

@@ -131,6 +131,8 @@
 import axios from 'axios';
 import { mapState } from 'vuex';
 
+import { isEmpty } from 'lodash';
+
 import cssVars from 'css-vars-ponyfill';
 
 import Comments from '@/components/Comments';
@@ -468,7 +470,7 @@ export default {
 
       this.$store.dispatch(action, { filter }).then(() => {
         let sections = [];
-        if (window._.isEmpty(filter)) {
+        if (isEmpty(filter)) {
           sections = this.$store.getters[getter];
         } else {
           sections = this.$store.getters[getter]({ filter });
@@ -703,7 +705,7 @@ export default {
         }
       }
 
-      if (config.user && !window._.isEmpty(config.user)) {
+      if (config.user && !isEmpty(config.user)) {
         this.user = config.user;
 
         if (config.user.email) {

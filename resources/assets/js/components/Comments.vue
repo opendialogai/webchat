@@ -41,6 +41,8 @@
 <script>
 import { mapActions } from 'vuex';
 
+import { isEmpty } from 'lodash';
+
 const moment = require('moment-timezone');
 
 export default {
@@ -154,7 +156,7 @@ export default {
 
     this.$store.dispatch(action, { filter }).then(() => {
       let comments = [];
-      if (window._.isEmpty(filter)) {
+      if (isEmpty(filter)) {
         comments = this.$store.getters[getter];
       } else {
         comments = this.$store.getters[getter]({ filter });
