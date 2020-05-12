@@ -117,7 +117,7 @@ class WebchatSetting extends Model
     public const BOT_NAME = 'botName';
     public const INPUT_PLACEHOLDER = 'inputPlaceholder';
     public const SEND_BUTTON_TEXT = 'sendButtonText';
-    public const END_CHAT_MESSAGE = 'endChatMessage';
+    public const END_CHAT_TEXT = 'endChatText';
     public const END_CHAT_CONFIRMATION_MESSAGE = 'endChatConfirmationMessage';
     public const END_CHAT_CONFIRMATION_POSITIVE = 'endChatConfirmationPositive';
     public const END_CHAT_CONFIRMATION_NEGATIVE = 'endChatConfirmationNegative';
@@ -248,7 +248,7 @@ class WebchatSetting extends Model
                     WebchatSetting::BOT_NAME,
                     WebchatSetting::INPUT_PLACEHOLDER,
                     WebchatSetting::SEND_BUTTON_TEXT,
-                    WebchatSetting::END_CHAT_MESSAGE,
+                    WebchatSetting::END_CHAT_TEXT,
                     WebchatSetting::END_CHAT_CONFIRMATION_MESSAGE,
                     WebchatSetting::END_CHAT_CONFIRMATION_POSITIVE,
                     WebchatSetting::END_CHAT_CONFIRMATION_NEGATIVE,

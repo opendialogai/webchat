@@ -5,7 +5,7 @@
       @click.stop="toggleConfirmCloseChat"
       class="end-chat-btn"
       :class="{confirmCloseChatAnimate: !confirmCloseChat}"
-    >{{ endChatMessage }}</button>
+    >{{ endChatText }}</button>
     <div
       v-if="confirmCloseChat"
       class="confirmCloseChat"
@@ -29,9 +29,9 @@
       }
     },
     computed: {
-      endChatMessage() {
-        if (this.$store.state.settings.bot && this.$store.state.settings.bot.endChatMessage) {
-          return this.$store.state.settings.bot.endChatMessage;
+      endChatText() {
+        if (this.$store.state.settings.bot && this.$store.state.settings.bot.endChatText) {
+          return this.$store.state.settings.bot.endChatText;
         } else {
           return "End chat";
         }
