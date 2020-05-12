@@ -206,11 +206,11 @@ function getSettings(url, userId = '', customSettings = null, callbackId = null,
 function getTags() {
   let tags = {};
 
-  Array.from(document.getElementsByTagName('meta')).forEach((item) => {
-    if (item.name) {
-      tags[item.name] = item.content;
-    }
-  });
+  if (typeof userInfo !== 'undefined') {
+    try {
+      tags = JSON.parse(userInfo);
+    } catch (e) {}
+  }
 
   return tags;
 }
