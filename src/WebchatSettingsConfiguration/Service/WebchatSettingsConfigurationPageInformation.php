@@ -19,16 +19,10 @@ class WebchatSettingsConfigurationPageInformation
 
     /**
      * @param $pageUrl
-     * @param null $userId
-     * @param $width
-     * @param $callbackId
      */
-    public function __construct($pageUrl, $userId = null, $width = null, $callbackId = null)
+    public function __construct($pageUrl)
     {
         $this->pageUrl = $pageUrl;
-        $this->userId = $userId;
-        $this->width = $width;
-        $this->callbackId = $callbackId;
     }
 
     /**
@@ -48,6 +42,14 @@ class WebchatSettingsConfigurationPageInformation
     }
 
     /**
+     * @param mixed $userId
+     */
+    public function setUserId($userId): void
+    {
+        $this->userId = $userId;
+    }
+
+    /**
      * @return mixed
      */
     public function getWidth()
@@ -56,11 +58,27 @@ class WebchatSettingsConfigurationPageInformation
     }
 
     /**
+     * @param mixed $width
+     */
+    public function setWidth($width): void
+    {
+        $this->width = $width;
+    }
+
+    /**
      * @return mixed
      */
     public function getCallbackId()
     {
         return $this->callbackId;
+    }
+
+    /**
+     * @param mixed $callbackId
+     */
+    public function setCallbackId($callbackId): void
+    {
+        $this->callbackId = $callbackId;
     }
 
     /**
@@ -74,11 +92,9 @@ class WebchatSettingsConfigurationPageInformation
     /**
      * @param array $queryParameters
      */
-    public function setQueryParameters(?array $queryParameters): void
+    public function setQueryParameters(array $queryParameters): void
     {
-        if (!is_null($queryParameters)) {
-            $this->queryParameters = $queryParameters;
-        }
+        $this->queryParameters = $queryParameters;
     }
 
     /**
@@ -92,10 +108,8 @@ class WebchatSettingsConfigurationPageInformation
     /**
      * @param array $tags
      */
-    public function setTags(?array $tags): void
+    public function setTags(array $tags): void
     {
-        if (!is_null($tags)) {
-            $this->tags = $tags;
-        }
+        $this->tags = $tags;
     }
 }

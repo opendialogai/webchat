@@ -78,14 +78,12 @@ class WebchatSettings
             parse_str($queryParametersString, $queryParameters);
         }
 
-        $pageInfo = new WebchatSettingsConfigurationPageInformation(
-            $pageUrl,
-            $request->get('user_id') ?? null,
-            $request->get('width') ?? null,
-            $request->get('callback_id') ?? null
-        );
-        $pageInfo->setQueryParameters($queryParameters);
-        $pageInfo->setTags($request->json('tags'));
+        $pageInfo = new WebchatSettingsConfigurationPageInformation($pageUrl);
+        $pageInfo->setUserId($request->get('user_id') ?? null);
+        $pageInfo->setWidth($request->get('width') ?? null);
+        $pageInfo->setCallbackId($request->get('callback_id') ?? null);
+        $pageInfo->setQueryParameters($queryParameters ?? []);
+        $pageInfo->setTags($request->json('tags') ?? []);
 
         $settings = $configurationService->runConfigurations($config, $pageInfo);
 
