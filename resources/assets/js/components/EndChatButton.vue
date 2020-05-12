@@ -5,15 +5,17 @@
       @click.stop="toggleConfirmCloseChat"
       class="end-chat-btn"
       :class="{confirmCloseChatAnimate: !confirmCloseChat}"
-    >End chat</button>
+    >{{ endChatText }}</button>
     <div
       v-if="confirmCloseChat"
       class="confirmCloseChat"
       :class="{confirmCloseChatAnimate: confirmCloseChat}"
     >
-      <span>Are you sure?</span>
-      <button class="end-chat-btn" @click.stop="closeChat">Yes</button> /
-      <button class="end-chat-btn" @click.stop="toggleConfirmCloseChat">No</button>
+      <span>{{ endChatConfirmationMessage }}</span>
+      <div class="confirmCloseChatButtons">
+        <button class="end-chat-btn" @click.stop="closeChat">{{ endChatConfirmationPositive }}</button> /
+        <button class="end-chat-btn" @click.stop="toggleConfirmCloseChat">{{ endChatConfirmationNegative }}</button>
+      </div>
     </div>
   </div>
 </template>
@@ -25,6 +27,36 @@
       return {
         confirmCloseChat: false
       }
+    },
+    computed: {
+      endChatText() {
+        if (this.$store.state.settings.bot && this.$store.state.settings.bot.endChatText) {
+          return this.$store.state.settings.bot.endChatText;
+        } else {
+          return "End chat";
+        }
+      },
+      endChatConfirmationMessage() {
+        if (this.$store.state.settings.bot && this.$store.state.settings.bot.endChatConfirmationMessage) {
+          return this.$store.state.settings.bot.endChatConfirmationMessage;
+        } else {
+          return "Are you sure?";
+        }
+      },
+      endChatConfirmationPositive() {
+        if (this.$store.state.settings.bot && this.$store.state.settings.bot.endChatConfirmationPositive) {
+          return this.$store.state.settings.bot.endChatConfirmationPositive;
+        } else {
+          return "Yes";
+        }
+      },
+      endChatConfirmationNegative() {
+        if (this.$store.state.settings.bot && this.$store.state.settings.bot.endChatConfirmationNegative) {
+          return this.$store.state.settings.bot.endChatConfirmationNegative;
+        } else {
+          return "No";
+        }
+      },
     },
     methods: {
       toggleConfirmCloseChat() {
