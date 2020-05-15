@@ -29,13 +29,15 @@
             '--btn-border-color':colors.messageButton.border,
             '--btn-border-color-hover':colors.messageButton.hoverBorder }"
       >
-        <button
-          v-for="(button, idx) in data.buttons"
-          :key="idx"
-          @click="_handleClick(button)"
-          v-html="button.text"
-          class="mt-message-with-button__buttons-wrapper__button fade-enter-active"
-        ></button>
+        <template v-for="(button, idx) in data.buttons">
+          <button
+            v-if="button.display && button.text"
+            :key="idx"
+            @click="_handleClick(button)"
+            v-html="button.text"
+            class="mt-message-with-button__buttons-wrapper__button fade-enter-active"
+          ></button>
+        </template>
       </div>
     </template>
   </div>

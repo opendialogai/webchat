@@ -15,15 +15,17 @@
             '--btn-border-color':colors.externalButton.border,
             '--btn-border-color-hover':colors.externalButton.hoverBorder }"
     >
-      <button
-        class="mt-external-buttons__button"
-        :class="(buttonClicked == idx) ? 'mt-external-buttons__button--clicked' : ''"
-        v-for="(externalButton, idx) in externalButtons"
-        v-on:click="_handleClick(externalButton, idx)"
-        :key="idx"
-      >
-        <span v-html="externalButton.text"></span>
-      </button>
+      <template v-for="(externalButton, idx) in externalButtons">
+        <button
+          v-if="externalButton.display && externalButton.text"
+          class="mt-external-buttons__button"
+          :class="(buttonClicked == idx) ? 'mt-external-buttons__button--clicked' : ''"
+          v-on:click="_handleClick(externalButton, idx)"
+          :key="idx"
+        >
+          <span v-html="externalButton.text"></span>
+        </button>
+      </template>
     </div>
   </div>
 </template>
