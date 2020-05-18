@@ -37,6 +37,7 @@
         :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
+        :on-download="download"
         :content-editable="contentEditable"
         :show-expand-button="false"
         :show-restart-button="showRestartButton"
@@ -353,14 +354,14 @@ export default {
         const date = moment
           .tz(
             `${message.data.date} ${message.data.time}`,
-            "ddd D MMM hh:mm A",
+            "ddd D MMM hh:mm:ss A",
             "utc"
           )
           .tz(this.userTimezone);
 
         /* eslint-disable no-param-reassign */
         message.data.date = date.format("ddd D MMM");
-        message.data.time = date.format("hh:mm A");
+        message.data.time = date.format("hh:mm:ss A");
         /* eslint-enable no-param-reassign */
       }
     },
@@ -375,7 +376,7 @@ export default {
         .format("ddd D MMM");
       newMsg.data.time = moment()
         .tz("UTC")
-        .format("hh:mm A");
+        .format("hh:mm:ss A");
 
       newMsg.user_id = this.user.email ? this.user.email : this.$store.state.uuid;
       newMsg.user = this.user;
@@ -414,14 +415,19 @@ export default {
       }
 
       if (newMsg.type === "text" && newMsg.data.text.length > 0) {
+        let event = 'message_sent_to_chatbot';
+        if (chatService.getMode() === "custom") {
+            event = 'message_sent_to_live_agent';
+        }
         window.parent.postMessage(
-          { dataLayerEvent: "message_sent_to_chatbot" },
+          { dataLayerEvent: event },
           this.referrerUrl
         );
       }
+
       if (newMsg.type === "button_response") {
         window.parent.postMessage(
-          { dataLayerEvent: "user_clicked_button_in_chatbot" },
+          { dataLayerEvent: { event: 'user_clicked_button_in_chatbot', label: newMsg.data.text} },
           this.referrerUrl
         );
       }
@@ -431,11 +437,7 @@ export default {
         () => chatService.sendResponseError(null, newMsg, this)
       );
     },
-    userInputFocus() {
-      if (!this.isExpand && !this.isMobile) {
-        this.$emit("expandChat");
-      }
-    },
+    userInputFocus() {},
     userInputBlur() {},
     sendReadReceipt(newMessage) {
       // Create the message object to send to our endpoint.
@@ -483,7 +485,7 @@ export default {
       if (button.phone_number) {
         const telephone = `tel:${button.phone_number}`;
 
-        this.onLinkClick(telephone);
+        this.onLinkClick(telephone, button.phone_number);
         window.open(telephone);
         return;
       }
@@ -494,13 +496,18 @@ export default {
       }
 
       if (button.link) {
-        this.onLinkClick(button.link);
+        this.onLinkClick(button.link, button.text);
 
         if (button.link_new_tab) {
           window.open(button.link, "_blank");
         } else {
           window.open(button.link, "_parent");
         }
+        return;
+      }
+
+      if (button.download) {
+        this.download();
         return;
       }
 
@@ -529,6 +536,39 @@ export default {
         }
       });
     },
+    download() {
+      window.parent.postMessage(
+        { dataLayerEvent: { event: 'download_chat_transcript'} },
+        this.referrerUrl
+      );
+      const userId = this.user && this.user.email ? this.user.email : this.uuid;
+      axios({
+        method: 'get',
+        url: `/user/${userId}/history/file`,
+        responseType: 'arraybuffer'
+      })
+      .then(response => {
+        this.forceFileDownload(response);
+      }).catch(() => console.log('Error occurred downloading chat history'))
+    },
+    forceFileDownload(response){
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      let fileName = 'Chatbot User History.txt';
+      const contentDisposition = response.headers['content-disposition'];
+      if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename=(.+)/);
+        if (fileNameMatch.length === 2) {
+          fileName = fileNameMatch[1].replace(/(^"|"$)/g, '');
+        }
+      }
+      link.setAttribute('download',fileName + '.txt');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    },
     onListButtonClick(callback) {
       this.sendMessage({
         type: "webchat_list_response",
@@ -537,9 +577,9 @@ export default {
         data: {}
       });
     },
-    onLinkClick(url) {
+    onLinkClick(url, text) {
       window.parent.postMessage(
-          { dataLayerEvent: "url_clicked" },
+          { dataLayerEvent: { event: 'url_clicked', url: url, text: text } },
           this.referrerUrl
       );
       this.sendMessage({
@@ -552,7 +592,7 @@ export default {
     },
     onFormButtonClick(data, msg) {
       window.parent.postMessage(
-          { dataLayerEvent: "form_submitted" },
+          { dataLayerEvent: { event: 'form_submitted', form_id: msg.data.callback_id, form_text: msg.data.text }},
           this.referrerUrl
       );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
@@ -572,7 +612,7 @@ export default {
     },
     onFormCancelClick(msg) {
       window.parent.postMessage(
-        { dataLayerEvent: "form_cancelled" },
+        { dataLayerEvent: { event: 'form_cancelled', 'callback_id': msg.data.cancel_callback }},
         this.referrerUrl
       );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
@@ -605,7 +645,7 @@ export default {
       if (this.isOpen) {
         this.closeChatButtonReverseAnimate = true;
           window.parent.postMessage(
-            { dataLayerEvent: "chat_closed" },
+            { dataLayerEvent: "chat_minimized" },
             this.referrerUrl
           );
         setTimeout(() => {
@@ -617,7 +657,7 @@ export default {
         this.isOpen = !this.isOpen;
         this.$emit("toggleChatOpen", this.headerHeight);
           window.parent.postMessage(
-            { dataLayerEvent: "chat_opened" },
+            { dataLayerEvent: "chat_maximized" },
             this.referrerUrl
           );
       }
@@ -665,7 +705,7 @@ export default {
 
       const userId = this.user && this.user.email ? this.user.email : this.$store.state.uuid;
 
-      const ignoreTypes = "chat_open,trigger,cta";
+      const ignoreTypes = "chat_open,trigger,cta,text_external";
 
       return axios
         .get(

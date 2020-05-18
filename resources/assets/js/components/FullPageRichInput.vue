@@ -57,7 +57,11 @@
             <button
               v-if="button.display && button.text"
               class="animateStartingState"
-              :class="[{animateSlideUp: isOpen, [`button-delay${idx + 1}`]: true}]"
+              :class="{
+                animateSlideUp: isOpen,
+                [`button-delay${idx + 1}`]: true,
+                downloadButton: button.download,
+              }"
               :key="idx"
               :myAttr="idx"
               @click="_handleClick(button)"
@@ -110,7 +114,9 @@ export default {
       if (!this.showLoader) {
         this.onSubmit(button);
 
-        this.showLoader = true;
+        if (!button.download) {
+          this.showLoader = true;
+        }
       }
     }
   }
@@ -124,6 +130,7 @@ export default {
   text-align: center;
   position: relative;
   overflow-x: hidden;
+  min-height: 30px;
 }
 .mt-fpri .mt-fpri-wrapper {
   padding: 20px 0;
@@ -208,6 +215,28 @@ export default {
   border: 2px solid var(--btn-border-color-hover);
 }
 
+.mt-fpri__buttons button.downloadButton {
+  background: none !important;
+  border: none !important;
+  color: var(--labelTextColor) !important;
+  text-decoration: underline;
+  font-size: 16px;
+  width: auto;
+  padding: 0;
+  min-height: 0;
+  margin-top: 30px;
+}
+.mt-fpri__buttons button.downloadButton:before {
+  content: "";
+  width: 13px;
+  height: 19px;
+  background: red;
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: middle;
+  background: url("/vendor/webchat/images/download-button.svg");
+}
+
 /* loader --- loader --- loader ---  */
 @keyframes mt-fpri__button-fade-in {
   from {
@@ -223,48 +252,6 @@ export default {
 .mt-fpri__button--animate {
   animation: mt-fpri__button-fade-in 1s forwards;
 }
-
-/* .sc-message--fp-rich {
-  background: #eaeaea;
-  border-radius: 6px;
-  padding: 0 12px;
-  max-width: calc(100% - 40px);
-  border: 1px solid blue;
-} */
-/*
-.sc-message--fp-rich .sc-message--fp-rich--text {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  -webkit-font-smoothing: subpixel-antialiased;
-}
-
-.sc-message--fp-rich button {
-  cursor: pointer;
-  border-radius: 30px;
-  border: none;
-  font-size: 14px;
-  padding: 12px 17px;
-  margin: 0 10px 10px 0;
-}
-.sc-message--fp-rich button:hover {
-  background-color: var(--button-hover) !important;
-}
-
-.sc-message--fp-rich button:last-child {
-  margin-right: 0;
-}
-
-.sc-message--fp-rich .sc-message--fp-rich--image {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.sc-message--fp-rich .sc-message--fp-rich--image img {
-  max-width: 100%;
-} */
 
 .fp-loader {
   position: sticky;

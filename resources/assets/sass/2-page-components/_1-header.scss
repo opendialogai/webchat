@@ -85,3 +85,44 @@
     vertical-align: middle;
   }
 }
+
+.header-nav__download-button {
+  position: absolute;
+  right: 18px;
+  top: 13px;
+  width: 40px;
+  height: 28px;
+  background: #c01a1e;
+  border-radius: 14px;
+
+  .header-nav__download-image-hover {
+    display: none;
+  }
+
+  img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    left: 0;
+    right: 0;
+  }
+
+  &:hover {
+    background: #ffffff;
+
+    .header-nav__download-image {
+      display: none;
+    }
+    .header-nav__download-image-hover {
+      display: block;
+    }
+  }
+}
+
+.mobile {
+  .header-nav__download-button {
+    right: 11px;
+    top: 11px;
+  }
+}

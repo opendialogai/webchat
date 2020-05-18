@@ -88,6 +88,11 @@ ConversiveClient.prototype.getSession = function(uuid, name = null) {
     iad: false,
   };
 
+  window.parent.postMessage(
+    { dataLayerEvent: { event: "conversation_started_live_agent", site_code: this.siteCode }},
+    document.referrer.match(/^.+:\/\/[^\/]+/)[0]
+  );
+
   return this.makeRequest("getSession", options);
 };
 
@@ -177,6 +182,23 @@ ConversiveClient.prototype.sendTypingMessage = function(text, sessionToken) {
     rsn: this.requestSerialNumber,
   });
 };
+
+ConversiveClient.prototype.sendMessageToHistory = function(message, agentName = false, uuid = null) {
+  const data = JSON.stringify({
+    date: message.data.date,
+    time: message.data.time,
+    author: (agentName) ? agentName : message.author,
+    text: message.data.text,
+  });
+  if (uuid) {
+    message.user_id = uuid;
+  }
+  axios.post("/user/" + message.user_id + "/history", data, {
+    headers: {
+      "Accept": "application/json",
+    }
+  });
+}
 
 ConversiveClient.prototype.logout = function(sessionToken) {
   return this.makeRequest("logout", {

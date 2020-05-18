@@ -61,6 +61,16 @@ function mergeSettings(webchatSettings) {
 }
 
 /**
+ * Push events to the GA datalayer
+ */
+function pushToDataLayer (eventData) {
+    eventData.scenario_name = 'ACO Bot'
+    if (window.dataLayer !== undefined) {
+        window.dataLayer.push(eventData)
+    }
+}
+
+/**
  * Creates the chat window iFrame on the parent page
  *
  * @param url
@@ -124,11 +134,13 @@ function openChatWindow(url, div = null) {
       ifrm.classList.remove(event.data.removeClass);
     }
 
-    if (event.data && typeof event.data.dataLayerEvent !== 'undefined') {
-      if (window.dataLayer !== undefined) {
-        window.dataLayer.push({ event: event.data.dataLayerEvent });
+      if (event.data && typeof event.data.dataLayerEvent !== 'undefined') {
+          let eventData = { event: event.data.dataLayerEvent };
+          if (typeof event.data.dataLayerEvent === 'object') {
+              eventData = event.data.dataLayerEvent;
+          }
+          pushToDataLayer(eventData)
       }
-    }
   };
 
   listeners.mouseUp = () => {
@@ -157,6 +169,8 @@ function openChatWindow(url, div = null) {
   window.addEventListener('mouseup', listeners.mouseUp);
   window.onpopstate = listeners.onPopState;
   window.addEventListener('openDialogCommentSectionChange', listeners.comment);
+
+  pushToDataLayer({event: 'chat_displayed'});
 
   return ifrm;
 }
@@ -296,6 +310,8 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
     }
 
     openChatWindow(url);
+  } else {
+      pushToDataLayer({ event: 'chat_not_displayed' });
   }
 }
 

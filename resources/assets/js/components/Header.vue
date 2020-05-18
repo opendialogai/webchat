@@ -34,6 +34,14 @@
         </div>
 
         <div v-else class="header-nav__restart-button"></div>
+
+        <div
+          v-if="!showFullPageFormInput && !showFullPageRichInput"
+          class="header-nav__download-button" @click.stop="onDownload"
+        >
+          <img class="header-nav__download-image" src="/vendor/webchat/images/download.svg" />
+          <img class="header-nav__download-image-hover" src="/vendor/webchat/images/download-hover.svg" />
+        </div>
       </div>
 
       <div class="header__btm-fade"></div>
@@ -84,6 +92,10 @@ export default {
       required: true
     },
     onRestartButtonClick: {
+      type: Function,
+      required: true
+    },
+    onDownload: {
       type: Function,
       required: true
     },

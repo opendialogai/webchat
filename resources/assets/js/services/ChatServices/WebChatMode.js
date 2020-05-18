@@ -37,6 +37,26 @@ WebChatMode.prototype.sendRequest = function(message, webChatComponent) {
     }
 };
 
+function sendConversationStartedEvent (agentName) {
+  window.parent.postMessage(
+    { dataLayerEvent: { event: 'conversation_started_chat_bot', agent_name: agentName } },
+    document.referrer.match(/^.+:\/\/[^\/]+/)[0]
+  )
+}
+
+function sendMessageReceivedEvent (message) {
+  if (message.intent === 'intent.avaya.presales_start_response') {
+    sendConversationStartedEvent('presales');
+  } else if (message.intent === 'intent.avaya.support_start_response') {
+    sendConversationStartedEvent('support');
+  }
+
+  window.parent.postMessage(
+    { dataLayerEvent: { event: 'message_received_from_chatbot', message: message.intent } },
+    document.referrer.match(/^.+:\/\/[^\/]+/)[0]
+  )
+}
+
 WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
   if (response.data instanceof Array) {
     let index = 0;
@@ -161,10 +181,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           }
         }, (messageIndex + 1) * webChatComponent.messageDelay);
 
-        window.parent.postMessage(
-          { dataLayerEvent: "message_received_from_chatbot" },
-          document.referrer.match(/^.+:\/\/[^\/]+/)[0]
-        );
+        sendMessageReceivedEvent(message);
 
         index += 1;
       }
@@ -310,11 +327,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           webChatComponent.showMessages = false;
         }
       }, webChatComponent.messageDelay);
-
-      window.parent.postMessage(
-        { dataLayerEvent: "message_received_from_chatbot" },
-        document.referrer.match(/^.+:\/\/[^\/]+/)[0]
-      );
+      sendMessageReceivedEvent(message);
     }
   }
 };
@@ -329,7 +342,7 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
         .format("ddd D MMM"),
       time: moment()
         .tz("UTC")
-        .format("hh:mm A"),
+        .format("hh:mm:ss A"),
       text: "We're sorry, that didn't work, please try again"
     }
   };
