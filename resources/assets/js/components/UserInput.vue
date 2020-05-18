@@ -30,14 +30,14 @@
         @keydown="handleKey"
         @input="onTextChange($event)"
         :contentEditable="contentEditable"
-        :placeholder="placeholder"
+        :placeholder="placeholderText"
         class="user-input__form-text-input"
         ref="userInput"
         :style="{color: colors.userInput.text}"
       ></div>
 
       <div class="user-input__buttons">
-        <button @click.prevent="_submitText" class="send-btn"></button>
+        <button @click.prevent="_submitText" class="send-btn">{{ sendButtonText }}</button>
 
         <EndChatButton
           @close-chat="closeChat"
@@ -53,7 +53,7 @@
   import ExternalButtons from "./ExternalButtons.vue";
   import EndChatButton from "./EndChatButton";
 
-export default {
+  export default {
   components: {
     EndChatButton,
     ExternalButtons
@@ -102,6 +102,22 @@ export default {
       inputActive: false,
       textEntered: false,
     };
+  },
+  computed: {
+    placeholderText () {
+      if (this.$store.state.settings.bot && this.$store.state.settings.bot.inputPlaceholder) {
+        return this.$store.state.settings.bot.inputPlaceholder;
+      } else {
+        return this.placeholder;
+      }
+    },
+    sendButtonText () {
+      if (this.$store.state.settings.bot && this.$store.state.settings.bot.sendButtonText) {
+        return this.$store.state.settings.bot.sendButtonText;
+      } else {
+        return "Send";
+      }
+    },
   },
   created() {
     this.onTextChange = _.debounce(this.onTextChangeForDebouncing, 500);

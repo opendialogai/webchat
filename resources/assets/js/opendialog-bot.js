@@ -199,11 +199,13 @@ function getSettings(url, userId = '', customSettings = null, callbackId = null,
     }
 
     let configUrl = `${url}/webchat-config?${configUrlObj.toString()}`;
-    return fetch(configUrl, {
+
+  return fetch(configUrl, {
       url: configUrl,
       method: 'POST',
       body: JSON.stringify({
-        custom_settings: customSettings
+        custom_settings: customSettings,
+        tags: getTags(),
       }),
     })
       .then((response) => {
@@ -215,21 +217,16 @@ function getSettings(url, userId = '', customSettings = null, callbackId = null,
       });
 }
 
-function checkValidPath(testPath) {
-    const currentUrl = window.location.href;
+function getTags() {
+  let tags = {};
 
-    if (testPath === '') {
-      return false;
+  Array.from(document.getElementsByTagName('meta')).forEach((item) => {
+    if (item.name) {
+      tags[item.name] = item.content;
     }
+  });
 
-    if (testPath === '*') {
-      return true;
-    }
-
-    let formattedTestPath = testPath.replace(/\*/, '(.*)');
-    let regex = new RegExp(formattedTestPath);
-
-    return regex.test(currentUrl);
+  return tags;
 }
 
 /**
@@ -238,7 +235,7 @@ function checkValidPath(testPath) {
  *
  * @returns {boolean}
  */
-function isValidPath() {
+async function isValidPath() {
     if (typeof window.openDialogSettings.general === 'undefined') {
       return false;
     }
@@ -251,14 +248,20 @@ function isValidPath() {
 
     let retVal = false;
 
-    if (Array.isArray(validPath)) {
-        validPath.forEach((key) => {
-            if (checkValidPath(key)) {
-                retVal = true;
-            }
-        });
-    } else {
-        retVal = checkValidPath(validPath);
+    try {
+      let response = await fetch(window.openDialogSettings.url + '/validate-paths', {
+        method: 'POST',
+        body: JSON.stringify({
+          current_url: window.location.href,
+          valid_paths: validPath
+        })
+      });
+
+      if (response.status === 200) {
+        retVal = await response.json();
+      }
+    } catch (e) {
+      console.error(e);
     }
 
     return retVal;
@@ -299,7 +302,7 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
     query = `${query}&mobile=true`;
   }
 
-  if (isValidPath()) {
+  if (await isValidPath()) {
     addCssToPage(`${url}/vendor/webchat/css/app-iframe.css`);
 
     if (window.openDialogSettings.general.pageCssPath) {
@@ -333,7 +336,7 @@ function addUrlUpdatedListener() {
     // This event listener is attached once and never removed as it will need to track URL changes even when there
     // is no chat window
     if (event.data && typeof event.data.urlUpdated !== 'undefined') {
-      if (!isValidPath()) {
+      if (!(await isValidPath())) {
         // Get new settings
         const urlParams = new URLSearchParams(window.location.search);
 

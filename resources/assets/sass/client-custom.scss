@@ -195,21 +195,18 @@
 }
 
 .send-btn {
-  width: 85px;
+  width: auto;
   height: 50px;
+  padding: 2px 20px;
   background-color: #da291c;
   border-radius: 34.5px;
   transition: 0.4s;
+  font-size: 18px;
+  color: white;
 
   &:hover {
     background-color: #c01a1e;
   }
-}
-
-.send-btn::before {
-  content: "Send";
-  font-size: 18px;
-  color: white;
 }
 
 .end-chat-btn,
@@ -232,6 +229,11 @@
 
 .confirmCloseChat {
   opacity: 0;
+  text-align: right;
+}
+
+.confirmCloseChatButtons {
+  display: inline-block;
 }
 
 .confirmCloseChatAnimate {
