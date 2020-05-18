@@ -53,18 +53,20 @@
 
       <template v-if="message.data.buttons.length">
         <div class="mt-fpri__buttons">
-          <button
-            class="animateStartingState"
-            :class="{
-              animateSlideUp: isOpen,
-              [`button-delay${idx + 1}`]: true,
-              downloadButton: button.download,
-            }"
-            v-for="(button, idx) in message.data.buttons"
-            :key="idx"
-            :myAttr="idx"
-            @click="_handleClick(button)"
-          >{{button.text}}</button>
+          <template v-for="(button, idx) in message.data.buttons">
+            <button
+              v-if="button.display && button.text"
+              class="animateStartingState"
+              :class="{
+                animateSlideUp: isOpen,
+                [`button-delay${idx + 1}`]: true,
+                downloadButton: button.download,
+              }"
+              :key="idx"
+              :myAttr="idx"
+              @click="_handleClick(button)"
+            >{{button.text}}</button>
+          </template>
         </div>
       </template>
     </div>
