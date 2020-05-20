@@ -330,6 +330,13 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
     const attributes = await fetchAttributes();
 
     if (attributes) {
+      if (!window.openDialogSettings.user) {
+        window.openDialogSettings.user = {};
+      }
+      if (!window.openDialogSettings.user.custom) {
+        window.openDialogSettings.user.custom = {};
+      }
+
       attributes.forEach((attr) => {
         if (attr.attribute_mapping_type === 'HTML Tag') {
           const mappingName = attr.attribute_mapping_name.split('.');
