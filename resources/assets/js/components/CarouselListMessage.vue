@@ -12,6 +12,8 @@
         <TextMessage
           v-if="item.message_type === 'text'"
           :data="item"
+          :author="message.author"
+          :type="message.type"
           :messageColors="messageColors"
           :onLinkClick="onLinkClick"
         />
