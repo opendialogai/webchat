@@ -23,8 +23,17 @@
       :onLinkClick="onLinkClick"
     />
 
+    <ListMessage
+      v-else-if="message.type === 'list' && message.data.view_type === 'list'"
+      :message="message"
+      :data="message.data"
+      :messageColors="determineMessageColors()"
+      :colors="colors"
+      :onButtonClick="onListButtonClick"
+    />
+
     <CarouselListMessage
-      v-else-if="message.type === 'list' && message.data.view_type"
+      v-else-if="message.type === 'list'"
       :message="message"
       :data="message.data"
       :messageColors="determineMessageColors()"
@@ -85,15 +94,6 @@
       :data="message.data"
       :messageColors="determineMessageColors()"
       :author="message.author"
-    />
-
-    <ListMessage
-      v-else-if="message.type === 'list'"
-      :message="message"
-      :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
-      :onButtonClick="onListButtonClick"
     />
 
     <RichMessage
