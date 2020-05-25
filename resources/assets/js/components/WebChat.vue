@@ -541,7 +541,7 @@ export default {
         { dataLayerEvent: { event: 'download_chat_transcript'} },
         this.referrerUrl
       );
-      const userId = this.user && this.user.email ? this.user.email : this.uuid;
+      const userId = this.user && this.user.email ? this.user.email : this.$store.state.uuid;
       axios({
         method: 'get',
         url: `/user/${userId}/history/file`,
