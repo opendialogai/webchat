@@ -61,6 +61,7 @@
                 animateSlideUp: isOpen,
                 [`button-delay${idx + 1}`]: true,
                 downloadButton: button.download,
+                [`${button.type}`]: true,
               }"
               :key="idx"
               :myAttr="idx"

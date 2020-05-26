@@ -36,6 +36,7 @@
             @click="_handleClick(button)"
             v-html="button.text"
             class="mt-message-with-button__buttons-wrapper__button fade-enter-active"
+            :class="button.type"
           ></button>
         </template>
       </div>
