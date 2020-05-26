@@ -94,7 +94,7 @@ function openChatWindow(url, div = null) {
     ifrm.style.width = '130px';
     window.document.body.appendChild(ifrm);
 
-   listeners.load = () => {
+    listeners.load = () => {
         // Send settings and initial path to the chat widget.
         ifrm.contentWindow.postMessage({
             loadUuid: sessionStorage.uuid,
@@ -153,7 +153,7 @@ function openChatWindow(url, div = null) {
   listeners.onPopState = (e) => {
     if (e.state !== null) {
       if (hasChatWindow()) {
-        ifrm.contentWindow.postMessage({newPathname: window.location.pathname}, '*');
+        ifrm.contentWindow.postMessage({ newPathname: window.location.pathname }, '*');
       }
     }
   };
@@ -429,7 +429,7 @@ if (window.openDialogSettings) {
 
   if (userId) {
     sessionStorage.uuid = userId;
-  } else {
+  } else if (!sessionStorage.uuid) {
     sessionStorage.uuid = uuid.v4();
   }
 
