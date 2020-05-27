@@ -1,5 +1,5 @@
 <template>
-  <div class="mt mt-message-rich sc-message--rich" :style="messageColors"  :class="[{
+  <div class="mt reap mt-message-rich sc-message--rich" :style="messageColors"  :class="[{
         animate: this.data.animate,
     }]">
     <div class="sc-message--rich--title">{{ data.title }}</div>
@@ -85,19 +85,42 @@ export default {
 }
 
 .sc-message--rich button {
+  margin-bottom: 10px;
+
+  border: 1px solid;
+  font-size: 15px;
+  line-height: 1.33;
+
+  text-align: center;
+  color: #ffffff;
+
+  font-weight: normal;
   cursor: pointer;
-  border-radius: 30px;
+
   border: none;
-  font-size: 14px;
-  padding: 12px 17px;
-  margin: 0 10px 10px 0;
-}
-.sc-message--rich button:hover {
-  background-color: var(--button-hover) !important;
+  outline: none;
+  position: relative;
+  transition: 0.4s;
+  width: 95%;
+  max-width: 325px;
+  border-radius: 34.5px;
+
+  padding: 0 20px;
+  @media (min-width: 450px) {
+    padding: 0 10px;
+  }
 }
 
-.sc-message--rich button:last-child {
-  margin-right: 0;
+.sc-message--rich button {
+  background-color: var(--btn-bg);
+  color: var(--btn-color);
+  border: 2px solid var(--btn-border-color);
+}
+
+.sc-message--rich button:hover {
+  background-color: var(--btn-bg-hover);
+  color: var(--btn-color-hover);
+  border: 2px solid var(--btn-border-color-hover);
 }
 
 .sc-message--rich .sc-message--rich--image {
