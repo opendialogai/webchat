@@ -351,3 +351,27 @@
 .button-delay4 {
   animation-delay: 1.05s;
 }
+
+#app .secondary-fp-button {
+    background: none;
+    border: none;
+    color: var(--labelTextColor);
+    text-decoration: underline;
+    font-size: 16px;
+    width: auto;
+    padding: 0;
+    min-height: 0;
+    margin-top: 30px;
+}
+
+#app .secondary-button {
+    background: none;
+    border: none;
+    color: var(--labelTextColor);
+    text-decoration: underline;
+    width: auto;
+    padding: 0;
+    min-height: 0;
+    margin-top: 10px;
+    margin-left: 15px;
+}

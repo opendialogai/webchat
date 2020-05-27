@@ -61,6 +61,7 @@
                 animateSlideUp: isOpen,
                 [`button-delay${idx + 1}`]: true,
                 downloadButton: button.download,
+                [`${button.type}`]: true,
               }"
               :key="idx"
               :myAttr="idx"
@@ -114,7 +115,7 @@ export default {
       if (!this.showLoader) {
         this.onSubmit(button);
 
-        if (!button.download) {
+        if (!button.download && !button.link) {
           this.showLoader = true;
         }
       }
