@@ -63,25 +63,9 @@ export default {
 
 <style scoped>
 .sc-message--rich {
-  background: #eaeaea;
   border-radius: 6px;
-  padding: 0 12px;
+  padding: 0 10px;
   max-width: calc(100% - 40px);
-}
-
-.sc-message--rich .sc-message--rich--title {
-}
-
-.sc-message--rich .sc-message--rich--subtitle {
-}
-
-.sc-message--rich .sc-message--rich--text {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 .sc-message--rich button {

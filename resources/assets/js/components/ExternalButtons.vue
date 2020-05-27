@@ -1,7 +1,7 @@
 <template>
-  <div v-if="externalButtons.length" class="mt-wrapper">
+  <div v-if="externalButtons.length">
     <div
-      class="mt mt-external-buttons"
+      class="mt-external-buttons"
       :class="{animate: this.animate, 'fade-enter-active': this.animate}"
       :style="{
             '--background': colors.messageList.bg,
