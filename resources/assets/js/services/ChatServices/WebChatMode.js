@@ -44,11 +44,11 @@ function sendConversationStartedEvent (agentName) {
   )
 }
 
-function sendMessageReceivedEvent (message) {
-  if (message.intent === 'intent.avaya.presales_start_response') {
-    sendConversationStartedEvent('presales');
-  } else if (message.intent === 'intent.avaya.support_start_response') {
-    sendConversationStartedEvent('support');
+function sendMessageReceivedEvent (message, webChatComponent) {
+  if (typeof webChatComponent.$store.state.messageMetaData.dialogflowId !== 'undefined'
+    && (message.intent === 'intent.avaya.agent1StartResponse'
+      || message.intent === 'intent.avaya.agent2StartResponse')) {
+    sendConversationStartedEvent(webChatComponent.$store.state.messageMetaData.dialogflowId);
   }
 
   window.parent.postMessage(
@@ -76,6 +76,10 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           webChatComponent.ctaText.splice(0, 1);
         }
         webChatComponent.ctaText.push(message.data.text);
+
+        totalMessages -= 1;
+      } else if (message.type === 'meta') {
+        webChatComponent.updateMessageMetaData(message);
 
         totalMessages -= 1;
       } else if (!message) {
@@ -181,7 +185,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           }
         }, (messageIndex + 1) * webChatComponent.messageDelay);
 
-        sendMessageReceivedEvent(message);
+        sendMessageReceivedEvent(message, webChatComponent);
 
         index += 1;
       }
@@ -327,7 +331,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           webChatComponent.showMessages = false;
         }
       }, webChatComponent.messageDelay);
-      sendMessageReceivedEvent(message);
+      sendMessageReceivedEvent(message, webChatComponent);
     }
   }
 };
