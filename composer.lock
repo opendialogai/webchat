@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "99df4710855262a807395c586f3d47c9",
+    "content-hash": "09ae8c7ac5407a5c81383a697aed6866",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -3845,16 +3845,16 @@
         },
         {
             "name": "opendialogai/core",
-            "version": "dev-feature/custom-buttons",
+            "version": "0.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opendialogai/core.git",
-                "reference": "ec0551752c32aa8485399252fb33ab524bd4d19c"
+                "reference": "5215063b92d362994b3416b5b300a07333ca27ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opendialogai/core/zipball/ec0551752c32aa8485399252fb33ab524bd4d19c",
-                "reference": "ec0551752c32aa8485399252fb33ab524bd4d19c",
+                "url": "https://api.github.com/repos/opendialogai/core/zipball/5215063b92d362994b3416b5b300a07333ca27ac",
+                "reference": "5215063b92d362994b3416b5b300a07333ca27ac",
                 "shasum": ""
             },
             "require": {
@@ -3933,7 +3933,7 @@
                 }
             ],
             "description": "The OpenDialog core package",
-            "time": "2020-05-26T13:02:27+00:00"
+            "time": "2020-05-27T07:08:09+00:00"
         },
         {
             "name": "opendialogai/dgraph-docker",
@@ -5812,9 +5812,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "opendialogai/core": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
