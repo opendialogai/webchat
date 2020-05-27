@@ -81,11 +81,11 @@
 
 
 <script>
-    import axios from "axios";
-    import chatService from "../services/ChatService";
-    import SessionStorageMixin from "../mixins/SessionStorageMixin";
+  import axios from "axios";
+  import chatService from "../services/ChatService";
+  import SessionStorageMixin from "../mixins/SessionStorageMixin";
 
-    const moment = require("moment-timezone");
+  const moment = require("moment-timezone");
 
 export default {
   name: "WebChat",
@@ -541,7 +541,7 @@ export default {
         { dataLayerEvent: { event: 'download_chat_transcript'} },
         this.referrerUrl
       );
-      const userId = this.user && this.user.email ? this.user.email : this.uuid;
+      const userId = this.user && this.user.email ? this.user.email : this.$store.state.uuid;
       axios({
         method: 'get',
         url: `/user/${userId}/history/file`,
@@ -919,7 +919,10 @@ export default {
         .sendTypingRequest(text, this)
         .then(response => chatService.sendTypingResponseSuccess(response, this))
         .catch(() => chatService.sendTypingResponseError(null, this));
-    }
+    },
+    updateMessageMetaData(message) {
+      this.$store.commit('setMessageMetaData', message.data.elements);
+    },
   }
 };
 </script>

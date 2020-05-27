@@ -17,7 +17,7 @@
         "phpunit/phpunit": "^8.3",
         "orchestra/testbench": "^4.0",
         "squizlabs/php_codesniffer": "^3.4",
-        "opendialogai/core": "0.6.5"
+        "opendialogai/core": "0.6.8"
     },
     "autoload": {
         "psr-4": {

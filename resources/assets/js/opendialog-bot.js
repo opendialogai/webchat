@@ -35,7 +35,7 @@ function addCssToPage(href) {
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', href);
+    link.setAttribute('href', `${href}?${window.openDialogSettings.css_version}`);
     document.getElementsByTagName('head')[0].appendChild(link);
 }
 /**
@@ -94,7 +94,7 @@ function openChatWindow(url, div = null) {
     ifrm.style.width = '130px';
     window.document.body.appendChild(ifrm);
 
-   listeners.load = () => {
+    listeners.load = () => {
         // Send settings and initial path to the chat widget.
         ifrm.contentWindow.postMessage({
             loadUuid: sessionStorage.uuid,
@@ -153,7 +153,7 @@ function openChatWindow(url, div = null) {
   listeners.onPopState = (e) => {
     if (e.state !== null) {
       if (hasChatWindow()) {
-        ifrm.contentWindow.postMessage({newPathname: window.location.pathname}, '*');
+        ifrm.contentWindow.postMessage({ newPathname: window.location.pathname }, '*');
       }
     }
   };
@@ -227,6 +227,24 @@ function getTags() {
   }
 
   return tags;
+}
+
+async function fetchAttributes() {
+  let retVal = false;
+
+  try {
+    let response = await fetch(window.openDialogSettings.url + '/api/attributes?url=' + window.location.href, {
+      method: 'GET',
+    });
+
+    if (response.status === 200) {
+      retVal = await response.json();
+    }
+  } catch (e) {
+    console.error(e);
+  }
+
+  return retVal;
 }
 
 /**
@@ -309,9 +327,39 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
       addCssToPage(window.openDialogSettings.general.pageCssPath);
     }
 
+    const attributes = await fetchAttributes();
+
+    if (attributes) {
+      if (!window.openDialogSettings.user) {
+        window.openDialogSettings.user = {};
+      }
+      if (!window.openDialogSettings.user.custom) {
+        window.openDialogSettings.user.custom = {};
+      }
+
+      attributes.forEach((attr) => {
+        if (attr.attribute_mapping_type === 'HTML Tag') {
+          const mappingName = attr.attribute_mapping_name.split('.');
+
+          if (window[mappingName[0]]) {
+            const json = JSON.parse(window[mappingName[0]]);
+            if (json[mappingName[1]]) {
+              window.openDialogSettings.user.custom[attr.attribute_canonical_name] = json[mappingName[1]];
+            }
+          }
+        } else if (attr.attribute_mapping_type === 'URL Parameter') {
+          const urlParams = new URLSearchParams(window.location.search);
+
+          if (urlParams.has(attr.attribute_mapping_name)) {
+            window.openDialogSettings.user.custom[attr.attribute_canonical_name] = urlParams.get(attr.attribute_mapping_name);
+          }
+        }
+      });
+    }
+
     openChatWindow(url);
   } else {
-      pushToDataLayer({ event: 'chat_not_displayed' });
+    pushToDataLayer({ event: 'chat_not_displayed' });
   }
 }
 
@@ -381,7 +429,7 @@ if (window.openDialogSettings) {
 
   if (userId) {
     sessionStorage.uuid = userId;
-  } else {
+  } else if (!sessionStorage.uuid) {
     sessionStorage.uuid = uuid.v4();
   }
 

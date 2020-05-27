@@ -273,7 +273,12 @@
       if (newValue) {
         this.agentProfile.teamName = 'You’re talking with ' + newValue;
       }
-    }
+    },
+    "messageMetaTeamName": function(newValue, oldValue) {
+      if (typeof newValue !== 'undefined' && newValue !== '') {
+        this.agentProfile.teamName = newValue;
+      }
+    },
   },
   computed: {
     messages() {
@@ -304,7 +309,10 @@
     lastMessage() {
       if (this.messages.length == 0) return {}
       return this.messages[this.messages.length - 1]
-    }
+    },
+    messageMetaTeamName() {
+      return this.$store.state.messageMetaData.teamName;
+    },
   },
   methods: {
     setChatMode(mode) {
