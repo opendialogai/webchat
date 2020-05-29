@@ -219,12 +219,17 @@ function getSettings(url, userId = '', customSettings = null, callbackId = null,
 
 function getTags() {
   let tags = {};
+  let variables = ['userInfo', 'avayaBot'];
 
-  if (typeof userInfo !== 'undefined') {
-    try {
-      tags = JSON.parse(userInfo);
-    } catch (e) {}
-  }
+  variables.forEach((variable) => {
+    if (typeof window[variable] !== 'undefined') {
+      try {
+        tags[variable] = JSON.parse(window[variable]);
+      } catch (e) {
+        tags[variable] = {};
+      }
+    }
+  });
 
   return tags;
 }
