@@ -219,12 +219,17 @@ function getSettings(url, userId = '', customSettings = null, callbackId = null,
 
 function getTags() {
   let tags = {};
+  let variables = ['userInfo', 'avayaBot'];
 
-  if (typeof userInfo !== 'undefined') {
-    try {
-      tags = JSON.parse(userInfo);
-    } catch (e) {}
-  }
+  variables.forEach((variable) => {
+    if (typeof window[variable] !== 'undefined') {
+      try {
+        tags[variable] = JSON.parse(window[variable]);
+      } catch (e) {
+        tags[variable] = {};
+      }
+    }
+  });
 
   return tags;
 }
@@ -342,9 +347,14 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
           const mappingName = attr.attribute_mapping_name.split('.');
 
           if (window[mappingName[0]]) {
-            const json = JSON.parse(window[mappingName[0]]);
-            if (json[mappingName[1]]) {
-              window.openDialogSettings.user.custom[attr.attribute_canonical_name] = json[mappingName[1]];
+            let json = JSON.parse(window[mappingName[0]]);
+
+            for (let x = 1; x < mappingName.length; x++) {
+              json = json[mappingName[x]];
+
+              if (json && x === mappingName.length - 1) {
+                window.openDialogSettings.user.custom[attr.attribute_canonical_name] = json;
+              }
             }
           }
         } else if (attr.attribute_mapping_type === 'URL Parameter') {
