@@ -181,7 +181,7 @@ function openChatWindow(url, div = null) {
  */
 function getSettings(url, userId = '', customSettings = null, callbackId = null, width = null) {
   let configUrlObj = new URLSearchParams();
-  configUrlObj.append('url', document.getElementById('spoof-url').value);
+  configUrlObj.append('url', locationOrSpoof());
 
   if (userId) {
     configUrlObj.append('user_id', userId);
@@ -215,6 +215,13 @@ function getSettings(url, userId = '', customSettings = null, callbackId = null,
     });
 }
 
+function locationOrSpoof() {
+  if (window.location.pathname.split('/').includes('demo')) {
+    return document.getElementById('spoof-url').value;
+  }
+  return window.location.href;
+}
+
 function getTags() {
   let tags = {};
   let variables = ['userInfo', 'avayaBot'];
@@ -236,7 +243,7 @@ async function fetchAttributes() {
   let retVal = false;
 
   try {
-    let response = await fetch(window.openDialogSettings.url + '/api/attributes?url=' + document.getElementById('spoof-url').value, {
+    let response = await fetch(window.openDialogSettings.url + '/api/attributes?url=' + locationOrSpoof(), {
       method: 'GET',
     });
 
@@ -272,7 +279,7 @@ async function isValidPath() {
     let response = await fetch(window.openDialogSettings.url + '/validate-paths', {
       method: 'POST',
       body: JSON.stringify({
-        current_url: document.getElementById("spoof-url").value,
+        current_url: locationOrSpoof(),
         valid_paths: validPath
       })
     });
