@@ -63,7 +63,7 @@ function mergeSettings(webchatSettings) {
 /**
  * Push events to the GA datalayer
  */
-function pushToDataLayer (eventData) {
+function pushToDataLayer(eventData) {
     eventData.scenario_name = 'ACO Bot'
     if (window.dataLayer !== undefined) {
         window.dataLayer.push(eventData)
