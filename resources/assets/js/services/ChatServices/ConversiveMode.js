@@ -44,7 +44,7 @@ ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
   this.client = new ConversiveClient(webChatComponent.conversiveUrl, webChatComponent.conversiveSiteCode);
 
   let name = webChatComponent.modeData.options.markupData.fullname;
-  return this.client.getSessionId(webChatComponent.uuid, name)
+  return this.client.getSessionId(webChatComponent.uuid, name, true)
     .then((sessionToken) => {
       return this.client.setEngineData(sessionToken, webChatComponent.modeData.options.markupData)
         .then(() => this.client.setEngineDataHistory(sessionToken, webChatComponent.modeData.options.markupData))

@@ -55,12 +55,19 @@ ConversiveClient.prototype.makeRequest = function(apiFunction, options) {
     });
 };
 
-ConversiveClient.prototype.getSessionId = async function(uuid, name = null) {
+ConversiveClient.prototype.getSessionId = async function(uuid, name = null, sendDataLayerEvent = false) {
   let modeDataInSession = SessionStorageMixin.methods.getModeDataInSession();
 
   if (modeDataInSession.options.sessionId) {
     return Promise.resolve(modeDataInSession.options.sessionId);
   } else {
+    if (sendDataLayerEvent) {
+      window.parent.postMessage(
+        { dataLayerEvent: { event: "conversation_started_live_agent", site_code: this.siteCode }},
+        document.referrer.match(/^.+:\/\/[^\/]+/)[0]
+      );
+    }
+
     return this.getSession(uuid, name).then((response) => {
       let sessionId = response.t;
       modeDataInSession = SessionStorageMixin.methods.getModeDataInSession();
@@ -87,11 +94,6 @@ ConversiveClient.prototype.getSession = function(uuid, name = null) {
     tc: uuid,
     iad: false,
   };
-
-  window.parent.postMessage(
-    { dataLayerEvent: { event: "conversation_started_live_agent", site_code: this.siteCode }},
-    document.referrer.match(/^.+:\/\/[^\/]+/)[0]
-  );
 
   return this.makeRequest("getSession", options);
 };
