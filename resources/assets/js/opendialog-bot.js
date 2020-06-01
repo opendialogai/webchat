@@ -13,30 +13,30 @@ let listeners = {};
 
 // startsWith polyfill
 if (!String.prototype.startsWith) {
-    // eslint-disable-next-line no-extend-native
-    Object.defineProperty(String.prototype, 'startsWith', {
-        value: (search, pos) => {
-            const newPos = !pos || pos < 0 ? 0 : +pos;
-            return this.substring(newPos, newPos + search.length) === search;
-        },
-    });
+  // eslint-disable-next-line no-extend-native
+  Object.defineProperty(String.prototype, 'startsWith', {
+    value: (search, pos) => {
+      const newPos = !pos || pos < 0 ? 0 : +pos;
+      return this.substring(newPos, newPos + search.length) === search;
+    },
+  });
 }
 
 // endsWith polyfill
 if (!String.prototype.endsWith) {
-    // eslint-disable-next-line no-extend-native
-    String.prototype.endsWith = (search, thisLen) => {
-        const newThisLen = (thisLen === undefined || thisLen > this.length) ? this.length : thisLen;
-        return this.substring(newThisLen - search.length, newThisLen) === search;
-    };
+  // eslint-disable-next-line no-extend-native
+  String.prototype.endsWith = (search, thisLen) => {
+    const newThisLen = (thisLen === undefined || thisLen > this.length) ? this.length : thisLen;
+    return this.substring(newThisLen - search.length, newThisLen) === search;
+  };
 }
 
 function addCssToPage(href) {
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('type', 'text/css');
-    link.setAttribute('href', `${href}?${window.openDialogSettings.css_version}`);
-    document.getElementsByTagName('head')[0].appendChild(link);
+  const link = document.createElement('link');
+  link.setAttribute('rel', 'stylesheet');
+  link.setAttribute('type', 'text/css');
+  link.setAttribute('href', `${href}?${window.openDialogSettings.css_version}`);
+  document.getElementsByTagName('head')[0].appendChild(link);
 }
 /**
  * Merges window.openDialogSettings with the settings from the database.
@@ -45,29 +45,29 @@ function addCssToPage(href) {
  * @param webchatSettings
  */
 function mergeSettings(webchatSettings) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const [key, value] of Object.entries(webchatSettings)) {
-        if (!window.openDialogSettings[key]) {
-            window.openDialogSettings[key] = value;
-        } else if (typeof value === 'object') {
-            // eslint-disable-next-line no-restricted-syntax
-            for (const [key2, value2] of Object.entries(value)) {
-                if (typeof window.openDialogSettings[key][key2] === 'undefined') {
-                    window.openDialogSettings[key][key2] = value2;
-                }
-            }
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [key, value] of Object.entries(webchatSettings)) {
+    if (!window.openDialogSettings[key]) {
+      window.openDialogSettings[key] = value;
+    } else if (typeof value === 'object') {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const [key2, value2] of Object.entries(value)) {
+        if (typeof window.openDialogSettings[key][key2] === 'undefined') {
+          window.openDialogSettings[key][key2] = value2;
         }
+      }
     }
+  }
 }
 
 /**
  * Push events to the GA datalayer
  */
-function pushToDataLayer(eventData) {
-    eventData.scenario_name = 'ACO Bot'
-    if (window.dataLayer !== undefined) {
-        window.dataLayer.push(eventData)
-    }
+function pushToDataLayer (eventData) {
+  eventData.scenario_name = 'ACO Bot'
+  if (window.dataLayer !== undefined) {
+    window.dataLayer.push(eventData)
+  }
 }
 
 /**
@@ -78,38 +78,38 @@ function pushToDataLayer(eventData) {
  * @returns {HTMLIFrameElement}
  */
 function openChatWindow(url, div = null) {
-    if (div) {
-        div.classList.add('opened');
+  if (div) {
+    div.classList.add('opened');
+  }
+
+  const ifrm = document.createElement('iframe');
+  ifrm.setAttribute('id', 'opendialog-chatwindow');
+  ifrm.setAttribute('src', `${url}/web-chat-iframe?${query}`);
+  ifrm.setAttribute('scrolling', "no");
+  ifrm.setAttribute('allowtransparency', "true");
+
+  // set height on page load
+  ifrm.style.backgroundColor= 'transparent';
+  ifrm.style.height = '120px';
+  ifrm.style.width = '130px';
+  window.document.body.appendChild(ifrm);
+
+  listeners.load = () => {
+    // Send settings and initial path to the chat widget.
+    ifrm.contentWindow.postMessage({
+      loadUuid: sessionStorage.uuid,
+      loadSettings: window.openDialogSettings,
+      newPathname: window.location.pathname,
+    }, '*');
+
+    if (window.openDialogSettings.general.chatbotCssPath) {
+      const link = document.createElement('link');
+      link.setAttribute('rel', 'stylesheet');
+      link.setAttribute('type', 'text/css');
+      link.setAttribute('href', window.openDialogSettings.general.chatbotCssPath);
+      ifrm.contentWindow.document.getElementsByTagName('head')[0].appendChild(link);
     }
-
-    const ifrm = document.createElement('iframe');
-    ifrm.setAttribute('id', 'opendialog-chatwindow');
-    ifrm.setAttribute('src', `${url}/web-chat-iframe?${query}`);
-    ifrm.setAttribute('scrolling', "no");
-    ifrm.setAttribute('allowtransparency', "true");
-
-    // set height on page load
-    ifrm.style.backgroundColor= 'transparent';
-    ifrm.style.height = '120px';
-    ifrm.style.width = '130px';
-    window.document.body.appendChild(ifrm);
-
-    listeners.load = () => {
-        // Send settings and initial path to the chat widget.
-        ifrm.contentWindow.postMessage({
-            loadUuid: sessionStorage.uuid,
-            loadSettings: window.openDialogSettings,
-            newPathname: window.location.pathname,
-        }, '*');
-
-        if (window.openDialogSettings.general.chatbotCssPath) {
-            const link = document.createElement('link');
-            link.setAttribute('rel', 'stylesheet');
-            link.setAttribute('type', 'text/css');
-            link.setAttribute('href', window.openDialogSettings.general.chatbotCssPath);
-            ifrm.contentWindow.document.getElementsByTagName('head')[0].appendChild(link);
-        }
-    };
+  };
 
   listeners.message = async (event) => {
     if (event.data && typeof event.data.height !== 'undefined') {
@@ -134,13 +134,13 @@ function openChatWindow(url, div = null) {
       ifrm.classList.remove(event.data.removeClass);
     }
 
-      if (event.data && typeof event.data.dataLayerEvent !== 'undefined') {
-          let eventData = { event: event.data.dataLayerEvent };
-          if (typeof event.data.dataLayerEvent === 'object') {
-              eventData = event.data.dataLayerEvent;
-          }
-          pushToDataLayer(eventData)
+    if (event.data && typeof event.data.dataLayerEvent !== 'undefined') {
+      let eventData = { event: event.data.dataLayerEvent };
+      if (typeof event.data.dataLayerEvent === 'object') {
+        eventData = event.data.dataLayerEvent;
       }
+      pushToDataLayer(eventData)
+    }
   };
 
   listeners.mouseUp = () => {
@@ -180,41 +180,46 @@ function openChatWindow(url, div = null) {
  * @returns {Promise<Response>}
  */
 function getSettings(url, userId = '', customSettings = null, callbackId = null, width = null) {
-    let configUrlObj = new URLSearchParams();
+  let configUrlObj = new URLSearchParams();
+  configUrlObj.append('url', locationOrSpoof());
 
-    configUrlObj.append('url', window.location.href);
+  if (userId) {
+    configUrlObj.append('user_id', userId);
+  } else if (sessionStorage.uuid) {
+    configUrlObj.append('user_id', sessionStorage.uuid);
+  }
 
-    if (userId) {
-      configUrlObj.append('user_id', userId);
-    } else if (sessionStorage.uuid) {
-      configUrlObj.append('user_id', sessionStorage.uuid);
-    }
+  if (callbackId) {
+    configUrlObj.append('callback_id', callbackId);
+  }
 
-    if (callbackId) {
-      configUrlObj.append('callback_id', callbackId);
-    }
-
-    if (width) {
-      configUrlObj.append('width', width);
-    }
-
-    let configUrl = `${url}/webchat-config?${configUrlObj.toString()}`;
+  if (width) {
+    configUrlObj.append('width', width);
+  }
+  let configUrl = `${url}/webchat-config?${configUrlObj.toString()}`;
 
   return fetch(configUrl, {
-      url: configUrl,
-      method: 'POST',
-      body: JSON.stringify({
-        custom_settings: customSettings,
-        tags: getTags(),
-      }),
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          return Promise.reject(response.statusText);
-        } else {
-          return response.json();
-        }
-      });
+    url: configUrl,
+    method: 'POST',
+    body: JSON.stringify({
+      custom_settings: customSettings,
+      tags: getTags(),
+    }),
+  })
+    .then((response) => {
+      if (response.status !== 200) {
+        return Promise.reject(response.statusText);
+      } else {
+        return response.json();
+      }
+    });
+}
+
+function locationOrSpoof() {
+  if (window.location.pathname.split('/').includes('demo')) {
+    return document.getElementById('spoof-url').value;
+  }
+  return window.location.href;
 }
 
 function getTags() {
@@ -238,7 +243,7 @@ async function fetchAttributes() {
   let retVal = false;
 
   try {
-    let response = await fetch(window.openDialogSettings.url + '/api/attributes?url=' + window.location.href, {
+    let response = await fetch(window.openDialogSettings.url + '/api/attributes?url=' + locationOrSpoof(), {
       method: 'GET',
     });
 
@@ -259,35 +264,34 @@ async function fetchAttributes() {
  * @returns {boolean}
  */
 async function isValidPath() {
-    if (typeof window.openDialogSettings.general === 'undefined') {
-      return false;
+  if (typeof window.openDialogSettings.general === 'undefined') {
+    return false;
+  }
+  const { validPath } = window.openDialogSettings.general;
+
+  if (typeof validPath === 'undefined') {
+    return false;
+  }
+
+  let retVal = false;
+
+  try {
+    let response = await fetch(window.openDialogSettings.url + '/validate-paths', {
+      method: 'POST',
+      body: JSON.stringify({
+        current_url: locationOrSpoof(),
+        valid_paths: validPath
+      })
+    });
+
+    if (response.status === 200) {
+      retVal = await response.json();
     }
+  } catch (e) {
+    console.error(e);
+  }
 
-    const { validPath } = window.openDialogSettings.general;
-
-    if (typeof validPath === 'undefined') {
-        return false;
-    }
-
-    let retVal = false;
-
-    try {
-      let response = await fetch(window.openDialogSettings.url + '/validate-paths', {
-        method: 'POST',
-        body: JSON.stringify({
-          current_url: window.location.href,
-          valid_paths: validPath
-        })
-      });
-
-      if (response.status === 200) {
-        retVal = await response.json();
-      }
-    } catch (e) {
-      console.error(e);
-    }
-
-    return retVal;
+  return retVal;
 }
 
 async function setupWebchat(url, userId, preloadedSettings = null) {
@@ -297,11 +301,12 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
   if (urlParams.has('callback_id')) {
     callbackId = urlParams.get('callback_id');
   }
-
   if (preloadedSettings === null) {
     try {
+      // document.addEventListener('DOMContentLoaded', async function(event) {
       let response = await getSettings(url, userId, window.openDialogSettings, callbackId, window.innerWidth);
       mergeSettings(response);
+      // })
     } catch (error) {
       console.error("Call to OpenDialog webchat settings failed:", error);
       console.log("Using default OpenDialog webchat settings");
@@ -433,17 +438,19 @@ function addUrlUpdatedListener() {
 }
 
 if (window.openDialogSettings) {
-  const { url } = window.openDialogSettings;
-  const userId = (window.openDialogSettings.user && window.openDialogSettings.user.email) ?
-        window.openDialogSettings.user.email : '';
+  document.addEventListener('DOMContentLoaded', async function(event) {
+    const {url} = window.openDialogSettings;
+    const userId = (window.openDialogSettings.user && window.openDialogSettings.user.email) ?
+      window.openDialogSettings.user.email : '';
 
-  if (userId) {
-    sessionStorage.uuid = userId;
-  } else if (!sessionStorage.uuid) {
-    sessionStorage.uuid = uuid.v4();
-  }
+    if (userId) {
+      sessionStorage.uuid = userId;
+    } else if (!sessionStorage.uuid) {
+      sessionStorage.uuid = uuid.v4();
+    }
 
-  addUrlUpdatedListener();
+    addUrlUpdatedListener();
 
-  setupWebchat(url, userId);
+    setupWebchat(url, userId);
+  });
 }
