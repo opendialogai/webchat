@@ -351,16 +351,22 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
         if (attr.attribute_mapping_type === 'HTML Tag') {
           const mappingName = attr.attribute_mapping_name.split('.');
 
-          if (window[mappingName[0]]) {
-            let json = JSON.parse(window[mappingName[0]]);
+          if (typeof window[mappingName[0]] !== 'undefined') {
+            try {
+              let json = JSON.parse(window[mappingName[0]]);
 
-            for (let x = 1; x < mappingName.length; x++) {
-              json = json[mappingName[x]];
+              for (let x = 1; x < mappingName.length; x++) {
+                if (typeof json[mappingName[x]] === 'undefined') {
+                  break;
+                } else {
+                  json = json[mappingName[x]];
 
-              if (json && x === mappingName.length - 1) {
-                window.openDialogSettings.user.custom[attr.attribute_canonical_name] = json;
+                  if (json && x === mappingName.length - 1) {
+                    window.openDialogSettings.user.custom[attr.attribute_canonical_name] = json;
+                  }
+                }
               }
-            }
+            } catch {}
           }
         } else if (attr.attribute_mapping_type === 'URL Parameter') {
           const urlParams = new URLSearchParams(window.location.search);
