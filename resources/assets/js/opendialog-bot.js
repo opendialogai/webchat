@@ -222,6 +222,11 @@ function locationOrSpoof() {
   return window.location.href;
 }
 
+function locationOrSpoofQueryParams() {
+  let url = new URL(locationOrSpoof());
+  return url.search;
+}
+
 function getTags() {
   let tags = {};
   let variables = ['userInfo', 'avayaBot'];
@@ -369,7 +374,7 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
             } catch {}
           }
         } else if (attr.attribute_mapping_type === 'URL Parameter') {
-          const urlParams = new URLSearchParams(window.location.search);
+          const urlParams = new URLSearchParams(locationOrSpoofQueryParams());
 
           if (urlParams.has(attr.attribute_mapping_name)) {
             window.openDialogSettings.user.custom[attr.attribute_canonical_name] = urlParams.get(attr.attribute_mapping_name);
