@@ -214,7 +214,7 @@ ConversiveMode.prototype.convertTypingIndicatorToFirstMessage = function(firstMe
     date: moment().tz("UTC").format("ddd D MMM"),
   };
 
-  this.client.sendMessageToHistory(typingIndicatorMessage, webChatComponent.modeData.options.teamName, webChatComponent.uuid);
+  this.client.sendMessageToHistory(typingIndicatorMessage, webChatComponent.modeData.options.teamName, webChatComponent.$store.state.uuid);
 };
 
 ConversiveMode.prototype.addMessageToMessageList = function(textMessage, isFirstRequest, webChatComponent) {
@@ -232,7 +232,7 @@ ConversiveMode.prototype.addMessageToMessageList = function(textMessage, isFirst
   };
 
   if (!isFirstRequest) {
-    this.client.sendMessageToHistory(message, webChatComponent.modeData.options.teamName, webChatComponent.uuid);
+    this.client.sendMessageToHistory(message, webChatComponent.modeData.options.teamName, webChatComponent.$store.state.uuid);
   }
 
   webChatComponent.messageList.push(message);
