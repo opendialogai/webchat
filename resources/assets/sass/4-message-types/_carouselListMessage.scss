@@ -8,6 +8,10 @@
     width: 265px;
   }
 
+  > div {
+    display: inline-block;
+  }
+
   .mt-message-rich {
     margin-left: 0 !important;
     border-radius: 6px !important;
