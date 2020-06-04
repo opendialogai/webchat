@@ -563,7 +563,7 @@ export default {
           fileName = fileNameMatch[1].replace(/(^"|"$)/g, '');
         }
       }
-      link.setAttribute('download',fileName + '.txt');
+      link.setAttribute('download',fileName);
       document.body.appendChild(link);
       link.click();
       link.remove();
