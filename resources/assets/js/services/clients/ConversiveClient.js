@@ -215,7 +215,25 @@ ConversiveClient.prototype.prepareChatData = function(chatData, historyDataOnly 
   if (historyDataOnly) {
     keys = ['history'];
   } else {
-    keys = ['email', 'fullname', 'loc', 'phone', 'company', 'headcount', 'starting_url']
+    keys = [
+      'email',
+      'fullname',
+      'loc',
+      'phone',
+      'company',
+      'headcount',
+      'starting_url',
+      'authenticated',
+      'language',
+      'userid',
+      'community',
+      'companyid',
+      'product',
+      'free_text_1',
+      'free_text_2',
+      'drop_down_1',
+      'drop_down_2',
+    ]
   }
 
   let data = Object.keys(chatData).filter((key) => {
