@@ -28,31 +28,32 @@
     box-shadow: none !important;
     border-radius: 0 !important;
     background: none !important;
-    padding: 10px;
+    padding: 10px 80px 10px 10px;
     min-height: 73px;
 
     .sc-message--rich--title {
       font-size: 12px;
-      float: left;
-      width: calc(100% - 60px);
     }
     .sc-message--rich--subtitle {
       display: none;
     }
     .sc-message--rich--text {
       font-size: 12px;
-      float: left;
-      width: calc(100% - 60px);
       &:before {
         display: none;
       }
     }
     .sc-message--rich--image {
       position: absolute;
+      top: 12px;
       right: 10px;
       margin: 0;
       height: 53px;
       width: 53px;
+    }
+    .sc-message--rich--buttons {
+      margin-left: 0;
+      margin-right: 0;
     }
   }
 }

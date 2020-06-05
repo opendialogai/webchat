@@ -69,11 +69,6 @@ export default {
       type: Function,
       required: true
     }
-  },
-  methods: {
-    _handleClick (callback) {
-      this.onButtonClick(callback, this.message)
-    }
   }
 }
 </script>
