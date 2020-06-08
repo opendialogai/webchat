@@ -194,7 +194,7 @@
     _handleFileSubmit(file) {
       this.file = file;
     },
-    closeChat() {
+    closeChat(event, messageText = 'End chat') {
       if (this.modeData.mode === 'custom') {
         this.$emit('setChatMode', {
           mode: 'webchat',
@@ -208,7 +208,7 @@
           author: "me",
           callback_id: "intent.app.end_chat",
           data: {
-            text: 'End chat',
+            text: messageText,
             value: ''
           }
         });
