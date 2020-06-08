@@ -284,8 +284,9 @@ async function isValidPath() {
     let response = await fetch(window.openDialogSettings.url + '/validate-paths', {
       method: 'POST',
       body: JSON.stringify({
+        user_id: sessionStorage.uuid,
         current_url: locationOrSpoof(),
-        valid_paths: validPath
+        tags: getTags()
       })
     });
 
