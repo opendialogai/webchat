@@ -64,7 +64,7 @@
       },
       closeChat(event) {
         this.confirmCloseChat = false;
-        this.$emit("close-chat", event);
+        this.$emit("close-chat", event, this.endChatText);
       }
     }
   }
