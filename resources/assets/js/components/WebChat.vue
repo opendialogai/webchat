@@ -569,13 +569,8 @@ export default {
       link.remove();
       window.URL.revokeObjectURL(url);
     },
-    onListButtonClick(callback) {
-      this.sendMessage({
-        type: "webchat_list_response",
-        author: "me",
-        callback_id: callback,
-        data: {}
-      });
+    onListButtonClick(button, msg) {
+      this.onButtonClick(button, msg);
     },
     onLinkClick(url, text) {
       window.parent.postMessage(

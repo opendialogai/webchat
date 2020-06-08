@@ -12,7 +12,6 @@ WebChatMode.prototype.sendRequest = function(message, webChatComponent) {
       message.type === "url_click" ||
       message.type === "trigger" ||
       message.type === "form_response" ||
-      message.type === "webchat_list_response" ||
       message.data.text.length > 0
     ) {
       // Make a copy of the message to send to the backend.
