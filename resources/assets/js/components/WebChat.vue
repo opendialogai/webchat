@@ -336,12 +336,12 @@ export default {
 
         if (event.data.expandChat) {
           if (!this.isExpand || !this.isOpen) {
-            this.expandChat(true);
+            this.expandChat();
           }
         }
 
         if (event.data.collapseChat) {
-          if (this.isExpand) {
+          if (this.isExpand && this.isOpen) {
             this.expandChat();
           }
         }
@@ -512,7 +512,7 @@ export default {
       }
 
       if (!this.isExpand) {
-        this.$emit("expandChat");
+        this.expandChat();
       }
 
       if (msg.type === "fp-rich") {
