@@ -33,7 +33,7 @@
         if (this.$store.state.settings.bot && this.$store.state.settings.bot.endChatText) {
           return this.$store.state.settings.bot.endChatText;
         } else {
-          return "End chat (testing)";
+          return "End chat";
         }
       },
       endChatConfirmationMessage() {
