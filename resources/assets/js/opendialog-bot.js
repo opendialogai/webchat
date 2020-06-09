@@ -277,15 +277,6 @@ async function fetchAttributes() {
  * @returns {boolean}
  */
 async function isValidPath() {
-  if (typeof window.openDialogSettings.general === 'undefined') {
-    return false;
-  }
-  const { validPath } = window.openDialogSettings.general;
-
-  if (typeof validPath === 'undefined') {
-    return false;
-  }
-
   let retVal = false;
 
   try {
