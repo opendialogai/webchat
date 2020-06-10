@@ -426,10 +426,13 @@ export default {
       }
 
       if (newMsg.type === "button_response") {
-        window.parent.postMessage(
-          { dataLayerEvent: { event: 'user_clicked_button_in_chatbot', label: newMsg.data.text} },
-          this.referrerUrl
-        );
+        const events = ['user_clicked_button_in_chatbot', 'message_sent_to_chatbot']
+        events.forEach((eventName) => {
+          window.parent.postMessage(
+            { dataLayerEvent: { event: eventName, label: newMsg.data.text} },
+            this.referrerUrl
+          );
+        })
       }
 
       chatService.sendRequest(newMsg, this).then(
@@ -640,7 +643,7 @@ export default {
       if (this.isOpen) {
         this.closeChatButtonReverseAnimate = true;
           window.parent.postMessage(
-            { dataLayerEvent: "chat_minimized" },
+            { dataLayerEvent: "chatbot_minimized" },
             this.referrerUrl
           );
         setTimeout(() => {
@@ -652,7 +655,7 @@ export default {
         this.isOpen = !this.isOpen;
         this.$emit("toggleChatOpen", this.headerHeight);
           window.parent.postMessage(
-            { dataLayerEvent: "chat_maximized" },
+            { dataLayerEvent: "chatbot_maximized" },
             this.referrerUrl
           );
       }
