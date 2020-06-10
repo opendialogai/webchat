@@ -1,7 +1,13 @@
 <template>
-  <div class="mt reap mt-message-rich sc-message--rich" :style="messageColors"  :class="[{
-        animate: this.data.animate,
-    }]">
+  <div
+    class="mt reap mt-message-rich sc-message--rich"
+    :style="messageColors"
+    :class="[{
+      animate: this.data.animate,
+      linkable: this.data.callback,
+    }]"
+    @click="_handleMessageClick"
+  >
     <div class="sc-message--rich--title">{{ data.title }}</div>
     <div class="sc-message--rich--subtitle">{{ data.subtitle }}</div>
     <p class="sc-message--rich--text" v-linkified>
@@ -54,6 +60,11 @@ export default {
     }
   },
   methods: {
+    _handleMessageClick() {
+      if (this.data.callback) {
+        this.onButtonClick(null, this.data)
+      }
+    },
     _handleClick(button) {
       this.onButtonClick(button, this.message)
     }

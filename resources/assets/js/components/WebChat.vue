@@ -478,6 +478,19 @@ export default {
       this.onButtonClick(button, msg);
     },
     async onButtonClick(button, msg) {
+      if (!button) {
+        this.sendMessage({
+          type: "button_response",
+          author: "me",
+          callback_id: msg.callback,
+          data: {
+            text: msg.callback_value,
+            value: msg.callback_value
+          }
+        });
+        return;
+      }
+
       if (msg.data.external) {
         await new Promise(resolve => setTimeout(resolve, 300));
       }

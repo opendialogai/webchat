@@ -8,6 +8,10 @@
   flex-direction: column;
   overflow: hidden;
 
+  &.linkable {
+    cursor: pointer;
+  }
+
   .sc-message--rich--title {
     font-size: 16px;
     font-weight: 600;
