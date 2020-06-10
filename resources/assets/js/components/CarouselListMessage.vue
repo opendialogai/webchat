@@ -42,10 +42,10 @@
 
       <div class="sc-message--carousel-list--arrows">
         <div v-if="showLeftArrow" class="sc-message--carousel-list--arrow-left" @click="previousPage">
-          <img src="./assets/left.svg" />
+          <img src="/vendor/webchat/images/left.svg" />
         </div>
         <div v-if="showRightArrow" class="sc-message--carousel-list--arrow-right" @click="nextPage">
-          <img src="./assets/right.svg" />
+          <img src="/vendor/webchat/images/right.svg" />
         </div>
       </div>
     </template>
