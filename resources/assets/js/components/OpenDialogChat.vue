@@ -349,18 +349,6 @@ export default {
 
       this.isExpand = !this.isExpand;
 
-      if (this.isExpand) {
-        window.parent.postMessage(
-          { dataLayerEvent: "chatbot_maximized" },
-          this.referrerUrl
-        );
-      } else {
-        window.parent.postMessage(
-          { dataLayerEvent: "chatbot_minimized" },
-          this.referrerUrl
-        );
-      }
-
       if (!this.isOpen) {
         this.toggleChatOpen();
       }
