@@ -426,10 +426,13 @@ export default {
       }
 
       if (newMsg.type === "button_response") {
-        window.parent.postMessage(
-          { dataLayerEvent: { event: 'user_clicked_button_in_chatbot', label: newMsg.data.text} },
-          this.referrerUrl
-        );
+        const events = ['user_clicked_button_in_chatbot', 'message_sent_to_chatbot']
+        events.forEach((eventName) => {
+          window.parent.postMessage(
+            { dataLayerEvent: { event: eventName, label: newMsg.data.text} },
+            this.referrerUrl
+          );
+        })
       }
 
       chatService.sendRequest(newMsg, this).then(
