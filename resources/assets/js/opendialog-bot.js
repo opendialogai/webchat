@@ -216,11 +216,19 @@ function getSettings(url, userId = '', customSettings = null, callbackId = null,
     });
 }
 
+let spoofUrl;
+function setSpoofUrl(url) {
+  spoofUrl = url;
+}
+
 function locationOrSpoof() {
-  if (window.location.pathname.split('/').includes('demo')) {
+  if (window.location.href.startsWith(window.openDialogSettings.url + '/admin/demo')) {
     return document.getElementById('spoof-url').value;
+  } else if (typeof spoofUrl !== 'undefined') {
+    return spoofUrl;
+  } else {
+    return window.location.href;
   }
-  return window.location.href;
 }
 
 function locationOrSpoofQueryParams() {
@@ -270,15 +278,6 @@ async function fetchAttributes() {
  * @returns {boolean}
  */
 async function isValidPath() {
-  if (typeof window.openDialogSettings.general === 'undefined') {
-    return false;
-  }
-  const { validPath } = window.openDialogSettings.general;
-
-  if (typeof validPath === 'undefined') {
-    return false;
-  }
-
   let retVal = false;
 
   try {
@@ -412,6 +411,8 @@ function addUrlUpdatedListener() {
     // This event listener is attached once and never removed as it will need to track URL changes even when there
     // is no chat window
     if (event.data && typeof event.data.urlUpdated !== 'undefined') {
+      setSpoofUrl(event.data.urlUpdated);
+
       if (!(await isValidPath())) {
         // Get new settings
         const urlParams = new URLSearchParams(window.location.search);
