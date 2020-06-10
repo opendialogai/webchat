@@ -640,7 +640,7 @@ export default {
       if (this.isOpen) {
         this.closeChatButtonReverseAnimate = true;
           window.parent.postMessage(
-            { dataLayerEvent: "chat_minimized" },
+            { dataLayerEvent: "chatbot_minimized" },
             this.referrerUrl
           );
         setTimeout(() => {
@@ -652,7 +652,7 @@ export default {
         this.isOpen = !this.isOpen;
         this.$emit("toggleChatOpen", this.headerHeight);
           window.parent.postMessage(
-            { dataLayerEvent: "chat_maximized" },
+            { dataLayerEvent: "chatbot_maximized" },
             this.referrerUrl
           );
       }
