@@ -62,16 +62,14 @@
       toggleConfirmCloseChat() {
         this.confirmCloseChat = !this.confirmCloseChat;
         window.parent.postMessage(
-          { dataLayerEvent: "end_chat" },
-          this.referrerUrl
+          { dataLayerEvent: "end_chat" }
         );
       },
       closeChat(event) {
         this.confirmCloseChat = false;
         this.$emit("close-chat", event, this.endChatText);
         window.parent.postMessage(
-          { dataLayerEvent: "confirm_end_chat" },
-          this.referrerUrl
+          { dataLayerEvent: "confirm_end_chat" }
         );
       }
     }
