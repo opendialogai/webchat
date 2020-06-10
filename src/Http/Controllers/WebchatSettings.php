@@ -19,6 +19,10 @@ class WebchatSettings
      */
     public function __invoke(Request $request)
     {
+        if ($error = $this->validateRequest($request)) {
+            return response($error, 400);
+        }
+
         // Create the config object.
         $config = [];
 
@@ -138,5 +142,22 @@ class WebchatSettings
         }
 
         return $value;
+    }
+
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return string|null
+     */
+    private function validateRequest(Request $request)
+    {
+        if (!is_numeric($request->get('width'))) {
+            return 'Width parameter must be an integer.';
+        }
+
+        if (!filter_var($request->get('url'), FILTER_VALIDATE_URL)) {
+            return 'Url parameter is not a valid URL.';
+        }
+
+        return null;
     }
 }
