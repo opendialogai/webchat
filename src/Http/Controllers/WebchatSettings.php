@@ -150,11 +150,11 @@ class WebchatSettings
      */
     private function validateRequest(Request $request)
     {
-        if (!is_numeric($request->get('width'))) {
+        if ($request->get('width') && !is_numeric($request->get('width'))) {
             return 'Width parameter must be an integer.';
         }
 
-        if (!filter_var($request->get('url'), FILTER_VALIDATE_URL)) {
+        if ($request->get('url') && !filter_var($request->get('url'), FILTER_VALIDATE_URL)) {
             return 'Url parameter is not a valid URL.';
         }
 
