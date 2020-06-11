@@ -34,10 +34,6 @@ const store = new Vuex.Store({
 const commentConfig = {};
 const userConfig = {};
 
-async function getWebchatConfig() {
-  return Promise.resolve(store.state.settings);
-}
-
 function setConfig(config) {
   if (config.comments) {
     Object.keys(config.comments).forEach((commentConfigKey) => {
@@ -52,33 +48,35 @@ function setConfig(config) {
   }
 }
 
-getWebchatConfig().then((config) => {
-  setConfig(config);
+store.subscribe((mutation, state) => {
+  if (mutation.type === 'setSettings') {
+    setConfig(state.settings);
 
-  if (commentConfig && commentConfig.commentsEnabled
-      && commentConfig.commentsEndpoint && commentConfig.commentsAuthToken) {
-    const commentsAxiosConfig = {
-      baseURL: commentConfig.commentsEndpoint,
-      headers: {
-        Authorization: commentConfig.commentsAuthToken,
-        'Content-Type': 'application/vnd.api+json',
-      },
-    };
+    if (commentConfig && commentConfig.commentsEnabled
+        && commentConfig.commentsEndpoint && commentConfig.commentsAuthToken) {
+      const commentsAxiosConfig = {
+        baseURL: commentConfig.commentsEndpoint,
+        headers: {
+          Authorization: commentConfig.commentsAuthToken,
+          'Content-Type': 'application/vnd.api+json',
+        },
+      };
 
-    if (userConfig.external_id) {
-      commentsAxiosConfig.headers['X-Requested-For-OD-User-ID'] = userConfig.external_id;
+      if (userConfig.external_id) {
+        commentsAxiosConfig.headers['X-Requested-For-OD-User-ID'] = userConfig.external_id;
+      }
+      const httpClient = axios.create(commentsAxiosConfig);
+
+      // Add the json:api modules.
+      store.registerModule('comments', resourceModule({ name: commentConfig.commentsEntityName, httpClient }));
+      store.registerModule('authors', resourceModule({ name: commentConfig.commentsAuthorEntityName, httpClient }));
+      if (commentConfig.commentsSectionEntityName) {
+        store.registerModule('sections', resourceModule({ name: commentConfig.commentsSectionEntityName, httpClient }));
+      }
+
+      // Tell vue we're ready.
+      store.commit('setApiReady', true);
     }
-    const httpClient = axios.create(commentsAxiosConfig);
-
-    // Add the json:api modules.
-    store.registerModule('comments', resourceModule({ name: commentConfig.commentsEntityName, httpClient }));
-    store.registerModule('authors', resourceModule({ name: commentConfig.commentsAuthorEntityName, httpClient }));
-    if (commentConfig.commentsSectionEntityName) {
-      store.registerModule('sections', resourceModule({ name: commentConfig.commentsSectionEntityName, httpClient }));
-    }
-
-    // Tell vue we're ready.
-    store.commit('setApiReady', true);
   }
 });
 
