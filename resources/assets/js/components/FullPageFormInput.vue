@@ -129,6 +129,14 @@
         </template>
       </div>
 
+      <div
+        v-if="errorMessages"
+        class="mt-fp-form__error animateStartingState animateDelay1"
+        :class="{animateSlideUp: isOpen}"
+        >
+        <p v-for="error in errorMessages">{{ error }}</p>
+      </div>
+
       <div class="mt-fp-form__submit-wrapper">
         <button
           class="mt-fp-form__submit"
@@ -154,10 +162,10 @@
 </template>
 
 <script>
-import vSelect from "vue-select";
-import "vue-select/dist/vue-select.css";
+  import vSelect from "vue-select";
+  import "vue-select/dist/vue-select.css";
 
-export default {
+  export default {
   components: {
     vSelect
   },
@@ -182,6 +190,28 @@ export default {
       type: Boolean,
       default: () => false
     }
+  },
+  computed: {
+    requiredErrorMessage() {
+      return this.errors.find(x => x.errorType === 'required') ? 'Missing required fields.' : '';
+    },
+    validErrorMessage() {
+      let field = this.errors.find(x => x.errorType === 'valid');
+      return field ? field.message : '';
+    },
+    errorMessages() {
+      let message = [];
+
+      if (this.requiredErrorMessage !== '') {
+        message.push(this.requiredErrorMessage);
+      }
+
+      if (this.validErrorMessage !== '') {
+        message.push(this.validErrorMessage);
+      }
+
+      return message;
+    },
   },
   data() {
     return {
@@ -259,6 +289,7 @@ export default {
         ) {
           this.errors.push({
             type: element.name,
+            errorType: "required",
             message: "<em>" + element.display + "</em> is required"
           });
         }
@@ -270,10 +301,8 @@ export default {
           if (!this.validateEmail(this.form.data[element.name].value)) {
             this.errors.push({
               type: element.name,
-              message:
-                "<em>" +
-                element.display +
-                "</em> field is not a valid email address"
+              errorType: "valid",
+              message: "Invalid Email Address."
             });
           }
         }
@@ -339,6 +368,19 @@ export default {
 
 /* 🔥 avaya - custom css 🔥 */
 /* 🔥 avaya - custom css 🔥 */
+
+/* error --- error --- error --- */
+
+.mt-fp-form__error {
+  margin-bottom: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.mt-fp-form__error p {
+  margin-top: 10px;
+  color: var(--btn-bg);
+}
 
 /* labels --- labels --- labels ---  */
 
