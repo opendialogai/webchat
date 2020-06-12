@@ -482,15 +482,19 @@ export default {
     },
     async onButtonClick(button, msg) {
       if (!button) {
-        this.sendMessage({
-          type: "button_response",
-          author: "me",
-          callback_id: msg.callback,
-          data: {
-            text: msg.callback_value,
-            value: msg.callback_value
-          }
-        });
+        if (msg.link) {
+          window.open(msg.link, "_blank");
+        } else {
+          this.sendMessage({
+            type: "button_response",
+            author: "me",
+            callback_id: msg.callback,
+            data: {
+              text: msg.callback_value,
+              value: msg.callback_value
+            }
+          });
+        }
         return;
       }
 
