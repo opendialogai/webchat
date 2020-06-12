@@ -42,6 +42,7 @@
             type="text"
             class="mt-fp-form__input"
             v-model="form.data[element.name].value"
+            @input="validateOnChange"
             v-on:keyup.enter="_handleClick"
             :placeholder="element.display"
             :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
@@ -52,6 +53,7 @@
           <textarea
             class="mt-fp-form__input mt-fp-form__textarea"
             v-model="form.data[element.name].value"
+            @input="validateOnChange"
             :placeholder="element.display"
           />
         </template>
@@ -83,6 +85,7 @@
                 v-bind:id="radio_value"
                 v-bind:value="radio_value"
                 v-model="form.data[element.name].value"
+                @input="validateOnChange"
               />
 
               <label v-bind:for="radio_value">{{ radio_text }}</label>
@@ -111,6 +114,7 @@
             type="email"
             class="mt-fp-form__input"
             v-model="form.data[element.name].value"
+            @input="validateOnChange"
             v-on:keyup.enter="_handleClick"
             :placeholder="element.display"
             :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
@@ -122,6 +126,7 @@
             type="tel"
             class="mt-fp-form__input"
             v-model="form.data[element.name].value"
+            @input="validateOnChange"
             v-on:keyup.enter="_handleClick"
             :placeholder="element.display"
             :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
@@ -215,6 +220,7 @@
   },
   data() {
     return {
+      attemptedSubmit: false,
       picked: "",
       form: {
         data: []
@@ -244,8 +250,17 @@
             this.form.data[element.name].value = element.default_value;
           }
         });
+
+        this.validateOnChange = _.debounce(this.validateOnChangeForDebounce, 300);
+    },
+    validateOnChangeForDebounce() {
+      if (this.attemptedSubmit) {
+        this.validateForm();
+      }
     },
     onSelectChange() {
+      this.validateOnChange();
+
       if (this.message.data.auto_submit) {
         this._handleClick();
       }
@@ -265,7 +280,9 @@
     _handleClick() {
       if (!this.showLoader) {
         this.validateForm();
-        if (!this.errors.length) {
+        if (this.errors.length) {
+          this.attemptedSubmit = true;
+        } else {
           this.onSubmit(this.form.data);
 
           this.showLoader = true;
