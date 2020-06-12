@@ -4,7 +4,7 @@
     :style="messageColors"
     :class="[{
       animate: this.data.animate,
-      linkable: this.data.callback,
+      linkable: (this.data.callback || this.data.link),
     }]"
     @click="_handleMessageClick"
   >
@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     _handleMessageClick() {
-      if (this.data.callback) {
+      if (this.data.callback || this.data.link) {
         this.onButtonClick(null, this.data)
       }
     },
