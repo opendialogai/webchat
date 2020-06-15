@@ -155,8 +155,9 @@ export default {
       showMessages: true,
       showTypingIndicator: false,
       users: [],
-      userName: "",
-      uuid: this.userUuid
+      userName: '',
+      uuid: this.userUuid,
+      canRestart: true,
     };
   },
   watch: {
@@ -349,8 +350,8 @@ export default {
         };
 
         // Need to add error handling here
-        axios.post("/incoming/webchat", webchatMessage).then(
-          response => {
+        return axios.post('/incoming/webchat', webchatMessage).then(
+          (response) => {
             if (response.data instanceof Array) {
               response.data.forEach((message, i) => {
                 if (!message) {
@@ -425,8 +426,8 @@ export default {
                         this.$nextTick(() => {
                           this.$nextTick(() => {
                             this.messageList.push({
-                              author: "them",
-                              type: "typing",
+                              author: 'them',
+                              type: 'typing',
                               data: {
                                 animate: this.messageAnimation
                               }
@@ -599,6 +600,7 @@ export default {
           }
         );
       }
+      return Promise.resolve();
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {
@@ -727,12 +729,19 @@ export default {
       });
     },
     onRestartButtonClick() {
-      this.sendMessage({
-        type: "trigger",
-        author: "me",
-        callback_id: this.restartButtonCallback,
-        data: {}
-      });
+      if (this.canRestart) {
+        this.canRestart = false;
+        this.sendMessage({
+          type: 'trigger',
+          author: 'me',
+          callback_id: this.restartButtonCallback,
+          data: {},
+        }).then(() => {
+          setTimeout(() => {
+            this.canRestart = true;
+          }, 5000);
+        });
+      }
     },
     expandChat() {
       this.$emit("expandChat");
