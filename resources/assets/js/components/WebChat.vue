@@ -27,6 +27,9 @@
         :is-open="isOpen"
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
+        :on-full-page-form-input-submit="onFullPageFormInputSubmit"
+        :on-full-page-form-input-cancel="onFullPageFormInputCancel"
+        :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
         :open="openChat"
         :on-button-click="onButtonClick"
@@ -39,6 +42,8 @@
         :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
         :show-long-text-input="showLongTextInput"
+        :show-full-page-form-input="showFullPageFormInput"
+        :show-full-page-rich-input="showFullPageRichInput"
         :show-messages="showMessages"
         :max-input-characters="maxInputCharacters"
         :button-text="buttonText"
@@ -47,6 +52,8 @@
         :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
+        :fp-form-input-message="fpFormInputMessage"
+        :fp-rich-input-message="fpRichInputMessage"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
       />
@@ -142,6 +149,8 @@ export default {
       buttonText: "Submit",
       confirmationMessage: null,
       contentEditable: false,
+      fpFormInputMessage: {},
+      fpRichInputMessage: {},
       headerHeight: 0,
       headerText: "",
       id: "",
@@ -152,6 +161,8 @@ export default {
       messageList: [],
       placeholder: "Type a message",
       showLongTextInput: false,
+      showFullPageFormInput: false,
+      showFullPageRichInput: false,
       showMessages: true,
       showTypingIndicator: false,
       users: [],
@@ -310,7 +321,6 @@ export default {
         this.headerText = "";
         this.maxInputCharacters = 0;
         this.showLongTextInput = false;
-        this.showMessages = true;
         this.messageList.push(newMsg);
       }
 
@@ -421,6 +431,20 @@ export default {
                       this.contentEditable = !message.data.disable_text;
                     }
 
+                    if (message.type === "fp-form") {
+                      this.showFullPageFormInputMessage(message);
+                    }
+
+                    if (message.type === "fp-rich") {
+                      this.showFullPageRichInputMessage(message);
+                    }
+
+                    if (message.type !== "fp-form" && message.type !== "fp-rich") {
+                      this.showFullPageFormInput = false;
+                      this.showFullPageRichInput = false;
+                      this.showMessages = true;
+                    }
+
                     if (!this.hideTypingIndicatorOnInternalMessages) {
                       if (i < response.data.length - 1) {
                         this.$nextTick(() => {
@@ -478,6 +502,14 @@ export default {
                     lastMessage.type = message.type;
                     lastMessage.data = message.data;
 
+                    if (message.type === 'fp-form') {
+                      this.showFullPageFormInputMessage(message);
+                    }
+
+                    if (message.type === 'fp-rich') {
+                      this.showFullPageRichInputMessage(message);
+                    }
+
                     this.contentEditable = !message.data.disable_text;
                   }, this.messageDelay);
                 } else {
@@ -525,6 +557,20 @@ export default {
 
                   if (message.data) {
                     this.contentEditable = !message.data.disable_text;
+                  }
+
+                  if (message.type === "fp-form") {
+                    this.showFullPageFormInputMessage(message);
+                  }
+
+                  if (message.type === "fp-rich") {
+                    this.showFullPageRichInputMessage(message);
+                  }
+
+                  if (message.type !== "fp-form" && message.type !== "fp-rich") {
+                    this.showFullPageFormInput = false;
+                    this.showFullPageRichInput = false;
+                    this.showMessages = true;
                   }
 
                   if (message.type === "longtext") {
@@ -635,6 +681,18 @@ export default {
       this.placeholder = "Write a reply";
     },
     openChat() {},
+    onFullPageFormInputSubmit(data) {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onFormButtonClick(data, msg);
+    },
+    onFullPageFormInputCancel() {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onFormCancelClick(msg);
+    },
+    onFullPageRichInputSubmit(button) {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onButtonClick(button, msg);
+    },
     async onButtonClick(button, msg) {
       if (msg.data.external) {
         await new Promise(resolve => setTimeout(resolve, 300));
@@ -664,15 +722,20 @@ export default {
         return;
       }
 
-      if (msg.data.clear_after_interaction) {
-        this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
-      }
-
       if (!this.isExpand) {
         this.$emit("expandChat");
       }
 
-      this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
+      if (msg.type === "fp-rich") {
+        const index = this.messageList.indexOf(msg);
+        this.messageList.splice(index, 1);
+
+        if (this.messageList[index - 1].type === "author") {
+          this.messageList.splice(index - 1, 1);
+        }
+      } else if (msg.data.clear_after_interaction) {
+        this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
+      }
 
       this.sendMessage({
         type: "button_response",
@@ -726,6 +789,19 @@ export default {
         author: "me",
         callback_id: msg.data.callback_id,
         data: responseData
+      });
+    },
+    onFormCancelClick(msg) {
+      window.parent.postMessage(
+        { dataLayerEvent: { event: 'form_cancelled', 'callback_id': msg.data.cancel_callback }},
+        this.referrerUrl
+      );
+      this.messageList[this.messageList.indexOf(msg)].type = "text";
+      this.sendMessage({
+        type: "form_response",
+        author: "me",
+        callback_id: msg.data.cancel_callback,
+        data:{text: msg.data.cancel_text}
       });
     },
     onRestartButtonClick() {
@@ -935,6 +1011,20 @@ export default {
           });
         }
       }
+    },
+    showFullPageFormInputMessage(message) {
+      this.fpFormInputMessage = message;
+
+      this.showMessages = false;
+      this.showFullPageRichInput = false;
+      this.showFullPageFormInput = true;
+    },
+    showFullPageRichInputMessage(message) {
+      this.fpRichInputMessage = message;
+
+      this.showMessages = false;
+      this.showFullPageFormInput = false;
+      this.showFullPageRichInput = true;
     },
     createUuid() {
       const uuid = this.$uuid.v4();
