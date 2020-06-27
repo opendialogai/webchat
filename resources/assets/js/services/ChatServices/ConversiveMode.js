@@ -17,7 +17,7 @@ ConversiveMode.prototype.sendRequest = function(message, webChatComponent) {
 
   this.client.sendMessageToHistory(message);
 
-  return this.client.getSessionId(webChatComponent.uuid)
+  return this.client.getSessionId(webChatComponent.$store.state.uuid)
     .then(sessionId => this.client.sendMessage(message, sessionId));
 };
 
@@ -28,7 +28,7 @@ ConversiveMode.prototype.sendResponseError = function(error, sentMessage, webCha
 };
 
 ConversiveMode.prototype.sendTypingRequest = function(message, webChatComponent) {
-  return this.client.getSessionId(webChatComponent.uuid)
+  return this.client.getSessionId(webChatComponent.$store.state.uuid)
     .then((sessionId) => {
       return this.client.sendTypingMessage(message, sessionId);
     });
@@ -44,7 +44,7 @@ ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
   this.client = new ConversiveClient(webChatComponent.conversiveUrl, webChatComponent.conversiveSiteCode);
 
   let name = webChatComponent.modeData.options.markupData.fullname;
-  return this.client.getSessionId(webChatComponent.uuid, name, true)
+  return this.client.getSessionId(webChatComponent.$store.state.uuid, name, true)
     .then((sessionToken) => {
       return this.client.setEngineData(sessionToken, webChatComponent.modeData.options.markupData)
         .then(() => this.client.setEngineDataHistory(sessionToken, webChatComponent.modeData.options.markupData))
@@ -71,7 +71,7 @@ ConversiveMode.prototype.initialiseChat = async function(webChatComponent) {
 
 ConversiveMode.prototype.destroyChat = async function(webChatComponent) {
   clearInterval(this.pollingInterval);
-  this.client.logout(await this.client.getSessionId(webChatComponent.uuid));
+  this.client.logout(await this.client.getSessionId(webChatComponent.$store.state.uuid));
   this.client = null;
 };
 
@@ -223,7 +223,7 @@ ConversiveMode.prototype.addMessageToMessageList = function(textMessage, isFirst
     mode: "custom",
     modeInstance: this.modeInstance,
     type: "text",
-    user_id: webChatComponent.uuid,
+    user_id: webChatComponent.$store.state.uuid,
     data: {
       text: textMessage.b,
       time: moment().tz("UTC").format("hh:mm:ss A"),

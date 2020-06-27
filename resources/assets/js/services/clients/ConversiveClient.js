@@ -1,4 +1,6 @@
 import axios from "axios";
+import {uuid as uuidGen} from 'vue-uuid';
+
 import SessionStorageMixin from "../../mixins/SessionStorageMixin";
 
 let ConversiveClient = function(baseUrl, siteCode) {
@@ -91,7 +93,7 @@ ConversiveClient.prototype.getSession = function(uuid, name = null) {
     v: this.version,
     sc: this.siteCode,
     n: name || "",
-    tc: uuid,
+    tc: typeof uuid === 'undefined' ? ('undefined-' + uuidGen.v4()) : uuid,
     iad: false,
   };
 
