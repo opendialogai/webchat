@@ -97,13 +97,11 @@
       :messageColors="determineMessageColors()"
       :colors="colors"
       :onButtonClick="onButtonClick"
-
-
     />
     <DatetimeFakeMessage v-else-if="message.type === 'datetime'" :message="message" />
 
     <span
-      v-if="message.type !== 'datetime' && message.type !== 'typing' && message.type !== 'author'"
+      v-if="!hideMessageTime && message.type !== 'datetime' && message.type !== 'typing' && message.type !== 'author'"
       class="sc-message--time-read"
     >
       <template
@@ -179,6 +177,10 @@ export default {
     onLinkClick: {
       type: Function,
       required: true
+    },
+    hideMessageTime: {
+      type: Boolean,
+      default: false
     },
     read: {
       type: Boolean

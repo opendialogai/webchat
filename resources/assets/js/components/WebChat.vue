@@ -54,6 +54,7 @@
         :initial-text="initialText"
         :fp-form-input-message="fpFormInputMessage"
         :fp-rich-input-message="fpRichInputMessage"
+        :hide-message-time="hideMessageTime"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
       />
@@ -92,6 +93,7 @@ export default {
       required: true
     },
     hideDatetimeMessage: Boolean,
+    hideMessageTime: Boolean,
     hideTypingIndicatorOnInternalMessages: Boolean,
     isExpand: Boolean,
     isMobile: Boolean,

@@ -145,7 +145,11 @@
   text-align: center;
 }
 
-// Time meta data hidden
 .sc-message--time-read {
-  display: none;
+  font-size: x-small;
+  margin-top: -20px;
+  color: white;
+}
+.mt.emit + .sc-message--time-read {
+  text-align: right;
 }

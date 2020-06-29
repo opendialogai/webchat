@@ -27,6 +27,7 @@ class WebchatSetting extends Model
     public const PAGE_CSS_PATH             = 'pageCssPath';
     public const HIDE_OPEN_CLOSE_ICONS     = 'hideOpenCloseIcons';
     public const HIDE_DATETIME_MESSAGE     = 'hideDatetimeMessage';
+    public const HIDE_MESSAGE_TIME         = 'hideMessageTime';
     public const CALLBACK_MAP              = 'callbackMap';
     public const DISABLE_CLOSE_CHAT        = 'disableCloseChat';
     public const START_MINIMIZED           = 'startMinimized';
@@ -135,6 +136,7 @@ class WebchatSetting extends Model
                     WebchatSetting::OPEN,
                     WebchatSetting::HIDE_OPEN_CLOSE_ICONS,
                     WebchatSetting::HIDE_DATETIME_MESSAGE,
+                    WebchatSetting::HIDE_MESSAGE_TIME,
                     WebchatSetting::DISABLE_CLOSE_CHAT,
                     WebchatSetting::START_MINIMIZED,
                     WebchatSetting::USE_BOT_AVATAR,

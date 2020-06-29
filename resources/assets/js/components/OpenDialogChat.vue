@@ -103,6 +103,7 @@
         :chatbot-name="chatbotName"
         :colours="colours"
         :hide-datetime-message="hideDatetimeMessage"
+        :hide-message-time="hideMessageTime"
         :hide-typing-indicator-on-internal-messages="hideTypingIndOnInternalMessages"
         :is-expand="isExpand"
         :is-mobile="isMobile"
@@ -211,6 +212,7 @@ export default {
       commentsEnabled: true,
       cssProps: {},
       hideDatetimeMessage: false,
+      hideMessageTime: false,
       hideTypingIndOnInternalMessages: false,
       ipAddressInitialised: false,
       isExpand: false,
@@ -643,6 +645,10 @@ export default {
 
         if (general.hideDatetimeMessage) {
           this.hideDatetimeMessage = general.hideDatetimeMessage;
+        }
+
+        if (general.hideMessageTime) {
+          this.hideMessageTime = general.hideMessageTime;
         }
 
         if (general.hideTypingIndicatorOnInternalMessages) {

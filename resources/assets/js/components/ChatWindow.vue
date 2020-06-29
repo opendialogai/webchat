@@ -23,6 +23,7 @@
       :onFormButtonClick="onFormButtonClick"
       :onListButtonClick="onListButtonClick"
       :onLinkClick="onLinkClick"
+      :hideMessageTime="hideMessageTime"
     />
 
     <template v-if="showLongTextInput">
@@ -201,6 +202,10 @@ export default {
       type: Boolean,
       default: () => true
     },
+    hideMessageTime: {
+      type: Boolean,
+      default: () => false
+    },
     maxInputCharacters: {
       type: Number,
       default: 0
@@ -226,8 +231,8 @@ export default {
       required: true
     },
     initialText: {
-        type: String,
-        default: null
+      type: String,
+      default: null
     }
   },
   data() {

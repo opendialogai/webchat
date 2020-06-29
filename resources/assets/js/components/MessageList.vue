@@ -11,6 +11,7 @@
       :onLinkClick="onLinkClick"
       :onListButtonClick="onListButtonClick"
       :onFormButtonClick="onFormButtonClick"
+      :hideMessageTime="hideMessageTime"
     />
     <Message
       v-if="showTypingIndicator"
@@ -42,6 +43,10 @@ export default {
       default: chatIcon
     },
     showTypingIndicator: {
+      type: Boolean,
+      default: () => false
+    },
+    hideMessageTime: {
       type: Boolean,
       default: () => false
     },

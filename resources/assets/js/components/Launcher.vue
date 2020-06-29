@@ -35,6 +35,7 @@
       :fullScreen="fullScreen"
       :fpFormInputMessage="fpFormInputMessage"
       :fpRichInputMessage="fpRichInputMessage"
+      :hideMessageTime="hideMessageTime"
     />
   </div>
 </template>
@@ -74,6 +75,10 @@ export default {
     showExpandButton: {
       type: Boolean,
       default: true
+    },
+    hideMessageTime: {
+      type: Boolean,
+      default: false
     },
     agentProfile: {
       type: Object,
