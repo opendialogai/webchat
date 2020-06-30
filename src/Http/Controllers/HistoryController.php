@@ -13,7 +13,7 @@ use OpenDialogAi\ConversationLog\Message;
 class HistoryController
 {
     const TEXT_EXTERNAL = 'text_external';
-    const CHATBOT = 'AvayaBot';
+    const CHATBOT = 'Bot';
     const CHATBOT_USER = 'You';
     const BUTTON_RESPONSE = 'button_response';
     const FORM_RESPONSE = 'form_response';
@@ -101,7 +101,7 @@ class HistoryController
 
     private function generateFileName()
     {
-        $fileName = env('HISTORY_FILE_NAME', 'Avaya Chat Transcript %s.txt');
+        $fileName = env('HISTORY_FILE_NAME', 'Chat Transcript %s.txt');
         $datetime = \Carbon\Carbon::now()->format('Y-m-d h:i:s');
 
         return sprintf($fileName, $datetime);

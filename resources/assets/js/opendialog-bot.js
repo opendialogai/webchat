@@ -64,8 +64,6 @@ function mergeSettings(webchatSettings) {
  * Push events to the GA datalayer
  */
 function pushToDataLayer (eventData) {
-  eventData.scenario_name = window.openDialogSettings.bot.botName;
-
   if (window.dataLayer !== undefined) {
     window.dataLayer.push(eventData)
   }

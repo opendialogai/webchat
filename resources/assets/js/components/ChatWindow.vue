@@ -71,11 +71,9 @@
         :lastMessage="lastMessage"
         :showFile="showFile"
         :placeholder="placeholder"
-        :colors="colors" />
         :colors="colors"
         :mode-data="modeData"
-        @setChatMode="setChatMode"
-      />
+        @setChatMode="setChatMode" />
     </template>
   </div>
 </template>

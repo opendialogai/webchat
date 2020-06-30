@@ -76,8 +76,6 @@
         :chatbot-avatar-path="chatbotAvatarPath"
         :chatbot-name="chatbotName"
         :colours="colours"
-        :conversive-url="conversiveURL"
-        :conversive-site-code="conversiveSiteCode"
         :hide-datetime-message="hideDatetimeMessage"
         :hide-message-time="hideMessageTime"
         :hide-typing-indicator-on-internal-messages="hideTypingIndOnInternalMessages"
@@ -149,7 +147,7 @@ export default {
       collectUserIp: true,
       colours: {
         header: {
-          bg: '#1b212a',
+          bg: 'purple',
           text: '#ffffff',
         },
         launcher: {
@@ -217,7 +215,7 @@ export default {
       isExpand: false,
       isMinimized: false,
       isMobile: false,
-      isOpen: true,
+      isOpen: false,
       showHistory: false,
       numberOfMessages: 10,
       messageAnimation: false,
@@ -465,14 +463,10 @@ export default {
         }
       });
     },
-    initialiseSettings(customConfig) {
+    initialiseSettings() {
       // Get default settings from the config endpoint.
       this.getWebchatConfig().then((config) => {
         this.setConfig(config);
-        return true;
-      }).then(() => {
-        // Over-ride default config with any custom settings.
-        this.setConfig(customConfig);
 
         if (!this.settingsInitialised) {
           this.settingsInitialised = true;

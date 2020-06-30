@@ -5,106 +5,12 @@
 
 // ChatWindow.vue --- ChatWindow.vue --- ChatWindow.vue ---
 
-.chat-window {
-  border-radius: 10px;
-  height: calc(100% - 55px);
-  margin: 0 auto;
-
-  @media (min-width: 450px) {
-    width: 423px;
-  }
-}
-
 .chat-window.opened {
   box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
   margin: 0px auto 0;
 
   @media (min-width: 767px) {
     margin: 20px auto 0;
-  }
-}
-
-// Header.vue --- Header.vue --- Header.vue ---
-// remove vertical linear fade
-.header__btm-fade {
-  display: none;
-}
-
-.header {
-  width: 100%;
-  background: none !important;
-  justify-content: flex-end;
-  border-radius: unset;
-}
-
-// Inital state of the header
-.header-closed {
-  .header-nav {
-    display: none;
-  }
-  height: 110px;
-  margin: 10px 0;
-}
-
-//When the header is open fully - full chat box
-.header-open {
-  background-color: #da291c !important;
-  .header-cta {
-    display: none;
-  }
-}
-
-.header-cta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  white-space: nowrap;
-  height: 90px;
-  width: 90px;
-  border-radius: 45px;
-  background-color: #da291c;
-  transition: width 0.45s;
-  margin: 0 10px 0 0;
-  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
-}
-
-.header-cta-expand {
-  .header-cta__text {
-    display: block;
-  }
-
-  width: 285px;
-  height: 70px;
-
-  margin: 0 auto;
-  justify-content: flex-start;
-  padding: 0 35px;
-
-  @media (min-width: 450px) {
-    width: 370px;
-    padding: 0 35px;
-    height: 90px;
-  }
-}
-
-.header-cta__icon {
-  min-height: 50px;
-  min-width: 50px;
-}
-
-.header-cta__text {
-  margin-left: 20px;
-  display: none;
-  overflow: hidden;
-  white-space: nowrap;
-
-  span {
-    font-size: 20px;
-    display: block;
-    font-weight: 500;
-    line-height: 1.5;
-    color: #ffffff;
   }
 }
 

@@ -50,10 +50,10 @@
 
 <script>
 
-  import ExternalButtons from "./ExternalButtons.vue";
+import ExternalButtons from "./ExternalButtons.vue";
   import EndChatButton from "./EndChatButton";
 
-  export default {
+export default {
   components: {
     EndChatButton,
     ExternalButtons
