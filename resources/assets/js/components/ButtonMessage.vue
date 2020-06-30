@@ -1,28 +1,44 @@
 <template>
   <div
     ref="message"
-    class="mt mt-message-with-button"
+    class="mt-message-with-button fade-enter-active"
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
-        reap: this.author === 'them',
     }]"
-    :style="messageColors"
   >
-    <div class="mt-message-with-button__text fade-enter-active" v-linkified>
+    <div
+      class="mt reap mt-message-with-button__text"
+      :style="messageColors"
+      v-linkified>
       <span v-html="data.text"></span>
     </div>
 
     <template v-if="data.buttons.length && !data.external">
-      <div class="mt-message-with-button__buttons-wrapper">
-        <button
-          v-for="(button, idx) in data.buttons"
-          :key="idx"
-          @click="_handleClick(button)"
-          :style="{'--btn-bg': colors.button.bg, '--btn-color': colors.button.text, '--btn-bg-hover': colors.button.hoverbg}"
-          v-html="button.text"
-          class="mt-message-with-button__buttons-wrapper__button"
-        ></button>
+      <div
+        class="mt-message-with-button__buttons-wrapper reap fade-enter-active"
+           :style="{
+            '--background': colors.messageList.bg,
+
+            '--btn-bg': colors.messageButton.bg,
+            '--btn-bg-hover': colors.messageButton.hoverbg,
+
+            '--btn-color': colors.messageButton.text,
+            '--btn-color-hover':  colors.messageButton.hoverText,
+
+            '--btn-border-color':colors.messageButton.border,
+            '--btn-border-color-hover':colors.messageButton.hoverBorder }"
+      >
+        <template v-for="(button, idx) in data.buttons">
+          <button
+            v-if="button.display && button.text"
+            :key="idx"
+            @click="_handleClick(button)"
+            v-html="button.text"
+            class="mt-message-with-button__buttons-wrapper__button fade-enter-active"
+            :class="button.type"
+          ></button>
+        </template>
       </div>
     </template>
   </div>
@@ -96,31 +112,38 @@ export default {
       setTimeout(() => {
         this.$root.$emit("scroll-down-message-list");
       }, 450);
-      setTimeout(() => {
-        this.$root.$emit("scroll-down-message-list");
-      }, 900);
 
       window.addEventListener("resize", () => {
         this.$refs.message.style.width = null;
         this.$refs.message.style.height = null;
       });
     }
+
+    setTimeout(() => {
+      this.$root.$emit("scroll-down-message-list");
+    }, 900);
   }
 };
 </script>
 
 <style scoped>
+
+
 .mt-message-with-button__buttons-wrapper__button {
   background-color: var(--btn-bg);
   color: var(--btn-color);
-  border: 1px solid var(--btn-bg);
+  border: 2px solid var(--btn-border-color);
 }
 
-.mt-message-with-button__buttons-wrapper__button:active {
-}
 
 .mt-message-with-button__buttons-wrapper__button:hover {
-  background-color: var(--btn-bg-hover);
-  color: var(--btn-bg);
+background-color: var(--btn-bg-hover);
+  color: var(--btn-color-hover);
+  border: 2px solid var(--btn-border-color-hover);
 }
+
+button:focus {
+    outline:0;
+}
+
 </style>

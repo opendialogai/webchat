@@ -1,85 +1,66 @@
-.mt-carousel__gradient {
-  width: 80px;
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  bottom: 0;
-  background: rgb(27, 33, 42);
-}
-
-.mt-carousel__gradient--right {
-  right: 0;
-  background: linear-gradient(270deg, rgba(27, 33, 42, 1) 0%, rgba(255, 255, 255, 0) 100%);
-}
-
-.mt-carousel__gradient--left {
-  left: 0;
-  background: linear-gradient(90deg, rgba(27, 33, 42, 1) 0%, rgba(255, 255, 255, 0) 100%);
-}
-
 .mt-carousel {
-  overflow: hidden;
-  max-width: none;
+  &.vertical {
+    padding: 0 !important;
+    columns: 2;
+    column-gap: 5px;
+    max-width: 100% !important;
+    width: 329px;
+    @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
+      width: 265px;
+    }
 
-  .slider {
-    overflow: visible;
-    padding: 19px 0;
+    > div {
+      display: inline-block;
+    }
 
-    .slider-wrap > div {
-      @media (min-width: $media-med) {
-        width: 300px;
+    .mt-message-rich {
+      margin-left: 0 !important;
+      border-radius: 6px !important;
+      padding: 10px !important;
+      margin: 0 0 5px 0;
+      width: 162px;
+      max-width: 162px;
+      transform: translateZ(0);
+      @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
+        padding: 5px !important;
+        width: 162px;
+        max-width: 162px;
       }
 
-      overflow: visible;
-
-      .mt-message-rich {
-        margin: 0 auto !important;
+      .sc-message--rich--title {
+        font-size: 13px;
+      }
+      .sc-message--rich--subtitle {
+        display: none;
+      }
+      .sc-message--rich--text {
+        font-size: 12px;
+        &:before {
+          display: none;
+        }
+      }
+      .sc-message--rich--image {
+        margin: -10px -10px 10px -10px;
+        height: 91px;
+        @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
+          margin: -5px -5px 5px -5px;
+          height: 73px;
+        }
       }
     }
+  }
 
-    .slider-pagination {
-      display: none;
+  &.horizontal {
+    padding: 0 20px !important;
+    position: relative;
+    max-width: 100%;
+    width: 311px;
+
+    .mt-message-rich {
+      margin-left: 10px !important;
+      margin-right: 10px !important;
+      border-radius: 6px !important;
+      max-width: 100%;
     }
-  }
-
-  //   arrows --- arrows --- arrows ---
-  //   arrows --- arrows --- arrows ---
-  //   arrows --- arrows --- arrows ---
-
-  .mt-carousel__arrows {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: calc(50% - 30px);
-    z-index: 2;
-  }
-
-  .mt-carousel__arrows__arrow {
-    cursor: pointer;
-    width: 60px;
-    height: 60px;
-    background-color: rgba(#000000, 0.3);
-
-    &:hover {
-      background-color: rgba(#000000, 0.7);
-    }
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 100%;
-
-    span {
-      font-size: 30px;
-      font-weight: bold;
-      color: white;
-    }
-  }
-
-  .mt-carousel__arrows__arrow-left {
-    float: left;
-  }
-
-  .mt-carousel__arrows__arrow-left {
-    float: right;
   }
 }

@@ -1,0 +1,377 @@
+.webchat-container {
+  // border: 1px solid blue;
+  background-color: transparent;
+}
+
+// ChatWindow.vue --- ChatWindow.vue --- ChatWindow.vue ---
+
+.chat-window {
+  border-radius: 10px;
+  height: calc(100% - 55px);
+  margin: 0 auto;
+
+  @media (min-width: 450px) {
+    width: 423px;
+  }
+}
+
+.chat-window.opened {
+  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+  margin: 0px auto 0;
+
+  @media (min-width: 767px) {
+    margin: 20px auto 0;
+  }
+}
+
+// Header.vue --- Header.vue --- Header.vue ---
+// remove vertical linear fade
+.header__btm-fade {
+  display: none;
+}
+
+.header {
+  width: 100%;
+  background: none !important;
+  justify-content: flex-end;
+  border-radius: unset;
+}
+
+// Inital state of the header
+.header-closed {
+  .header-nav {
+    display: none;
+  }
+  height: 110px;
+  margin: 10px 0;
+}
+
+//When the header is open fully - full chat box
+.header-open {
+  background-color: #da291c !important;
+  .header-cta {
+    display: none;
+  }
+}
+
+.header-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  white-space: nowrap;
+  height: 90px;
+  width: 90px;
+  border-radius: 45px;
+  background-color: #da291c;
+  transition: width 0.45s;
+  margin: 0 10px 0 0;
+  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+}
+
+.header-cta-expand {
+  .header-cta__text {
+    display: block;
+  }
+
+  width: 285px;
+  height: 70px;
+
+  margin: 0 auto;
+  justify-content: flex-start;
+  padding: 0 35px;
+
+  @media (min-width: 450px) {
+    width: 370px;
+    padding: 0 35px;
+    height: 90px;
+  }
+}
+
+.header-cta__icon {
+  min-height: 50px;
+  min-width: 50px;
+}
+
+.header-cta__text {
+  margin-left: 20px;
+  display: none;
+  overflow: hidden;
+  white-space: nowrap;
+
+  span {
+    font-size: 20px;
+    display: block;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #ffffff;
+  }
+}
+
+//   <MessageList />
+//message list bkg is in test.css
+.message-list {
+}
+
+// <Message />
+// Line up the bot avatar inline with the message-type
+.mt {
+  max-width: calc(90% - 45px);
+  @media (min-width: $media-med) {
+    max-width: calc(90% - 60px);
+  }
+  margin-bottom: 20px;
+}
+
+.reap {
+  margin-left: 45px;
+
+  @media (min-width: $media-med) {
+    margin-left: 60px;
+  }
+}
+
+.mt-author img.avatar {
+  padding: 0;
+  width: 36px;
+  @media screen and (min-width: 768px) {
+    border-radius: 0;
+    width: 50px;
+  }
+}
+
+.mt-author.reap {
+  margin-bottom: -50px;
+  margin-left: 0px;
+  @media (min-width: 900px) {
+    margin-bottom: -70px;
+  }
+}
+
+.mt-typing-indicator {
+  background-color: transparent !important;
+  color: grey !important;
+  color: #575759;
+  font-size: 14px;
+  padding: 25px 20px 10px 5px;
+}
+
+/* User Input --- User Input --- User Input ---  */
+
+.user-input__form {
+  flex-direction: column;
+  padding: 20px;
+}
+
+.user-input__form-text-input {
+  display: inline-block;
+  width: 100%;
+  caret-color: #da291c;
+  font-family: Gotham;
+  font-size: 16px;
+  font-weight: 300;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.38;
+
+  padding: 0;
+  margin: 0;
+  margin-bottom: 15px;
+
+  height: 100%;
+}
+
+.user-input__buttons {
+  width: 100%;
+  margin: 0;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.user-input__button {
+  //   align-items: flex-start;
+  border: 1px solid blue;
+}
+
+.send-btn {
+  width: auto;
+  height: 50px;
+  padding: 2px 20px;
+  background-color: #da291c;
+  border-radius: 34.5px;
+  transition: 0.4s;
+  font-size: 18px;
+  color: white;
+
+  &:hover {
+    background-color: #c01a1e;
+  }
+}
+
+.end-chat-btn,
+.end-chat-btn:hover,
+.end-chat-btn:focus {
+  border: none;
+  outline: none;
+  background: none;
+  text-decoration: underline;
+}
+
+@keyframes confirmCloseChatAnim {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.confirmCloseChat {
+  opacity: 0;
+  text-align: right;
+}
+
+.confirmCloseChatButtons {
+  display: inline-block;
+}
+
+.confirmCloseChatAnimate {
+  animation: confirmCloseChatAnim 0.6s forwards;
+}
+
+// close-chat --- close-chat --- close-chat ---
+// close-chat --- close-chat --- close-chat ---
+// close-chat --- close-chat --- close-chat ---
+
+.close-chat {
+  display: flex;
+  justify-content: center;
+  margin-top: -30px;
+  margin-bottom: 10px;
+}
+
+@keyframes close-chat-spin {
+  from {
+    transform: rotate(0deg) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(180deg) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes reverse-close-chat-spin {
+  from {
+    transform: rotate(180deg) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: rotate(0deg) scale(0);
+    opacity: 0;
+  }
+}
+
+.close-chat__button {
+  position: relative;
+  z-index: 1;
+  width: 70px;
+  height: 70px;
+  background-color: #313133;
+  border-radius: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    background-color: #000000;
+  }
+}
+
+.closeChatButtonAnimate {
+  animation: close-chat-spin 0.5s forwards;
+}
+.closeChatButtonReverseAnimate {
+  animation: reverse-close-chat-spin 0.5s forwards;
+}
+
+.close-chat__img {
+  width: 31px;
+  height: 30px;
+  object-fit: contain;
+  transition: transform 0.5s;
+  // background-color: #ffffff;
+}
+
+// ANIMATIONS --- ANIMATIONS --- ANIMATIONS ---
+// ANIMATIONS --- ANIMATIONS --- ANIMATIONS ---
+// ANIMATIONS --- ANIMATIONS --- ANIMATIONS ---
+
+@keyframes slide-up {
+  from {
+    transform: translate(0px, 30px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0px, 0px);
+    opacity: 1;
+  }
+}
+
+.animateStartingState {
+  opacity: 0;
+}
+
+.animateSlideUp {
+  animation: slide-up 0.8s forwards;
+}
+
+.animateDelay1 {
+  animation-delay: 0.2s;
+}
+.animateDelay2 {
+  animation-delay: 0.5s;
+}
+.animateDelay3 {
+  animation-delay: 0.8s;
+}
+.animateDelay4 {
+  animation-delay: 2s;
+}
+
+.button-delay1 {
+  animation-delay: 0.6s;
+}
+.button-delay2 {
+  animation-delay: 0.75s;
+}
+.button-delay3 {
+  animation-delay: 0.9s;
+}
+.button-delay4 {
+  animation-delay: 1.05s;
+}
+
+#app .secondary-fp-button {
+    background: none;
+    border: none;
+    color: var(--labelTextColor);
+    text-decoration: underline;
+    font-size: 16px;
+    width: auto;
+    padding: 0;
+    min-height: 0;
+    margin-top: 30px;
+}
+
+#app .secondary-button {
+    background: none;
+    border: none;
+    color: var(--labelTextColor);
+    text-decoration: underline;
+    width: auto;
+    padding: 0;
+    min-height: 0;
+    margin-top: 10px;
+    margin-left: 15px;
+}

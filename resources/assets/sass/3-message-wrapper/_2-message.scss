@@ -1,6 +1,7 @@
-// Old CSS still being used by some components
-// Old CSS still being used by some components
-// Old CSS still being used by some components
+// Old CSS may still being used by some components
+// Old CSS may still being used by some components
+// Old CSS may still being used by some components
+
 .sc-message {
   width: 300px;
   margin: 0 auto;
@@ -98,6 +99,7 @@
   z-index: 0;
 }
 
+// special wrapper for author message (avatar) only
 .mt-wrapper-author {
   z-index: 1;
 }
@@ -109,20 +111,15 @@
 // message type --- message type ---message type ---
 
 .mt {
-  padding: 25px;
-  background-color: white;
   border-radius: 30px;
   box-shadow: none;
-
   max-width: 90%;
-  margin-bottom: 30px;
+  padding: 15px 20px;
   line-height: 1.6;
-  font-size: 15px;
-  @media (min-width: $media-sml){
+  font-size: 14px;
+  @media (min-width: $media-sml) {
     font-size: 16px;
   }
-
-  //   position: relative;
 }
 
 // 🧘🏻‍♂️ User Sends Emits 🧘🏻‍♂️
@@ -152,4 +149,19 @@
 }
 .mt.emit + .sc-message--time-read {
   text-align: right;
+}
+
+/// Style text --- Style text --- Style text ---
+
+.linkified,
+.linkified:link,
+.linkified:visited,
+.linkified:hover,
+.linkified:active {
+  text-decoration: none;
+  font-weight: bold;
+  color: white;
+  border-bottom: dashed 1px white;
+  padding-bottom: 3px;
+  position: relative;
 }

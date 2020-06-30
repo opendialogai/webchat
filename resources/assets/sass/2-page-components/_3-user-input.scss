@@ -1,34 +1,12 @@
-.sc-user-input {
-  border-radius: 0;
-  .sc-user-input--text {
-    font-size: 16px;
-    transform-origin: left;
-    transform: scale(0.94);
-    padding: 16px 18px;
-  }
-  .sc-user-input--buttons {
-    right: 10px;
-    width: auto;
-    .sc-user-input--send-icon-wrapper {
-      background: url("/vendor/webchat/images/message.svg") center center no-repeat;
-      height: 16px;
-      cursor: pointer;
-      svg {
-        display: none;
-      }
-    }
-  }
-}
-
-.sc-user-input-wrapper {
+.user-input {
   position: relative;
+  width: 100%;
+
 }
 
-.sc-user-input {
+.user-input__form {
   min-height: 55px;
-  margin: 0px;
   position: relative;
-  bottom: 0;
   display: flex;
   background-color: #f4f7f9;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
@@ -37,112 +15,77 @@
   margin: 0 auto;
 }
 
-
-
-.sc-user-input.disabled {
-  pointer-events: none;
-  background: #a9a9a9 !important;
-}
-
-.sc-user-input--text {
-  width: 300px;
-  resize: none;
-  border: none;
-  outline: none;
-  border-bottom-left-radius: 10px;
-  box-sizing: border-box;
-  padding: 18px;
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.33;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  color: #565867;
-  -webkit-font-smoothing: antialiased;
-  max-height: 200px;
-  overflow: scroll;
-  bottom: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-.sc-user-input--text:empty:before {
-  content: attr(placeholder);
-  display: block; /* For Firefox */
-  /* color: rgba(86, 88, 103, 0.3); */
-  filter: contrast(15%);
-  outline: none;
-}
-
-.sc-chat-window.fullscreen .sc-user-input--text {
-  width: calc(100% - 120px);
-}
-
-.sc-user-input--buttons {
-  width: 100px;
-  position: absolute;
-  right: 25px;
-  height: 100%;
-  display: flex;
-}
-
-.sc-user-input--button {
-  width: 30px;
-  height: 55px;
-  margin-left: 2px;
-  margin-right: 2px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.sc-user-input.active {
+.user-input__form.active {
   box-shadow: none;
   background-color: white;
   box-shadow: 0px -5px 20px 0px rgba(150, 165, 190, 0.2);
 }
 
-.sc-user-input--button label {
-  position: relative;
-  height: 24px;
-  padding-left: 3px;
-  cursor: pointer;
+.user-input__form.disabled {
+  pointer-events: none;
+  background: #a9a9a9 !important;
 }
 
-.sc-user-input--button label:hover path {
-  fill: rgba(86, 88, 103, 1);
-}
+// Form text --- Form text --- Form text ---
 
-.sc-user-input--button input {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  z-index: 99999;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-  overflow: hidden;
-}
+.user-input__form-text-input {
+  resize: none;
+  border: none;
+  outline: none;
+  padding: 18px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.33;
 
-.file-container {
-  background-color: #f4f7f9;
-  border-top-left-radius: 10px;
-  padding: 5px 20px;
   color: #565867;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex: 1;
+
+
 }
 
-.delete-file-message {
-  font-style: normal;
-  float: right;
-  cursor: pointer;
-  color: #c8cad0;
+.user-input__form-text-input:empty:before {
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  filter: contrast(15%);
+  outline: none;
+  cursor: text;
 }
 
-.delete-file-message:hover {
-  color: #5d5e6d;
+// Form Buttons --- Form Buttons --- Form Buttons ---
+
+
+.user-input__buttons {
+  width: 50px;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+
 }
 
-.icon-file-message {
-  margin-right: 5px;
+.user-input__button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  height: 100%;
+  width: 100%;
+
+
+}
+
+// restyle the button - remove default styles
+.send-btn {
+  border: none;
+  height: 70%;
+  width: 70%;
+  &:active,
+  &:focus {
+    outline: none;
+    border: none;
+  }
 }

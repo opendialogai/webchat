@@ -1,7 +1,13 @@
 <template>
-  <div class="mt mt-message-rich sc-message--rich" :style="messageColors"  :class="[{
-        animate: this.data.animate,
-    }]">
+  <div
+    class="mt reap mt-message-rich sc-message--rich"
+    :style="messageColors"
+    :class="[{
+      animate: this.data.animate,
+      linkable: (this.data.callback || this.data.link),
+    }]"
+    @click="_handleMessageClick"
+  >
     <div class="sc-message--rich--title">{{ data.title }}</div>
     <div class="sc-message--rich--subtitle">{{ data.subtitle }}</div>
     <p class="sc-message--rich--text" v-linkified>
@@ -36,7 +42,6 @@ export default {
       type: Object,
       required: true
     },
-
     colors: {
       type: Object,
       required: true
@@ -53,9 +58,13 @@ export default {
       type: Function,
       required: true
     }
-
   },
   methods: {
+    _handleMessageClick() {
+      if (this.data.callback || this.data.link) {
+        this.onButtonClick(null, this.data)
+      }
+    },
     _handleClick(button) {
       this.onButtonClick(button, this.message)
     }
@@ -65,41 +74,48 @@ export default {
 
 <style scoped>
 .sc-message--rich {
-  background: #eaeaea;
   border-radius: 6px;
-  padding: 0 12px;
+  padding: 0 10px;
   max-width: calc(100% - 40px);
 }
 
-.sc-message--rich .sc-message--rich--title {
-}
+.sc-message--rich button {
+  margin-bottom: 10px;
 
-.sc-message--rich .sc-message--rich--subtitle {
-}
+  border: 1px solid;
+  font-size: 15px;
+  line-height: 1.33;
 
-.sc-message--rich .sc-message--rich--text {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  -webkit-font-smoothing: subpixel-antialiased;
+  text-align: center;
+  color: #ffffff;
+
+  font-weight: normal;
+  cursor: pointer;
+
+  border: none;
+  outline: none;
+  position: relative;
+  transition: 0.4s;
+  width: 95%;
+  max-width: 325px;
+  border-radius: 34.5px;
+
+  padding: 0 20px;
+  @media (min-width: 450px) {
+    padding: 0 10px;
+  }
 }
 
 .sc-message--rich button {
-  cursor: pointer;
-  border-radius: 30px;
-  border: none;
-  font-size: 14px;
-  padding: 12px 17px;
-  margin: 0 10px 10px 0;
-}
-.sc-message--rich button:hover {
-  background-color: var(--button-hover) !important;
+  background-color: var(--btn-bg);
+  color: var(--btn-color);
+  border: 2px solid var(--btn-border-color);
 }
 
-.sc-message--button button:last-child {
-  margin-right: 0;
+.sc-message--rich button:hover {
+  background-color: var(--btn-bg-hover);
+  color: var(--btn-color-hover);
+  border: 2px solid var(--btn-border-color-hover);
 }
 
 .sc-message--rich .sc-message--rich--image {

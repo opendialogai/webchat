@@ -9,7 +9,12 @@
       :showExpandButton="showExpandButton"
       :showRestartButton="showRestartButton"
       :onRestartButtonClick="onRestartButtonClick"
+      :onDownload="onDownload"
       :colors="colors"
+      :isOpen="isOpen"
+      :ctaText="ctaText"
+      :showFullPageFormInput="showFullPageFormInput"
+      :showFullPageRichInput="showFullPageRichInput"
     />
     <MessageList
       v-if="showMessages"
@@ -23,6 +28,9 @@
       :onFormButtonClick="onFormButtonClick"
       :onListButtonClick="onListButtonClick"
       :onLinkClick="onLinkClick"
+      :mode-data="modeData"
+      :isOpen="isOpen"
+      @setChatMode="setChatMode"
       :hideMessageTime="hideMessageTime"
     />
 
@@ -64,17 +72,21 @@
         :showFile="showFile"
         :placeholder="placeholder"
         :colors="colors" />
+        :colors="colors"
+        :mode-data="modeData"
+        @setChatMode="setChatMode"
+      />
     </template>
   </div>
 </template>
 
 <script>
-import Header from './Header.vue'
-import MessageList from './MessageList.vue'
-import UserInput from './UserInput.vue'
-import FullPageFormInput from './FullPageFormInput.vue'
-import FullPageRichInput from './FullPageRichInput.vue'
-import LongTextUserInput from './LongTextUserInput.vue'
+  import Header from './Header.vue'
+  import MessageList from './MessageList.vue'
+  import UserInput from './UserInput.vue'
+  import FullPageFormInput from './FullPageFormInput.vue'
+  import FullPageRichInput from './FullPageRichInput.vue'
+  import LongTextUserInput from './LongTextUserInput.vue'
 
 export default {
   components: {
@@ -162,6 +174,14 @@ export default {
       type: Function,
       required: true
     },
+    onDownload: {
+      type: Function,
+      required: true
+    },
+    ctaText: {
+      type: Array,
+      default: () => []
+    },
     messageList: {
       type: Array,
       default: () => []
@@ -233,10 +253,38 @@ export default {
     initialText: {
       type: String,
       default: null
+    },
+    modeData: {
+      type: Object,
+      required: true
     }
   },
   data() {
-    return {}
+    return {
+        originalTeamName: ''
+    }
+  },
+  created () {
+    this.originalTeamName = this.agentProfile.teamName;
+  },
+  watch: {
+    "modeData.mode": function(newValue, oldValue) {
+      if (newValue !== 'custom') {
+        this.agentProfile.teamName = this.originalTeamName;
+      } else {
+        this.agentProfile.teamName = 'Waiting for agent...';
+      }
+    },
+    "modeData.options.teamName": function(newValue, oldValue) {
+      if (newValue) {
+        this.agentProfile.teamName = 'You’re talking with ' + newValue;
+      }
+    },
+    "messageMetaTeamName": function(newValue, oldValue) {
+      if (typeof newValue !== 'undefined' && newValue !== '') {
+        this.agentProfile.teamName = newValue;
+      }
+    },
   },
   computed: {
     messages() {
@@ -267,6 +315,14 @@ export default {
     lastMessage() {
       if (this.messages.length == 0) return {}
       return this.messages[this.messages.length - 1]
+    },
+    messageMetaTeamName() {
+      return this.$store.state.messageMetaData.teamName;
+    },
+  },
+  methods: {
+    setChatMode(mode) {
+      this.$emit('setChatMode', mode);
     }
   }
 }

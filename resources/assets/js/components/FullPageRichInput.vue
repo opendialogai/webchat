@@ -140,6 +140,8 @@ export default {
   overflow-y: hidden;
 }
 
+/* Title/Subtitle */
+
 .mt-fpri__title {
   font-family: PlayfairDisplay;
   font-size: 26px;
@@ -159,10 +161,13 @@ export default {
   line-height: 1.3em;
 }
 
+/* image */
 .mt-fpri__image {
   width: 100%;
   margin-bottom: 10px;
 }
+
+/* button */
 
 .mt-fpri__buttons {
   display: flex;
@@ -233,6 +238,7 @@ export default {
   background: url("/vendor/webchat/images/download-button.svg");
 }
 
+/* loader --- loader --- loader ---  */
 @keyframes mt-fpri__button-fade-in {
   from {
     transform: translate(0px, 30px);

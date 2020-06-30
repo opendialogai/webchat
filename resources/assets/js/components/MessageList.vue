@@ -1,7 +1,8 @@
 <template>
-  <div class="message-list" ref="scrollList" :style="{backgroundColor: colors.messageList.bg}">
+  <div class="message-list" ref="scrollList" :style="{'--messageList-bkg': colors.messageList.bg}">
     <Message
       v-for="(message, idx) in messages"
+      v-show="shouldShowMessage(message)"
       :message="message"
       :read="message.read"
       :chatImageUrl="chatImageUrl"
@@ -11,6 +12,9 @@
       :onLinkClick="onLinkClick"
       :onListButtonClick="onListButtonClick"
       :onFormButtonClick="onFormButtonClick"
+      :mode-data="modeData"
+      :isOpen="isOpen"
+      @setChatMode="setChatMode"
       :hideMessageTime="hideMessageTime"
     />
     <Message
@@ -73,28 +77,41 @@ export default {
     onLinkClick: {
       type: Function,
       required: true
-    }
+    },
+    modeData: {
+      type: Object,
+      required: true
+    },
+    isOpen: {
+        type: Boolean,
+        default: () => false
+    },
   },
   methods: {
-    _scrollDown() {
+    _scrollDown(animate = true) {
       if (this.$refs.scrollList) {
         if (
           this.$refs.scrollList.scrollHeight >
           this.$refs.scrollList.offsetHeight
         ) {
-          const scrollStep =
-            (this.$refs.scrollList.scrollHeight -
-              this.$refs.scrollList.offsetHeight -
-              this.$refs.scrollList.scrollTop) /
-            15;
+          if (animate) {
+            const scrollStep =
+              (this.$refs.scrollList.scrollHeight -
+                this.$refs.scrollList.offsetHeight -
+                this.$refs.scrollList.scrollTop) /
+              15;
 
-          let i = 0;
-          const scrollInterval = setInterval(() => {
-            this.$refs.scrollList.scrollTop =
-              this.$refs.scrollList.scrollTop + scrollStep;
-            i = i + 1;
-            if (i == 15) clearInterval(scrollInterval);
-          }, 30);
+            let i = 0;
+            const scrollInterval = setInterval(() => {
+              if (this.$refs.scrollList) {
+                this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollTop + scrollStep;
+              }
+              i = i + 1;
+              if (i == 15) clearInterval(scrollInterval);
+            }, 30);
+          } else {
+            this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
+          }
         }
       }
     },
@@ -104,12 +121,22 @@ export default {
         this.$refs.scrollList.scrollTop >
           this.$refs.scrollList.scrollHeight - 300
       );
-    }
+    },
+    setChatMode(mode) {
+      this.$emit('setChatMode', mode);
+    },
+    shouldShowMessage(message) {
+      let isModeSame = message.mode === this.modeData.mode;
+      let isWebchatMode = message.mode === 'webchat';
+      let isCustomMode = message.mode === 'custom';
+      let isFromSameInstance = message.modeInstance === this.modeData.modeInstance;
+      return (isModeSame && isWebchatMode) || (isModeSame && isCustomMode && isFromSameInstance);
+    },
   },
   mounted() {
-    this._scrollDown();
-    this.$root.$on("scroll-down-message-list", () => {
-      this._scrollDown();
+    this._scrollDown(false);
+    this.$root.$on("scroll-down-message-list", (animate = true) => {
+      this._scrollDown(animate);
     });
   },
   updated() {
@@ -119,5 +146,9 @@ export default {
 </script>
 
 <style scoped>
+.message-list {
+    /* background-color: yellow; */
+  background-color: var(--messageList-bkg);
 
+}
 </style>

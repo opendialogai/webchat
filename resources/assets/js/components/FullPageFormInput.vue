@@ -42,6 +42,7 @@
             type="text"
             class="mt-fp-form__input"
             v-model="form.data[element.name].value"
+            @input="validateOnChange"
             v-on:keyup.enter="_handleClick"
             :placeholder="element.display"
             :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
@@ -52,6 +53,7 @@
           <textarea
             class="mt-fp-form__input mt-fp-form__textarea"
             v-model="form.data[element.name].value"
+            @input="validateOnChange"
             :placeholder="element.display"
           />
         </template>
@@ -83,6 +85,7 @@
                 v-bind:id="radio_value"
                 v-bind:value="radio_value"
                 v-model="form.data[element.name].value"
+                @input="validateOnChange"
               />
 
               <label v-bind:for="radio_value">{{ radio_text }}</label>
@@ -111,6 +114,7 @@
             type="email"
             class="mt-fp-form__input"
             v-model="form.data[element.name].value"
+            @input="validateOnChange"
             v-on:keyup.enter="_handleClick"
             :placeholder="element.display"
             :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
@@ -122,6 +126,7 @@
             type="tel"
             class="mt-fp-form__input"
             v-model="form.data[element.name].value"
+            @input="validateOnChange"
             v-on:keyup.enter="_handleClick"
             :placeholder="element.display"
             :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
@@ -215,6 +220,7 @@
   },
   data() {
     return {
+      attemptedSubmit: false,
       picked: "",
       form: {
         data: []
@@ -230,22 +236,31 @@
   },
   methods: {
     setUp() {
-      this.showLoader = false;
+        this.showLoader = false;
 
-      this.form.data = [];
+        this.form.data = [];
 
-      this.message.data.elements.forEach(element => {
-          this.form.data[element.name] = {
-              name: element.name,
-              value: ""
-          };
+        this.message.data.elements.forEach(element => {
+            this.form.data[element.name] = {
+                name: element.name,
+                value: ""
+            };
 
-        if (element.default_value) {
-          this.form.data[element.name].value = element.default_value;
-        }
-      });
+          if (element.default_value) {
+            this.form.data[element.name].value = element.default_value;
+          }
+        });
+
+        this.validateOnChange = _.debounce(this.validateOnChangeForDebounce, 300);
+    },
+    validateOnChangeForDebounce() {
+      if (this.attemptedSubmit) {
+        this.validateForm();
+      }
     },
     onSelectChange() {
+      this.validateOnChange();
+
       if (this.message.data.auto_submit) {
         this._handleClick();
       }
@@ -265,7 +280,9 @@
     _handleClick() {
       if (!this.showLoader) {
         this.validateForm();
-        if (!this.errors.length) {
+        if (this.errors.length) {
+          this.attemptedSubmit = true;
+        } else {
           this.onSubmit(this.form.data);
 
           this.showLoader = true;
@@ -326,6 +343,8 @@
   text-align: center;
 }
 
+/* form --- form --- form ---  */
+
 .mt-fp-form {
   background-color: var(--messageListBg);
   overflow-x: hidden;
@@ -354,6 +373,21 @@
   margin: 0 auto 18px;
 }
 
+/* 🔥 custom css 🔥 */
+/* 🔥 custom css 🔥 */
+
+.first_name,
+.last_name {
+  width: 47%;
+  padding: 0;
+  margin: 0 0 18px;
+}
+
+/* 🔥 custom css 🔥 */
+/* 🔥 custom css 🔥 */
+
+/* error --- error --- error --- */
+
 .mt-fp-form__error {
   margin-bottom: 20px;
   width: 100%;
@@ -364,6 +398,8 @@
   margin-top: 10px;
   color: var(--btn-bg);
 }
+
+/* labels --- labels --- labels ---  */
 
 .mt-fp-form__label {
   z-index: 1;
@@ -399,6 +435,8 @@
   /* content: " Required"; */
 }
 
+/* input --- input --- input ---  */
+
 .mt-fp-form__input {
   border-radius: 4px;
   border: 1px solid #979797;
@@ -417,10 +455,16 @@
   border: 1px solid var(--btn-bg);
 }
 
+/* textarea -- */
 .mt-fp-form__textarea {
   height: 100px;
   padding: 10px;
 }
+
+/*
+styling <select> is notoriously difficult </select>
+maybe look into https://cdnjs.com/libraries/bootstrap-select
+*/
 
 .mt-fp-form__select {
   width: 100%;
@@ -441,6 +485,12 @@
   outline: none;
   border: 1px solid var(--btn-bg);
 }
+
+/*
+v-select --- v-select --- v-select ---
+https://vue-select.org/guide/css.html#overriding-default-styles
+doesnt work though 🤦🏻‍♂️
+*/
 
 .mt-fp-form__auto-select {
   width: 100%;
@@ -465,6 +515,8 @@
 .style-chooser .vs__open-indicator {
   fill: #394066;
 }
+
+/* radio --- radio --- radio ---  */
 
 .mt-fp-form__radio {
   display: flex;
@@ -529,6 +581,8 @@
   border: 1px solid #979797;
 }
 
+/* submit --- submit --- submit ---  */
+
 .mt-fp-form__submit-wrapper {
   width: 100%;
   text-align: center;
@@ -555,6 +609,8 @@
   outline: none;
   border: 1px solid var(--btn-bg-hover);
 }
+
+/* cancel --- cancel --- cancel ---  */
 
 .mt-fp-form__cancel-wrapper {
   width: 100%;
@@ -587,6 +643,8 @@
 .confirmCloseChatAnimate {
   animation: confirmCloseChatAnim 0.6s forwards;
 }
+
+/* fp-loader --- fp-loader --- fp-loader ---  */
 
 .fp-loader {
   position: sticky;

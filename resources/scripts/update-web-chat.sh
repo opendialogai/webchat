@@ -62,7 +62,7 @@ if ${ask}; then
 fi
 
 
-cd vendor/opendialogai/webchat
+cd vendor/opendialogai/avaya-webchat
 
 if ${lando}
 then

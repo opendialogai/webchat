@@ -1,40 +1,45 @@
 // This is injected early on, before...  vendor-local/webchat/resources/views/webchat-iframe.blade.php
 // This is styling for the iframe chat box
 
-#opendialog-bot {
-  cursor: pointer;
-  position: fixed;
-  height: 60px;
-  width: 60px;
-  bottom: 10px;
-  right: 10px;
-  border: none;
-  z-index: 2147483000;
-  background: #4e8cff;
-  -webkit-border-radius: 50px;
-  -moz-border-radius: 50px;
-  border-radius: 50px;
-}
+// Extra small devices (portrait phones, less than 576px)
+// No media query since this is the default in Bootstrap
 
+// Small devices (landscape phones, 576px and up)
+// @media (min-width: 576px) { ... }
 
-#opendialog-bot:hover {
-  background: blue;
-}
+// // Medium devices (tablets, 768px and up)
+// @media (min-width: 768px) { ... }
+
+// // Large devices (desktops, 992px and up)
+// @media (min-width: 992px) { ... }
+
+// // Extra large devices (large desktops, 1200px and up)
+// @media (min-width: 1200px) { ... }
 
 iframe#opendialog-chatwindow {
   position: fixed;
-  height: 70%;
+
   bottom: 0;
   right: 10px;
   border: none;
-  width: 400px;
-  box-shadow: #aaa 0 0 10px;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+
+  max-height: 750px;
+  height: 85%;
+  width: 463px;
+
+  // 👇🏻 turned off for Avaya
+  //   border-radius: 10px;
   background-color: #fff;
+  box-sizing: border-box;
+
+  transition: 0.3s ease-in-out;
 }
+
+//   Set the width of the eXpAnDeD iframe here
+
 iframe#opendialog-chatwindow.expanded {
-  width: 490px;
+  //   width: 400px;
+  //   width: 463px;
 }
 
 iframe.open#opendialog-chatwindow {
@@ -44,8 +49,8 @@ iframe.open#opendialog-chatwindow {
   right: 0;
 }
 
-#opendialog-bot .sc-open-icon,
-#opendialog-bot .sc-closed-icon {
+#opendialog-bot .open-icon,
+#opendialog-bot .closed-icon {
   width: 60px;
   height: 60px;
   position: fixed;
@@ -54,30 +59,32 @@ iframe.open#opendialog-chatwindow {
   transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
 }
 
-#opendialog-bot .sc-closed-icon {
+#opendialog-bot .closed-icon {
   transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
   width: 60px;
   height: 60px;
 }
 
-#opendialog-bot .sc-open-icon {
+#opendialog-bot .open-icon {
   padding: 20px;
   box-sizing: border-box;
   opacity: 0;
 }
 
-#opendialog-bot.opened .sc-open-icon {
+#opendialog-bot.opened .open-icon {
   transform: rotate(-90deg);
   opacity: 1;
 }
 
-#opendialog-bot.opened .sc-closed-icon {
+#opendialog-bot.opened .closed-icon {
   transform: rotate(-90deg);
   opacity: 0;
 }
 
 @media (max-width: 480px) {
   iframe#opendialog-chatwindow {
+    min-height: 0;
+    max-height: 100%;
     width: 100%;
     height: 100%;
     bottom: 0;
@@ -99,3 +106,30 @@ iframe.open#opendialog-chatwindow {
     bottom: 0 !important;
   }
 }
+
+// Welcome
+
+// What is this 🤔 I dunno?
+
+// #opendialog-bot {
+//   cursor: pointer;
+//   position: fixed;
+//   height: 60px;
+//   width: 60px;
+//   bottom: 10px;
+//   right: 10px;
+//   border: none;
+//   z-index: 2147483000;
+//   background: #4e8cff;
+//   -webkit-border-radius: 50px;
+//   -moz-border-radius: 50px;
+//   border-radius: 50px;
+// }
+// #opendialog-bot:hover {
+//   background: blue;
+// }
+
+// Turn window backgrounf color on
+// body {
+//   background-color: lightgrey;
+// }

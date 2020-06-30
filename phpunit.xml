@@ -17,6 +17,10 @@
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
+
+        <testsuite name="WebchatSettingsConfiguration">
+            <directory suffix="Test.php">./src/WebchatSettingsConfiguration/tests</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

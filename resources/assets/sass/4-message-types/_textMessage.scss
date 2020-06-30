@@ -2,28 +2,10 @@
   transition: width 0.3s linear, height 0.3s linear;
 }
 
-.first-message,
-.middle-message,
-.last-message {
-  margin-bottom: 15px;
+.linkified {
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
-
-.first-message {
-  border-bottom-right-radius: 0px;
-}
-
-.middle-message {
-  border-radius: 0;
-}
-
-.last-message {
-  border-bottom-left-radius: 30px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0px;
-}
-
-//DO we NEED SOMETHING FOR  href
-// a {
-//     color: #2d2d2d !important;
-//     text-decoration: underline;
-//   }
