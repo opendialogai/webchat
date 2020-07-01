@@ -269,13 +269,13 @@ export default {
     "modeData.mode": function(newValue, oldValue) {
       if (newValue !== 'custom') {
         this.agentProfile.teamName = this.originalTeamName;
-      } else {
-        this.agentProfile.teamName = 'Waiting for agent...';
       }
     },
     "modeData.options.teamName": function(newValue, oldValue) {
       if (newValue) {
-        this.agentProfile.teamName = newValue;
+        let messageMetaData = this.$store.state.messageMetaData;
+        messageMetaData.teamName = newValue;
+        this.$store.commit('setMessageMetaData', messageMetaData);
       }
     },
     "messageMetaTeamName": function(newValue, oldValue) {

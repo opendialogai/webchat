@@ -25,6 +25,8 @@ CustomMode.prototype.sendRequest = async function(message, webChatComponent) {
 };
 
 CustomMode.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
+  this.setTeamName('Custom mode [Instance ' + this.modeInstance + ']', webChatComponent);
+
   if (this.typingIndicatorIndices !== null && response.length > 0) {
     let firstMessage = response[0];
     this.convertTypingIndicatorToFirstMessage(firstMessage, webChatComponent);
@@ -53,7 +55,7 @@ CustomMode.prototype.sendTypingResponseError = function(error, webChatComponent)
 };
 
 CustomMode.prototype.initialiseChat = async function(webChatComponent) {
-  this.setTeamName('Custom mode [Instance ' + this.modeInstance + ']', webChatComponent);
+  this.setTeamName('Waiting for agent...', webChatComponent);
 };
 
 CustomMode.prototype.destroyChat = async function(webChatComponent) {

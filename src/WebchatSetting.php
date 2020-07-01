@@ -113,7 +113,6 @@ class WebchatSetting extends Model
 
     // Bot
     public const BOT = 'bot';
-    public const BOT_NAME = 'botName';
     public const INPUT_PLACEHOLDER = 'inputPlaceholder';
     public const SEND_BUTTON_TEXT = 'sendButtonText';
     public const END_CHAT_TEXT = 'endChatText';
@@ -243,7 +242,6 @@ class WebchatSetting extends Model
             ],
             WebchatSetting::BOT => [
                 WebchatSetting::STRING => [
-                    WebchatSetting::BOT_NAME,
                     WebchatSetting::INPUT_PLACEHOLDER,
                     WebchatSetting::SEND_BUTTON_TEXT,
                     WebchatSetting::END_CHAT_TEXT,
