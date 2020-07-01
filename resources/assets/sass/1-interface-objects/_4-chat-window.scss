@@ -38,6 +38,15 @@
   }
 }
 
+.chat-window.opened {
+  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+  margin: 0px auto 0;
+
+  @media (min-width: 767px) {
+    margin: 20px auto 0;
+  }
+}
+
 // 👇🏻👇🏻👇🏻 OLD style you might need for the comments tab and max/min buttons👇🏻👇🏻👇🏻
 
 // .sc-chat-window {

@@ -7,7 +7,11 @@
       :style="{background: colors.header.bg, color: colors.header.text}"
       :class="{'header-open': isOpen, 'header-closed': !isOpen}"
     >
-      <div class="header-cta" ref="headerCta">
+      <div
+        ref="headerCta"
+        class="header-cta"
+        :style="{background: colors.header.bg}"
+      >
         <div class="header-cta__icon"></div>
 
         <div v-if="ctaText.length" class="header-cta__text" ref="headerCtaText">
@@ -38,9 +42,16 @@
         <div
           v-if="!showFullPageFormInput && !showFullPageRichInput"
           class="header-nav__download-button" @click.stop="onDownload"
+          :style="{
+            '--download-bg': colors.button.bg,
+            '--download-fill': colors.button.text,
+            '--download-hover-bg': colors.button.hoverbg,
+            '--download-hover-fill': colors.button.hoverText,
+          }"
         >
-          <img class="header-nav__download-image" src="/vendor/webchat/images/download.svg" />
-          <img class="header-nav__download-image-hover" src="/vendor/webchat/images/download-hover.svg" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="19" viewBox="0 0 12 19">
+            <path fill="#FFF" fill-rule="evenodd" d="M6 14.481l-4.95-4.95 1.414-1.414 2.537 2.537L5 .34h2v10.314l2.536-2.536 1.414 1.414L6 14.481zm6 3.858H0v-2h12v2z"/>
+          </svg>
         </div>
       </div>
 

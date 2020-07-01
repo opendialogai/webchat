@@ -147,7 +147,7 @@ export default {
       collectUserIp: true,
       colours: {
         header: {
-          bg: 'purple',
+          bg: '#1b212a',
           text: '#ffffff',
         },
         launcher: {
@@ -165,26 +165,27 @@ export default {
           text: '#1b212a',
         },
         userInput: {
-          bg: '#fffffff',
+          bg: '#ffffff',
           text: '#1b212a',
         },
         button: {
           bg: '#00f',
-          hoverbg: '#ffffff',
+          hoverbg: 'transparent',
           text: '#ffffff',
           // 👇🏻 new
-          hoverText: "#1b212a",
+          hoverText: "#ffffff",
           border: "#1b212a",
           hoverBorder: "#00f"
         },
         // 👇🏻 new
         messageButton: {
-          bg: "transparent",
-          hoverbg: "#575759",
-          text: "#313133",
+          bg: '#00f',
+          hoverbg: 'rgba(0, 0, 225, 0.5)',
+          text: '#ffffff',
+          //new 👇🏻
           hoverText: "#ffffff",
-          border: "#575759",
-          hoverBorder: "#575759"
+          border: "#00f",
+          hoverBorder: "rgba(0, 0, 225, 0.5)"
         },
         externalButton: {
           bg: '#00f',
@@ -196,7 +197,7 @@ export default {
           hoverBorder: "#575759"
         },
         form: {
-          labelTextColor: '#575759',
+          labelTextColor: '#ffffff',
           formHighlightColor: '#da291c',
           inputBorderColor: '#979797'
         },

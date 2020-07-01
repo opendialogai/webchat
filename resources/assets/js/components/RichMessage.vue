@@ -27,7 +27,14 @@
 
     <template v-if="data.buttons.length">
       <div class="sc-message--rich--buttons">
-        <button v-for="(button, idx) in data.buttons" :key="idx" @click="_handleClick(button)" :style="{backgroundColor: colors.button.bg, color: colors.button.text, '--button-hover': colors.button.hoverbg}">
+        <button
+          v-for="(button, idx) in data.buttons"
+          :key="idx" @click="_handleClick(button)"
+          :style="{
+            backgroundColor: colors.button.bg,
+            color: colors.button.text,
+            '--button-hover': colors.button.hoverbg
+          }">
           {{button.text}}
         </button>
       </div>

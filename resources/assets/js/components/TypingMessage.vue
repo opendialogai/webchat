@@ -58,7 +58,7 @@ export default {
 }
 .typewriter p {
   overflow: hidden; /* Ensures the content is not revealed until the animation */
-  border-right: 0.15em solid #da291c;
+  border-right: 0.15em solid currentColor;
   white-space: nowrap; /* Keeps the content on a single line */
   margin: -8px auto 0px;
   line-height: 1.5;
@@ -98,7 +98,7 @@ export default {
     border-color: transparent;
   }
   50% {
-    border-color: #da291c;
+    border-color: currentColor;
   }
 }
 </style>

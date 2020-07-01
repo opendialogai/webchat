@@ -114,11 +114,17 @@
   border-radius: 30px;
   box-shadow: none;
   max-width: 90%;
+  max-width: calc(90% - 45px);
+  margin-bottom: 20px;
   padding: 15px 20px;
   line-height: 1.6;
   font-size: 14px;
   @media (min-width: $media-sml) {
     font-size: 16px;
+  }
+
+  @media (min-width: $media-med) {
+    max-width: calc(90% - 60px);
   }
 }
 
@@ -160,8 +166,8 @@
 .linkified:active {
   text-decoration: none;
   font-weight: bold;
-  color: white;
-  border-bottom: dashed 1px white;
+  color: inherit;
+  border-bottom: dashed 1px currentColor;
   padding-bottom: 3px;
   position: relative;
 }

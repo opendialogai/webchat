@@ -160,7 +160,14 @@
 
     <template v-if="showLoader">
       <div class="fp-loader">
-        <img src="./assets/fp-loader.svg" />
+        <div class="fp-loader">
+          <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="38px" height="38px" viewBox="0 0 128 128" xml:space="preserve">
+          <g>
+            <path d="M64 9.75A54.25 54.25 0 0 0 9.75 64H0a64 64 0 0 1 128 0h-9.75A54.25 54.25 0 0 0 64 9.75z" fill="#da291c" fill-opacity="1"/>
+            <animateTransform attributeName="transform" type="rotate" from="0 64 64" to="360 64 64" dur="1000ms" repeatCount="indefinite"></animateTransform>
+          </g>
+        </svg>
+        </div>
       </div>
     </template>
   </div>
@@ -341,6 +348,7 @@
   margin-bottom: 20px;
   width: 100%;
   text-align: center;
+  color: var(--labelTextColor);
 }
 
 /* form --- form --- form ---  */
@@ -396,7 +404,7 @@
 
 .mt-fp-form__error p {
   margin-top: 10px;
-  color: var(--btn-bg);
+  color: var(--formHighlightColor);
 }
 
 /* labels --- labels --- labels ---  */
@@ -447,7 +455,7 @@
 
 .mt-fp-form__input--error {
   outline: none;
-  border: 1px solid var(--btn-bg);
+  border: 1px solid var(--formHighlightColor);
 }
 
 .mt-fp-form__input:focus {
@@ -618,6 +626,10 @@ doesnt work though 🤦🏻‍♂️
   margin-bottom: 40px;
 }
 
+.mt-fp-form__cancel {
+  color: var(--labelTextColor);
+}
+
 .mt-fp-form__cancel,
 .mt-fp-form__cancel:hover,
 .mt-fp-form__cancel:focus {
@@ -656,12 +668,15 @@ doesnt work though 🤦🏻‍♂️
   left: 0;
   background: rgba(0, 0, 0, 0.3);
 }
-.fp-loader img {
+.fp-loader svg {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   margin: auto;
+}
+.fp-loader svg path {
+  fill: var(--btn-bg)
 }
 </style>

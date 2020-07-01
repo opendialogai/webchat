@@ -186,7 +186,7 @@ export default {
 .sc-message--form button {
   cursor: pointer;
   border-radius: 15px;
-  border: none;
+  border: 1px solid transparent;
   font-size: 14px;
   padding: 12px 17px;
   margin-top: 5px;

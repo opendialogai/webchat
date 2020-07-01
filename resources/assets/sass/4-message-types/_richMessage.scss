@@ -62,8 +62,8 @@
     margin: 10px -10px -10px -10px;
 
     button {
-      background: #da291c !important;
-      color: #fff !important;
+      background: #00f;
+      color: #fff;
       font-size: 12px;
       line-height: 16px;
       padding: 7px 10px;
@@ -71,7 +71,7 @@
       border-radius: 0;
 
       &:hover {
-        background: #da291c !important;
+        background: darken(#00f, 10);
         text-decoration: none;
       }
     }

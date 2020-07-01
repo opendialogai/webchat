@@ -37,7 +37,14 @@
       ></div>
 
       <div class="user-input__buttons">
-        <button @click.prevent="_submitText" class="send-btn">{{ sendButtonText }}</button>
+        <button
+          @click.prevent="_submitText"
+          class="send-btn"
+          :style="{
+            '--send-btn-bg': colors.button.bg,
+            '--send-btn-hover-bg': colors.button.bg,
+          }"
+        >{{ sendButtonText }}</button>
 
         <EndChatButton
           @close-chat="closeChat"

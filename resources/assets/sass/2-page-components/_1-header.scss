@@ -58,7 +58,7 @@
 }
 
 .header-nav__logo {
-  width: 78px;
+  width: 40%;
   min-height: 22px;
   margin-bottom: 10px;
   @media (min-width: $media-sml) {
@@ -87,35 +87,31 @@
 }
 
 .header-nav__download-button {
+  --download-bg: #00f;
+  --download-fill: #ffffff;
+  --download-hover-bg: #ffffff;
+  --download-hover-fill: #00f;
+
   position: absolute;
   right: 18px;
   top: 13px;
   width: 40px;
   height: 28px;
-  background: #c01a1e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--download-bg);
   border-radius: 14px;
 
-  .header-nav__download-image-hover {
-    display: none;
-  }
-
-  img {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    left: 0;
-    right: 0;
+  svg > * {
+    fill: var(--download-fill);
   }
 
   &:hover {
-    background: #ffffff;
+    background: var(--download-hover-bg);
 
-    .header-nav__download-image {
-      display: none;
-    }
-    .header-nav__download-image-hover {
-      display: block;
+    svg > * {
+      fill: var(--download-hover-fill);
     }
   }
 }
@@ -136,7 +132,6 @@
 
 .header {
     width: 100%;
-    background: none !important;
     justify-content: flex-end;
     border-radius: unset;
 }
@@ -148,11 +143,11 @@
     }
     height: 110px;
     margin: 10px 0;
+    background: none !important;
 }
 
 //When the header is open fully - full chat box
 .header-open {
-    background-color: #1b212a !important;
     .header-cta {
         display: none;
     }
@@ -167,7 +162,6 @@
     height: 90px;
     width: 90px;
     border-radius: 45px;
-    background-color: #da291c;
     transition: width 0.45s;
     margin: 0 10px 0 0;
     box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
@@ -195,6 +189,10 @@
 .header-cta__icon {
     min-height: 50px;
     min-width: 50px;
+    background: url(/vendor/webchat/images/header-cta-btn.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 
 .header-cta__text {
