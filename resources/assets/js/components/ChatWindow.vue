@@ -275,7 +275,7 @@ export default {
     },
     "modeData.options.teamName": function(newValue, oldValue) {
       if (newValue) {
-        this.agentProfile.teamName = 'You’re talking with ' + newValue;
+        this.agentProfile.teamName = newValue;
       }
     },
     "messageMetaTeamName": function(newValue, oldValue) {

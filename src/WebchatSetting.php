@@ -54,8 +54,6 @@ class WebchatSetting extends Model
     public const ONGOING_USER_CLOSED_CALLBACK   = 'ongoingUserClosedCallback';
     public const ONGOING_USER_OPEN_CALLBACK     = 'ongoingUserOpenCallback';
     public const HIDE_TYPING_INDICATOR_ON_INTERNAL_MESSAGES = 'hideTypingIndicatorOnInternalMessages';
-    public const CONVERSIVE_URL = 'conversiveURL';
-    public const CONVERSIVE_SITE_CODE = 'conversiveSiteCode';
 
     // Colours
     public const COLOURS                          = 'colours';
@@ -161,8 +159,6 @@ class WebchatSetting extends Model
                     WebchatSetting::RETURNING_USER_OPEN_CALLBACK,
                     WebchatSetting::ONGOING_USER_CLOSED_CALLBACK,
                     WebchatSetting::ONGOING_USER_OPEN_CALLBACK,
-                    WebchatSetting::CONVERSIVE_URL,
-                    WebchatSetting::CONVERSIVE_SITE_CODE,
                 ],
                 WebchatSetting::BOOLEAN => [
                     WebchatSetting::OPEN,

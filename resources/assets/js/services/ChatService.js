@@ -1,10 +1,10 @@
 import WebChatMode from "./ChatServices/WebChatMode";
-import ConversiveMode from "./ChatServices/ConversiveMode";
+import CustomMode from "./ChatServices/CustomMode";
 
 let ChatService = function() {
   this.services = {
     webchat: new WebChatMode(),
-    custom: new ConversiveMode(),
+    custom: new CustomMode(),
   };
 
   this.modeData = {

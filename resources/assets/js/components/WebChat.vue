@@ -946,19 +946,18 @@ export default {
     setChatMode(data) {
       this.$emit("setChatMode", data);
     },
-    destroyCustomMode() {
-      chatService.destroyChat(this);
+    async destroyCustomMode() {
+      await chatService.destroyChat(this);
 
       let modeDataInSession = this.getModeDataInSession();
       modeDataInSession.modeInstance++;
       this.setChatMode(modeDataInSession);
     },
-    destroyWebchatMode() {
-      chatService.destroyChat(this);
+    async destroyWebchatMode() {
+      await chatService.destroyChat(this);
     },
     async setupCustomMode() {
       this.contentEditable = true;
-      this.chatbotAvatar = "/vendor/webchat/images/agent.svg";
 
       await chatService.initialiseChat(this);
     },

@@ -281,8 +281,7 @@ function isValidPath() {
 
 function checkValidPath(testPath) {
   const currentUrl = locationOrSpoof();
-  console.log(testPath);
-  console.log(currentUrl);
+
   if (testPath === '*') {
     return true;
   }
