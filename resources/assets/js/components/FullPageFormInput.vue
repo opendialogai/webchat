@@ -427,7 +427,7 @@
   font-weight: normal;
   line-height: 1.38;
   letter-spacing: normal;
-  color: unset;
+  color: #ffffff;
   background-color: transparent;
 }
 
@@ -559,6 +559,7 @@ doesnt work though 🤦🏻‍♂️
   left: 0;
   right: 0;
   cursor: pointer;
+  color: #ffffff;
 }
 
 .mt-fp-form__radio-btn label:after {
@@ -569,7 +570,7 @@ doesnt work though 🤦🏻‍♂️
   width: 15px;
   height: 15px;
   border-radius: 100%;
-  background-color: #da291c;
+  background-color: var(--btn-bg);
   transition: 0.4s;
   opacity: 0;
 }
