@@ -236,7 +236,7 @@ function locationOrSpoofQueryParams() {
 
 function getTags() {
   let tags = {};
-  let variables = ['userInfo', 'avayaBot'];
+  let variables = ['userInfo'];
 
   variables.forEach((variable) => {
     if (typeof window[variable] !== 'undefined') {
@@ -251,51 +251,49 @@ function getTags() {
   return tags;
 }
 
-async function fetchAttributes() {
-  let retVal = false;
-
-  try {
-    let response = await fetch(window.openDialogSettings.url + '/api/attributes?url=' + locationOrSpoof(), {
-      method: 'GET',
-    });
-
-    if (response.status === 200) {
-      retVal = await response.json();
-    }
-  } catch (e) {
-    console.error(e);
-  }
-
-  return retVal;
-}
-
 /**
  * Checks whether the current page matches the validPath if set.
  * Returns true if no validPath parameter is set
  *
  * @returns {boolean}
  */
-async function isValidPath() {
+function isValidPath() {
+  const { validPath } = window.openDialogSettings.general;
+
+  if (typeof validPath === 'undefined') {
+    return true;
+  }
+
   let retVal = false;
 
-  try {
-    let response = await fetch(window.openDialogSettings.url + '/validate-paths', {
-      method: 'POST',
-      body: JSON.stringify({
-        user_id: sessionStorage.uuid,
-        current_url: locationOrSpoof(),
-        tags: getTags()
-      })
+  if (Array.isArray(validPath)) {
+    validPath.forEach((key) => {
+      if (checkValidPath(key)) {
+        retVal = true;
+      }
     });
-
-    if (response.status === 200) {
-      retVal = await response.json();
-    }
-  } catch (e) {
-    console.error(e);
+  } else {
+    retVal = checkValidPath(validPath);
   }
 
   return retVal;
+}
+
+function checkValidPath(testPath) {
+  const currentUrl = locationOrSpoof();
+  console.log(testPath);
+  console.log(currentUrl);
+  if (testPath === '*') {
+    return true;
+  }
+  if (testPath.endsWith('$')) {
+    return currentUrl.endsWith(testPath.replace('$', ''));
+  }
+  if (currentUrl.indexOf(testPath) >= 0) {
+    return true;
+  }
+
+  return false;
 }
 
 async function setupWebchat(url, userId, preloadedSettings = null) {
@@ -307,10 +305,8 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
   }
   if (preloadedSettings === null) {
     try {
-      // document.addEventListener('DOMContentLoaded', async function(event) {
       let response = await getSettings(url, userId, window.openDialogSettings, callbackId, window.innerWidth);
       mergeSettings(response);
-      // })
     } catch (error) {
       console.error("Call to OpenDialog webchat settings failed:", error);
       console.log("Using default OpenDialog webchat settings");
@@ -339,47 +335,6 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
 
     if (window.openDialogSettings.general.pageCssPath) {
       addCssToPage(window.openDialogSettings.general.pageCssPath);
-    }
-
-    const attributes = await fetchAttributes();
-
-    if (attributes) {
-      if (!window.openDialogSettings.user) {
-        window.openDialogSettings.user = {};
-      }
-      if (!window.openDialogSettings.user.custom) {
-        window.openDialogSettings.user.custom = {};
-      }
-
-      attributes.forEach((attr) => {
-        if (attr.attribute_mapping_type === 'HTML Tag') {
-          const mappingName = attr.attribute_mapping_name.split('.');
-
-          if (typeof window[mappingName[0]] !== 'undefined') {
-            try {
-              let json = JSON.parse(window[mappingName[0]]);
-
-              for (let x = 1; x < mappingName.length; x++) {
-                if (typeof json[mappingName[x]] === 'undefined') {
-                  break;
-                } else {
-                  json = json[mappingName[x]];
-
-                  if (json && x === mappingName.length - 1) {
-                    window.openDialogSettings.user.custom[attr.attribute_canonical_name] = json;
-                  }
-                }
-              }
-            } catch {}
-          }
-        } else if (attr.attribute_mapping_type === 'URL Parameter') {
-          const urlParams = new URLSearchParams(locationOrSpoofQueryParams());
-
-          if (urlParams.has(attr.attribute_mapping_name)) {
-            window.openDialogSettings.user.custom[attr.attribute_canonical_name] = urlParams.get(attr.attribute_mapping_name);
-          }
-        }
-      });
     }
 
     openChatWindow(url);
@@ -412,33 +367,7 @@ function addUrlUpdatedListener() {
       setSpoofUrl(event.data.urlUpdated);
 
       if (!(await isValidPath())) {
-        // Get new settings
-        const urlParams = new URLSearchParams(window.location.search);
-
-        let callbackId = null;
-        if (urlParams.has('callback_id')) {
-          callbackId = urlParams.get('callback_id');
-        }
-
-        let response = await getSettings(
-          window.openDialogSettings.url,
-          sessionStorage.uuid,
-          window.openDialogSettings,
-          callbackId,
-          window.innerWidth
-        );
-
-        if (!response.bot || typeof response.bot.botName === 'undefined' || response.bot.botName === '') {
-          console.log("Response did not contain a bot name. Removing chat window.");
-          window.openDialogSettings = Object.assign({}, window.originalOpenDialogSettings);
           removeChatWindow();
-        } else if (typeof window.openDialogSettings.bot == 'undefined'
-          || response.bot.botName !== window.openDialogSettings.bot.botName) {
-          console.log("Response's bot name was different to the current bot. Reloading chat window.");
-          removeChatWindow();
-          window.openDialogSettings = Object.assign({}, window.originalOpenDialogSettings);
-          await setupWebchat(window.openDialogSettings.url, sessionStorage.uuid, response);
-        }
       } else if (!hasChatWindow()) {
         console.log("Path was valid but there was no chat window. Setting up chat window.");
         await setupWebchat(window.openDialogSettings.url, sessionStorage.uuid);
