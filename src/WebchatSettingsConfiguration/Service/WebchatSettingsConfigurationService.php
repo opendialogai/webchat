@@ -1,8 +1,6 @@
 <?php
 
-
 namespace OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service;
-
 
 use OpenDialogAi\Webchat\WebchatSettingsConfiguration\Configurators\WebchatSettingsConfiguratorInterface;
 
@@ -22,15 +20,17 @@ class WebchatSettingsConfigurationService implements WebchatSettingsConfiguratio
     public function registerConfigurators(array $configurators)
     {
         foreach ($configurators as $configurator) {
-            $this->configurators[] = new $configurator;
+            $this->configurators[] = new $configurator();
         }
     }
 
     /**
      * @inheritDoc
      */
-    public function runConfigurations(array $settings, WebchatSettingsConfigurationPageInformation $pageInfo = null): array
-    {
+    public function runConfigurations(
+        array $settings,
+        WebchatSettingsConfigurationPageInformation $pageInfo = null
+    ): array {
         $configuredSettings = $settings;
 
         /** @var WebchatSettingsConfiguratorInterface $configurator */

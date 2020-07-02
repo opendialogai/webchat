@@ -1,8 +1,6 @@
 <?php
 
-
 namespace OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service;
-
 
 use OpenDialogAi\Webchat\WebchatSettingsConfiguration\Configurators\WebchatSettingsConfiguratorInterface;
 
@@ -19,5 +17,8 @@ interface WebchatSettingsConfigurationServiceInterface
      * @param WebchatSettingsConfigurationPageInformation|null $pageInfo
      * @return array
      */
-    public function runConfigurations(array $settings, WebchatSettingsConfigurationPageInformation $pageInfo = null): array;
+    public function runConfigurations(
+        array $settings,
+        WebchatSettingsConfigurationPageInformation $pageInfo = null
+    ): array;
 }

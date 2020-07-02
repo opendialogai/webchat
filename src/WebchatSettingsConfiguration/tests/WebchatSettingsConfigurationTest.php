@@ -2,7 +2,6 @@
 
 namespace OpenDialogAi\Webchat\WebchatSettingsConfiguration\Tests;
 
-
 use OpenDialogAi\Webchat\WebchatSetting;
 use OpenDialogAi\Webchat\WebchatSettingsConfiguration\Configurators\ExampleConfigurator;
 use OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service\WebchatSettingsConfigurationServiceInterface;

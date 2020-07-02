@@ -1,8 +1,6 @@
 <?php
 
-
 namespace OpenDialogAi\Webchat\WebchatSettingsConfiguration\Configurators;
-
 
 use OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service\WebchatSettingsConfigurationPageInformation;
 

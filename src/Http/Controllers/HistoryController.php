@@ -12,11 +12,11 @@ use OpenDialogAi\ConversationLog\Message;
 
 class HistoryController
 {
-    const TEXT_EXTERNAL = 'text_external';
-    const CHATBOT = 'Bot';
-    const CHATBOT_USER = 'You';
-    const BUTTON_RESPONSE = 'button_response';
-    const FORM_RESPONSE = 'form_response';
+    public const TEXT_EXTERNAL = 'text_external';
+    public const CHATBOT = 'Bot';
+    public const CHATBOT_USER = 'You';
+    public const BUTTON_RESPONSE = 'button_response';
+    public const FORM_RESPONSE = 'form_response';
 
     /**
      * @param string $user_id

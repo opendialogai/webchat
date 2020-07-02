@@ -93,6 +93,7 @@ class WebchatSettings
 
         $general = $settings[WebchatSetting::GENERAL];
 
+        // phpcs:disable
         switch ($userType) {
             case ChatbotUser::NEW_USER:
                 $settings[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::NEW_USER_START_MINIMIZED] ?? false;
@@ -112,6 +113,7 @@ class WebchatSettings
                 $settings[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::ONGOING_USER_OPEN_CALLBACK] ?? null;
                 break;
         }
+        // phpcs:enable
 
         // Return the config as JSON.
         return json_encode($settings);
