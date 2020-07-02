@@ -11,6 +11,12 @@ class SettingsEndpointTest extends TestCase
 {
     public function testSettingsApi()
     {
+        $generalSetting = new WebchatSetting();
+        $generalSetting->name = 'general';
+        $generalSetting->value = 'general';
+        $generalSetting->type = 'object';
+        $generalSetting->save();
+
         $setting = new WebchatSetting();
         $setting->name = 'teamName';
         $setting->value = 'OpenDialog Webchat';
@@ -75,7 +81,6 @@ class SettingsEndpointTest extends TestCase
         $setting9->type = 'object';
         $setting9->save();
 
-
         $response = $this->json('GET', '/webchat-config');
         $response
             ->assertStatus(200)
@@ -100,58 +105,73 @@ class SettingsEndpointTest extends TestCase
 
     public function testSettingsApiWithUserId()
     {
+        $generalSetting = new WebchatSetting();
+        $generalSetting->name = 'general';
+        $generalSetting->value = 'general';
+        $generalSetting->type = 'object';
+        $generalSetting->save();
+
         $setting = new WebchatSetting();
         $setting->name = 'newUserStartMinimized';
         $setting->value = TRUE;
         $setting->type = 'boolean';
+        $setting->parent()->associate($generalSetting);
         $setting->save();
 
         $setting2 = new WebchatSetting();
         $setting2->name = 'newUserClosedCallback';
         $setting2->value = 'new_user_closed_callback';
         $setting2->type = 'string';
+        $setting2->parent()->associate($generalSetting);
         $setting2->save();
 
         $setting3 = new WebchatSetting();
         $setting3->name = 'newUserOpenCallback';
         $setting3->value = 'new_user_open_callback';
         $setting3->type = 'string';
+        $setting3->parent()->associate($generalSetting);
         $setting3->save();
 
         $setting4 = new WebchatSetting();
         $setting4->name = 'returningUserStartMinimized';
         $setting4->value = FALSE;
         $setting4->type = 'boolean';
+        $setting4->parent()->associate($generalSetting);
         $setting4->save();
 
         $setting5 = new WebchatSetting();
         $setting5->name = 'returningUserClosedCallback';
         $setting5->value = 'returning_user_closed_callback';
         $setting5->type = 'string';
+        $setting5->parent()->associate($generalSetting);
         $setting5->save();
 
         $setting6 = new WebchatSetting();
         $setting6->name = 'returningUserOpenCallback';
         $setting6->value = 'returning_user_open_callback';
         $setting6->type = 'string';
+        $setting6->parent()->associate($generalSetting);
         $setting6->save();
 
         $setting7 = new WebchatSetting();
         $setting7->name = 'ongoingUserStartMinimized';
         $setting7->value = FALSE;
         $setting7->type = 'boolean';
+        $setting7->parent()->associate($generalSetting);
         $setting7->save();
 
         $setting8 = new WebchatSetting();
         $setting8->name = 'ongoingUserClosedCallback';
         $setting8->value = 'ongoing_user_closed_callback';
         $setting8->type = 'string';
+        $setting8->parent()->associate($generalSetting);
         $setting8->save();
 
         $setting9 = new WebchatSetting();
         $setting9->name = 'ongoingUserOpenCallback';
         $setting9->value = 'ongoing_user_open_callback';
         $setting9->type = 'string';
+        $setting9->parent()->associate($generalSetting);
         $setting9->save();
 
         $userId = 'test';
