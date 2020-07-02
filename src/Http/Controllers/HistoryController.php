@@ -43,7 +43,7 @@ class HistoryController
         }
 
         $response = new StreamedResponse();
-        $response->setCallBack(function() use($text) {
+        $response->setCallBack(function () use ($text) {
             echo $text;
         });
         $disposition = $response->headers->makeDisposition(
