@@ -220,7 +220,8 @@ function setSpoofUrl(url) {
 }
 
 function locationOrSpoof() {
-  if (window.location.href.startsWith(window.openDialogSettings.url + '/admin/demo')) {
+  if (window.location.href.startsWith(window.openDialogSettings.url + '/admin/demo')
+    && document.getElementById('spoof-url') !== null) {
     return document.getElementById('spoof-url').value;
   } else if (typeof spoofUrl !== 'undefined') {
     return spoofUrl;
