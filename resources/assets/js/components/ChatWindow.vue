@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-window sc-chat-window" :class="{opened: isOpen, closed: !isOpen, expanded: isExpand, fullscreen: fullScreen}">
+  <div class="chat-window sc-chat-window" :class="{opened: isOpen, closed: !isOpen, expanded: isExpand, fullscreen: fullScreen, iframe: iframe}">
     <Header
       v-if="!fullScreen"
       :teamName="agentProfile.teamName"
@@ -259,10 +259,15 @@ export default {
   },
   data() {
     return {
-        originalTeamName: ''
-    }
+      iframe: false,
+      originalTeamName: '',
+    };
   },
-  created () {
+  created() {
+    if (window.self !== window.top) {
+      this.iframe = true;
+    }
+
     this.originalTeamName = this.agentProfile.teamName;
   },
   watch: {
@@ -321,13 +326,10 @@ export default {
   methods: {
     setChatMode(mode) {
       this.$emit('setChatMode', mode);
-    }
-  }
-}
+    },
+  },
+};
 </script>
+
 <style scoped>
-
-
-
-
 </style>

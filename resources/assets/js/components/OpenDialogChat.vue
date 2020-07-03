@@ -309,7 +309,12 @@ export default {
     },
   },
   created() {
-    this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
+    if (window.self !== window.top) {
+      this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
+    } else {
+      this.isOpen = true;
+      this.referrerUrl = document.location.origin;
+    }
 
     const urlParams = new URLSearchParams(window.location.search);
 

@@ -63,7 +63,7 @@
         @vbc-user-typing="userTyping"
         @setChatMode="setChatMode"
       />
-      <div class="close-chat">
+      <div v-if="showCloseChatButton" class="close-chat">
         <div
           class="close-chat__button"
           :class="{
@@ -193,6 +193,7 @@ export default {
       messageList: [],
       placeholder: "Enter your message",
       referrerUrl: '',
+      showCloseChatButton: false,
       showLongTextInput: false,
       showFullPageFormInput: false,
       showFullPageRichInput: false,
@@ -298,7 +299,12 @@ export default {
     }
   },
   created() {
-    this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
+    if (window.self !== window.top) {
+      this.showCloseChatButton = true;
+      this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
+    } else {
+      this.referrerUrl = document.location.origin;
+    }
 
     this.id = `webchat-${this.$uuid.v4()}`;
 
@@ -671,8 +677,10 @@ export default {
       this.$emit("expandChat");
     },
     onClose() {
-      if (!this.closeChatButtonReverseAnimate) {
-        this.toggleChatOpen();
+      if (this.showCloseChatButton) {
+        if (!this.closeChatButtonReverseAnimate) {
+          this.toggleChatOpen();
+        }
       }
     },
     toggleChatOpen() {

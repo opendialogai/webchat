@@ -37,9 +37,16 @@ WebChatMode.prototype.sendRequest = function(message, webChatComponent) {
 };
 
 function sendMessageReceivedEvent (message, webChatComponent) {
+  let referrerUrl = '';
+  if (window.self !== window.top) {
+    referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
+  } else {
+    referrerUrl = document.location.origin;
+  }
+
   window.parent.postMessage(
     { dataLayerEvent: { event: 'message_received_from_chatbot', message: message.intent } },
-    document.referrer.match(/^.+:\/\/[^\/]+/)[0]
+    referrerUrl
   )
 }
 

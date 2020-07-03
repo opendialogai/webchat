@@ -38,6 +38,7 @@ function openChatWindow() {
     // Send settings to the chat widget.
     window.postMessage({
         openDialogSettings: window.openDialogSettings,
+        loadSettings: window.openDialogSettings,
         newPathname: window.location.pathname,
     }, '*');
 
