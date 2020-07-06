@@ -2,7 +2,7 @@ const moment = require('moment-timezone');
 
 let CustomMode = function() {
   this.name = "custom";
-  this.typingIndicatorIndices = null;
+  this.typingIndicatorMessages = null;
   this.modeInstance = 0;
 };
 
@@ -27,7 +27,7 @@ CustomMode.prototype.sendRequest = async function(message, webChatComponent) {
 CustomMode.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
   this.setTeamName('Custom mode [Instance ' + this.modeInstance + ']', webChatComponent);
 
-  if (this.typingIndicatorIndices !== null && response.length > 0) {
+  if (this.typingIndicatorMessages !== null && response.length > 0) {
     let firstMessage = response[0];
     this.convertTypingIndicatorToFirstMessage(firstMessage, webChatComponent);
     firstMessage.skip = true;
@@ -63,20 +63,22 @@ CustomMode.prototype.destroyChat = async function(webChatComponent) {
 };
 
 CustomMode.prototype.addAuthorMessage = function(message, webChatComponent) {
-  return webChatComponent.messageList.push(webChatComponent.newAuthorMessage({
+  let authorMessage = webChatComponent.newAuthorMessage({
     author: "them",
     data: {
       time: moment().tz("UTC").format("hh:mm:ss A"),
       date: moment().tz("UTC").format("ddd D MMM"),
     }
-  }));
+  });
+  webChatComponent.messageList.push(authorMessage)
+  return authorMessage;
 };
 
 CustomMode.prototype.convertTypingIndicatorToFirstMessage = function(firstMessage, webChatComponent) {
-  let typingIndicatorIndices = this.typingIndicatorIndices;
-  this.typingIndicatorIndices = null;
+  let typingIndicatorIndices = this.typingIndicatorMessages;
+  this.typingIndicatorMessages = null;
 
-  let typingIndicatorMessage = webChatComponent.messageList[typingIndicatorIndices.typing];
+  let typingIndicatorMessage = typingIndicatorIndices.typing;
   typingIndicatorMessage.type = "text";
   typingIndicatorMessage.data = {
     text: firstMessage.content,
@@ -116,15 +118,15 @@ CustomMode.prototype.addMessageToMessageList = function(textMessage, webChatComp
 };
 
 CustomMode.prototype.addTypingMessageToMessageList = function(webChatComponent) {
-  if (this.typingIndicatorIndices !== null) {
+  if (this.typingIndicatorMessages !== null) {
     return;
   }
 
   let previousMessage = webChatComponent.messageList[webChatComponent.messageList.length-1];
 
-  let authorIndex = null;
+  let authorMessage = null;
   if (previousMessage.mode !== "custom" || previousMessage.author !== "them") {
-    authorIndex = this.addAuthorMessage({}, webChatComponent) - 1;
+    authorMessage = this.addAuthorMessage({}, webChatComponent) - 1;
   }
 
   let newTypingIndicatorMessage = {
@@ -136,11 +138,11 @@ CustomMode.prototype.addTypingMessageToMessageList = function(webChatComponent) 
       animate: true,
     }
   };
+  webChatComponent.messageList.push(newTypingIndicatorMessage);
 
-  let index = webChatComponent.messageList.push(newTypingIndicatorMessage) - 1;
-  this.typingIndicatorIndices = {
-    author: authorIndex,
-    typing: index
+  this.typingIndicatorMessages = {
+    author: authorMessage,
+    typing: newTypingIndicatorMessage
   };
 };
 
@@ -151,17 +153,16 @@ CustomMode.prototype.setTeamName = function(teamName, webChatComponent) {
 };
 
 CustomMode.prototype.clearTypingIndicator = function(webChatComponent) {
-  let typingIndicatorIndices = this.typingIndicatorIndices;
-  let typingIndicatorMessage = webChatComponent.messageList[typingIndicatorIndices.typing];
+  let typingIndicatorIndices = this.typingIndicatorMessages;
+  let typingIndicatorMessage = typingIndicatorIndices.typing;
   if (typingIndicatorMessage.type === "typing") {
-    // We should remove this prior to the author message as removing the authorIndex first would alter all indexes after it
-    webChatComponent.messageList.splice(typingIndicatorIndices.typing, 1);
+    webChatComponent.messageList.splice(webChatComponent.messageList.indexOf(typingIndicatorIndices.typing), 1);
 
     if (typingIndicatorIndices.author !== null) {
-      webChatComponent.messageList.splice(typingIndicatorIndices.author, 1);
+      webChatComponent.messageList.splice(webChatComponent.messageList.indexOf(typingIndicatorIndices.author), 1);
     }
 
-    this.typingIndicatorIndices = null;
+    this.typingIndicatorMessages = null;
   }
 };
 

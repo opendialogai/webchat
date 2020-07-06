@@ -47,7 +47,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
   if (response.data instanceof Array) {
     let index = 0;
     let totalMessages = response.data.length;
-    let lastMessageIndex = webChatComponent.messageList.length - 1;
+    let typingMessage;
     let clearCtaText = true;
 
     response.data.forEach((message, i) => {
@@ -81,17 +81,16 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             webChatComponent.messageList.push(authorMsg);
           }
 
-          webChatComponent.messageList.push({
+          typingMessage = {
             author: "them",
             type: "typing",
             mode: webChatComponent.modeData.mode,
             data: {
               animate: webChatComponent.messageAnimation
             }
-          });
+          };
+          webChatComponent.messageList.push(typingMessage);
         }
-
-        lastMessageIndex = webChatComponent.messageList.length - 1;
 
         setTimeout(() => {
           webChatComponent.$emit("newMessage", message);
@@ -103,20 +102,19 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             messageIndex === 0 ||
             !webChatComponent.hideTypingIndicatorOnInternalMessages
           ) {
-            const lastMessage = webChatComponent.messageList[lastMessageIndex];
-            lastMessage.type = message.type;
-            lastMessage.data = message.data;
+            typingMessage.type = message.type;
+            typingMessage.data = message.data;
 
             if (messageIndex === 0 && totalMessages > 1) {
-              lastMessage.data.first = true;
+              typingMessage.data.first = true;
             }
 
             if (messageIndex > 0 && messageIndex < totalMessages - 1) {
-              lastMessage.data.middle = true;
+              typingMessage.data.middle = true;
             }
 
             if (messageIndex > 0 && messageIndex === totalMessages - 1) {
-              lastMessage.data.last = true;
+              typingMessage.data.last = true;
             }
 
             webChatComponent.$root.$emit("scroll-down-message-list");
@@ -155,16 +153,15 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             if (messageIndex < totalMessages - 1) {
               webChatComponent.$nextTick(() => {
                 webChatComponent.$nextTick(() => {
-                  webChatComponent.messageList.push({
+                  typingMessage = {
                     author: "them",
                     type: "typing",
                     mode: webChatComponent.modeData.mode,
                     data: {
                       animate: webChatComponent.messageAnimation
                     }
-                  });
-
-                  lastMessageIndex = webChatComponent.messageList.length - 1;
+                  };
+                  webChatComponent.messageList.push(typingMessage);
                 });
               });
             }
@@ -181,6 +178,8 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
 
     if (sentMessage.type === "chat_open") {
       if (message && message.data) {
+        let typingMessage;
+
         if (
           (webChatComponent.useBotName || webChatComponent.useBotAvatar) &&
           !message.data.hideavatar
@@ -190,26 +189,23 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           webChatComponent.messageList.push(authorMsg);
         }
 
-        webChatComponent.messageList.push({
+        typingMessage = {
           author: "them",
           type: "typing",
           mode: webChatComponent.modeData.mode,
           data: {
             animate: webChatComponent.messageAnimation
           }
-        });
-
-        const lastMessageIndex = webChatComponent.messageList.length - 1;
+        };
+        webChatComponent.messageList.push(typingMessage);
 
         setTimeout(() => {
-          const lastMessage = webChatComponent.messageList[lastMessageIndex];
-
           webChatComponent.$emit("newMessage", message);
 
           message.data.animate = webChatComponent.messageAnimation;
 
-          lastMessage.type = message.type;
-          lastMessage.data = message.data;
+          typingMessage.type = message.type;
+          typingMessage.data = message.data;
 
           if (message.type === "fp-form") {
             webChatComponent.showFullPageFormInputMessage(message);
@@ -226,6 +222,8 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
         webChatComponent.contentEditable = true;
       }
     } else {
+      let typingMessage;
+
       if (message.data) {
         if (
           (webChatComponent.useBotName || webChatComponent.useBotAvatar) &&
@@ -236,29 +234,26 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           webChatComponent.messageList.push(authorMsg);
         }
 
-        webChatComponent.messageList.push({
+        typingMessage = {
           author: "them",
           type: "typing",
           mode: webChatComponent.modeData.mode,
           data: {
             animate: webChatComponent.messageAnimation
           }
-        });
+        };
+        webChatComponent.messageList.push(typingMessage);
       }
-
-      const lastMessageIndex = webChatComponent.messageList.length - 1;
 
       setTimeout(() => {
         // Only add a message to the list if it is a message object
         if (typeof message === "object" && message !== null) {
-          const lastMessage = webChatComponent.messageList[lastMessageIndex];
-
           webChatComponent.$emit("newMessage", message);
 
           message.data.animate = webChatComponent.messageAnimation;
 
-          lastMessage.type = message.type;
-          lastMessage.data = message.data;
+          typingMessage.type = message.type;
+          typingMessage.data = message.data;
 
           webChatComponent.$root.$emit("scroll-down-message-list");
           setTimeout(() => {
@@ -342,20 +337,19 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
     webChatComponent.messageList.push(authorMsg);
   }
 
-  webChatComponent.messageList.push({
+  let typingMessage = {
     author: "them",
     type: "typing",
     mode: webChatComponent.modeData.mode,
     data: {
       animate: webChatComponent.messageAnimation
     }
-  });
+  };
+  webChatComponent.messageList.push(typingMessage);
 
   setTimeout(() => {
-    const lastMessage = webChatComponent.messageList[webChatComponent.messageList.length - 1];
-
-    lastMessage.type = message.type;
-    lastMessage.data = message.data;
+    typingMessage.type = message.type;
+    typingMessage.data = message.data;
 
     webChatComponent.$root.$emit("scroll-down-message-list");
   }, webChatComponent.messageDelay);
