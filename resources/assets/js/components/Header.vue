@@ -64,8 +64,8 @@
 export default {
   data() {
     return {
-      referrerUrl: document.referrer.match(/^.+:\/\/[^\/]+/)[0]
-    }
+      referrerUrl: '',
+    };
   },
   watch: {
     ctaText(newVal, oldVal) {
@@ -76,13 +76,12 @@ export default {
         }, 1000);
       } else {
         this.$refs.headerCta.classList.remove("header-cta-expand");
-          if (newVal.length !== oldVal.length && !this.isOpen) {
-              window.parent.postMessage({ width: "130px" }, this.referrerUrl);
-          }
+        if (newVal.length !== oldVal.length && !this.isOpen) {
+          window.parent.postMessage({ width: "130px" }, this.referrerUrl);
+        }
       }
-    }
+    },
   },
-
   props: {
     ctaText: {
       type: Array,
@@ -134,7 +133,14 @@ export default {
       type: Boolean,
       default: true
     },
-  }
+  },
+  created() {
+    if (window.self !== window.top) {
+      this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
+    } else {
+      this.referrerUrl = document.location.origin;
+    }
+  },
 };
 </script>
 

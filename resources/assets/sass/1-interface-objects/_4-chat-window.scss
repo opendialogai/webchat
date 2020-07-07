@@ -9,13 +9,16 @@
   flex-direction: column;
   width: 100%;
   overflow: hidden;
-  border-radius: 10px;
   height: 100%;
-  height: calc(100% - 55px);
-  margin: 0 auto;
 
-  @media (min-width: 450px) {
-    width: 423px;
+  &.iframe {
+    height: calc(100% - 55px);
+    margin: 0 auto;
+    border-radius: 10px;
+
+    @media (min-width: 450px) {
+      width: 423px;
+    }
   }
 }
 
@@ -29,21 +32,23 @@
   font-family: "Playfair Display";
 }
 
-.chat-window.closed {
-  height: auto;
-  padding-right: 20px;
-  transition: none;
-  @media (min-width: 450px) {
-    padding-right: 0;
+.chat-window.iframe {
+  &.closed {
+    height: auto;
+    padding-right: 20px;
+    transition: none;
+    @media (min-width: 450px) {
+      padding-right: 0;
+    }
   }
-}
 
-.chat-window.opened {
-  box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
-  margin: 0px auto 0;
+  &.opened {
+    box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+    margin: 0px auto 0;
 
-  @media (min-width: 767px) {
-    margin: 20px auto 0;
+    @media (min-width: 767px) {
+      margin: 20px auto 0;
+    }
   }
 }
 

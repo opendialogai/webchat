@@ -18,19 +18,14 @@
 
 iframe#opendialog-chatwindow {
   position: fixed;
-
   bottom: 0;
   right: 10px;
   border: none;
-
   max-height: 750px;
   height: 85%;
   width: 463px;
-
-  //   border-radius: 10px;
   background-color: #fff;
   box-sizing: border-box;
-
   transition: 0.3s ease-in-out;
 }
 
