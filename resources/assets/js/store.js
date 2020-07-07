@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
-import { resourceModule } from '@reststate/vuex';
+import {resourceModule} from '@reststate/vuex';
 
 Vue.use(Vuex);
 
@@ -9,28 +9,32 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     apiReady: false,
+    uuid: sessionStorage.uuid || null,
+    settings: sessionStorage.openDialogSettings ? JSON.parse(sessionStorage.openDialogSettings) : null,
+    messageMetaData: {
+      teamName: null
+    }
   },
   mutations: {
     setApiReady(state, val) {
       state.apiReady = val;
     },
+    setUuid(state, uuid) {
+      state.uuid = uuid;
+    },
+    setSettings(state, settings) {
+      state.settings = settings;
+    },
+    setMessageMetaData(state, data) {
+      state.messageMetaData = data;
+    },
   },
+  actions: {},
+  getters: {},
 });
 
 const commentConfig = {};
 const userConfig = {};
-
-// Helper function - retrieve DB settings from endpoint.
-async function getWebchatConfig(url = '') {
-  let configUrl = url;
-  if (configUrl === '') {
-    configUrl = `${window.location.origin}/webchat-config`;
-  }
-
-  const response = await fetch(configUrl);
-  const json = await response.json();
-  return json;
-}
 
 function setConfig(config) {
   if (config.comments) {
@@ -46,27 +50,9 @@ function setConfig(config) {
   }
 }
 
-// Add event listener for custom open dialog settings.
-const customConfig = {};
-window.addEventListener('message', (event) => {
-  if (event.data) {
-    if (event.data.openDialogSettings) {
-      Object.keys(event.data.openDialogSettings).forEach((key) => {
-        customConfig[key] = event.data.openDialogSettings[key];
-      });
-      customConfig.newPathname = event.data.newPathname;
-    }
-  }
-});
-
-// Get default settings from the config endpoint.
-getWebchatConfig().then((config) => {
-  setConfig(config);
-  return true;
-}).then(() => {
-  setTimeout(() => {
-    // Over-ride default config with any custom settings.
-    setConfig(customConfig);
+store.subscribe((mutation, state) => {
+  if (mutation.type === 'setSettings') {
+    setConfig(state.settings);
 
     if (commentConfig && commentConfig.commentsEnabled
         && commentConfig.commentsEndpoint && commentConfig.commentsAuthToken) {
@@ -93,7 +79,7 @@ getWebchatConfig().then((config) => {
       // Tell vue we're ready.
       store.commit('setApiReady', true);
     }
-  }, 200);
+  }
 });
 
 export default store;

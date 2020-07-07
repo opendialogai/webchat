@@ -24,6 +24,14 @@
           v-on:keyup.enter="_handleClick"
         />
       </template>
+      <template v-if="element.element_type == 'email'">
+        <input
+          type="email"
+          class="sc-message--form--element-input"
+          v-model="form.data[element.name].value"
+          v-on:keyup.enter="_handleClick"
+        />
+      </template>
       <template v-if="element.element_type == 'textarea'">
         <textarea
           class="sc-message--form--element-textarea"
@@ -112,6 +120,13 @@ export default {
         this.onFormButtonClick(this.form.data, this.message);
       }
     },
+    validateEmail(emailAddress) {
+      if (/^[^\s@]+@[^\s@]+$/.test(emailAddress)) {
+        return true;
+      }
+
+      return false;
+    },
     validateForm() {
       this.errors = [];
 
@@ -123,6 +138,17 @@ export default {
           this.errors.push(
             "<em>" + element.display + "</em> field is required"
           );
+        }
+
+        if (
+          element.element_type === 'email' &&
+          !this.isEmpty(this.form.data[element.name].value)
+        ) {
+          if (!this.validateEmail(this.form.data[element.name].value)) {
+            this.errors.push(
+              "<em>" + element.display + "</em> field is not a valid email address"
+            );
+          }
         }
       });
     },
@@ -136,6 +162,10 @@ export default {
         name: element.name,
         value: ""
       };
+
+      if (element.default_value) {
+        this.form.data[element.name].value = element.default_value;
+      }
     });
   }
 };
@@ -156,7 +186,7 @@ export default {
 .sc-message--form button {
   cursor: pointer;
   border-radius: 15px;
-  border: none;
+  border: 1px solid transparent;
   font-size: 14px;
   padding: 12px 17px;
   margin-top: 5px;

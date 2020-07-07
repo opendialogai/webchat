@@ -3,32 +3,53 @@
 }
 
 .chat-window {
-  font-family: "Sofia Pro", "Proxima Nova", Georgia, sans-serif;
+  font-family: "Gotham", "Arial";
   transition: 0.3s ease-in-out;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  height: 100%;
 
+  &.iframe {
+    height: calc(100% - 55px);
+    margin: 0 auto;
+    border-radius: 10px;
+
+    @media (min-width: 450px) {
+      width: 423px;
+    }
+  }
 }
 
-// .chat-window.expanded {
-//   width: 490px;
-// }
+// 🔥 ☠️ 💀 DoN't Do It !!!!! 🔥 ☠️ 💀
+// Do this in app-framne.scss
+// .expanded {
+//   ⚰️  width: 400px; ⚰️
+//   }
 
-// .chat-window.fullscreen {
-//   position: relative;
-//   width: 100%;
-//   height: 100%;
-//   max-height: 100vh;
-//   bottom: 0;
-//   right: 0;
-// }
+.font-playfair {
+  font-family: "Playfair Display";
+}
 
-.chat-window.closed {
-  height: 75px;
-  bottom: 90px;
-  overflow: hidden;
-  border-radius: 10px;
+.chat-window.iframe {
+  &.closed {
+    height: auto;
+    padding-right: 20px;
+    transition: none;
+    @media (min-width: 450px) {
+      padding-right: 0;
+    }
+  }
+
+  &.opened {
+    box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+    margin: 0px auto 0;
+
+    @media (min-width: 767px) {
+      margin: 20px auto 0;
+    }
+  }
 }
 
 // 👇🏻👇🏻👇🏻 OLD style you might need for the comments tab and max/min buttons👇🏻👇🏻👇🏻

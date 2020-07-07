@@ -1,17 +1,61 @@
 <template>
-  <div class="mt mt-carousel">
-    <slider
-      :direction="data.view_type"
-      :pagination-visible="true"
-      :pagination-clickable="true"
-      :drag-enable="false"
-      ref="slider"
-      @slide-change-start="onSlideChangeStart"
-    >
+  <div class="mt reap mt-carousel" :class="data.view_type">
+    <template v-if="data.view_type == 'horizontal'">
+      <slider
+        direction="horizontal"
+        :drag-enable="false"
+        ref="slider"
+        @slide-change-start="onSlideChangeStart"
+      >
+        <div v-for="(item, idx) in data.items" :key="idx">
+          <TextMessage
+            v-if="item.message_type === 'text'"
+            :data="item"
+            :author="message.author"
+            :type="message.type"
+            :messageColors="messageColors"
+            :onLinkClick="onLinkClick"
+          />
+          <ButtonMessage
+            v-else-if="item.message_type === 'button'"
+            :message="message"
+            :data="item"
+            :messageColors="messageColors"
+            :colors="colors"
+            :onButtonClick="onButtonClick"
+          />
+          <ImageMessage
+            v-else-if="item.message_type === 'image'"
+            :data="item"
+            :messageColors="messageColors"
+          />
+          <RichMessage
+            v-else-if="item.message_type === 'rich'"
+            :message="message"
+            :data="item"
+            :messageColors="messageColors"
+            :colors="colors"
+            :onButtonClick="onButtonClick"
+          />
+        </div>
+      </slider>
+
+      <div class="sc-message--carousel-list--arrows">
+        <div v-if="showLeftArrow" class="sc-message--carousel-list--arrow-left" @click="previousPage">
+          <img src="/vendor/webchat/images/left.svg" />
+        </div>
+        <div v-if="showRightArrow" class="sc-message--carousel-list--arrow-right" @click="nextPage">
+          <img src="/vendor/webchat/images/right.svg" />
+        </div>
+      </div>
+    </template>
+    <template v-else>
       <div v-for="(item, idx) in data.items" :key="idx">
         <TextMessage
           v-if="item.message_type === 'text'"
           :data="item"
+          :author="message.author"
+          :type="message.type"
           :messageColors="messageColors"
           :onLinkClick="onLinkClick"
         />
@@ -37,34 +81,12 @@
           :onButtonClick="onButtonClick"
         />
       </div>
-    </slider>
-
-    <div v-if="data.view_type == 'horizontal'" class="mt-carousel__arrows">
-      <div
-        v-if="showLeftArrow"
-        class="mt-carousel__arrows__arrow mt-carousel__arrows__arrow-left"
-        @click="previousPage"
-      >
-        <!-- <img src="./assets/left.svg" /> -->
-        <span>&gt;</span>
-      </div>
-      <div
-        v-if="showRightArrow"
-        class="mt-carousel__arrows__arrow mt-carousel__arrows__right"
-        @click="nextPage"
-      >
-        <!-- <img src="./assets/right.svg" /> -->
-
-        <span>&lt;</span>
-      </div>
-    </div>
-    <div class="mt-carousel__gradient mt-carousel__gradient--right"></div>
-    <div class="mt-carousel__gradient mt-carousel__gradient--left"></div>
+    </template>
   </div>
 </template>
-Â
+
 <script>
-import Slider from "vue-plain-slider";
+import Slider from 'vue-plain-slider'
 
 import ImageMessage from "./ImageMessage.vue";
 import ButtonMessage from "./ButtonMessage.vue";
@@ -112,49 +134,47 @@ export default {
   data() {
     return {
       showLeftArrow: false,
-      showRightArrow: false
-    };
+      showRightArrow: false,
+    }
   },
-  mounted() {
-    this.showRightArrow = this.data.items.length > 1 ? true : false;
+  mounted () {
+    this.showRightArrow = (this.data.items.length > 1) ? true : false
   },
   methods: {
-    previousPage() {
-      this.$refs.slider.prev();
+    previousPage () {
+      this.$refs.slider.prev()
     },
-    nextPage() {
-      this.$refs.slider.next();
+    nextPage () {
+      this.$refs.slider.next()
     },
-    onSlideChangeStart(currentPage, el) {
-      this.showLeftArrow = currentPage == 1 ? false : true;
-      this.showRightArrow =
-        this.data.items.length > 1 && currentPage < this.data.items.length
-          ? true
-          : false;
+    onSlideChangeStart (currentPage, el) {
+      this.showLeftArrow = (currentPage == 1) ? false : true
+      this.showRightArrow = (this.data.items.length > 1 && currentPage < this.data.items.length) ? true : false
     }
   }
 };
 </script>
 
 <style scoped>
-.mt-carousel {
-  /* background: #eaeaea;
-  border-radius: 6px;
-  padding: 0 15px;
-  max-width: calc(100% - 40px);
-  position: relative; */
-
-  background: none;
+.sc-message--carousel-list--arrows {
+  position: absolute;
+  top: calc(50% - 25px);
+  width: calc(100% - 6px);
+  left: 3px;
 }
-
-/* .mt-carousel .slider.horizontal {
-  padding-bottom: 30px;
+.sc-message--carousel-list--arrows div {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
-.mt-carousel .slider.vertical {
-  padding-right: 30px;
-} */
-
-.mt-carousel__arrows img {
+.sc-message--carousel-list--arrows img {
   width: 100%;
+}
+
+.sc-message--carousel-list--arrows .sc-message--carousel-list--arrow-left {
+  float: left;
+}
+.sc-message--carousel-list--arrows .sc-message--carousel-list--arrow-right {
+  float: right;
 }
 </style>

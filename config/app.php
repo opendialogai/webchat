@@ -153,6 +153,7 @@ return [
          * Application Service Providers...
          */
         OpenDialogAi\Webchat\PackageServiceProvider::class,
+        \OpenDialogAi\Webchat\WebchatSettingsConfiguration\WebchatSettingsConfigurationServiceProvider::class,
     ],
 
     /*

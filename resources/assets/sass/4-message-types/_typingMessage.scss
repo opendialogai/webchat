@@ -1,6 +1,11 @@
 .mt-typing-indicator {
   animation-duration: 0s;
-  padding: 25px 20px 10px;
+  //padding: 25px 20px 10px;
+
+  background-color: transparent !important;
+  color: #efefeb !important;
+  font-size: 14px;
+  padding: 25px 20px 10px 5px;
 
   @media (min-width: $media-med) {
     padding: 15px 30px;

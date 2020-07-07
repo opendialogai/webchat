@@ -14,7 +14,8 @@
     @endif
 
     <!-- Fonts -->
-    <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.min.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.min.css" /> -->
+    <link rel="stylesheet" type="text/css" href="/vendor/webchat/fonts/fonts.css" />
 </head>
 
 <body>
@@ -29,6 +30,7 @@
 <script>
     window.openDialogSettings = {
         url: "{{ env("APP_URL") }}",
+        css_version: "{{ env("CSS_VERSION", "v1") }}",
         user: {
             first_name: '{!! app('request')->input('first_name') ? app('request')->input('first_name') : (auth()->user() ? auth()->user()->name : '') !!}',
             last_name: '{!! app('request')->input('last_name') ? app('request')->input('last_name') : '' !!}',

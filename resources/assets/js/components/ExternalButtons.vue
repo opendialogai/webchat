@@ -1,19 +1,31 @@
 <template>
-  <div v-if="externalButtons.length" class="mt-wrapper">
+  <div v-if="externalButtons.length">
     <div
-      class="mt mt-external-buttons"
+      class="mt-external-buttons"
       :class="{animate: this.animate, 'fade-enter-active': this.animate}"
-      :style="{'--btn-bg': colors.button.bg, '--btn-color': colors.button.text, '--btn-bg-hover': colors.button.hoverbg, '--background': colors.messageList.bg}"
+      :style="{
+            '--background': colors.messageList.bg,
+
+            '--btn-bg': colors.externalButton.bg,
+            '--btn-bg-hover': colors.externalButton.hoverbg,
+
+            '--btn-color': colors.externalButton.text,
+            '--btn-color-hover':  colors.externalButton.hoverText,
+
+            '--btn-border-color':colors.externalButton.border,
+            '--btn-border-color-hover':colors.externalButton.hoverBorder }"
     >
-      <button
-        class="mt-external-buttons__button"
-        :class="(buttonClicked == idx) ? 'mt-external-buttons__button--clicked' : ''"
-        v-for="(externalButton, idx) in externalButtons"
-        v-on:click="_handleClick(externalButton, idx)"
-        :key="idx"
-      >
-        <span v-html="externalButton.text"></span>
-      </button>
+      <template v-for="(externalButton, idx) in externalButtons">
+        <button
+          v-if="externalButton.display && externalButton.text"
+          class="mt-external-buttons__button"
+          :class="(buttonClicked == idx) ? 'mt-external-buttons__button--clicked' : ''"
+          v-on:click="_handleClick(externalButton, idx)"
+          :key="idx"
+        >
+          <span v-html="externalButton.text"></span>
+        </button>
+      </template>
     </div>
   </div>
 </template>
@@ -63,11 +75,12 @@ export default {
 .mt-external-buttons__button {
   background-color: var(--btn-bg);
   color: var(--btn-color);
-  border: 1px solid var(--btn-bg);
+  border: 2px solid var(--btn-border-color);
 }
 
 .mt-external-buttons__button:hover {
   background-color: var(--btn-bg-hover);
-  color: var(--btn-bg);
+  color: var(--btn-color-hover);
+  border: 2px solid var(--btn-border-color-hover);
 }
 </style>

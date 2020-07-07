@@ -74,7 +74,12 @@
 
     <template v-if="showLoader">
       <div class="fp-loader">
-        <img src="./assets/fp-loader.svg" />
+        <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="38px" height="38px" viewBox="0 0 128 128" xml:space="preserve">
+          <g>
+            <path d="M64 9.75A54.25 54.25 0 0 0 9.75 64H0a64 64 0 0 1 128 0h-9.75A54.25 54.25 0 0 0 64 9.75z" fill="#da291c" fill-opacity="1"/>
+            <animateTransform attributeName="transform" type="rotate" from="0 64 64" to="360 64 64" dur="1000ms" repeatCount="indefinite"></animateTransform>
+          </g>
+        </svg>
       </div>
     </template>
   </div>
@@ -140,29 +145,36 @@ export default {
   overflow-y: hidden;
 }
 
+/* Title/Subtitle */
+
 .mt-fpri__title {
   font-family: PlayfairDisplay;
   font-size: 26px;
   font-weight: bold;
   line-height: 1.5;
   text-align: center;
-  color: #000000;
+  color: #ffffff;
   margin: 0 10px 20px 10px;
   letter-spacing: 1px;
 }
 .mt-fpri__subtitle {
   margin: 0 10px 20px 10px;
+  color: #ffffff;
 }
 
 .mt-fpri__text {
   margin: 0 10px 35px 10px;
   line-height: 1.3em;
+  color: #ffffff;
 }
 
+/* image */
 .mt-fpri__image {
   width: 100%;
   margin-bottom: 10px;
 }
+
+/* button */
 
 .mt-fpri__buttons {
   display: flex;
@@ -233,6 +245,7 @@ export default {
   background: url("/vendor/webchat/images/download-button.svg");
 }
 
+/* loader --- loader --- loader ---  */
 @keyframes mt-fpri__button-fade-in {
   from {
     transform: translate(0px, 30px);
@@ -258,12 +271,15 @@ export default {
   left: 0;
   background: rgba(0, 0, 0, 0.3);
 }
-.fp-loader img {
+.fp-loader svg {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   margin: auto;
+}
+.fp-loader svg path {
+  fill: var(--btn-bg)
 }
 </style>

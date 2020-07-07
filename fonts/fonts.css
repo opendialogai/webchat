@@ -1,0 +1,60 @@
+@font-face {
+  font-family: "Gotham";
+  src: url("Gotham-Book.eot");
+  src: url("Gotham-Book.eot?#iefix") format("embedded-opentype"), url("Gotham-Book.woff2") format("woff2"),
+    url("Gotham-Book.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gotham Book";
+  src: url("Gotham-Book.eot");
+  src: url("Gotham-Book.eot?#iefix") format("embedded-opentype"), url("Gotham-Book.woff2") format("woff2"),
+    url("Gotham-Book.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-weight: normal;
+  font-family: "Gotham";
+  src: url("Gotham-Bold.eot");
+  src: url("Gotham-Bold.eot?#iefix") format("embedded-opentype"), url("Gotham-Bold.woff2") format("woff2"),
+    url("Gotham-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-weight: normal;
+  font-family: "Playfair Display";
+  src: url("PlayfairDisplay-SemiBold.woff2") format("woff2"), url("PlayfairDisplay-SemiBold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-weight: normal;
+  font-family: "Playfair Display";
+  src: url("PlayfairDisplay-Bold.woff2") format("woff2"), url("PlayfairDisplay-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Playfair Display";
+  src: url("PlayfairDisplay-Italic.woff2") format("woff2"), url("PlayfairDisplay-Italic.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Sofia Pro";
+  src: url("sofiapro-light.otf") format("opentype");
+  font-family: "Playfair Display";
+  src: url("PlayfairDisplay-Regular.woff2") format("woff2"), url("PlayfairDisplay-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}

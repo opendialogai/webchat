@@ -1,15 +1,13 @@
 <template>
-  <div class="sc-user-input-wrapper"  :style="{backgroundColor: colors.messageList.bg}">
+  <div class="user-input" :style="{backgroundColor: colors.messageList.bg}">
     <ExternalButtons
       :externalButtons="externalButtons"
       :animate="animateExternalButtons"
       v-on:sendExternalButton="_submitExternalButton"
       :colors="colors"
     />
-    <div
-      v-if="file"
-      class="file-container"
-    >
+
+    <div v-if="file" class="file-container">
       <span class="icon-file-message">
         <img src="./assets/file.svg" alt="genericFileIcon" height="15" />
       </span>
@@ -18,8 +16,9 @@
         <img src="./assets/close.svg" alt="close icon" height="10" title="Remove the file" />
       </span>
     </div>
+
     <form
-      class="sc-user-input"
+      class="user-input__form"
       :class="{active: inputActive, disabled: !contentEditable}"
       :style="{background: colors.userInput.bg}"
     >
@@ -31,15 +30,25 @@
         @keydown="handleKey"
         @input="onTextChange($event)"
         :contentEditable="contentEditable"
-        :placeholder="placeholder"
-        class="sc-user-input--text"
+        :placeholder="placeholderText"
+        class="user-input__form-text-input"
         ref="userInput"
         :style="{color: colors.userInput.text}"
       ></div>
-      <div class="sc-user-input--buttons">
-        <div class="sc-user-input--button">
-          <SendIcon :onClick="_submitText" :color="colors.userInput.text" />
-        </div>
+
+      <div class="user-input__buttons">
+        <button
+          @click.prevent="_submitText"
+          class="send-btn"
+          :style="{
+            '--send-btn-bg': colors.button.bg,
+            '--send-btn-hover-bg': colors.button.bg,
+          }"
+        >{{ sendButtonText }}</button>
+
+        <EndChatButton
+          @close-chat="closeChat"
+        />
       </div>
     </form>
   </div>
@@ -47,12 +56,13 @@
 
 
 <script>
-import SendIcon from "./SendIcon.vue";
+
 import ExternalButtons from "./ExternalButtons.vue";
+  import EndChatButton from "./EndChatButton";
 
 export default {
   components: {
-    SendIcon,
+    EndChatButton,
     ExternalButtons
   },
   props: {
@@ -78,7 +88,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: "Write a reply"
+      default: "Enter your message"
     },
     lastMessage: {
       type: Object,
@@ -87,14 +97,37 @@ export default {
     colors: {
       type: Object,
       required: true
+    },
+    modeData: {
+      type: Object,
+      required: true
     }
   },
   data() {
     return {
       file: null,
       inputActive: false,
-      textEntered: false
+      textEntered: false,
     };
+  },
+  computed: {
+    placeholderText () {
+      if (this.$store.state.settings.bot && this.$store.state.settings.bot.inputPlaceholder) {
+        return this.$store.state.settings.bot.inputPlaceholder;
+      } else {
+        return this.placeholder;
+      }
+    },
+    sendButtonText () {
+      if (this.$store.state.settings.bot && this.$store.state.settings.bot.sendButtonText) {
+        return this.$store.state.settings.bot.sendButtonText;
+      } else {
+        return "Send";
+      }
+    },
+  },
+  created() {
+    this.onTextChange = _.debounce(this.onTextChangeForDebouncing, 500);
   },
   methods: {
     cancelFile() {
@@ -117,7 +150,7 @@ export default {
         event.preventDefault();
       }
     },
-    onTextChange(event) {
+    onTextChangeForDebouncing(event) {
       if (event.target.innerHTML === "" || event.target.innerHTML === "<br>") {
         // Input is empty, turn off the typing indicator.
         if (this.textEntered === true) {
@@ -127,10 +160,8 @@ export default {
       } else {
         // Input is not empty, turn on the typing indicator if
         // it's not already.
-        if (this.textEntered === false) {
-          this.$parent.$parent.$emit("vbc-user-typing");
-          this.textEntered = true;
-        }
+        this.$parent.$parent.$emit("vbc-user-typing", event.target.innerHTML);
+        this.textEntered = true;
       }
     },
     _submitExternalButton(button) {
@@ -169,12 +200,30 @@ export default {
     },
     _handleFileSubmit(file) {
       this.file = file;
+    },
+    closeChat(event, messageText = 'End chat') {
+      if (this.modeData.mode === 'custom') {
+        this.$emit('setChatMode', {
+          mode: 'webchat',
+          options: {
+            'callback_id': this.modeData.options.callback_id
+          }
+        });
+      } else {
+        this.$parent.$parent.$parent.sendMessage({
+          type: "button_response",
+          author: "me",
+          callback_id: "intent.app.end_chat",
+          data: {
+            text: messageText,
+            value: ''
+          }
+        });
+      }
     }
   }
 };
 </script>
 
 <style>
-
-
 </style>

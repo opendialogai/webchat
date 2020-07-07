@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="chat-window-container">
     <ChatWindow
       :messageList="messageList"
       :onUserInputSubmit="onMessageWasSent"
@@ -15,6 +15,7 @@
       :onFormButtonClick="onFormButtonClick"
       :onListButtonClick="onListButtonClick"
       :onRestartButtonClick="onRestartButtonClick"
+      :onDownload="onDownload"
       :onLinkClick="onLinkClick"
       :contentEditable="contentEditable"
       :showExpandButton="showExpandButton"
@@ -35,12 +36,16 @@
       :fullScreen="fullScreen"
       :fpFormInputMessage="fpFormInputMessage"
       :fpRichInputMessage="fpRichInputMessage"
+      :ctaText="ctaText"
+      :mode-data="modeData"
+      @setChatMode="setChatMode"
       :hideMessageTime="hideMessageTime"
     />
   </div>
 </template>
 <script>
 import ChatWindow from './ChatWindow.vue'
+import SessionStorageMixin from "../mixins/SessionStorageMixin";
 
 export default {
   props: {
@@ -58,10 +63,6 @@ export default {
     },
     isExpand: {
       type: Boolean,
-      required: true
-    },
-    open: {
-      type: Function,
       required: true
     },
     close: {
@@ -100,13 +101,17 @@ export default {
       type: Function,
       required: true
     },
+    ctaText: {
+      type: Array,
+      default: () => []
+    },
     messageList: {
       type: Array,
       default: () => []
     },
     placeholder: {
       type: String,
-      default: 'Write a reply'
+      default: 'Enter your message'
     },
     showRestartButton: {
       type: Boolean,
@@ -176,6 +181,10 @@ export default {
       type: Function,
       required: true
     },
+    onDownload: {
+      type: Function,
+      required: true
+    },
     initialText: {
        type: String,
        default: null
@@ -236,6 +245,10 @@ export default {
     alwaysScrollToBottom: {
       type: Boolean,
       default: () => false
+    },
+    modeData: {
+      type: Object,
+      required: true
     }
   },
   data () {
@@ -245,9 +258,23 @@ export default {
   },
   components: {
     ChatWindow
+  },
+  mixins: [SessionStorageMixin],
+  created() {
+    if (this.isCustomModeInSession()) {
+      this.setChatMode(this.getModeDataInSession());
+    }
+  },
+  methods: {
+    setChatMode(mode) {
+      this.$emit('setChatMode', mode);
+    }
   }
 }
 </script>
-<style scoped>
 
+<style scoped>
+.chat-window-container {
+  display: inline;
+}
 </style>
