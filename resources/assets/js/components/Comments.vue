@@ -28,9 +28,7 @@
         :on-message-was-sent="onMessageWasSent"
         :open="openComments"
         :placeholder="placeholder"
-        :show-emoji="false"
         :show-expand-button="false"
-        :show-file="false"
         :show-messages="showMessages"
         :show-typing-indicator="false"
       />

@@ -1,6 +1,7 @@
 <template>
   <div
     :id="id"
+    class="web-chat"
     :class="[
       isMobile ? 'mobile' : '',
       canCloseChat ? '' : 'no-close',
@@ -10,9 +11,7 @@
   >
     <template v-if="loading">
       <div class="loading">
-        <div class="loading-message">
-          Loading chat history
-        </div>
+        <div class="loading-message">Loading chat history</div>
 
         <div class="loading-indicator">
           <span />
@@ -24,26 +23,29 @@
     <template v-else>
       <beautiful-chat
         :agent-profile="agentProfile"
-        :close="toggleChatOpen"
+        :close="onClose"
         :expand="expandChat"
         :hide-user-input="hideUserInput"
         :is-open="isOpen"
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
+        :on-full-page-form-input-submit="onFullPageFormInputSubmit"
+        :on-full-page-form-input-cancel="onFullPageFormInputCancel"
+        :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
-        :open="openChat"
         :on-button-click="onButtonClick"
         :on-form-button-click="onFormButtonClick"
         :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
+        :on-download="download"
         :content-editable="contentEditable"
-        :show-emoji="false"
-        :show-file="false"
         :show-expand-button="false"
         :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
         :show-long-text-input="showLongTextInput"
+        :show-full-page-form-input="showFullPageFormInput"
+        :show-full-page-rich-input="showFullPageRichInput"
         :show-messages="showMessages"
         :max-input-characters="maxInputCharacters"
         :button-text="buttonText"
@@ -52,44 +54,70 @@
         :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
+        :mode-data="modeData"
+        :fp-form-input-message="fpFormInputMessage"
+        :fp-rich-input-message="fpRichInputMessage"
+        :cta-text="ctaText"
+        :hide-message-time="hideMessageTime"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
+        @vbc-user-typing="userTyping"
+        @setChatMode="setChatMode"
       />
+      <div v-if="showCloseChatButton" class="close-chat">
+        <div
+          class="close-chat__button"
+          :class="{
+            closeChatButtonAnimate: isOpen,
+            closeChatButtonReverseAnimate: closeChatButtonReverseAnimate,
+          }"
+          @click="toggleChatOpen"
+        >
+          <img src="/images/close-btn.svg" class="close-chat__img" />
+        </div>
+      </div>
     </template>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
+import chatService from "../services/ChatService";
+import SessionStorageMixin from "../mixins/SessionStorageMixin";
 
-const moment = require('moment-timezone');
+const moment = require("moment-timezone");
 
 export default {
-  name: 'WebChat',
+  name: "WebChat",
   props: {
     agentProfile: {
       type: Object,
-      required: true,
+      required: true
     },
     callbackMap: {
       type: Array,
-      required: true,
+      required: true
     },
     canCloseChat: Boolean,
     chatbotAvatarPath: {
       type: String,
-      default: '',
+      default: ""
     },
     chatbotName: {
       type: String,
-      default: '',
+      default: ""
     },
     chatIsOpen: Boolean,
+    closedIntent: {
+      type: String,
+      default: ""
+    },
     colours: {
       type: Object,
-      required: true,
+      required: true
     },
     hideDatetimeMessage: Boolean,
+    hideMessageTime: Boolean,
     hideTypingIndicatorOnInternalMessages: Boolean,
     hideUserInput: Boolean,
     isExpand: Boolean,
@@ -98,23 +126,27 @@ export default {
     showHistory: Boolean,
     numberOfMessages: {
       type: Number,
-      required: true,
+      required: true
     },
     messageDelay: {
       type: Number,
-      required: true,
+      required: true
     },
     newMessageIcon: {
       type: String,
-      required: true,
+      required: true
+    },
+    openIntent: {
+      type: String,
+      default: ""
     },
     parentUrl: {
       type: String,
-      required: true,
+      required: true
     },
     restartButtonCallback: {
       type: String,
-      default: '',
+      default: ""
     },
     showRestartButton: Boolean,
     showExpandButton: Boolean,
@@ -124,65 +156,85 @@ export default {
     useHumanName: Boolean,
     user: {
       type: Object,
-      required: true,
+      required: true
     },
     userInfo: {
       type: Object,
-      required: true,
+      required: true
     },
     userTimezone: {
       type: String,
-      required: true,
+      required: true
     },
     userExternalId: {
       type: String,
-      required: true,
+      required: true
     },
-    userUuid: {
-      type: String,
-      required: true,
-    },
+    modeData: {
+      type: Object,
+      required: true
+    }
   },
+  mixins: [SessionStorageMixin],
   data() {
     return {
-      buttonText: 'Submit',
+      buttonText: "Submit",
+      closeChatButtonReverseAnimate: false,
       confirmationMessage: null,
       contentEditable: false,
+      ctaText: [],
+      fpFormInputMessage: {},
+      fpRichInputMessage: {},
       headerHeight: 0,
-      headerText: '',
-      id: '',
+      headerText: "",
+      id: "",
       initialText: null,
       isOpen: this.chatIsOpen,
       loading: true,
       maxInputCharacters: 0,
       messageList: [],
-      placeholder: 'Type a message',
+      placeholder: "Enter your message",
+      referrerUrl: '',
+      showCloseChatButton: false,
       showLongTextInput: false,
+      showFullPageFormInput: false,
+      showFullPageRichInput: false,
       showMessages: true,
       showTypingIndicator: false,
       users: [],
-      userName: '',
-      uuid: this.userUuid,
+      userName: "",
+      chatbotAvatar: this.chatbotAvatarPath,
+      chatMode: "webchat",
       canRestart: true,
     };
   },
   watch: {
+    ctaText() {
+      if (this.ctaText.length) {
+        setTimeout(() => {
+          this.ctaText = [];
+        }, 5500);
+      }
+    },
     messageList() {
       let spliceIndex = 1;
       let previousMessage = this.messageList[this.messageList.length - 2];
       const lastMessage = this.messageList[this.messageList.length - 1];
 
-      if (previousMessage && previousMessage.type === 'author') {
+      if (previousMessage && previousMessage.type === "author") {
         spliceIndex = 2;
         previousMessage = this.messageList[this.messageList.length - 3];
       }
 
       if (!this.hideDatetimeMessage) {
-        if (!previousMessage || previousMessage.type !== 'datetime') {
-          if (!previousMessage || previousMessage.data.date !== lastMessage.data.date) {
+        if (!previousMessage || previousMessage.type !== "datetime") {
+          if (
+            !previousMessage ||
+            previousMessage.data.date !== lastMessage.data.date
+          ) {
             this.messageList.splice(this.messageList.length - spliceIndex, 0, {
-              type: 'datetime',
-              datetime: lastMessage.data.date,
+              type: "datetime",
+              datetime: lastMessage.data.date
             });
           }
         }
@@ -196,62 +248,107 @@ export default {
         this.dateTimezoneFormat(lastMessage);
       }
     },
-    isOpen(isOpen) {
-      if (isOpen) {
-        this.agentProfile.imageUrl = null;
-      }
-    },
     loading(isLoading) {
       if (!isLoading) {
         setTimeout(() => {
-          const header = document.querySelector(`#${this.id} .sc-header`);
+          const header = document.querySelector(`#${this.id} .header`);
           if (header) {
             this.headerHeight = header.offsetHeight;
           }
         }, 1000);
       }
     },
+    modeData(newValue, oldValue) {
+      if (newValue.mode !== oldValue.mode) {
+        if (oldValue.mode === "custom") {
+          this.destroyCustomMode();
+        } else if (oldValue.mode === "webchat") {
+          this.destroyWebchatMode();
+        }
+      }
+
+      chatService.setModeData(newValue);
+
+      if (oldValue.mode === "custom" && newValue.mode === "webchat") {
+        // Convert the Hand-to-Human message to a text message
+        let filteredMessageList = this.messageList.filter(
+          message =>
+            message.mode === "webchat" && message.type === "hand-to-human"
+        );
+        let handToHumanMessage =
+          filteredMessageList[filteredMessageList.length - 1];
+
+        if (handToHumanMessage) {
+          handToHumanMessage.type = "text";
+          handToHumanMessage.data.text = handToHumanMessage.data.elements.text;
+        }
+
+        this.sendMessage({
+          type: "trigger",
+          author: "me",
+          callback_id: newValue.options.callback_id,
+          data: {}
+        });
+      }
+
+      if (newValue.mode === "custom") {
+        if (oldValue.mode !== "custom") {
+          this.setupCustomMode();
+        }
+      } else if (newValue.mode === "webchat") {
+        this.setupWebchatMode();
+      }
+    }
   },
   created() {
+    if (window.self !== window.top) {
+      this.showCloseChatButton = true;
+      this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
+    } else {
+      this.referrerUrl = document.location.origin;
+    }
+
     this.id = `webchat-${this.$uuid.v4()}`;
 
     const urlParams = new URLSearchParams(window.location.search);
 
-    if (urlParams.has('mobile')) {
-      if (urlParams.get('mobile')) {
+    if (urlParams.has("mobile")) {
+      if (urlParams.get("mobile")) {
         this.isMobile = true;
         this.showExpandButton = false;
       }
     }
 
-    this.initChat();
     this.userName = `${this.user.first_name} ${this.user.last_name}`;
     this.fetchMessages();
 
-    window.addEventListener('message', (event) => {
+    window.addEventListener("message", event => {
       if (event.data) {
-        if (event.data.triggerConversation && event.data.triggerConversation.callback_id) {
+        if (
+          event.data.triggerConversation &&
+          event.data.triggerConversation.callback_id
+        ) {
           const data = {};
           if (event.data.triggerConversation.value) {
             data.value = event.data.triggerConversation.value;
           }
 
           this.sendMessage({
-            type: 'trigger',
-            author: 'me',
+            type: "trigger",
+            author: "me",
             callback_id: event.data.triggerConversation.callback_id,
-            data,
+            data
           });
         }
 
         if (event.data.expandChat) {
           if (!this.isExpand || !this.isOpen) {
-            this.expandChat(true);
+            this.expandChat();
           }
         }
 
         if (event.data.collapseChat) {
-          if (this.isExpand) {
+          if (this.isExpand && this.isOpen) {
             this.expandChat();
           }
         }
@@ -260,34 +357,54 @@ export default {
   },
   methods: {
     dateTimezoneFormat(message) {
-      if (this.userTimezone !== 'utc') {
-        const date = moment.tz(`${message.data.date} ${message.data.time}`, 'ddd D MMM hh:mm A', 'utc').tz(this.userTimezone);
+      if (this.userTimezone !== "utc") {
+        const date = moment
+          .tz(
+            `${message.data.date} ${message.data.time}`,
+            "ddd D MMM hh:mm:ss A",
+            "utc"
+          )
+          .tz(this.userTimezone);
 
         /* eslint-disable no-param-reassign */
-        message.data.date = date.format('ddd D MMM');
-        message.data.time = date.format('hh:mm A');
+        message.data.date = date.format("ddd D MMM");
+        message.data.time = date.format("hh:mm:ss A");
         /* eslint-enable no-param-reassign */
       }
     },
     sendMessage(msg) {
       const newMsg = msg;
-      newMsg.data.date = moment().tz('UTC').format('ddd D MMM');
-      newMsg.data.time = moment().tz('UTC').format('hh:mm A');
 
-      newMsg.user_id = (this.user.email) ? this.user.email : this.uuid;
+      newMsg.mode = this.modeData.mode;
+      newMsg.modeInstance = this.modeData.modeInstance;
+
+      newMsg.data.date = moment()
+        .tz("UTC")
+        .format("ddd D MMM");
+      newMsg.data.time = moment()
+        .tz("UTC")
+        .format("hh:mm:ss A");
+
+      newMsg.user_id = this.user.email ? this.user.email : this.$store.state.uuid;
       newMsg.user = this.user;
 
-      if (!newMsg.user.name && newMsg.user.first_name && newMsg.user.last_name) {
+      if (
+        !newMsg.user.name &&
+        newMsg.user.first_name &&
+        newMsg.user.last_name
+      ) {
         newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
       }
 
       // Give the message an id.
       newMsg.id = this.$uuid.v4();
 
-      if (newMsg.type === 'chat_open' && this.userInfo) {
-        Object.keys(this.userInfo).forEach((key) => {
-          newMsg.user[key] = this.userInfo[key];
-        });
+      if (newMsg.type === "chat_open") {
+        if (this.userInfo) {
+          Object.keys(this.userInfo).forEach(key => {
+            newMsg.user[key] = this.userInfo[key];
+          });
+        }
       }
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
@@ -297,280 +414,101 @@ export default {
           this.messageList.push(authorMsg);
         }
 
-        this.buttonText = 'Submit';
-        this.headerText = '';
+        this.buttonText = "Submit";
+        this.headerText = "";
         this.maxInputCharacters = 0;
         this.showLongTextInput = false;
-        this.showMessages = true;
         this.messageList.push(newMsg);
       }
 
-      if (newMsg.type === 'text' && newMsg.data.text.length > 0) {
-        window.parent.postMessage({ dataLayerEvent: 'message_sent_to_chatbot' }, '*');
-      }
-      if (newMsg.type === 'button_response') {
-        window.parent.postMessage({ dataLayerEvent: 'user_clicked_button_in_chatbot' }, '*');
-      }
-
-      if (newMsg.type === 'chat_open' || newMsg.type === 'url_click' || newMsg.type === 'trigger' || newMsg.type === 'form_response' || newMsg.type === 'webchat_list_response' || newMsg.data.text.length > 0) {
-        // Make a copy of the message to send to the backend.
-        // This is needed so that the author change will not affect this.messageList.
-        const msgCopy = Object.assign({}, newMsg);
-
-        // Set the message author ID.
-        msgCopy.author = msgCopy.user_id;
-        const webchatMessage = {
-          notification: 'message',
-          user_id: msgCopy.user_id,
-          author: msgCopy.author,
-          message_id: msgCopy.id,
-          content: msgCopy,
-        };
-
-        // Need to add error handling here
-        return axios.post('/incoming/webchat', webchatMessage).then(
-          (response) => {
-            if (response.data instanceof Array) {
-              response.data.forEach((message, i) => {
-                if (!message) {
-                  this.contentEditable = true;
-                } else {
-                  if (i === 0) {
-                    if ((this.useBotName || this.useBotAvatar) && !message.data.hideavatar) {
-                      const authorMsg = this.newAuthorMessage(message);
-
-                      this.messageList.push(authorMsg);
-                    }
-
-                    this.messageList.push({
-                      author: 'them',
-                      type: 'typing',
-                      data: {},
-                    });
-                  }
-
-                  setTimeout(() => {
-                    this.$emit('newMessage', message);
-
-                    /* eslint-disable no-param-reassign */
-                    message.data.animate = this.messageAnimation;
-
-                    if (i === 0 || !this.hideTypingIndicatorOnInternalMessages) {
-                      const lastMessage = this.messageList[this.messageList.length - 1];
-                      lastMessage.type = message.type;
-                      lastMessage.data = message.data;
-
-                      if (response.data.length > 1) {
-                        lastMessage.data.firstInternal = true;
-                      }
-
-                      if (i > 0 && (i === (response.data.length - 1))) {
-                        lastMessage.data.lastInternal = true;
-                      }
-
-                      this.$root.$emit('scroll-down-message-list');
-                      setTimeout(() => {
-                        this.$root.$emit('scroll-down-message-list');
-                      }, 50);
-                    } else {
-                      if (i > 0 && (i === (response.data.length - 1))) {
-                        /* eslint-disable no-param-reassign */
-                        message.data.lastInternal = true;
-                      }
-
-                      this.messageList.push(message);
-                    }
-
-                    if (message.data) {
-                      this.contentEditable = !message.data.disable_text;
-                    }
-
-                    if (!this.hideTypingIndicatorOnInternalMessages) {
-                      if (i < (response.data.length - 1)) {
-                        this.$nextTick(() => {
-                          this.$nextTick(() => {
-                            this.messageList.push({
-                              author: 'them',
-                              type: 'typing',
-                              data: {},
-                            });
-                          });
-                        });
-                      }
-                    }
-                  }, (i + 1) * this.messageDelay);
-
-                  window.parent.postMessage({ dataLayerEvent: 'message_received_from_chatbot' }, '*');
-                }
-              });
-            } else if (response.data) {
-              const message = response.data;
-
-              if (newMsg.type === 'chat_open') {
-                if (message && message.data) {
-                  if ((this.useBotName || this.useBotAvatar) && !message.data.hideavatar) {
-                    const authorMsg = this.newAuthorMessage(message);
-
-                    this.messageList.push(authorMsg);
-                  }
-
-                  this.messageList.push({
-                    author: 'them',
-                    type: 'typing',
-                    data: {},
-                  });
-
-                  setTimeout(() => {
-                    const lastMessage = this.messageList[this.messageList.length - 1];
-
-                    this.$emit('newMessage', message);
-
-                    message.data.animate = this.messageAnimation;
-
-                    lastMessage.type = message.type;
-                    lastMessage.data = message.data;
-
-                    this.contentEditable = !message.data.disable_text;
-                  }, this.messageDelay);
-                } else {
-                  // If we don't get data about whether to disable the editor, turn it on
-                  this.contentEditable = true;
-                }
-              } else {
-                if (message.data) {
-                  if ((this.useBotName || this.useBotAvatar) && !message.data.hideavatar) {
-                    const authorMsg = this.newAuthorMessage(message);
-
-                    this.messageList.push(authorMsg);
-                  }
-
-                  this.messageList.push({
-                    author: 'them',
-                    type: 'typing',
-                    data: {},
-                  });
-                }
-                setTimeout(() => {
-                  // Only add a message to the list if it is a message object
-                  if (typeof message === 'object' && message !== null) {
-                    const lastMessage = this.messageList[this.messageList.length - 1];
-
-                    this.$emit('newMessage', message);
-
-                    message.data.animate = this.messageAnimation;
-
-                    lastMessage.type = message.type;
-                    lastMessage.data = message.data;
-
-                    this.$root.$emit('scroll-down-message-list');
-                    setTimeout(() => {
-                      this.$root.$emit('scroll-down-message-list');
-                    }, 50);
-                  }
-
-                  if (message.data) {
-                    this.contentEditable = !message.data.disable_text;
-                  }
-
-                  if (message.type === 'longtext') {
-                    if (message.data.character_limit) {
-                      this.maxInputCharacters = message.data.character_limit;
-                    }
-
-                    if (message.data.submit_text) {
-                      this.buttonText = message.data.submit_text;
-                    }
-
-                    if (message.data.text) {
-                      this.headerText = message.data.text;
-                    }
-
-                    if (message.data.placeholder) {
-                      this.placeholder = message.data.placeholder;
-                    }
-
-                    if (message.data.initial_text) {
-                      this.initialText = message.data.initial_text;
-                    } else {
-                      this.initialText = null;
-                    }
-
-                    if (message.data.confirmation_text) {
-                      this.confirmationMessage = message.data.confirmation_text;
-                    } else {
-                      this.confirmationMessage = null;
-                    }
-
-                    this.showLongTextInput = true;
-                    this.showMessages = false;
-                  }
-                }, this.messageDelay);
-
-                window.parent.postMessage({ dataLayerEvent: 'message_received_from_chatbot' }, '*');
-              }
-            }
-          },
-          // Axios error handler.
-          () => {
-            setTimeout(() => {
-              const message = {
-                type: 'text',
-                author: 'them',
-                data: {
-                  date: moment().tz('UTC').format('ddd D MMM'),
-                  time: moment().tz('UTC').format('hh:mm A'),
-                  text: "We're sorry, that didn't work, please try again",
-                },
-              };
-
-              const lastMessage = this.messageList[this.messageList.length - 1];
-
-              if (this.useBotName || this.useBotAvatar) {
-                const authorMsg = this.newAuthorMessage(message);
-                this.messageList.push(authorMsg);
-              }
-
-              lastMessage.type = message.type;
-              lastMessage.data = message.data;
-
-              this.$root.$emit('scroll-down-message-list');
-            }, this.messageDelay);
-          },
+      if (newMsg.type === "text" && newMsg.data.text.length > 0) {
+        let event = 'message_sent_to_chatbot';
+        if (chatService.getMode() === "custom") {
+            event = 'message_sent_to_live_agent';
+        }
+        window.parent.postMessage(
+          { dataLayerEvent: event },
+          this.referrerUrl
         );
       }
-      return Promise.resolve();
+      if (newMsg.type === "button_response") {
+        const events = ['user_clicked_button_in_chatbot', 'message_sent_to_chatbot']
+        events.forEach((eventName) => {
+          window.parent.postMessage(
+            { dataLayerEvent: { event: eventName, label: newMsg.data.text} },
+            this.referrerUrl
+          );
+        })
+      }
+
+      chatService.sendRequest(newMsg, this).then(
+        response => chatService.sendResponseSuccess(response, newMsg, this),
+        () => chatService.sendResponseError(null, newMsg, this)
+      );
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {
-        this.$emit('expandChat');
+        this.$emit("expandChat");
       }
     },
-    userInputBlur() {
-    },
+    userInputBlur() {},
     sendReadReceipt(newMessage) {
       // Create the message object to send to our endpoint.
       const pusherMsg = {
-        notification: 'read_receipt', // Is mapped to the broadcast event type.
-        user_id: this.uuid, // UUID of the webchat end user.
-        author: this.uuid, // UUID of the webchat end user.
-        message_id: newMessage.id, // Unique id for this message.
+        notification: "read_receipt", // Is mapped to the broadcast event type.
+        user_id: this.$store.state.uuid, // UUID of the webchat end user.
+        author: this.$store.state.uuid, // UUID of the webchat end user.
+        message_id: newMessage.id // Unique id for this message.
       };
 
-      axios.post('/incoming/webchat', pusherMsg).then(() => {});
+      axios.post("/incoming/webchat", pusherMsg).then(() => {});
     },
     onMessageWasSent(msg) {
       const msgToSend = msg;
-      if (this.messageList.length && this.messageList[this.messageList.length - 1].type === 'longtext') {
-        msgToSend.type = 'longtext_response';
-        msgToSend.callback_id = this.messageList[this.messageList.length - 1].data.callback_id;
+      if (
+        this.messageList.length &&
+        this.messageList[this.messageList.length - 1].type === "longtext"
+      ) {
+        msgToSend.type = "longtext_response";
+        msgToSend.callback_id = this.messageList[
+          this.messageList.length - 1
+        ].data.callback_id;
       }
 
       this.sendMessage(msgToSend);
-      this.placeholder = 'Write a reply';
+      this.placeholder = "Write a reply";
     },
-    openChat() {
+    openChat() {},
+    onFullPageFormInputSubmit(data) {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onFormButtonClick(data, msg);
+    },
+    onFullPageFormInputCancel() {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onFormCancelClick(msg);
+    },
+    onFullPageRichInputSubmit(button) {
+      const msg = this.messageList[this.messageList.length - 1];
+      this.onButtonClick(button, msg);
     },
     async onButtonClick(button, msg) {
+      if (!button) {
+        if (msg.link) {
+          window.open(msg.link, "_blank");
+        } else {
+          this.sendMessage({
+            type: "button_response",
+            author: "me",
+            callback_id: msg.callback,
+            data: {
+              text: msg.callback_value,
+              value: msg.callback_value
+            }
+          });
+        }
+        return;
+      }
+
       if (msg.data.external) {
         await new Promise(resolve => setTimeout(resolve, 300));
       }
@@ -578,87 +516,148 @@ export default {
       if (button.phone_number) {
         const telephone = `tel:${button.phone_number}`;
 
-        this.onLinkClick(telephone);
+        this.onLinkClick(telephone, button.phone_number);
         window.open(telephone);
         return;
       }
 
       if (button.tab_switch) {
-        this.$emit('switchToCommentsTab');
+        this.$emit("switchToCommentsTab");
         return;
       }
 
       if (button.link) {
-        this.onLinkClick(button.link);
+        this.onLinkClick(button.link, button.text);
 
         if (button.link_new_tab) {
-          window.open(button.link, '_blank');
+          window.open(button.link, "_blank");
         } else {
-          window.open(button.link, '_parent');
+          window.open(button.link, "_parent");
         }
         return;
       }
 
-      if (msg.data.clear_after_interaction) {
-        this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
+      if (button.download) {
+        this.download();
+        return;
       }
 
       if (!this.isExpand) {
-        this.$emit('expandChat');
+        this.expandChat();
       }
 
-      this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
+      if (msg.type === "fp-rich") {
+        const index = this.messageList.indexOf(msg);
+        this.messageList.splice(index, 1);
+
+        if (this.messageList[index - 1].type === "author") {
+          this.messageList.splice(index - 1, 1);
+        }
+      } else if (msg.data.clear_after_interaction) {
+        this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
+      }
 
       this.sendMessage({
-        type: 'button_response',
-        author: 'me',
+        type: "button_response",
+        author: "me",
         callback_id: button.callback_id,
         data: {
           text: button.text,
-          value: button.value,
-        },
+          value: button.value
+        }
       });
     },
-    onListButtonClick(callback) {
-      this.sendMessage({
-        type: 'webchat_list_response',
-        author: 'me',
-        callback_id: callback,
-        data: {},
-      });
+    download() {
+      window.parent.postMessage(
+        { dataLayerEvent: { event: 'download_chat_transcript'} },
+        this.referrerUrl
+      );
+      const userId = this.user && this.user.email ? this.user.email : this.$store.state.uuid;
+      axios({
+        method: 'get',
+        url: `/user/${userId}/history/file`,
+        responseType: 'arraybuffer'
+      })
+      .then(response => {
+        this.forceFileDownload(response);
+      }).catch(() => console.log('Error occurred downloading chat history'))
     },
-    onLinkClick(url) {
+    forceFileDownload(response){
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      let fileName = 'Chatbot User History.txt';
+      const contentDisposition = response.headers['content-disposition'];
+      if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename=(.+)/);
+        if (fileNameMatch.length === 2) {
+          fileName = fileNameMatch[1].replace(/(^"|"$)/g, '');
+        }
+      }
+      link.setAttribute('download',fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    },
+    onListButtonClick(button, msg) {
+      this.onButtonClick(button, msg);
+    },
+    onLinkClick(url, text) {
+      window.parent.postMessage(
+          { dataLayerEvent: { event: 'url_clicked', url: url, text: text } },
+          this.referrerUrl
+      );
       this.sendMessage({
-        type: 'url_click',
-        author: this.uuid,
+        type: "url_click",
+        author: this.$store.state.uuid,
         data: {
-          url,
-        },
+          url
+        }
       });
     },
     onFormButtonClick(data, msg) {
-      this.messageList[this.messageList.indexOf(msg)].type = 'text';
+      window.parent.postMessage(
+          { dataLayerEvent: { event: 'form_submitted', form_id: msg.data.callback_id, form_text: msg.data.text }},
+          this.referrerUrl
+      );
+      this.messageList[this.messageList.indexOf(msg)].type = "text";
 
       const responseData = {};
       const newMessageText = [];
 
-      msg.data.elements.forEach((element) => {
+      msg.data.elements.forEach(element => {
         responseData[element.name] = data[element.name].value;
 
         if (element.display) {
-          newMessageText.push(`${element.display}: ${data[element.name].value}`);
+          newMessageText.push(
+            `${element.display}: ${data[element.name].value}`
+          );
         } else {
           newMessageText.push(data[element.name].value);
         }
       });
 
-      responseData.text = newMessageText.join('\n');
+      responseData.text = newMessageText.join("\n");
 
       this.sendMessage({
-        type: 'form_response',
-        author: 'me',
+        type: "form_response",
+        author: "me",
         callback_id: msg.data.callback_id,
-        data: responseData,
+        data: responseData
+      });
+    },
+    onFormCancelClick(msg) {
+      window.parent.postMessage(
+        { dataLayerEvent: { event: 'form_cancelled', 'callback_id': msg.data.cancel_callback }},
+        this.referrerUrl
+      );
+      this.messageList[this.messageList.indexOf(msg)].type = "text";
+      this.sendMessage({
+        type: "form_response",
+        author: "me",
+        callback_id: msg.data.cancel_callback,
+        data:{text: msg.data.cancel_text}
       });
     },
     onRestartButtonClick() {
@@ -677,35 +676,66 @@ export default {
       }
     },
     expandChat() {
-      this.$emit('expandChat');
+      this.$emit("expandChat");
+    },
+    onClose() {
+      if (this.showCloseChatButton) {
+        if (!this.closeChatButtonReverseAnimate) {
+          this.toggleChatOpen();
+        }
+      }
     },
     toggleChatOpen() {
-      this.isOpen = !this.isOpen;
-      this.$emit('toggleChatOpen', this.headerHeight);
+      this.ctaText = [];
+
+      if (this.isOpen) {
+        this.closeChatButtonReverseAnimate = true;
+          window.parent.postMessage(
+            { dataLayerEvent: "chatbot_minimized" },
+            this.referrerUrl
+          );
+        setTimeout(() => {
+          this.closeChatButtonReverseAnimate = false;
+          this.isOpen = !this.isOpen;
+          this.$emit("toggleChatOpen", this.headerHeight);
+        }, 300);
+      } else {
+        this.isOpen = !this.isOpen;
+        this.$emit("toggleChatOpen", this.headerHeight);
+          window.parent.postMessage(
+            { dataLayerEvent: "chatbot_maximized" },
+            this.referrerUrl
+          );
+      }
     },
     workoutCallback() {
       // Default
-      let callbackId = 'WELCOME';
+      let callbackId = "WELCOME";
       const urlParams = new URLSearchParams(window.location.search);
 
       // If the url has a callback id present, use that
-      if (urlParams.has('callback_id')) {
-        callbackId = urlParams.get('callback_id');
+      if (urlParams.has("callback_id")) {
+          callbackId = urlParams.get("callback_id");
       } else {
-        // Check if the url matches one in the callback map
-        this.callbackMap.forEach((url, idx) => {
-          if (this.parentUrl.match(this.wildcardToRegExp(url))) {
-            callbackId = this.callbackMap[idx];
-          }
-        });
+          // Check if the url matches one in the callback map
+          this.callbackMap.forEach((url, idx) => {
+              if (this.parentUrl.match(this.wildcardToRegExp(url))) {
+                  callbackId = this.callbackMap[idx];
+              }
+          });
       }
       return callbackId;
     },
     wildcardToRegExp(string) {
-      return new RegExp(`^${string.split(/\*+/).map(this.regExpEscape).join('.*')}$`);
+      return new RegExp(
+        `^${string
+          .split(/\*+/)
+          .map(this.regExpEscape)
+          .join(".*")}$`
+      );
     },
     regExpEscape(string) {
-      return string.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
+      return string.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&");
     },
     async fetchMessages() {
       if (this.showHistory) {
@@ -715,31 +745,56 @@ export default {
         this.checkHideChat();
       }
 
-      const message = {
-        type: 'chat_open',
-        callback_id: this.workoutCallback(),
-        data: {},
-      };
+      const isOpen = this.isOpen;
 
-      this.sendMessage(message);
+      this.sendChatOpenMessage();
+    },
+    sendChatOpenMessage() {
+      const callback = this.openIntent;
+
+      if (callback) {
+        const message = {
+          type: "chat_open",
+          callback_id: callback,
+          data: {
+            value: this.parentUrl
+          }
+        };
+
+        this.sendMessage(message);
+      }
     },
     getChatHistory() {
       this.loading = true;
 
-      const userId = (this.user && this.user.email) ? this.user.email : this.uuid;
+      const userId = this.user && this.user.email ? this.user.email : this.$store.state.uuid;
 
-      const ignoreTypes = 'chat_open,trigger';
+      const ignoreTypes = "chat_open,trigger,cta,text_external";
 
-      return axios.get(`/user/${userId}/history?limit=${this.numberOfMessages}&ignore=${ignoreTypes}`)
-        .then((response) => {
+      return axios
+        .get(
+          `/user/${userId}/history?limit=${this.numberOfMessages}&ignore=${ignoreTypes}`
+        )
+        .then(response => {
+          const total = response.data.length;
           response.data.reverse().forEach((message, i, messages) => {
             // Ignore 'url_click' messages.
-            if (message.type === 'url_click') {
+            if (message.type === "url_click") {
               return;
             }
 
             // Ignore 'trigger' messages.
-            if (message.type === 'trigger') {
+            if (message.type === "trigger") {
+              return;
+            }
+
+            // Ignore 'fp-rich' messages.
+            if (message.type === "fp-rich" && (i+1 !== total || this.openIntent)) {
+              return;
+            }
+
+            // Ignore 'fp-form' messages.
+            if (message.type === "fp-form" && (i+1 !== total || this.openIntent)) {
               return;
             }
 
@@ -747,42 +802,77 @@ export default {
 
             // Sets the author to 'me' for messages from the current user
             if (currentMessage.author === userId) {
-              currentMessage.author = 'me';
+              currentMessage.author = "me";
             } else {
-              currentMessage.author = 'them';
+              currentMessage.author = "them";
             }
 
             // Convert to the right message type for display
-            if (currentMessage.type === 'button' || currentMessage.type === 'long_text' || currentMessage.type === 'form') {
-              currentMessage.type = 'text';
+            if (currentMessage.type === "hand-to-human") {
+              currentMessage.data.text = currentMessage.data.elements.text;
+              currentMessage.type = "text";
             }
 
-            if (i === 0 && currentMessage.data && currentMessage.data.internal) {
+            if (
+              i === 0 &&
+              currentMessage.data &&
+              currentMessage.data.internal
+            ) {
               delete currentMessage.data.internal;
             }
 
             if (!this.hideDatetimeMessage) {
-              if ((i === 0 && currentMessage.data)
-                || this.messageList[this.messageList.length - 1].data.date
-                !== currentMessage.data.date) {
+              if (
+                (i === 0 && currentMessage.data) ||
+                this.messageList[this.messageList.length - 1].data.date !==
+                  currentMessage.data.date
+              ) {
                 this.messageList.push({
-                  type: 'datetime',
-                  datetime: currentMessage.data.date,
+                  type: "datetime",
+                  datetime: currentMessage.data.date
                 });
               }
             }
 
             if (i < messages.length - 1) {
+              // Convert to the right message type for display
+              if (
+                currentMessage.type === "button" ||
+                currentMessage.type === "long_text" ||
+                currentMessage.type === "form"
+              ) {
+                currentMessage.type = "text";
+              }
+
               this.dateTimezoneFormat(currentMessage);
             }
 
-            if ((currentMessage.author === 'me' && (this.useHumanName || this.useHumanAvatar))
-                || (currentMessage.author === 'them' && !currentMessage.data.hideavatar && !currentMessage.data.internal && (this.useBotName || this.useBotAvatar))) {
+            if (
+              (currentMessage.author === "me" &&
+                (this.useHumanName || this.useHumanAvatar)) ||
+              (currentMessage.author === "them" &&
+                !currentMessage.data.hideavatar &&
+                !currentMessage.data.internal &&
+                (this.useBotName || this.useBotAvatar))
+            ) {
               const authorMsg = this.newAuthorMessage(currentMessage);
 
               this.messageList.push(authorMsg);
             }
 
+            if (i === messages.length - 1) {
+              this.contentEditable = !currentMessage.data.disable_text;
+
+              if (currentMessage.type === "fp-form") {
+                this.showFullPageFormInputMessage(currentMessage);
+              }
+
+              if (currentMessage.type === "fp-rich") {
+                this.showFullPageRichInputMessage(currentMessage);
+              }
+            }
+
+            currentMessage.mode = this.modeData.mode;
             this.messageList.push(currentMessage);
           });
 
@@ -791,37 +881,48 @@ export default {
         });
     },
     newAuthorMessage(message) {
-      if (message.author === 'them') {
+      if (message.author === "them") {
         const authorMsg = {
-          type: 'author',
+          type: "author",
+          author: "them",
+          mode: this.modeData.mode,
+          modeInstance: this.modeData.modeInstance,
           data: {
-            text: (this.useBotName) ? this.chatbotName : '',
+            author: "them",
+            animate: this.messageAnimation,
+            text: this.useBotName ? this.chatbotName : "",
             date: message.data.date,
-            time: message.data.time,
-          },
+            time: message.data.time
+          }
         };
 
         if (this.useBotAvatar) {
-          authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatarPath}" />`;
+          authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatar}" />`;
         }
 
         return authorMsg;
       }
 
       const authorMsg = {
-        type: 'author',
-        author: 'me',
+        type: "author",
+        author: "me",
+        mode: this.modeData.mode,
+        modeInstance: this.modeData.modeInstance,
         data: {
-          author: 'me',
-          text: (this.useHumanName) ? this.userName : '',
+          animate: this.messageAnimation,
+          author: "me",
+          text: this.useHumanName ? this.userName : "",
           date: message.data.date,
-          time: message.data.time,
-        },
+          time: message.data.time
+        }
       };
 
       if (this.useHumanAvatar) {
         const avatarName = this.userName
-          .split(' ').map(n => n[0]).join('').toUpperCase();
+          .split(" ")
+          .map(n => n[0])
+          .join("")
+          .toUpperCase();
         authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
       }
 
@@ -830,91 +931,76 @@ export default {
     checkHideChat() {
       const urlParams = new URLSearchParams(window.location.search);
 
-      if (urlParams.has('hide')) {
-        if (urlParams.get('hide')) {
+      if (urlParams.has("hide")) {
+        if (urlParams.get("hide")) {
           this.$nextTick(() => {
-            this.$emit('toggleChatOpen');
+            this.$emit("toggleChatOpen");
           });
         }
       }
     },
-    createUuid() {
-      const uuid = this.$uuid.v4();
-      this.uuid = uuid;
-      sessionStorage.uuid = uuid;
-    },
-    initChat() {
-      // The uuid might have already been set to the user's email address
-      if (!this.uuid) {
-        if (sessionStorage.uuid) {
-          this.uuid = sessionStorage.uuid;
-        } else {
-          this.createUuid();
-        }
-      }
-    },
-  },
-};
+    showFullPageFormInputMessage(message) {
+      this.fpFormInputMessage = message;
 
+      this.showMessages = false;
+      this.showFullPageRichInput = false;
+      this.showFullPageFormInput = true;
+    },
+    showFullPageRichInputMessage(message) {
+      this.fpRichInputMessage = message;
+
+      this.showMessages = false;
+      this.showFullPageFormInput = false;
+      this.showFullPageRichInput = true;
+    },
+    setChatMode(data) {
+      this.$emit("setChatMode", data);
+    },
+    async destroyCustomMode() {
+      await chatService.destroyChat(this);
+
+      let modeDataInSession = this.getModeDataInSession();
+      modeDataInSession.modeInstance++;
+      this.setChatMode(modeDataInSession);
+    },
+    async destroyWebchatMode() {
+      await chatService.destroyChat(this);
+    },
+    async setupCustomMode() {
+      this.contentEditable = true;
+
+      await chatService.initialiseChat(this);
+    },
+    async setupWebchatMode() {
+      this.contentEditable = false;
+      this.chatbotAvatar = this.chatbotAvatarPath;
+
+      await chatService.initialiseChat(this);
+    },
+    userTyping(text) {
+      chatService
+        .sendTypingRequest(text, this)
+        .then(response => chatService.sendTypingResponseSuccess(response, this))
+        .catch(() => chatService.sendTypingResponseError(null, this));
+    },
+    updateMessageMetaData(message) {
+      this.$store.commit('setMessageMetaData', message.data.elements);
+    },
+  }
+};
 </script>
 
 <style scoped>
-    .loading {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        /* var inherited from OpenDialogChat component. */
-        height: calc(100vh - var(--header-height));
-    }
+/* var inherited from OpenDialogChat component???? */
+/* .loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - var(--header-height));
+} */
 
-    .loading-message {
-        font-size: 18px;
-        color: #B6B5BA;
-        margin-bottom: 17px;
-    }
-
-    .mobile .loading-message {
-        margin-bottom: 5px;
-    }
-
-    .loading-indicator span {
-        display: inline-block;
-        background-color: #B6B5BA;
-        width: 11px;
-        height: 11px;
-        border-radius: 100%;
-        margin-right: 4px;
-        animation: bob 2s infinite;
-    }
-
-    /* SAFARI GLITCH */
-    .loading-indicator span:nth-child(1) {
-        animation-delay: -1s;
-    }
-
-    .loading-indicator span:nth-child(2) {
-        animation-delay: -0.85s;
-    }
-
-    .loading-indicator span:nth-child(3) {
-        animation-delay: -0.7s;
-    }
-
-    @keyframes bob {
-        10% {
-            transform: translateY(-10px);
-            background-color: #9E9DA2;
-        }
-        50% {
-            transform: translateY(0);
-            background-color: #B6B5BA;
-        }
-    }
-</style>
-
-<style>
-    .comments-enabled .sc-header {
-        display: none !important;
-    }
+.web-chat {
+  height: 100vh;
+}
 </style>
