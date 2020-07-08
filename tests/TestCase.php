@@ -3,6 +3,7 @@
 namespace OpenDialogAi\Webchat\Tests;
 
 use OpenDialogAi\Webchat\PackageServiceProvider;
+use OpenDialogAi\Webchat\WebchatSettingsConfiguration\WebchatSettingsConfigurationServiceProvider;
 
 /**
  * Base TestCase class for setting up all package tests
@@ -21,7 +22,8 @@ class TestCase extends \Orchestra\Testbench\TestCase
     public function getPackageProviders($app)
     {
         return [
-            PackageServiceProvider::class
+            PackageServiceProvider::class,
+            WebchatSettingsConfigurationServiceProvider::class,
         ];
     }
 

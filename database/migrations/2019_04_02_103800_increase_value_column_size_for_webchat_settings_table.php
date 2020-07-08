@@ -13,7 +13,7 @@ class IncreaseValueColumnSizeForWebchatSettingsTable extends Migration
      */
     public function up()
     {
-        if (config('database.default') !== 'testbench') {
+        if (config('database.default') !== 'testbench' && config('database.default') !== 'sqlite') {
             DB::statement('ALTER TABLE webchat_settings MODIFY COLUMN value VARCHAR(8192)');
         }
     }

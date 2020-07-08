@@ -1,0 +1,25 @@
+.mt-external-buttons {
+  text-align: center;
+  animation-duration: 1s;
+  background: #f1f1f3 !important;
+}
+
+.mt-external-buttons__button {
+  margin: 10px 3px;
+  padding: 10px;
+  border-radius: 30px;
+  font-size: 15px;
+  line-height: 14px;
+  cursor: pointer;
+  border: 2px solid #626264 !important;
+  background: none !important;
+  color: #575759 !important;
+  outline: none;
+  position: relative;
+  transition: .4s;
+
+  &:hover {
+    background: #626264 !important;
+    color: #ffffff !important;
+  }
+}

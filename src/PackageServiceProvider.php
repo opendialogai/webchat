@@ -16,9 +16,7 @@ class PackageServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../public' => public_path('vendor/webchat'),
-            __DIR__ . '/../images/vendor' => public_path('images/vendor'),
-            __DIR__ . '/../resources/images' => public_path('images/vendor/webchat/images'),
-            __DIR__ . '/../resources/assets/css' => public_path('vendor/webchat/css'),
+            __DIR__ . '/../resources/images' => public_path('vendor/webchat/images'),
             __DIR__ . '/../resources/fonts' => public_path('vendor/webchat/fonts'),
         ], 'public');
 

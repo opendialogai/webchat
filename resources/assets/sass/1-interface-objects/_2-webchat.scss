@@ -1,0 +1,29 @@
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* var inherited from OpenDialogChat component. */
+//   height: calc(100vh - var(--header-height));
+}
+
+.loading-message {
+  font-size: 18px;
+  color: #b6b5ba;
+  margin-bottom: 17px;
+}
+
+.mobile .loading-message {
+  margin-bottom: 5px;
+}
+
+.loading-indicator span {
+  display: inline-block;
+  background-color: #b6b5ba;
+  width: 11px;
+  height: 11px;
+  border-radius: 100%;
+  margin-right: 4px;
+  animation: bob 2s infinite;
+}
+
