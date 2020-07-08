@@ -18,14 +18,15 @@ class WebchatSetting extends Model
     public const GENERAL                   = 'general';
     public const URL                       = 'url';
     public const TEAM_NAME                 = 'teamName';
+    public const LOGO                      = 'logo';
     public const VALID_PATH                = 'validPath';
     public const MESSAGE_DELAY             = 'messageDelay';
     public const OPEN                      = 'open';
     public const CHATBOT_CSS_PATH          = 'chatbotCssPath';
     public const CHATBOT_FULLPAGE_CSS_PATH = 'chatbotFullpageCssPath';
     public const PAGE_CSS_PATH             = 'pageCssPath';
-    public const HIDE_OPEN_CLOSE_ICONS     = 'hideOpenCloseIcons';
     public const HIDE_DATETIME_MESSAGE     = 'hideDatetimeMessage';
+    public const HIDE_MESSAGE_TIME         = 'hideMessageTime';
     public const CALLBACK_MAP              = 'callbackMap';
     public const DISABLE_CLOSE_CHAT        = 'disableCloseChat';
     public const START_MINIMIZED           = 'startMinimized';
@@ -39,6 +40,19 @@ class WebchatSetting extends Model
     public const SHOW_RESTART_BUTTON       = 'showRestartButton';
     public const RESTART_BUTTON_CALLBACK   = 'restartButtonCallback';
     public const MESSAGE_ANIMATION         = 'messageAnimation';
+    public const USER_TYPE                 = 'userType';
+    public const SHOW_MINIMIZED            = 'showMinimized';
+    public const CLOSED_INTENT             = 'closedIntent';
+    public const OPEN_INTENT               = 'openIntent';
+    public const NEW_USER_START_MINIMIZED       = 'newUserStartMinimized';
+    public const NEW_USER_CLOSED_CALLBACK       = 'newUserClosedCallback';
+    public const NEW_USER_OPEN_CALLBACK         = 'newUserOpenCallback';
+    public const RETURNING_USER_START_MINIMIZED = 'returningUserStartMinimized';
+    public const RETURNING_USER_CLOSED_CALLBACK = 'returningUserClosedCallback';
+    public const RETURNING_USER_OPEN_CALLBACK   = 'returningUserOpenCallback';
+    public const ONGOING_USER_START_MINIMIZED   = 'ongoingUserStartMinimized';
+    public const ONGOING_USER_CLOSED_CALLBACK   = 'ongoingUserClosedCallback';
+    public const ONGOING_USER_OPEN_CALLBACK     = 'ongoingUserOpenCallback';
     public const HIDE_TYPING_INDICATOR_ON_INTERNAL_MESSAGES = 'hideTypingIndicatorOnInternalMessages';
 
     // Colours
@@ -58,7 +72,6 @@ class WebchatSetting extends Model
     public const BUTTON_BACKGROUND                = 'buttonBackground';
     public const BUTTON_HOVER_BACKGROUND          = 'buttonHoverBackground';
     public const BUTTON_TEXT                      = 'buttonText';
-    public const MINIMIZE_BUTTON_BACKGROUND       = 'minimizeButtonBackground';
     public const EXTERNAL_BUTTON_BACKGROUND       = 'externalButtonBackground';
     public const EXTERNAL_BUTTON_HOVER_BACKGROUND = 'externalButtonHoverBackground';
     public const EXTERNAL_BUTTON_TEXT             = 'externalButtonText';
@@ -98,6 +111,15 @@ class WebchatSetting extends Model
     public const BOOLEAN = 'boolean';
     public const OBJECT  = 'object';
 
+    // Bot
+    public const BOT = 'bot';
+    public const INPUT_PLACEHOLDER = 'inputPlaceholder';
+    public const SEND_BUTTON_TEXT = 'sendButtonText';
+    public const END_CHAT_TEXT = 'endChatText';
+    public const END_CHAT_CONFIRMATION_MESSAGE = 'endChatConfirmationMessage';
+    public const END_CHAT_CONFIRMATION_POSITIVE = 'endChatConfirmationPositive';
+    public const END_CHAT_CONFIRMATION_NEGATIVE = 'endChatConfirmationNegative';
+
     protected $fillable = ['name', 'type', 'value'];
 
     /**
@@ -123,17 +145,24 @@ class WebchatSetting extends Model
                 WebchatSetting::STRING => [
                     WebchatSetting::URL,
                     WebchatSetting::TEAM_NAME,
+                    WebchatSetting::LOGO,
                     WebchatSetting::CHATBOT_CSS_PATH,
                     WebchatSetting::CHATBOT_FULLPAGE_CSS_PATH,
                     WebchatSetting::PAGE_CSS_PATH,
                     WebchatSetting::CHATBOT_NAME,
                     WebchatSetting::CHATBOT_AVATAR_PATH,
                     WebchatSetting::RESTART_BUTTON_CALLBACK,
+                    WebchatSetting::NEW_USER_CLOSED_CALLBACK,
+                    WebchatSetting::NEW_USER_OPEN_CALLBACK,
+                    WebchatSetting::RETURNING_USER_CLOSED_CALLBACK,
+                    WebchatSetting::RETURNING_USER_OPEN_CALLBACK,
+                    WebchatSetting::ONGOING_USER_CLOSED_CALLBACK,
+                    WebchatSetting::ONGOING_USER_OPEN_CALLBACK,
                 ],
                 WebchatSetting::BOOLEAN => [
                     WebchatSetting::OPEN,
-                    WebchatSetting::HIDE_OPEN_CLOSE_ICONS,
                     WebchatSetting::HIDE_DATETIME_MESSAGE,
+                    WebchatSetting::HIDE_MESSAGE_TIME,
                     WebchatSetting::DISABLE_CLOSE_CHAT,
                     WebchatSetting::START_MINIMIZED,
                     WebchatSetting::USE_BOT_AVATAR,
@@ -144,6 +173,9 @@ class WebchatSetting extends Model
                     WebchatSetting::SHOW_RESTART_BUTTON,
                     WebchatSetting::MESSAGE_ANIMATION,
                     WebchatSetting::HIDE_TYPING_INDICATOR_ON_INTERNAL_MESSAGES,
+                    WebchatSetting::NEW_USER_START_MINIMIZED,
+                    WebchatSetting::RETURNING_USER_START_MINIMIZED,
+                    WebchatSetting::ONGOING_USER_START_MINIMIZED,
                 ],
                 WebchatSetting::NUMBER => [
                     WebchatSetting::MESSAGE_DELAY,
@@ -173,7 +205,6 @@ class WebchatSetting extends Model
                     WebchatSetting::EXTERNAL_BUTTON_BACKGROUND,
                     WebchatSetting::EXTERNAL_BUTTON_HOVER_BACKGROUND,
                     WebchatSetting::EXTERNAL_BUTTON_TEXT,
-                    WebchatSetting::MINIMIZE_BUTTON_BACKGROUND,
                 ],
             ],
             WebchatSetting::COMMENTS => [
@@ -209,6 +240,16 @@ class WebchatSetting extends Model
                     WebchatSetting::NUMBER_OF_MESSAGES,
                 ],
             ],
+            WebchatSetting::BOT => [
+                WebchatSetting::STRING => [
+                    WebchatSetting::INPUT_PLACEHOLDER,
+                    WebchatSetting::SEND_BUTTON_TEXT,
+                    WebchatSetting::END_CHAT_TEXT,
+                    WebchatSetting::END_CHAT_CONFIRMATION_MESSAGE,
+                    WebchatSetting::END_CHAT_CONFIRMATION_POSITIVE,
+                    WebchatSetting::END_CHAT_CONFIRMATION_NEGATIVE,
+                ]
+            ]
         ];
         return $settings;
     }

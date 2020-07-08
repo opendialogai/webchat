@@ -1,0 +1,51 @@
+// OpenDialog.vue
+//     ⬇
+// WebChat.vue
+//     ⬇
+// Launcher.vue
+//     ⬇
+// ChatWindow.vue
+//     ⬇
+//  ---  Header.vue
+//
+//  --- MessageList.vue
+//              ⬇
+//      --- Message.vue
+//                  ⬇
+//          --- message type
+
+//  --- UserInput.vue
+
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap-vue/src/index.scss";
+
+@import "./0-globals/reset";
+@import "./0-globals/normalize";
+@import "./0-globals/vars";
+
+@import "./1-interface-objects/1-open-dialog";
+@import "./1-interface-objects/2-webchat";
+@import "./1-interface-objects/3-launcher";
+@import "./1-interface-objects/4-chat-window";
+
+@import "./2-page-components/1-header";
+@import "./2-page-components/2-message-list";
+@import "./2-page-components/3-user-input";
+
+@import "./3-message-wrapper/2-message";
+
+@import "./4-message-types/authorMessage";
+@import "./4-message-types/buttonMessage";
+@import "./4-message-types/carouselListMessage";
+@import "./4-message-types/external-button";
+@import "./4-message-types/formMessage";
+@import "./4-message-types/fullPageFormInput";
+@import "./4-message-types/fullPageRichInput";
+@import "./4-message-types/imageMessage";
+@import "./4-message-types/listMessage";
+@import "./4-message-types/richMessage";
+@import "./4-message-types/textMessage";
+@import "./4-message-types/typingMessage";
+@import "./4-message-types/fp-form";
+
+@import "./client-custom.scss";
