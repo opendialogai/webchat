@@ -9,11 +9,11 @@
 
     <div v-if="file" class="file-container">
       <span class="icon-file-message">
-        <img src="./assets/file.svg" alt="genericFileIcon" height="15" />
+        <img src="../assets/file.svg" alt="genericFileIcon" height="15" />
       </span>
       {{file.name}}
       <span class="delete-file-message" @click="cancelFile()">
-        <img src="./assets/close.svg" alt="close icon" height="10" title="Remove the file" />
+        <img src="../assets/close.svg" alt="close icon" height="10" title="Remove the file" />
       </span>
     </div>
 
@@ -58,7 +58,7 @@
 <script>
 
 import ExternalButtons from "./ExternalButtons.vue";
-  import EndChatButton from "./EndChatButton";
+import EndChatButton from "./EndChatButton";
 
 export default {
   components: {

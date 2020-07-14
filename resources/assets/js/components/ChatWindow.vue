@@ -79,12 +79,12 @@
 </template>
 
 <script>
-  import Header from './Header.vue'
+  import Header from './layout/Header.vue'
   import MessageList from './MessageList.vue'
-  import UserInput from './UserInput.vue'
-  import FullPageFormInput from './FullPageFormInput.vue'
-  import FullPageRichInput from './FullPageRichInput.vue'
-  import LongTextUserInput from './LongTextUserInput.vue'
+  import UserInput from './layout/UserInput.vue'
+  import FullPageFormInput from './messages/inputs/FullPageFormInput.vue'
+  import FullPageRichInput from './messages/inputs/FullPageRichInput.vue'
+  import LongTextUserInput from './messages/inputs/LongTextUserInput.vue'
 
 export default {
   components: {
