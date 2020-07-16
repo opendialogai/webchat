@@ -5,13 +5,6 @@
 version: 2
 jobs:
   build:
-    branches:
-      only:
-        - develop
-        - master
-        - /.*feature.*/
-        - /.*bug.*/
-
     docker:
       # specify the version you desire here
       - image: circleci/php:7.3-fpm
@@ -50,9 +43,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "composer.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "composer.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run: composer install -n --prefer-dist --no-scripts
 
