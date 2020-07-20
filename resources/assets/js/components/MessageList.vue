@@ -1,5 +1,5 @@
 <template>
-  <div class="message-list" ref="scrollList" :style="{'--messageList-bkg': colors.messageList.bg}">
+  <div class="od-message-list" ref="scrollList">
     <Message
       v-for="(message, idx) in messages"
       v-show="shouldShowMessage(message)"
@@ -145,10 +145,8 @@ export default {
 };
 </script>
 
-<style scoped>
-.message-list {
-    /* background-color: yellow; */
-  background-color: var(--messageList-bkg);
-
+<style lang="scss">
+.od-message-list {
+   background-color: var(--od-message-list-background);
 }
 </style>

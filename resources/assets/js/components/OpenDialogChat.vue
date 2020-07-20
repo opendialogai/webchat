@@ -35,7 +35,7 @@
       >{{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}</b-nav-item>
     </b-nav>
 
-    <div v-show="commentsEnabled && activeTab == 'comments'" class="comments-container">
+    <div v-show="commentsEnabled && activeTab == 'comments'" class="od-comments-container">
       <div ref="opendialogWidgetSectionSelector" class="comment-section-selector-wrapper">
         <b-form-select
           v-if="sectionOptions.length"
@@ -67,7 +67,7 @@
         :user-external-id="userExternalId"
       />
     </div>
-    <div v-show="activeTab == 'webchat'" class="webchat-container">
+    <div v-show="activeTab == 'webchat'" class="od-webchat-container">
       <WebChat
         v-if="ready"
         :agent-profile="agentProfile"
@@ -150,20 +150,20 @@ export default {
           bg: '#1b212a',
           text: '#ffffff',
         }, */
-        launcher: {
+        /* launcher: {
           bg: '#1b212a',
-        },
-        messageList: {
+        }, */
+        /* messageList: {
           bg: '#1b212a',
-        },
-        sentMessage: {
+        }, */
+        /* sentMessage: {
           bg: '#0000ff',
           text: '#ffffff',
-        },
-        receivedMessage: {
+        }, */
+        /* receivedMessage: {
           bg: '#ffffff',
           text: '#1b212a',
-        },
+        }, */
         userInput: {
           bg: '#ffffff',
           text: '#1b212a',
@@ -702,30 +702,30 @@ export default {
         if (colours.headerText) {
           this.colours.header.text = colours.headerText;
         } */
-        if (colours.launcherBackground) {
+        /* if (colours.launcherBackground) {
           this.colours.launcher.bg = colours.launcherBackground;
-        }
-        if (colours.messageListBackground) {
+        } */
+        /* if (colours.messageListBackground) {
           this.colours.messageList.bg = colours.messageListBackground;
-        }
-        if (colours.sentMessageBackground) {
+        } */
+        /* if (colours.sentMessageBackground) {
           this.colours.sentMessage.bg = colours.sentMessageBackground;
         }
         if (colours.sentMessageText) {
           this.colours.sentMessage.text = colours.sentMessageText;
-        }
-        if (colours.receivedMessageBackground) {
+        } */
+        /* if (colours.receivedMessageBackground) {
           this.colours.receivedMessage.bg = colours.receivedMessageBackground;
         }
         if (colours.receivedMessageText) {
           this.colours.receivedMessage.text = colours.receivedMessageText;
-        }
-        if (colours.userInputBackground) {
+        } */
+        /* if (colours.userInputBackground) {
           this.colours.userInput.bg = colours.userInputBackground;
         }
         if (colours.userInputText) {
           this.colours.userInput.text = colours.userInputText;
-        }
+        } */
         if (colours.buttonBackground) {
           this.colours.button.bg = colours.buttonBackground;
         }

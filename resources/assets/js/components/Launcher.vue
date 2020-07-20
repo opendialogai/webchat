@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-window-container">
+  <div class="od-chat-window-container">
     <ChatWindow
       :messageList="messageList"
       :onUserInputSubmit="onMessageWasSent"
@@ -192,43 +192,43 @@ export default {
     colors: {
       type: Object,
       required: false,
-      validator: c =>
-        /* 'header' in c
+      /*validator: c =>
+        'header' in c
         && 'bg' in c.header && 'text' in c.header
-        &&  */'launcher' in c
+        &&  'launcher' in c
         && 'bg' in c.launcher
         && 'messageList' in c
         && 'bg' in c.messageList
         && 'sentMessage' in c
         && 'bg' in c.sentMessage && 'text' in c.sentMessage
         && 'receivedMessage' in c
-        && 'bg' in c.receivedMessage && 'text' in c.receivedMessage
+        && 'bg' in c.receivedMessage && 'text' in c.receivedMessage,
         && 'userInput' in c
-        && 'bg' in c.userInput && 'text' in c.userInput,
+        && 'bg' in c.userInput && 'text' in c.userInput, */
       default: function () {
         return {
           /* header: {
             bg: '#4e8cff',
             text: '#ffffff'
           }, */
-          launcher: {
+          /* launcher: {
             bg: '#4e8cff'
-          },
-          messageList: {
+          }, */
+          /* messageList: {
             bg: '#ffffff'
-          },
-          sentMessage: {
+          }, */
+          /* sentMessage: {
             bg: '#4e8cff',
             text: '#ffffff'
-          },
-          receivedMessage: {
+          }, */
+          /* receivedMessage: {
             bg: '#f4f7f9',
             text: '#ffffff'
-          },
-          userInput: {
+          }, */
+          /* userInput: {
             bg: '#f4f7f9',
             text: '#565867'
-          },
+          }, */
           button: {
             bg: '#4e8cff',
             hoverbg: '#0000ff',
@@ -273,8 +273,8 @@ export default {
 }
 </script>
 
-<style scoped>
-.chat-window-container {
+<style lang="scss">
+.od-chat-window-container {
   display: inline;
 }
 </style>

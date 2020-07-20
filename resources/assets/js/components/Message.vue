@@ -19,7 +19,6 @@
       :data="message.data"
       :author="message.author"
       :type="message.type"
-      :messageColors="determineMessageColors()"
       :onLinkClick="onLinkClick"
     />
 
@@ -233,8 +232,6 @@ export default {
       default: () => false
     }
   },
-
-  myFn() {},
   created() {
     if (this.message.type == "chat_open") return;
 
@@ -247,22 +244,11 @@ export default {
     }
   },
   methods: {
-    sentColorsStyle() {
-      return {
-        color: this.colors.sentMessage.text,
-        backgroundColor: this.colors.sentMessage.bg
-      };
-    },
-    receivedColorsStyle() {
-      return {
-        color: this.colors.receivedMessage.text,
-        backgroundColor: this.colors.receivedMessage.bg
-      };
-    },
     determineMessageColors() {
-      return this.message.author === "me"
+      /* return this.message.author === "me"
         ? this.sentColorsStyle()
-        : this.receivedColorsStyle();
+        : this.receivedColorsStyle(); */
+        return {}
     },
     setChatMode(mode) {
       this.$emit("setChatMode", mode);

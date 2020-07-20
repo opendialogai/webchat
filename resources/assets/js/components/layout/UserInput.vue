@@ -1,5 +1,5 @@
 <template>
-  <div class="user-input" :style="{backgroundColor: colors.messageList.bg}">
+  <div class="od-user-input">
     <ExternalButtons
       :externalButtons="externalButtons"
       :animate="animateExternalButtons"
@@ -7,20 +7,19 @@
       :colors="colors"
     />
 
-    <div v-if="file" class="file-container">
-      <span class="icon-file-message">
+    <div v-if="file" class="od-file-container">
+      <span class="od-icon-file-message">
         <img src="../assets/file.svg" alt="genericFileIcon" height="15" />
       </span>
       {{file.name}}
-      <span class="delete-file-message" @click="cancelFile()">
+      <span class="od-delete-file-message" @click="cancelFile()">
         <img src="../assets/close.svg" alt="close icon" height="10" title="Remove the file" />
       </span>
     </div>
 
     <form
-      class="user-input__form"
+      class="od-user-input__form"
       :class="{active: inputActive, disabled: !contentEditable}"
-      :style="{background: colors.userInput.bg}"
     >
       <div
         role="button"
@@ -31,15 +30,14 @@
         @input="onTextChange($event)"
         :contentEditable="contentEditable"
         :placeholder="placeholderText"
-        class="user-input__form-text-input"
+        class="od-user-input__form-text-input"
         ref="userInput"
-        :style="{color: colors.userInput.text}"
       ></div>
 
-      <div class="user-input__buttons">
+      <div class="od-user-input__buttons">
         <button
           @click.prevent="_submitText"
-          class="send-btn"
+          class="od-send-btn"
           :style="{
             '--send-btn-bg': colors.button.bg,
             '--send-btn-hover-bg': colors.button.bg,
@@ -225,5 +223,16 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+.od-user-input {
+  background-color: var(--od-message-list-background);
+
+  &__form {
+    background-color: var(--od-user-input-background)
+  }
+
+  &__form-text-input {
+    color: var(od-user-input__form-text-input);
+  }
+}
 </style>

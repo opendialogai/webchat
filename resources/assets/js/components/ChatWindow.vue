@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-window sc-chat-window" :class="{opened: isOpen, closed: !isOpen, expanded: isExpand, fullscreen: fullScreen, iframe: iframe}">
+  <div class="od-chat-window od-sc-chat-window" :class="{opened: isOpen, closed: !isOpen, expanded: isExpand, fullscreen: fullScreen, iframe: iframe}">
     <Header
       v-if="!fullScreen"
       :teamName="agentProfile.teamName"
@@ -331,5 +331,5 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 </style>

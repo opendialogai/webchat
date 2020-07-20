@@ -1,4 +1,4 @@
-.header {
+.od-header {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   position: relative;
@@ -15,7 +15,7 @@
 }
 
 
-.header__btm-fade {
+.od-header__btm-fade {
   position: absolute;
   bottom: -25px;
   height: 25px;
@@ -25,7 +25,7 @@
   z-index: 999;
 }
 
-.header-nav {
+.od-header-nav {
   max-width: 1000px;
 
   width: 100%;
@@ -44,7 +44,7 @@
   }
 }
 
-.header-nav__team-name {
+.od-header-nav__team-name {
   width: 100%;
   align-items: center;
   justify-content: center;
@@ -57,7 +57,7 @@
   }
 }
 
-.header-nav__logo {
+.od-header-nav__logo {
   width: 40%;
   min-height: 22px;
   margin-bottom: 10px;
@@ -69,7 +69,7 @@
   }
 }
 
-.header-nav__restart-button {
+.od-header-nav__restart-button {
   width: 28%;
   margin: 0 !important;
 
@@ -86,7 +86,7 @@
   }
 }
 
-.header-nav__download-button {
+.od-header-nav__download-button {
   --download-bg: #00f;
   --download-fill: #ffffff;
   --download-hover-bg: #ffffff;
@@ -117,7 +117,7 @@
 }
 
 .mobile {
-  .header-nav__download-button {
+  .od-header-nav__download-button {
     right: 11px;
     top: 11px;
   }
@@ -126,19 +126,19 @@
 
 // Header.vue --- Header.vue --- Header.vue ---
 // remove vertical linear fade
-.header__btm-fade {
+.od-header__btm-fade {
     display: none;
 }
 
-.header {
+.od-header {
     width: 100%;
     justify-content: flex-end;
     border-radius: unset;
 }
 
 // Inital state of the header
-.header-closed {
-    .header-nav {
+.od-header--closed {
+    .od-header-nav {
         display: none;
     }
     height: 110px;
@@ -147,13 +147,13 @@
 }
 
 //When the header is open fully - full chat box
-.header-open {
-    .header-cta {
+.od-header--open {
+    .od-header-cta {
         display: none;
     }
 }
 
-.header-cta {
+.od-header-cta {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -167,8 +167,8 @@
     box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
 }
 
-.header-cta-expand {
-    .header-cta__text {
+.od-header-cta-expand {
+    .od-header-cta__text {
         display: block;
     }
 
@@ -186,7 +186,7 @@
     }
 }
 
-.header-cta__icon {
+.od-header-cta__icon {
     min-height: 50px;
     min-width: 50px;
     background: url(/vendor/webchat/images/header-cta-btn.svg);
@@ -195,7 +195,7 @@
     background-size: contain;
 }
 
-.header-cta__text {
+.od-header-cta__text {
     margin-left: 20px;
     display: none;
     overflow: hidden;

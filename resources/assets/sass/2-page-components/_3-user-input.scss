@@ -1,10 +1,10 @@
-.user-input {
+.od-user-input {
   position: relative;
   width: 100%;
 
 }
 
-.user-input__form {
+.od-user-input__form {
   min-height: 55px;
   position: relative;
   display: flex;
@@ -15,20 +15,20 @@
   margin: 0 auto;
 }
 
-.user-input__form.active {
+.od-user-input__form.active {
   box-shadow: none;
   background-color: white;
   box-shadow: 0px -5px 20px 0px rgba(150, 165, 190, 0.2);
 }
 
-.user-input__form.disabled {
+.od-user-input__form.disabled {
   pointer-events: none;
   background: #a9a9a9 !important;
 }
 
 // Form text --- Form text --- Form text ---
 
-.user-input__form-text-input {
+.od-user-input__form-text-input {
   resize: none;
   border: none;
   outline: none;
@@ -45,7 +45,7 @@
 
 }
 
-.user-input__form-text-input:empty:before {
+.od-user-input__form-text-input:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
   filter: contrast(15%);
@@ -56,7 +56,7 @@
 // Form Buttons --- Form Buttons --- Form Buttons ---
 
 
-.user-input__buttons {
+.od-user-input__buttons {
   width: 50px;
   height: auto;
   display: flex;
@@ -66,7 +66,7 @@
 
 }
 
-.user-input__button {
+.od-user-input__button {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -79,7 +79,7 @@
 }
 
 // restyle the button - remove default styles
-.send-btn {
+.od-send-btn {
   border: none;
   height: 70%;
   width: 70%;
@@ -91,7 +91,7 @@
   }
 }
 
-.send-btn {
+.od-send-btn {
   --send-btn-bg: #00f;
   --send-btn-hover-bg: darken(#00f, 10);
 
@@ -109,12 +109,12 @@
   }
 }
 
-.user-input__form {
+.od-user-input__form {
   flex-direction: column;
   padding: 20px;
 }
 
-.user-input__form-text-input {
+.od-user-input__form-text-input {
   display: inline-block;
   width: 100%;
   caret-color: currentColor;
@@ -132,7 +132,7 @@
   height: 100%;
 }
 
-.user-input__buttons {
+.od-user-input__buttons {
   width: 100%;
   margin: 0;
 
@@ -140,7 +140,7 @@
   justify-content: space-between;
 }
 
-.user-input__button {
+.od-user-input__button {
   //   align-items: flex-start;
   border: 1px solid blue;
 }

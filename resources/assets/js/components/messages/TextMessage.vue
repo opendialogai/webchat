@@ -2,7 +2,7 @@
   <div
     ref="message"
     @click="_handleClick"
-    class="mt mt-text"
+    class="od-message-text mt mt-text"
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
@@ -12,7 +12,6 @@
         'middle-message': this.data && this.data.middle,
         'last-message': this.data && this.data.last,
     }]"
-    :style="messageColors"
     v-linkified:options="{ format: function (value, type) { return '<span>' + value + '</span>'; } }"
   >
     <span class="fade-enter-active" v-html="data.text"></span>
@@ -33,10 +32,6 @@ export default {
       required: true
     },
     data: {
-      type: Object,
-      required: true
-    },
-    messageColors: {
       type: Object,
       required: true
     },
@@ -100,8 +95,17 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+.od-message-text {
+  &.emit {
+    background-color: var(--od-sent-message-background);
+    color: var(--od-sent-message-text);
+  }
 
-
+  &.reap {
+    background-color: var(--od-received-message-background);
+    color: var(--od-received-message-text);
+  }
+}
 
 </style>

@@ -31,6 +31,23 @@ export default {
         "numberOfMessages": 10
     },
     "colours": {
-        "headerBackground": "#00ff00"
+        "headerBackground": "#1b212a",
+        "headerText": "#ffffff",
+        "launcherBackground": "#1b212a",
+        "messageListBackground": "#1b212a",
+        "sentMessageBackground": "#0000ff",
+        "sentMessageText": "#ffffff",
+        "receivedMessageBackground": "#ffffff",
+        "receivedMessageText": "#1b212a",
+        "userInputBackground": "#ffffff",
+        "userInputText": "#1b212a",
+        "buttonBackground": "#00ffff",
+        "buttonHoverBackground": "transparent",
+        "buttonText": "#ffffff",
+        "externalButtonBackground": "#00ffff",
+        "externalButtonHoverBackground": "#ffffff",
+        "externalButtonText": "#ffffff",
+        "iconBackground": "#ffffff",
+        "iconHoverBackground": "#1b212a"
     }
 };

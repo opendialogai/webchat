@@ -2,46 +2,46 @@
   <div>
     <div
       ref="header"
-      class="header"
+      class="od-header"
       @click="onClose"
       
-      :class="{'header-open': isOpen, 'header-closed': !isOpen}"
+      :class="{'od-header--open': isOpen, 'od-header--closed': !isOpen}"
     >
       <div
         ref="headerCta"
-        class="header-cta"
+        class="od-header-cta"
         
       >
-        <div class="header-cta__icon"></div>
+        <div class="od-header-cta__icon"></div>
 
-        <div v-if="ctaText.length" class="header-cta__text" ref="headerCtaText">
+        <div v-if="ctaText.length" class="od-header-cta__text" ref="headerCtaText">
           <span v-for="text in ctaText">{{ text }}</span>
         </div>
       </div>
 
-      <div class="header-nav">
-        <div class="header-nav__team-name" v-if="!showFullPageFormInput && !showFullPageRichInput">
+      <div class="od-header-nav">
+        <div class="od-header-nav__team-name" v-if="!showFullPageFormInput && !showFullPageRichInput">
           <span v-if="teamName" v-html="teamName"></span>
         </div>
 
-        <div class="header-nav__logo">
+        <div class="od-header-nav__logo">
           <img v-if="imageUrl" :src="imageUrl" alt />
         </div>
 
         <div
           v-if="showRestartButton"
           @click.stop="onRestartButtonClick"
-          class="header-nav__restart-button"
+          class="od-header-nav__restart-button"
         >
           <img src="../assets/restart.svg" />
           <span>Restart</span>
         </div>
 
-        <div v-else class="header-nav__restart-button"></div>
+        <div v-else class="od-header-nav__restart-button"></div>
 
         <div
           v-if="!showFullPageFormInput && !showFullPageRichInput"
-          class="header-nav__download-button" @click.stop="onDownload"
+          class="od-header-nav__download-button" @click.stop="onDownload"
           :style="{
             '--download-bg': colors.button.bg,
             '--download-fill': colors.button.text,
@@ -55,7 +55,7 @@
         </div>
       </div>
 
-      <div class="header__btm-fade"></div>
+      <div class="od-header__btm-fade"></div>
     </div>
   </div>
 </template>
@@ -144,9 +144,13 @@ export default {
 };
 </script>
 
-<style>
-  .header {
+<style lang="scss">
+  .od-header {
     background-color: var(--od-header-background);
     color: var(--od-header-text);
+
+    .od-header-cta {
+      background-color: var(--od-header-background);
+    }
   }
 </style>
