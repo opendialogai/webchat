@@ -193,9 +193,9 @@ export default {
       type: Object,
       required: false,
       validator: c =>
-        'header' in c
+        /* 'header' in c
         && 'bg' in c.header && 'text' in c.header
-        && 'launcher' in c
+        &&  */'launcher' in c
         && 'bg' in c.launcher
         && 'messageList' in c
         && 'bg' in c.messageList
@@ -207,10 +207,10 @@ export default {
         && 'bg' in c.userInput && 'text' in c.userInput,
       default: function () {
         return {
-          header: {
+          /* header: {
             bg: '#4e8cff',
             text: '#ffffff'
-          },
+          }, */
           launcher: {
             bg: '#4e8cff'
           },

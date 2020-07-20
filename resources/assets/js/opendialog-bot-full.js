@@ -1,6 +1,7 @@
 import 'promise-polyfill/src/polyfill';
 import 'whatwg-fetch';
 import 'core-js/es/object';
+import defaultWebchatSettings from './default-webchat-settings';
 
 function addCssToPage(href) {
     const link = document.createElement('link');

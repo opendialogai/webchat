@@ -298,6 +298,7 @@ function checkValidPath(testPath) {
 
 async function setupWebchat(url, userId, preloadedSettings = null) {
   const urlParams = new URLSearchParams(window.location.search);
+  mergeSettings(defaultWebchatSettings);
 
   let callbackId = null;
   if (urlParams.has('callback_id')) {
@@ -306,11 +307,11 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
   if (preloadedSettings === null) {
     try {
       let response = await getSettings(url, userId, window.openDialogSettings, callbackId, window.innerWidth);
-      mergeSettings(response);
+
+      Object.assign(window.openDialogSettings, response);
+
     } catch (error) {
       console.error("Call to OpenDialog webchat settings failed:", error);
-      console.log("Using default OpenDialog webchat settings");
-      mergeSettings(defaultWebchatSettings);
     }
   } else {
     mergeSettings(preloadedSettings);

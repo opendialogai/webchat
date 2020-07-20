@@ -29,5 +29,8 @@ export default {
     "webchatHistory": {
         "showHistory": true,
         "numberOfMessages": 10
+    },
+    "colours": {
+        "headerBackground": "#00ff00"
     }
 };

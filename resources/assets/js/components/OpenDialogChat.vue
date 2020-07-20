@@ -146,10 +146,10 @@ export default {
       closedIntent: "",
       collectUserIp: true,
       colours: {
-        header: {
+        /* header: {
           bg: '#1b212a',
           text: '#ffffff',
-        },
+        }, */
         launcher: {
           bg: '#1b212a',
         },
@@ -438,7 +438,7 @@ export default {
         if (event.data) {
           if (event.data.loadSettings) {
             sessionStorage.openDialogSettings = JSON.stringify(event.data.loadSettings);
-            this.$store.commit('setSettings', event.data.loadSettings);
+            this.$store.dispatch('updateSettings', event.data.loadSettings);
             this.initialiseSettings();
           }
 
@@ -696,12 +696,12 @@ export default {
       if (config.colours) {
         const { colours } = config;
 
-        if (colours.headerBackground) {
+        /* if (colours.headerBackground) {
           this.colours.header.bg = colours.headerBackground;
         }
         if (colours.headerText) {
           this.colours.header.text = colours.headerText;
-        }
+        } */
         if (colours.launcherBackground) {
           this.colours.launcher.bg = colours.launcherBackground;
         }

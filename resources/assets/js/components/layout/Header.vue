@@ -4,13 +4,13 @@
       ref="header"
       class="header"
       @click="onClose"
-      :style="{background: colors.header.bg, color: colors.header.text}"
+      
       :class="{'header-open': isOpen, 'header-closed': !isOpen}"
     >
       <div
         ref="headerCta"
         class="header-cta"
-        :style="{background: colors.header.bg}"
+        
       >
         <div class="header-cta__icon"></div>
 
@@ -144,5 +144,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+  .header {
+    background-color: var(--od-header-background);
+    color: var(--od-header-text);
+  }
 </style>
