@@ -146,23 +146,23 @@
 </template>
 
 <script>
-  import DatetimeFakeMessage from "./DatetimeFakeMessage.vue";
-  import CarouselListMessage from "./CarouselListMessage.vue";
-  import ListMessage from "./ListMessage.vue";
-  import ImageMessage from "./ImageMessage.vue";
-  import FormMessage from "./FormMessage.vue";
-  import FormResponseMessage from "./FormResponseMessage.vue";
-  import FpRichMessage from "./FpRichMessage.vue";
-  import ButtonMessage from "./ButtonMessage.vue";
-  import ButtonResponseMessage from "./ButtonResponseMessage.vue";
-  import RichMessage from "./RichMessage.vue";
-  import TextMessage from "./TextMessage.vue";
-  import LongTextMessage from "./LongTextMessage.vue";
-  import TypingMessage from "./TypingMessage.vue";
-  import AuthorMessage from "./AuthorMessage.vue";
+  import DatetimeFakeMessage from "./messages/DatetimeFakeMessage.vue";
+  import CarouselListMessage from "./messages/CarouselListMessage.vue";
+  import ListMessage from "./messages/ListMessage.vue";
+  import ImageMessage from "./messages/ImageMessage.vue";
+  import FormMessage from "./messages/FormMessage.vue";
+  import FormResponseMessage from "./messages/responses/FormResponseMessage.vue";
+  import FpRichMessage from "./messages/FpRichMessage.vue";
+  import ButtonMessage from "./messages/ButtonMessage.vue";
+  import ButtonResponseMessage from "./messages/responses/ButtonResponseMessage.vue";
+  import RichMessage from "./messages/RichMessage.vue";
+  import TextMessage from "./messages/TextMessage.vue";
+  import LongTextMessage from "./messages/LongTextMessage.vue";
+  import TypingMessage from "./messages/TypingMessage.vue";
+  import AuthorMessage from "./messages/AuthorMessage.vue";
   import chatIcon from "./assets/chat-icon.svg";
-  import HandToHumanMessage from "./HandToHumanMessage";
-  import MetaMessage from "./MetaMessage";
+  import HandToHumanMessage from "./messages/HandToHumanMessage";
+  import MetaMessage from "./messages/MetaMessage";
 
 export default {
   data() {
