@@ -26,8 +26,6 @@
       v-else-if="message.type === 'list' && message.data.view_type === 'list'"
       :message="message"
       :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
       :onButtonClick="onListButtonClick"
     />
 
@@ -35,8 +33,6 @@
       v-else-if="message.type === 'list'"
       :message="message"
       :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
       :onButtonClick="onButtonClick"
       :onLinkClick="onLinkClick"
       :author="message.author"
@@ -45,13 +41,11 @@
     <LongTextMessage
       v-else-if="message.type === 'longtext'"
       :data="message.data"
-      :messageColors="determineMessageColors()"
     />
 
     <TypingMessage
       v-else-if="message.type === 'typing'"
       :data="message.data"
-      :messageColors="determineMessageColors()"
       :author="message.author"
     />
 
@@ -59,8 +53,6 @@
       v-else-if="message.type === 'button'"
       :message="message"
       :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
       :onButtonClick="onButtonClick"
       :author="message.author"
     />
@@ -68,7 +60,6 @@
     <ButtonResponseMessage
       v-else-if="message.type === 'button_response'"
       :data="message.data"
-      :messageColors="determineMessageColors()"
       :author="message.author"
     />
 
@@ -76,22 +67,19 @@
       v-else-if="message.type === 'form'"
       :message="message"
       :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
+      :author="message.author"
       :onFormButtonClick="onFormButtonClick"
     />
 
     <FormResponseMessage
       v-else-if="message.type === 'form_response'"
       :data="message.data"
-      :messageColors="determineMessageColors()"
       :author="message.author"
     />
 
     <ImageMessage
       v-else-if="message.type === 'image'"
       :data="message.data"
-      :messageColors="determineMessageColors()"
       :author="message.author"
     />
 
@@ -99,8 +87,6 @@
       v-else-if="message.type === 'rich'"
       :message="message"
       :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
       :onButtonClick="onButtonClick"
     />
 
@@ -108,8 +94,6 @@
       v-else-if="message.type === 'fp-rich'"
       :message="message"
       :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
       :isOpen="isOpen"
     />
 
@@ -118,7 +102,6 @@
       :data="message.data"
       :author="message.author"
       :type="message.type"
-      :messageColors="determineMessageColors()"
       :mode-data="modeData"
       @setChatMode="setChatMode"
     />

@@ -1,5 +1,5 @@
 <template>
-  <div class="sc-message--datetime">
+  <div class="od-message-datetime sc-message--datetime">
     {{ message.datetime }}
   </div>
 </template>
@@ -15,8 +15,8 @@ export default {
 }
 </script>
 
-<style scoped>
-.sc-message--datetime {
+<style lang="scss">
+.od-message-datetime {
   width: 100%;
   font-size: x-small;
   text-align: center;

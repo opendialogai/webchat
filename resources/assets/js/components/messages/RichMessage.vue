@@ -1,7 +1,6 @@
 <template>
   <div
-    class="mt reap mt-message-rich sc-message--rich"
-    :style="messageColors"
+    class="od-message-rich mt reap mt-message-rich sc-message--rich"
     :class="[{
       animate: this.data.animate,
       linkable: (this.data.callback || this.data.link),
@@ -29,12 +28,7 @@
       <div class="sc-message--rich--buttons">
         <button
           v-for="(button, idx) in data.buttons"
-          :key="idx" @click="_handleClick(button)"
-          :style="{
-            backgroundColor: colors.button.bg,
-            color: colors.button.text,
-            '--button-hover': colors.button.hoverbg
-          }">
+          :key="idx" @click="_handleClick(button)">
           {{button.text}}
         </button>
       </div>
@@ -49,15 +43,7 @@ export default {
       type: Object,
       required: true
     },
-    colors: {
-      type: Object,
-      required: true
-    },
     message: {
-      type: Object,
-      required: true
-    },
-    messageColors: {
       type: Object,
       required: true
     },
@@ -79,58 +65,60 @@ export default {
 }
 </script>
 
-<style scoped>
-.sc-message--rich {
+<style lang="scss">
+
+.od-message-rich.sc-message--rich {
   border-radius: 6px;
   padding: 0 10px;
   max-width: calc(100% - 40px);
-}
 
-.sc-message--rich button {
-  margin-bottom: 10px;
+  &.emit {
+    background-color: var(--od-sent-message-background);
+    color: var(--od-sent-message-text);
+  }
 
-  border: 1px solid;
-  font-size: 15px;
-  line-height: 1.33;
+  &.reap {
+    background-color: var(--od-received-message-background);
+    color: var(--od-received-message-text);
+  }
 
-  text-align: center;
-  color: #ffffff;
+  button {
+    background-color: var(--od-button-background);
+    color: var(--od-button-text);
+    border: 2px solid var(--od-button-background);
+    margin-bottom: 10px;
+    font-size: 15px;
+    line-height: 1.33;
+    text-align: center;
+    color: #ffffff;
+    font-weight: normal;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    transition: 0.4s;
+    width: 95%;
+    max-width: 325px;
+    border-radius: 34.5px;
+    padding: 0 20px;
 
-  font-weight: normal;
-  cursor: pointer;
+    &:hover {
+      background-color: var(--od-button-hover-background);
+      border: 2px solid var(--od-button-hover-background);
+    }
+    
+    @media (min-width: 450px) {
+      padding: 0 10px;
+    }
+  }
 
-  border: none;
-  outline: none;
-  position: relative;
-  transition: 0.4s;
-  width: 95%;
-  max-width: 325px;
-  border-radius: 34.5px;
+  .sc-message--rich--image {
+    text-align: center;
+    margin-bottom: 10px;
+  }
 
-  padding: 0 20px;
-  @media (min-width: 450px) {
-    padding: 0 10px;
+  .sc-message--rich--image img {
+    max-width: 100%;
   }
 }
 
-.sc-message--rich button {
-  background-color: var(--btn-bg);
-  color: var(--btn-color);
-  border: 2px solid var(--btn-border-color);
-}
-
-.sc-message--rich button:hover {
-  background-color: var(--btn-bg-hover);
-  color: var(--btn-color-hover);
-  border: 2px solid var(--btn-border-color-hover);
-}
-
-.sc-message--rich .sc-message--rich--image {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.sc-message--rich .sc-message--rich--image img {
-  max-width: 100%;
-}
 </style>

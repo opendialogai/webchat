@@ -17,10 +17,6 @@
         type: Object,
         required: true
       },
-      messageColors: {
-        type: Object,
-        required: true
-      },
       modeData: {
         type: Object,
         required: true
@@ -42,6 +38,6 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss">
 
 </style>

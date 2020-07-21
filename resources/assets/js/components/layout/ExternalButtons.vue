@@ -1,19 +1,8 @@
 <template>
   <div v-if="externalButtons.length">
     <div
-      class="mt-external-buttons"
+      class="od-external-button mt-external-buttons"
       :class="{animate: this.animate, 'fade-enter-active': this.animate}"
-      :style="{
-            '--background': colors.messageList.bg,
-
-            '--btn-bg': colors.externalButton.bg,
-            '--btn-bg-hover': colors.externalButton.hoverbg,
-
-            '--btn-color': colors.externalButton.text,
-            '--btn-color-hover':  colors.externalButton.hoverText,
-
-            '--btn-border-color':colors.externalButton.border,
-            '--btn-border-color-hover':colors.externalButton.hoverBorder }"
     >
       <template v-for="(externalButton, idx) in externalButtons">
         <button
@@ -40,10 +29,6 @@ export default {
     externalButtons: {
       type: Array,
       default: () => []
-    },
-    colors: {
-      type: Object,
-      required: true
     }
   },
   data() {
@@ -67,20 +52,20 @@ export default {
 };
 </script>
 
-<style scoped>
-.mt-external-buttons {
-  background-color: var(--background);
-}
+<style lang="scss">
+.od-external-button {
+  background-color: var(--od-message-list-background);
 
-.mt-external-buttons__button {
-  background-color: var(--btn-bg);
-  color: var(--btn-color);
-  border: 2px solid var(--btn-border-color);
-}
+  .mt-external-buttons__button {
+    background-color: var(--od-external-button-background);
+    color: var(--od-external-button-text);
+    border: 2px solid var(--od-external-button-background);
+  }
 
-.mt-external-buttons__button:hover {
-  background-color: var(--btn-bg-hover);
-  color: var(--btn-color-hover);
-  border: 2px solid var(--btn-border-color-hover);
+  .mt-external-buttons__button:hover {
+    background-color: var(--od-external-button-hover-background);
+    color: var(--od-external-button-text);
+    border: 2px solid var(--od-external-button-hover-background);
+  }
 }
 </style>

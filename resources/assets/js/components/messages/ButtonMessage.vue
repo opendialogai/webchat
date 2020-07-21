@@ -1,34 +1,18 @@
 <template>
   <div
     ref="message"
-    class="mt-message-with-button fade-enter-active"
+    class="od-message-button mt-message-with-button fade-enter-active"
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
     }]"
   >
-    <div
-      class="mt reap mt-message-with-button__text"
-      :style="messageColors"
-      v-linkified>
+    <div class="mt reap mt-message-with-button__text" v-linkified>
       <span v-html="data.text"></span>
     </div>
 
     <template v-if="data.buttons.length && !data.external">
-      <div
-        class="mt-message-with-button__buttons-wrapper reap fade-enter-active"
-           :style="{
-            '--background': colors.messageList.bg,
-
-            '--btn-bg': colors.messageButton.bg,
-            '--btn-bg-hover': colors.messageButton.hoverbg,
-
-            '--btn-color': colors.messageButton.text,
-            '--btn-color-hover':  colors.messageButton.hoverText,
-
-            '--btn-border-color':colors.messageButton.border,
-            '--btn-border-color-hover':colors.messageButton.hoverBorder }"
-      >
+      <div class="mt-message-with-button__buttons-wrapper reap fade-enter-active">
         <template v-for="(button, idx) in data.buttons">
           <button
             v-if="button.display && button.text"
@@ -55,15 +39,7 @@ export default {
       type: String,
       required: true
     },
-    colors: {
-      type: Object,
-      required: true
-    },
     message: {
-      type: Object,
-      required: true
-    },
-    messageColors: {
       type: Object,
       required: true
     },
@@ -126,24 +102,36 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+.od-message-button {
+  &.emit {
+    .mt-message-with-button__text {
+      background-color: var(--od-sent-message-background);
+      color: var(--od-sent-message-text);
+    }
+  }
+
+  .mt-message-with-button__text {
+    background-color: var(--od-received-message-background);
+    color: var(--od-received-message-text);
+  }
+  
+  .mt-message-with-button__buttons-wrapper__button {
+    background-color: var(--od-button-background);
+    color: var(--od-button-text);
+    border: 2px solid var(--od-button-background);
+  }
 
 
-.mt-message-with-button__buttons-wrapper__button {
-  background-color: var(--btn-bg);
-  color: var(--btn-color);
-  border: 2px solid var(--btn-border-color);
-}
+  .mt-message-with-button__buttons-wrapper__button:hover {
+    background-color: var(--od-button-hover-background);
+    color: var(--od-button-text);
+    border: 2px solid var(--od-button-hover-background);
+  }
 
-
-.mt-message-with-button__buttons-wrapper__button:hover {
-background-color: var(--btn-bg-hover);
-  color: var(--btn-color-hover);
-  border: 2px solid var(--btn-border-color-hover);
-}
-
-button:focus {
+  button:focus {
     outline:0;
+  }
 }
 
 </style>

@@ -1,7 +1,6 @@
 <template>
   <div
-    class="mt mt-button-response"
-    :style="messageColors"
+    class="od-button-response mt mt-button-response"
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
@@ -22,15 +21,21 @@ export default {
     author: {
       type: String,
       required: true
-    },
-    messageColors: {
-      type: Object,
-      required: true
     }
   }
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+.od-button-response {
+  &.emit {
+    background-color: var(--od-sent-message-background);
+    color: var(--od-sent-message-text);
+  }
 
+  &.reap {
+    background-color: var(--od-received-message-background);
+    color: var(--od-received-message-text);
+  }
+}
 </style>

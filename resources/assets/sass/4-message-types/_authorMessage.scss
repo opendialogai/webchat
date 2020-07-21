@@ -1,4 +1,4 @@
-.mt-author {
+.od-author {
   padding: 0;
   margin: 0;
   border-radius: 0;
@@ -60,7 +60,7 @@
   }
 }
 
-.mt-author.emit {
+.od-author.emit {
   margin-bottom: -6px;
   margin-right: 5px;
   @media (min-width: 900px) {
@@ -76,7 +76,7 @@
   }
 }
 
-.mt-author.reap {
+.od-author.reap {
   margin-bottom: -25px;
   @media (min-width: 900px) {
     margin-left: -100px;

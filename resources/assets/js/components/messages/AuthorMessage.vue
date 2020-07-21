@@ -2,7 +2,7 @@
   <!-- <div class="message-author" :class="{ animate: this.data.animate }"> -->
 
   <div
-    class="mt mt-author"
+    class="od-author mt mt-author"
     :class="[
     { animate: this.data.animate,
       emit : this.author === 'me',
@@ -42,5 +42,5 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
 </style>

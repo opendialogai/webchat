@@ -1,5 +1,5 @@
 <template>
-  <div class="mt reap sc-message--list">
+  <div class="od-message-list mt reap sc-message--list">
     <div v-if="data.title" class="sc-message--list--title">{{ data.title }}</div>
     <div v-for="(item, idx) in data.items" :key="idx">
       <TextMessage
@@ -7,28 +7,22 @@
         :data="item"
         :author="message.author"
         :type="message.type"
-        :messageColors="messageColors"
         :onLinkClick="onLinkClick"
       />
       <ButtonMessage
         v-else-if="item.message_type === 'button'"
         :message="message"
         :data="item"
-        :messageColors="messageColors"
-        :colors="colors"
         :onButtonClick="onButtonClick"
       />
       <ImageMessage
         v-else-if="item.message_type === 'image'"
         :data="item"
-        :messageColors="messageColors"
       />
       <RichMessage
         v-else-if="item.message_type === 'rich'"
         :message="message"
         :data="item"
-        :messageColors="messageColors"
-        :colors="colors"
         :onButtonClick="onButtonClick"
       />
     </div>
@@ -53,15 +47,7 @@ export default {
       type: Object,
       required: true
     },
-    colors: {
-      type: Object,
-      required: true
-    },
     message: {
-      type: Object,
-      required: true
-    },
-    messageColors: {
       type: Object,
       required: true
     },
@@ -73,6 +59,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 
 </style>

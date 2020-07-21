@@ -1,7 +1,7 @@
 <template>
-  <div class="sc-message--long-text" :style="messageColors" v-linkified>
+  <div class="od-message-long-text sc-message--long-text" v-linkified>
     <span v-html="data.text"></span>
-    <p v-if="data.meta" class='sc-message--meta' :style="{color: messageColors.color}">{{data.meta}}</p>
+    <p v-if="data.meta" class='sc-message--meta'>{{data.meta}}</p>
   </div>
 </template>
 
@@ -11,16 +11,32 @@ export default {
     data: {
       type: Object,
       required: true
-    },
-    messageColors: {
-      type: Object,
-      required: true
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+.od-message-long-text {
+  .sent & {
+    background-color: var(--od-sent-message-background);
+    color: var(--od-sent-message-text);
+
+    .sc-message--meta {
+      color: var(--od-sent-message-text);
+    }
+  }
+
+  .received & {
+    background-color: var(--od-received-message-background);
+    color: var(--od-received-message-text);
+
+    .sc-message--meta {
+      color: var(--od-received-message-text);
+    }
+  }
+}
+
 .sc-message--long-text {
   padding: 17px 20px;
   border-radius: 6px;

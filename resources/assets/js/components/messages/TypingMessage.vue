@@ -1,13 +1,12 @@
 <template>
   <transition leave-active-class="fadeOut">
     <div
-      class="mt-typing-indicator"
+      class="od-message-typing mt-typing-indicator"
       :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
         reap: this.author === 'them',
     }]"
-      :style="messageColors"
     >
       <!-- <div class="all-blobs">
         <div class="blob">
@@ -44,15 +43,23 @@ export default {
     author: {
       type: String,
       required: true
-    },
-    messageColors: {
-      type: Object,
-      required: true
     }
   }
 };
 </script>
-<style scoped>
+<style lang="scss">
+.od-message-text {
+  &.emit {
+    background-color: var(--od-sent-message-background);
+    color: var(--od-sent-message-text);
+  }
+
+  &.reap {
+    background-color: var(--od-received-message-background);
+    color: var(--od-received-message-text);
+  }
+}
+
 .typewriter {
   width: 60px;
 }

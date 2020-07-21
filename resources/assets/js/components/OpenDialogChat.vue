@@ -164,19 +164,19 @@ export default {
           bg: '#ffffff',
           text: '#1b212a',
         }, */
-        userInput: {
+        /* userInput: {
           bg: '#ffffff',
           text: '#1b212a',
-        },
-        button: {
-          bg: '#00f',
-          hoverbg: 'transparent',
-          text: '#ffffff',
+        }, */
+        /* button: {
+          //bg: '#00f',
+          //hoverbg: 'transparent',
+          //text: '#ffffff',
           // 👇🏻 new
           hoverText: "#ffffff",
           border: "#1b212a",
           hoverBorder: "#00f"
-        },
+        }, */
         // 👇🏻 new
         messageButton: {
           bg: '#00f',
@@ -187,7 +187,7 @@ export default {
           border: "#00f",
           hoverBorder: "rgba(0, 0, 225, 0.5)"
         },
-        externalButton: {
+        /* externalButton: {
           bg: '#00f',
           hoverbg: '#fff ',
           text: '#ffffff',
@@ -195,12 +195,12 @@ export default {
           hoverText: "#ffffff",
           border: "#575759",
           hoverBorder: "#575759"
-        },
-        form: {
+        }, */
+        /* form: {
           labelTextColor: '#ffffff',
           formHighlightColor: '#da291c',
           inputBorderColor: '#979797'
-        },
+        }, */
         minimizeButton: {
           bg: '#000000',
         },
@@ -726,7 +726,7 @@ export default {
         if (colours.userInputText) {
           this.colours.userInput.text = colours.userInputText;
         } */
-        if (colours.buttonBackground) {
+/*         if (colours.buttonBackground) {
           this.colours.button.bg = colours.buttonBackground;
         }
         if (colours.buttonHoverBackground) {
@@ -734,8 +734,8 @@ export default {
         }
         if (colours.buttonText) {
           this.colours.button.text = colours.buttonText;
-        }
-        if (colours.externalButtonBackground) {
+        } */
+        /* if (colours.externalButtonBackground) {
           this.colours.externalButton.bg = colours.externalButtonBackground;
         }
         if (colours.externalButtonHoverBackground) {
@@ -743,7 +743,7 @@ export default {
         }
         if (colours.externalEuttonText) {
           this.colours.externalButton.text = colours.externalEuttonText;
-        }
+        } */
         if (colours.minimizeButtonBackground) {
           this.colours.minimizeButton.bg = colours.minimizeButtonBackground;
         }

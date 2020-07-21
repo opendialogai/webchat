@@ -4,7 +4,6 @@
       :externalButtons="externalButtons"
       :animate="animateExternalButtons"
       v-on:sendExternalButton="_submitExternalButton"
-      :colors="colors"
     />
 
     <div v-if="file" class="od-file-container">
@@ -38,10 +37,6 @@
         <button
           @click.prevent="_submitText"
           class="od-send-btn"
-          :style="{
-            '--send-btn-bg': colors.button.bg,
-            '--send-btn-hover-bg': colors.button.bg,
-          }"
         >{{ sendButtonText }}</button>
 
         <EndChatButton
@@ -233,6 +228,14 @@ export default {
 
   &__form-text-input {
     color: var(od-user-input__form-text-input);
+  }
+
+  &__buttons .od-send-btn {
+    background-color: var(--od-button-background);
+
+    &:hover {
+      background-color: var(--od-button-background);
+    }
   }
 }
 </style>

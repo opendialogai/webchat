@@ -1,5 +1,5 @@
 <template>
-  <div class="mt reap mt-carousel" :class="data.view_type">
+  <div class="od-carousel mt reap mt-carousel" :class="data.view_type">
     <template v-if="data.view_type == 'horizontal'">
       <slider
         direction="horizontal"
@@ -13,28 +13,22 @@
             :data="item"
             :author="message.author"
             :type="message.type"
-            :messageColors="messageColors"
             :onLinkClick="onLinkClick"
           />
           <ButtonMessage
             v-else-if="item.message_type === 'button'"
             :message="message"
             :data="item"
-            :messageColors="messageColors"
-            :colors="colors"
             :onButtonClick="onButtonClick"
           />
           <ImageMessage
             v-else-if="item.message_type === 'image'"
             :data="item"
-            :messageColors="messageColors"
           />
           <RichMessage
             v-else-if="item.message_type === 'rich'"
             :message="message"
             :data="item"
-            :messageColors="messageColors"
-            :colors="colors"
             :onButtonClick="onButtonClick"
           />
         </div>
@@ -56,28 +50,22 @@
           :data="item"
           :author="message.author"
           :type="message.type"
-          :messageColors="messageColors"
           :onLinkClick="onLinkClick"
         />
         <ButtonMessage
           v-else-if="item.message_type === 'button'"
           :message="message"
           :data="item"
-          :messageColors="messageColors"
-          :colors="colors"
           :onButtonClick="onButtonClick"
         />
         <ImageMessage
           v-else-if="item.message_type === 'image'"
           :data="item"
-          :messageColors="messageColors"
         />
         <RichMessage
           v-else-if="item.message_type === 'rich'"
           :message="message"
           :data="item"
-          :messageColors="messageColors"
-          :colors="colors"
           :onButtonClick="onButtonClick"
         />
       </div>
@@ -110,15 +98,7 @@ export default {
       type: String,
       required: true
     },
-    colors: {
-      type: Object,
-      required: true
-    },
     message: {
-      type: Object,
-      required: true
-    },
-    messageColors: {
       type: Object,
       required: true
     },
@@ -155,26 +135,28 @@ export default {
 };
 </script>
 
-<style scoped>
-.sc-message--carousel-list--arrows {
-  position: absolute;
-  top: calc(50% - 25px);
-  width: calc(100% - 6px);
-  left: 3px;
-}
-.sc-message--carousel-list--arrows div {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-.sc-message--carousel-list--arrows img {
-  width: 100%;
-}
+<style lang="scss">
+.od-carousel {
+  .sc-message--carousel-list--arrows {
+    position: absolute;
+    top: calc(50% - 25px);
+    width: calc(100% - 6px);
+    left: 3px;
+  }
+  .sc-message--carousel-list--arrows div {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  .sc-message--carousel-list--arrows img {
+    width: 100%;
+  }
 
-.sc-message--carousel-list--arrows .sc-message--carousel-list--arrow-left {
-  float: left;
-}
-.sc-message--carousel-list--arrows .sc-message--carousel-list--arrow-right {
-  float: right;
+  .sc-message--carousel-list--arrows .sc-message--carousel-list--arrow-left {
+    float: left;
+  }
+  .sc-message--carousel-list--arrows .sc-message--carousel-list--arrow-right {
+    float: right;
+  }
 }
 </style>

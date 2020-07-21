@@ -229,16 +229,16 @@ export default {
             bg: '#f4f7f9',
             text: '#565867'
           }, */
-          button: {
+          /* button: {
             bg: '#4e8cff',
             hoverbg: '#0000ff',
             text: '#ffffff'
-          },
-          externalButton: {
+          }, */
+          /* externalButton: {
             bg: '#4e8cff',
             hoverbg: '#0000ff',
             text: '#ffffff'
-          }
+          } */
         }
       }
     },

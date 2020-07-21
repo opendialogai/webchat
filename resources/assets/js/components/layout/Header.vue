@@ -42,12 +42,6 @@
         <div
           v-if="!showFullPageFormInput && !showFullPageRichInput"
           class="od-header-nav__download-button" @click.stop="onDownload"
-          :style="{
-            '--download-bg': colors.button.bg,
-            '--download-fill': colors.button.text,
-            '--download-hover-bg': colors.button.hoverbg,
-            '--download-hover-fill': colors.button.hoverText,
-          }"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="19" viewBox="0 0 12 19">
             <path fill="#FFF" fill-rule="evenodd" d="M6 14.481l-4.95-4.95 1.414-1.414 2.537 2.537L5 .34h2v10.314l2.536-2.536 1.414 1.414L6 14.481zm6 3.858H0v-2h12v2z"/>
@@ -151,6 +145,15 @@ export default {
 
     .od-header-cta {
       background-color: var(--od-header-background);
+    }
+
+    .od-header-nav__download-button {
+      background-color: var(--od-button-background);
+      color: var(--od-button-text);
+
+      &:hover {
+        background-color: var(--od-button-hover-background);
+      }
     }
   }
 </style>
