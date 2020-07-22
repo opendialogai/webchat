@@ -91,9 +91,10 @@ async function getSettings(url) {
 
 if (window.openDialogSettings) {
     const { url } = window.openDialogSettings;
+    mergeSettings(defaultWebchatSettings);
 
     getSettings(url).then((settings) => {
-        mergeSettings(settings);
+        Object.assign(window.openDialogSettings, settings);
 
         if (window.openDialogSettings.general.chatbotFullpageCssPath) {
             addCssToPage(window.openDialogSettings.general.chatbotFullpageCssPath);
