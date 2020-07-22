@@ -42,22 +42,19 @@
         :confirmationMessage="confirmationMessage"
         :onSubmit="onUserInputSubmit"
         :placeholder="placeholder"
-        :initialText="initialText"
-        :colors="colors" />
+        :initialText="initialText" />
     </template>
     <template v-else-if="showFullPageFormInput">
       <FullPageFormInput
         :message="fpFormInputMessage"
         :onSubmit="onFullPageFormInputSubmit"
         :onCancel="onFullPageFormInputCancel"
-        :colors="colors"
         :isOpen="isOpen" />
     </template>
     <template v-else-if="showFullPageRichInput">
       <FullPageRichInput
         :message="fpRichInputMessage"
         :onSubmit="onFullPageRichInputSubmit"
-        :colors="colors"
         :isOpen="isOpen" />
     </template>
     <template v-else>

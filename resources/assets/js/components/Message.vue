@@ -179,10 +179,6 @@ export default {
       type: String,
       default: chatIcon
     },
-    colors: {
-      type: Object,
-      required: true
-    },
     onButtonClick: {
       type: Function,
       required: true
@@ -227,12 +223,6 @@ export default {
     }
   },
   methods: {
-    determineMessageColors() {
-      /* return this.message.author === "me"
-        ? this.sentColorsStyle()
-        : this.receivedColorsStyle(); */
-        return {}
-    },
     setChatMode(mode) {
       this.$emit("setChatMode", mode);
     }
