@@ -87,10 +87,6 @@ export default {
       type: Object,
       required: true
     },
-    colors: {
-      type: Object,
-      required: true
-    },
     modeData: {
       type: Object,
       required: true

@@ -10,7 +10,6 @@
       :showRestartButton="showRestartButton"
       :onRestartButtonClick="onRestartButtonClick"
       :onDownload="onDownload"
-      :colors="colors"
       :isOpen="isOpen"
       :ctaText="ctaText"
       :showFullPageFormInput="showFullPageFormInput"
@@ -22,7 +21,6 @@
       :imageUrl="agentProfile.imageUrl"
       :chatImageUrl="agentProfile.imageUrl"
       :showTypingIndicator="showTypingIndicator"
-      :colors="colors"
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :onButtonClick="onButtonClick"
       :onFormButtonClick="onFormButtonClick"
@@ -68,7 +66,6 @@
         :lastMessage="lastMessage"
         :showFile="showFile"
         :placeholder="placeholder"
-        :colors="colors"
         :mode-data="modeData"
         @setChatMode="setChatMode" />
     </template>
@@ -236,10 +233,6 @@ export default {
     confirmationMessage: {
       type: String,
       default: 'Are you sure you want to submit?'
-    },
-    colors: {
-      type: Object,
-      required: true
     },
     alwaysScrollToBottom: {
       type: Boolean,

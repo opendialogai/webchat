@@ -7,7 +7,6 @@
       :read="message.read"
       :chatImageUrl="chatImageUrl"
       :key="message.id"
-      :colors="colors"
       :onButtonClick="onButtonClick"
       :onLinkClick="onLinkClick"
       :onListButtonClick="onListButtonClick"
@@ -21,7 +20,6 @@
       v-if="showTypingIndicator"
       :message="{author: 'them', type: 'typing'}"
       :chatImageUrl="chatImageUrl"
-      :colors="colors"
       :onLinkClick="onLinkClick"
       :onButtonClick="onButtonClick"
       :onListButtonClick="onListButtonClick"
@@ -53,10 +51,6 @@ export default {
     hideMessageTime: {
       type: Boolean,
       default: () => false
-    },
-    colors: {
-      type: Object,
-      required: true
     },
     alwaysScrollToBottom: {
       type: Boolean,

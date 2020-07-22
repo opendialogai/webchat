@@ -111,10 +111,6 @@ export default {
       type: Boolean,
       default: true
     },
-    colors: {
-      type: Object,
-      required: true
-    },
     isOpen: {
       type: Boolean,
       default: () => false

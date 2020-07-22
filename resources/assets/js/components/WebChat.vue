@@ -49,7 +49,6 @@
         :max-input-characters="maxInputCharacters"
         :button-text="buttonText"
         :always-scroll-to-bottom="true"
-        :colors="colours"
         :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
@@ -110,10 +109,6 @@ export default {
     closedIntent: {
       type: String,
       default: ""
-    },
-    colours: {
-      type: Object,
-      required: true
     },
     hideDatetimeMessage: Boolean,
     hideMessageTime: Boolean,

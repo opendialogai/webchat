@@ -15,7 +15,7 @@
     v-linkified:options="{ format: function (value, type) { return '<span>' + value + '</span>'; } }"
   >
     <span class="fade-enter-active" v-html="data.text"></span>
-    <!-- <p v-if="data.meta" class="sc-message--meta" :style="{color: messageColors.color}">{{data.meta}}</p> -->
+    <!-- <p v-if="data.meta" class="sc-message--meta">{{data.meta}}</p> -->
       <p v-if="data.meta" class="sc-message--meta" >{{data.meta}}</p>
   </div>
 </template>
