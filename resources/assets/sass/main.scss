@@ -48,4 +48,6 @@
 @import "./4-message-types/typingMessage";
 @import "./4-message-types/fp-form";
 
+
+// - optional theming styles can be added in the below file. If not required, comment this file out and the UI will revert to base styles
 @import "./client-custom.scss";

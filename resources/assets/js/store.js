@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import axios from 'axios';
 import {resourceModule} from '@reststate/vuex';
 import camelToKebab from './mixins/camelToKebab';
+import hexToRgb from './mixins/hexToRgb';
 
 Vue.use(Vuex);
 
@@ -43,6 +44,10 @@ const store = new Vuex.Store({
       
       const root = document.querySelector(':root')
       let c = payload.colours ? payload.colours : {}
+      const headerRGB = hexToRgb(c.headerBackground)
+
+      c.headerBackgroundGradient = `linear-gradient(180deg, rgba(${headerRGB[0]},${headerRGB[1]},${headerRGB[2]},1) 0%, rgba(${headerRGB[0]},${headerRGB[1]},${headerRGB[2]},0) 100%)`
+  
 
       for (const[key, val] of Object.entries(c)) {
         if (val) {
