@@ -13,7 +13,6 @@
         :agent-profile="agentProfile"
         :always-scroll-to-bottom="true"
         :button-text="buttonText"
-        :colors="colours"
         :content-editable="messageListReady"
         :close="closeComments"
         :expand="expandChat"
@@ -53,10 +52,6 @@ export default {
       required: true,
     },
     canCloseChat: Boolean,
-    colours: {
-      type: Object,
-      required: true,
-    },
     commentsApiConfig: {
       type: Object,
       required: true,

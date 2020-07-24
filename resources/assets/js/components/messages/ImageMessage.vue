@@ -1,5 +1,5 @@
 <template>
-  <div class="mt mt-image " :style="messageColors" :class="[{
+  <div class="od-message-image mt" :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
         reap: this.author === 'them',
@@ -25,10 +25,6 @@ export default {
     author: {
       type: String,
       required: true
-    },
-    messageColors: {
-      type: Object,
-      required: true
     }
   },
   methods: {
@@ -39,6 +35,22 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+.od-message-image {
+  display: inline;
 
+  &.emit {
+    background-color: var(--od-sent-message-background);
+    color: var(--od-sent-message-text);
+  }
+
+  &.reap {
+    background-color: var(--od-received-message-background);
+    color: var(--od-received-message-text);
+  }
+
+  img {
+    width: 100%;
+  }
+}
 </style>

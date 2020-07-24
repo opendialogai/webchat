@@ -1,41 +1,25 @@
 <template>
   <div
     ref="message"
-    class="mt-message-with-button fade-enter-active"
+    class="od-message-button fade-enter-active"
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
     }]"
   >
-    <div
-      class="mt reap mt-message-with-button__text"
-      :style="messageColors"
-      v-linkified>
+    <div class="mt reap od-message-button__text" v-linkified>
       <span v-html="data.text"></span>
     </div>
 
     <template v-if="data.buttons.length && !data.external">
-      <div
-        class="mt-message-with-button__buttons-wrapper reap fade-enter-active"
-           :style="{
-            '--background': colors.messageList.bg,
-
-            '--btn-bg': colors.messageButton.bg,
-            '--btn-bg-hover': colors.messageButton.hoverbg,
-
-            '--btn-color': colors.messageButton.text,
-            '--btn-color-hover':  colors.messageButton.hoverText,
-
-            '--btn-border-color':colors.messageButton.border,
-            '--btn-border-color-hover':colors.messageButton.hoverBorder }"
-      >
+      <div class="od-message-button__buttons-wrapper reap fade-enter-active">
         <template v-for="(button, idx) in data.buttons">
           <button
             v-if="button.display && button.text"
             :key="idx"
             @click="_handleClick(button)"
             v-html="button.text"
-            class="mt-message-with-button__buttons-wrapper__button fade-enter-active"
+            class="od-message-button__buttons-wrapper__button fade-enter-active"
             :class="button.type"
           ></button>
         </template>
@@ -55,15 +39,7 @@ export default {
       type: String,
       required: true
     },
-    colors: {
-      type: Object,
-      required: true
-    },
     message: {
-      type: Object,
-      required: true
-    },
-    messageColors: {
       type: Object,
       required: true
     },
@@ -126,24 +102,60 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+.od-message-button {
+  transition: width 0.3s linear, height 0.3s linear 0.3s;
+  
+  &.animate {
+    opacity: 0;
+  }
+
+  &.emit {
+    .od-message-button__text {
+      background-color: var(--od-sent-message-background);
+      color: var(--od-sent-message-text);
+    }
+  }
+
+  .od-message-button__buttons-wrapper {
+    animation-duration: 0.3s;
+    animation-delay: 0.9s;
+    margin-top: -18px;
+    margin-bottom: 20px;
+  }
+
+  .od-message-button__text {
+    animation-duration: 0.3s;
+    animation-delay: 0.6s;
+    background-color: var(--od-received-message-background);
+    color: var(--od-received-message-text);
+  }
+  
+  .od-message-button__buttons-wrapper__button {
+    background-color: var(--od-button-background);
+    color: var(--od-button-text);
+    border: 2px solid var(--od-button-background);
+    margin: 3px 5px 3px 0;
+    padding: 14px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    line-height: 17px;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    transition: 0.4s;
+  }
 
 
-.mt-message-with-button__buttons-wrapper__button {
-  background-color: var(--btn-bg);
-  color: var(--btn-color);
-  border: 2px solid var(--btn-border-color);
-}
+  .od-message-button__buttons-wrapper__button:hover {
+    background-color: var(--od-button-hover-background);
+    color: var(--od-button-text);
+    border: 2px solid var(--od-button-hover-background);
+  }
 
-
-.mt-message-with-button__buttons-wrapper__button:hover {
-background-color: var(--btn-bg-hover);
-  color: var(--btn-color-hover);
-  border: 2px solid var(--btn-border-color-hover);
-}
-
-button:focus {
+  button:focus {
     outline:0;
+  }
 }
 
 </style>

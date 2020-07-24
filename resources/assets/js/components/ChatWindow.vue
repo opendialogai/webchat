@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-window sc-chat-window" :class="{opened: isOpen, closed: !isOpen, expanded: isExpand, fullscreen: fullScreen, iframe: iframe}">
+  <div class="od-chat-window" :class="{opened: isOpen, closed: !isOpen, expanded: isExpand, fullscreen: fullScreen, iframe: iframe}">
     <Header
       v-if="!fullScreen"
       :teamName="agentProfile.teamName"
@@ -10,7 +10,6 @@
       :showRestartButton="showRestartButton"
       :onRestartButtonClick="onRestartButtonClick"
       :onDownload="onDownload"
-      :colors="colors"
       :isOpen="isOpen"
       :ctaText="ctaText"
       :showFullPageFormInput="showFullPageFormInput"
@@ -22,7 +21,6 @@
       :imageUrl="agentProfile.imageUrl"
       :chatImageUrl="agentProfile.imageUrl"
       :showTypingIndicator="showTypingIndicator"
-      :colors="colors"
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :onButtonClick="onButtonClick"
       :onFormButtonClick="onFormButtonClick"
@@ -42,22 +40,19 @@
         :confirmationMessage="confirmationMessage"
         :onSubmit="onUserInputSubmit"
         :placeholder="placeholder"
-        :initialText="initialText"
-        :colors="colors" />
+        :initialText="initialText" />
     </template>
     <template v-else-if="showFullPageFormInput">
       <FullPageFormInput
         :message="fpFormInputMessage"
         :onSubmit="onFullPageFormInputSubmit"
         :onCancel="onFullPageFormInputCancel"
-        :colors="colors"
         :isOpen="isOpen" />
     </template>
     <template v-else-if="showFullPageRichInput">
       <FullPageRichInput
         :message="fpRichInputMessage"
         :onSubmit="onFullPageRichInputSubmit"
-        :colors="colors"
         :isOpen="isOpen" />
     </template>
     <template v-else>
@@ -71,7 +66,6 @@
         :lastMessage="lastMessage"
         :showFile="showFile"
         :placeholder="placeholder"
-        :colors="colors"
         :mode-data="modeData"
         @setChatMode="setChatMode" />
     </template>
@@ -240,10 +234,6 @@ export default {
       type: String,
       default: 'Are you sure you want to submit?'
     },
-    colors: {
-      type: Object,
-      required: true
-    },
     alwaysScrollToBottom: {
       type: Boolean,
       required: true
@@ -331,5 +321,53 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+.od-chat-window::-webkit-scrollbar {
+  display: none;
+}
+
+.od-chat-window {
+  font-family: "Gotham", "Arial";
+  transition: 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  height: 100%;
+
+  &.iframe {
+    height: calc(100% - 55px);
+    margin: 0 auto;
+    border-radius: 10px;
+
+    @media (min-width: 450px) {
+      width: 423px;
+    }
+  }
+}
+
+.font-playfair {
+  font-family: "Playfair Display";
+}
+
+.od-chat-window.iframe {
+  &.closed {
+    height: auto;
+    padding-right: 20px;
+    transition: none;
+    @media (min-width: 450px) {
+      padding-right: 0;
+    }
+  }
+
+  &.opened {
+    box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+    margin: 0px auto 0;
+
+    @media (min-width: 767px) {
+      margin: 20px auto 0;
+    }
+  }
+}
+
 </style>

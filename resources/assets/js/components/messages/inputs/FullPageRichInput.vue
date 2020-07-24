@@ -1,41 +1,33 @@
 <template>
   <div
-    class="mt-fpri"
+    class="od-full-page-rich-input"
     :class="{ loader: showLoader, isOpen: isOpen }"
-    :style="{
-            '--background': colors.messageList.bg,
-            '--btn-bg': colors.button.bg,
-            '--btn-bg-hover': colors.button.hoverbg,
-            '--btn-color': colors.button.text,
-            '--btn-color-hover':  colors.button.hoverText,
-            '--btn-border-color':colors.button.border,
-            '--btn-border-color-hover':colors.button.hoverBorder }"
   >
-    <div class="mt-fpri-wrapper">
+    <div class="od-full-page-rich-wrapper">
       <div v-if="message.data.title">
         <div
-          class="mt-fpri__title animateStartingState animateDelay1"
+          class="od-full-page-rich__title animateStartingState animateDelay1"
           :class="{animateSlideUp: isOpen}"
         >{{ message.data.title }}</div>
       </div>
 
       <div v-if="message.data.subtitle">
         <div
-          class="mt-fpri__subtitle animateStartingState animateDelay1"
+          class="od-full-page-rich__subtitle animateStartingState animateDelay1"
           :class="{animateSlideUp: isOpen}"
         >{{ message.data.subtitle }}</div>
       </div>
 
       <div v-if="message.data.text">
         <p
-          class="mt-fpri__text animateStartingState animateDelay1"
+          class="od-full-page-rich__text animateStartingState animateDelay1"
           :class="{animateSlideUp: isOpen}"
         >
           <span v-html="message.data.text"></span>
         </p>
       </div>
       <template v-if="message.data.image">
-        <div class="mt-fpri__image animateStartingState" :class="{animateSlideUp: isOpen}">
+        <div class="od-full-page-rich__image animateStartingState" :class="{animateSlideUp: isOpen}">
           <template v-if="message.data.image.url">
             <a
               :href="message.data.image.url"
@@ -52,7 +44,7 @@
 
 
       <template v-if="message.data.buttons.length">
-        <div class="mt-fpri__buttons">
+        <div class="od-full-page-rich__buttons">
           <template v-for="(button, idx) in message.data.buttons">
             <button
               v-if="button.display && button.text"
@@ -96,10 +88,6 @@ export default {
       type: Object,
       required: true
     },
-    colors: {
-      type: Object,
-      required: true
-    },
     isOpen: {
       type: Boolean,
       default: () => false
@@ -129,157 +117,159 @@ export default {
 };
 </script>
 
-<style scoped>
-.mt-fpri {
-  background-color: var(--background);
+<style lang="scss">
+.od-full-page-rich-input {
+  background-color: var(--od-message-list-background);
   flex: 1;
   text-align: center;
   position: relative;
   overflow-x: hidden;
   min-height: 30px;
-}
-.mt-fpri .mt-fpri-wrapper {
-  padding: 20px 0;
-}
-.mt-fpri.loader {
-  overflow-y: hidden;
-}
 
-/* Title/Subtitle */
-
-.mt-fpri__title {
-  font-family: PlayfairDisplay;
-  font-size: 26px;
-  font-weight: bold;
-  line-height: 1.5;
-  text-align: center;
-  color: #ffffff;
-  margin: 0 10px 20px 10px;
-  letter-spacing: 1px;
-}
-.mt-fpri__subtitle {
-  margin: 0 10px 20px 10px;
-  color: #ffffff;
-}
-
-.mt-fpri__text {
-  margin: 0 10px 35px 10px;
-  line-height: 1.3em;
-  color: #ffffff;
-}
-
-/* image */
-.mt-fpri__image {
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-/* button */
-
-.mt-fpri__buttons {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.mt-fpri__buttons button {
-  margin-bottom: 10px;
-
-  border: 1px solid;
-  font-size: 15px;
-  line-height: 1.33;
-
-  text-align: center;
-  color: #ffffff;
-
-  font-weight: normal;
-  cursor: pointer;
-
-  border: none;
-  outline: none;
-  position: relative;
-  transition: 0.4s;
-  width: 95%;
-  max-width: 325px;
-  min-height: 61px;
-  border-radius: 34.5px;
-
-  padding: 0 20px;
-  @media (min-width: 450px) {
-    padding: 0 10px;
+  .od-full-page-rich.loader {
+    overflow-y: hidden;
   }
-}
 
-.mt-fpri__buttons button {
-  background-color: var(--btn-bg);
-  color: var(--btn-color);
-  border: 2px solid var(--btn-border-color);
-}
-
-.mt-fpri__buttons button:hover {
-  background-color: var(--btn-bg-hover);
-  color: var(--btn-color-hover);
-  border: 2px solid var(--btn-border-color-hover);
-}
-
-.mt-fpri__buttons button.downloadButton {
-  background: none !important;
-  border: none !important;
-  color: var(--labelTextColor) !important;
-  text-decoration: underline;
-  font-size: 16px;
-  width: auto;
-  padding: 0;
-  min-height: 0;
-  margin-top: 30px;
-}
-.mt-fpri__buttons button.downloadButton:before {
-  content: "";
-  width: 13px;
-  height: 19px;
-  background: red;
-  display: inline-block;
-  margin-right: 8px;
-  vertical-align: middle;
-  background: url("/vendor/webchat/images/download-button.svg");
-}
-
-/* loader --- loader --- loader ---  */
-@keyframes mt-fpri__button-fade-in {
-  from {
-    transform: translate(0px, 30px);
-    opacity: 0;
+  .od-full-page-rich-wrapper {
+    padding: 20px 0;
   }
-  to {
-    transform: translate(0px, 0px);
-    opacity: 1;
+
+  /* Title/Subtitle */
+
+  .od-full-page-rich__title {
+    font-family: PlayfairDisplay;
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1.5;
+    text-align: center;
+    color: #ffffff;
+    margin: 0 10px 20px 10px;
+    letter-spacing: 1px;
   }
-}
+  .od-full-page-rich__subtitle {
+    margin: 0 10px 20px 10px;
+    color: #ffffff;
+  }
 
-.mt-fpri__button--animate {
-  animation: mt-fpri__button-fade-in 1s forwards;
-}
+  .od-full-page-rich__text {
+    margin: 0 10px 35px 10px;
+    line-height: 1.3em;
+    color: #ffffff;
+  }
 
-.fp-loader {
-  position: sticky;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.3);
-}
-.fp-loader svg {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-}
-.fp-loader svg path {
-  fill: var(--btn-bg)
+  /* image */
+  .od-full-page-rich__image {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* button */
+
+  .od-full-page-rich__buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .od-full-page-rich__buttons button {
+    margin-bottom: 10px;
+
+    border: 1px solid;
+    font-size: 15px;
+    line-height: 1.33;
+
+    text-align: center;
+    color: #ffffff;
+
+    font-weight: normal;
+    cursor: pointer;
+
+    border: none;
+    outline: none;
+    position: relative;
+    transition: 0.4s;
+    width: 95%;
+    max-width: 325px;
+    min-height: 61px;
+    border-radius: 34.5px;
+
+    padding: 0 20px;
+    @media (min-width: 450px) {
+      padding: 0 10px;
+    }
+  }
+
+  .od-full-page-rich__buttons button {
+    background-color: var(--od-button-background);
+    color: var(--od-button-text);
+    border: 2px solid var(--od-button-background);
+  }
+
+  .od-full-page-rich__buttons button:hover {
+    background-color: var(--od-button-hover-background);
+    color: var(--od-button-text);
+    border: 2px solid var(--od-button-hover-background);
+  }
+
+  .od-full-page-rich__buttons button.downloadButton {
+    background: none !important;
+    border: none !important;
+    color: #ffffff !important;
+    text-decoration: underline;
+    font-size: 16px;
+    width: auto;
+    padding: 0;
+    min-height: 0;
+    margin-top: 30px;
+  }
+  .od-full-page-rich__buttons button.downloadButton:before {
+    content: "";
+    width: 13px;
+    height: 19px;
+    background: red;
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+    background: url("/vendor/webchat/images/download-button.svg");
+  }
+
+  /* loader --- loader --- loader ---  */
+  @keyframes od-full-page-rich__button-fade-in {
+    from {
+      transform: translate(0px, 30px);
+      opacity: 0;
+    }
+    to {
+      transform: translate(0px, 0px);
+      opacity: 1;
+    }
+  }
+
+  .od-full-page-rich__button--animate {
+    animation: od-full-page-rich__button-fade-in 1s forwards;
+  }
+
+  .fp-loader {
+    position: sticky;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.3);
+  }
+  .fp-loader svg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+  .fp-loader svg path {
+    fill: var(--od-button-background)
+  }
 }
 </style>

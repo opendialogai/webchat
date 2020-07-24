@@ -1,25 +1,14 @@
 <template>
   <div v-if="externalButtons.length">
     <div
-      class="mt-external-buttons"
+      class="od-external-button"
       :class="{animate: this.animate, 'fade-enter-active': this.animate}"
-      :style="{
-            '--background': colors.messageList.bg,
-
-            '--btn-bg': colors.externalButton.bg,
-            '--btn-bg-hover': colors.externalButton.hoverbg,
-
-            '--btn-color': colors.externalButton.text,
-            '--btn-color-hover':  colors.externalButton.hoverText,
-
-            '--btn-border-color':colors.externalButton.border,
-            '--btn-border-color-hover':colors.externalButton.hoverBorder }"
     >
       <template v-for="(externalButton, idx) in externalButtons">
         <button
           v-if="externalButton.display && externalButton.text"
-          class="mt-external-buttons__button"
-          :class="(buttonClicked == idx) ? 'mt-external-buttons__button--clicked' : ''"
+          class="od-external-button__button"
+          :class="(buttonClicked == idx) ? 'od-external-button__button--clicked' : ''"
           v-on:click="_handleClick(externalButton, idx)"
           :key="idx"
         >
@@ -40,10 +29,6 @@ export default {
     externalButtons: {
       type: Array,
       default: () => []
-    },
-    colors: {
-      type: Object,
-      required: true
     }
   },
   data() {
@@ -67,20 +52,31 @@ export default {
 };
 </script>
 
-<style scoped>
-.mt-external-buttons {
-  background-color: var(--background);
-}
+<style lang="scss">
+.od-external-button {
+  background-color: var(--od-message-list-background);
+  text-align: center;
+  animation-duration: 1s;
 
-.mt-external-buttons__button {
-  background-color: var(--btn-bg);
-  color: var(--btn-color);
-  border: 2px solid var(--btn-border-color);
-}
+  .od-external-button__button {
+    background-color: var(--od-external-button-background);
+    color: var(--od-external-button-text);
+    border: 2px solid var(--od-external-button-background);
+    margin: 10px 3px;
+    padding: 10px;
+    border-radius: 30px;
+    font-size: 15px;
+    line-height: 14px;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    transition: .4s;
+  }
 
-.mt-external-buttons__button:hover {
-  background-color: var(--btn-bg-hover);
-  color: var(--btn-color-hover);
-  border: 2px solid var(--btn-border-color-hover);
+  .od-external-button__button:hover {
+    background-color: var(--od-external-button-hover-background);
+    color: var(--od-external-button-text);
+    border: 2px solid var(--od-external-button-hover-background);
+  }
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
-  <div class="mt sc-message--form-response" :style="messageColors" :class="[{
+  <div class="od-form-response mt" 
+    :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
         reap: this.author === 'them',
@@ -18,19 +19,21 @@ export default {
     author: {
       type: String,
       required: true
-    },
-    messageColors: {
-      type: Object,
-      required: true
     }
   }
 }
 </script>
 
-<style scoped>
-.sc-message--form-response {
-  /* padding: 10px 12px;
-  border-radius: 6px;
-  max-width: calc(100% - 40px); */
+<style lang="scss">
+.od-form-response {
+  &.emit {
+    background-color: var(--od-sent-message-background);
+    color: var(--od-sent-message-text);
+  }
+
+  &.reap {
+    background-color: var(--od-received-message-background);
+    color: var(--od-received-message-text);
+  }
 }
 </style>

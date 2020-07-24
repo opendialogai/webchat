@@ -19,7 +19,6 @@
       :data="message.data"
       :author="message.author"
       :type="message.type"
-      :messageColors="determineMessageColors()"
       :onLinkClick="onLinkClick"
     />
 
@@ -27,8 +26,6 @@
       v-else-if="message.type === 'list' && message.data.view_type === 'list'"
       :message="message"
       :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
       :onButtonClick="onListButtonClick"
     />
 
@@ -36,8 +33,6 @@
       v-else-if="message.type === 'list'"
       :message="message"
       :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
       :onButtonClick="onButtonClick"
       :onLinkClick="onLinkClick"
       :author="message.author"
@@ -46,13 +41,11 @@
     <LongTextMessage
       v-else-if="message.type === 'longtext'"
       :data="message.data"
-      :messageColors="determineMessageColors()"
     />
 
     <TypingMessage
       v-else-if="message.type === 'typing'"
       :data="message.data"
-      :messageColors="determineMessageColors()"
       :author="message.author"
     />
 
@@ -60,8 +53,6 @@
       v-else-if="message.type === 'button'"
       :message="message"
       :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
       :onButtonClick="onButtonClick"
       :author="message.author"
     />
@@ -69,7 +60,6 @@
     <ButtonResponseMessage
       v-else-if="message.type === 'button_response'"
       :data="message.data"
-      :messageColors="determineMessageColors()"
       :author="message.author"
     />
 
@@ -77,22 +67,19 @@
       v-else-if="message.type === 'form'"
       :message="message"
       :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
+      :author="message.author"
       :onFormButtonClick="onFormButtonClick"
     />
 
     <FormResponseMessage
       v-else-if="message.type === 'form_response'"
       :data="message.data"
-      :messageColors="determineMessageColors()"
       :author="message.author"
     />
 
     <ImageMessage
       v-else-if="message.type === 'image'"
       :data="message.data"
-      :messageColors="determineMessageColors()"
       :author="message.author"
     />
 
@@ -100,8 +87,6 @@
       v-else-if="message.type === 'rich'"
       :message="message"
       :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
       :onButtonClick="onButtonClick"
     />
 
@@ -109,8 +94,6 @@
       v-else-if="message.type === 'fp-rich'"
       :message="message"
       :data="message.data"
-      :messageColors="determineMessageColors()"
-      :colors="colors"
       :isOpen="isOpen"
     />
 
@@ -119,7 +102,6 @@
       :data="message.data"
       :author="message.author"
       :type="message.type"
-      :messageColors="determineMessageColors()"
       :mode-data="modeData"
       @setChatMode="setChatMode"
     />
@@ -197,10 +179,6 @@ export default {
       type: String,
       default: chatIcon
     },
-    colors: {
-      type: Object,
-      required: true
-    },
     onButtonClick: {
       type: Function,
       required: true
@@ -233,8 +211,6 @@ export default {
       default: () => false
     }
   },
-
-  myFn() {},
   created() {
     if (this.message.type == "chat_open") return;
 
@@ -247,28 +223,105 @@ export default {
     }
   },
   methods: {
-    sentColorsStyle() {
-      return {
-        color: this.colors.sentMessage.text,
-        backgroundColor: this.colors.sentMessage.bg
-      };
-    },
-    receivedColorsStyle() {
-      return {
-        color: this.colors.receivedMessage.text,
-        backgroundColor: this.colors.receivedMessage.bg
-      };
-    },
-    determineMessageColors() {
-      return this.message.author === "me"
-        ? this.sentColorsStyle()
-        : this.receivedColorsStyle();
-    },
     setChatMode(mode) {
       this.$emit("setChatMode", mode);
     }
   }
 };
 </script>
-<style>
+<style lang="scss">
+@import '../../sass/0-globals/_vars.scss';
+
+// message type wrapper --- message type wrapper ---
+
+.mt-wrapper {
+  margin: 0 auto;
+  max-width: 700px;
+  width: calc(100% - 50px);
+  @media screen and (min-width: 768px) {
+    width: 100%;
+  }
+
+  &.fadeUp-enter-active {
+    animation-duration: 0.5s;
+  }
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 0;
+}
+
+// special wrapper for author message (avatar) only
+.mt-wrapper-author {
+  z-index: 1;
+}
+
+.mt-wrapper.fadeUp-enter-active {
+  animation-duration: 0s;
+}
+
+// message type --- message type ---message type ---
+
+.mt {
+  border-radius: 30px;
+  box-shadow: none;
+  max-width: 90%;
+  max-width: calc(90% - 45px);
+  margin-bottom: 20px;
+  padding: 15px 20px;
+  line-height: 1.6;
+  font-size: 14px;
+  @media (min-width: $media-sml) {
+    font-size: 16px;
+  }
+
+  @media (min-width: $media-med) {
+    max-width: calc(90% - 60px);
+  }
+}
+
+// 🧘🏻‍♂️ User Sends Emits 🧘🏻‍♂️
+.emit {
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+}
+
+// 🤖 Robot Receives Reap 🤖
+.reap {
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+}
+
+.mt-meta {
+  font-size: xx-small;
+  margin-bottom: 0px;
+  margin-top: 5px;
+  opacity: 0.5;
+  text-align: center;
+}
+
+.sc-message--time-read {
+  font-size: x-small;
+  margin-top: -20px;
+  color: white;
+}
+.mt.emit + .sc-message--time-read {
+  text-align: right;
+}
+
+/// Style text --- Style text --- Style text ---
+
+.linkified,
+.linkified:link,
+.linkified:visited,
+.linkified:hover,
+.linkified:active {
+  text-decoration: none;
+  font-weight: bold;
+  color: inherit;
+  border-bottom: dashed 1px currentColor;
+  padding-bottom: 3px;
+  position: relative;
+}
 </style>

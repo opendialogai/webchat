@@ -29,5 +29,25 @@ export default {
     "webchatHistory": {
         "showHistory": true,
         "numberOfMessages": 10
+    },
+    "colours": {
+        "headerBackground": "#1b212a",
+        "headerText": "#ffffff",
+        "launcherBackground": "#1b212a",
+        "messageListBackground": "#1b212a",
+        "sentMessageBackground": "#0000ff",
+        "sentMessageText": "#ffffff",
+        "receivedMessageBackground": "#ffffff",
+        "receivedMessageText": "#1b212a",
+        "userInputBackground": "#ffffff",
+        "userInputText": "#1b212a",
+        "buttonBackground": "#0000ff",
+        "buttonHoverBackground": "transparent",
+        "buttonText": "#ffffff",
+        "externalButtonBackground": "#0000ff",
+        "externalButtonHoverBackground": "#ffffff",
+        "externalButtonText": "#ffffff",
+        "iconBackground": "#ffffff",
+        "iconHoverBackground": "#1b212a"
     }
 };

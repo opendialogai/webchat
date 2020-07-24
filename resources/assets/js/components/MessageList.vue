@@ -1,5 +1,5 @@
 <template>
-  <div class="message-list" ref="scrollList" :style="{'--messageList-bkg': colors.messageList.bg}">
+  <div class="od-messagelist" ref="scrollList">
     <Message
       v-for="(message, idx) in messages"
       v-show="shouldShowMessage(message)"
@@ -7,7 +7,6 @@
       :read="message.read"
       :chatImageUrl="chatImageUrl"
       :key="message.id"
-      :colors="colors"
       :onButtonClick="onButtonClick"
       :onLinkClick="onLinkClick"
       :onListButtonClick="onListButtonClick"
@@ -21,7 +20,6 @@
       v-if="showTypingIndicator"
       :message="{author: 'them', type: 'typing'}"
       :chatImageUrl="chatImageUrl"
-      :colors="colors"
       :onLinkClick="onLinkClick"
       :onButtonClick="onButtonClick"
       :onListButtonClick="onListButtonClick"
@@ -53,10 +51,6 @@ export default {
     hideMessageTime: {
       type: Boolean,
       default: () => false
-    },
-    colors: {
-      type: Object,
-      required: true
     },
     alwaysScrollToBottom: {
       type: Boolean,
@@ -145,10 +139,26 @@ export default {
 };
 </script>
 
-<style scoped>
-.message-list {
-    /* background-color: yellow; */
-  background-color: var(--messageList-bkg);
+<style lang="scss">
+@import '../../sass/0-globals/_vars.scss';
 
+.od-messagelist {
+  background-color: var(--od-message-list-background);
+  -ms-overflow-style: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 0 0;
+
+  @media (min-width: $media-med) {
+    padding: 40px 0 0;
+  }
+    
+  &.fadeUp-enter-active {
+    animation-duration: 0.5s;
+  }
+}
+
+.od-messagelist::-webkit-scrollbar {
+  display: none;
 }
 </style>

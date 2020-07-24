@@ -45,6 +45,7 @@ function addCssToPage(href) {
  * @param webchatSettings
  */
 function mergeSettings(webchatSettings) {
+  console.log('mergeSettings', webchatSettings, window.openDialogSettings);
   // eslint-disable-next-line no-restricted-syntax
   for (const [key, value] of Object.entries(webchatSettings)) {
     if (!window.openDialogSettings[key]) {
@@ -58,6 +59,21 @@ function mergeSettings(webchatSettings) {
       }
     }
   }
+}
+
+function isObject(item) {
+  return (item && typeof item === 'object' && !Array.isArray(item));
+}
+
+// deep merge (non-recursive) property defaults, config and window vars
+function merge(src, tar) {
+  Object.keys(src).forEach(key => {
+    if (tar[key] && isObject(src[key])) {
+      src[key] = Object.assign(src[key], tar[key])
+    } else if (!tar[key]) {
+      tar[key] = src[key]
+    }
+  })
 }
 
 /**
@@ -299,6 +315,8 @@ function checkValidPath(testPath) {
 async function setupWebchat(url, userId, preloadedSettings = null) {
   const urlParams = new URLSearchParams(window.location.search);
 
+  merge(defaultWebchatSettings, window.openDialogSettings);
+
   let callbackId = null;
   if (urlParams.has('callback_id')) {
     callbackId = urlParams.get('callback_id');
@@ -306,14 +324,14 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
   if (preloadedSettings === null) {
     try {
       let response = await getSettings(url, userId, window.openDialogSettings, callbackId, window.innerWidth);
-      mergeSettings(response);
+
+      merge(window.openDialogSettings, response);
+
     } catch (error) {
       console.error("Call to OpenDialog webchat settings failed:", error);
-      console.log("Using default OpenDialog webchat settings");
-      mergeSettings(defaultWebchatSettings);
     }
   } else {
-    mergeSettings(preloadedSettings);
+    merge(window.openDialogSettings, preloadedSettings);
   }
 
   const mobileWidth = (window.openDialogSettings.mobileWidth)

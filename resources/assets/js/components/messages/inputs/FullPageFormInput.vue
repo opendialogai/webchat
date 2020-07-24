@@ -1,57 +1,46 @@
 <template>
   <div
-    class="mt-fp-form"
+    class="od-fp-form"
     :class="{ loader: showLoader }"
-    :style="{
-            '--messageListBg': colors.messageList.bg,
-            '--btn-bg': colors.button.bg,
-            '--btn-bg-hover': colors.button.hoverbg,
-            '--btn-text-color': colors.button.text,
-            '--btn-text-color-hover':  colors.button.hoverText,
-            '--btn-border-color':colors.button.border,
-            '--btn-border-color-hover':colors.button.hoverBorder,
-            '--labelTextColor' :colors.form.labelTextColor,
-            '--formHighlightColor'  :colors.form.formHighlightColor,
-            '--inputBorderColor' :colors.form.inputBorderColor }"
   >
-    <div class="mt-fp-form__elements">
+    <div class="od-fp-form__elements">
       <div
-        class="mt-fp-form__title animateStartingState animateDelay1"
+        class="od-fp-form__title animateStartingState animateDelay1"
         :class="{animateSlideUp: isOpen}"
         v-html="message.data.text"
       ></div>
 
       <div
         v-for="element in message.data.elements"
-        class="mt-fp-form__element animateStartingState animateDelay2"
+        class="od-fp-form__element animateStartingState animateDelay2"
         :class="[{animateSlideUp: isOpen}, element.name]"
         v-bind:key="element.id"
         :ref="element.name"
       >
         <span
           v-if="element.display && element.element_type == 'radio'"
-          class="mt-fp-form__label"
+          class="od-fp-form__label"
           :class="[
-          { 'mt-fp-form__label--radio' : element.element_type == 'radio'},
-          { 'mt-fp-form__label--error' : errors.find(x => x.type === element.name)}
+          { 'od-fp-form__label--radio' : element.element_type == 'radio'},
+          { 'od-fp-form__label--error' : errors.find(x => x.type === element.name)}
           ]"
         >{{ element.display }}</span>
 
         <template v-if="element.element_type == 'text'">
           <input
             type="text"
-            class="mt-fp-form__input"
+            class="od-fp-form__input"
             v-model="form.data[element.name].value"
             @input="validateOnChange"
             v-on:keyup.enter="_handleClick"
             :placeholder="element.display"
-            :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
+            :class="{ 'od-fp-form__input--error' : errors.find(x => x.type === element.name)}"
           />
         </template>
 
         <template v-if="element.element_type == 'textarea'">
           <textarea
-            class="mt-fp-form__input mt-fp-form__textarea"
+            class="od-fp-form__input od-fp-form__textarea"
             v-model="form.data[element.name].value"
             @input="validateOnChange"
             :placeholder="element.display"
@@ -61,7 +50,7 @@
         <template v-if="element.element_type == 'select'">
           <select
             @change="onSelectChange"
-            class="mt-fp-form__select"
+            class="od-fp-form__select"
             v-model="form.data[element.name].value"
           >
             <option value>{{ element.display }}</option>
@@ -73,9 +62,9 @@
         </template>
 
         <template v-if="element.element_type == 'radio'">
-          <div class="mt-fp-form__radio">
+          <div class="od-fp-form__radio">
             <div
-              class="mt-fp-form__radio-btn"
+              class="od-fp-form__radio-btn"
               v-for="(radio_text, radio_value) in element.options"
               :key="radio_value"
             >
@@ -95,7 +84,7 @@
 
         <template v-if="element.element_type == 'auto-select'">
           <v-select
-            class="mt-fp-form__auto-select style-chooser"
+            class="od-fp-form__auto-select style-chooser"
             @input="onSelectChange"
             @open="onSelectOpen(element.name)"
             @close="onSelectClose(element.name)"
@@ -105,46 +94,46 @@
             :placeholder="element.display"
             :select-on-tab="true"
             label="value"
-            :class="{ 'mt-fp-form__v-select--error' : errors.find(x => x.type === element.name)}"
+            :class="{ 'od-fp-form__v-select--error' : errors.find(x => x.type === element.name)}"
           ></v-select>
         </template>
 
         <template v-if="element.element_type == 'email'">
           <input
             type="email"
-            class="mt-fp-form__input"
+            class="od-fp-form__input"
             v-model="form.data[element.name].value"
             @input="validateOnChange"
             v-on:keyup.enter="_handleClick"
             :placeholder="element.display"
-            :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
+            :class="{ 'od-fp-form__input--error' : errors.find(x => x.type === element.name)}"
           />
         </template>
 
         <template v-if="element.element_type == 'number'">
           <input
             type="tel"
-            class="mt-fp-form__input"
+            class="od-fp-form__input"
             v-model="form.data[element.name].value"
             @input="validateOnChange"
             v-on:keyup.enter="_handleClick"
             :placeholder="element.display"
-            :class="{ 'mt-fp-form__input--error' : errors.find(x => x.type === element.name)}"
+            :class="{ 'od-fp-form__input--error' : errors.find(x => x.type === element.name)}"
           />
         </template>
       </div>
 
       <div
         v-if="errorMessages"
-        class="mt-fp-form__error animateStartingState animateDelay1"
+        class="od-fp-form__error animateStartingState animateDelay1"
         :class="{animateSlideUp: isOpen}"
         >
         <p v-for="error in errorMessages">{{ error }}</p>
       </div>
 
-      <div class="mt-fp-form__submit-wrapper">
+      <div class="od-fp-form__submit-wrapper">
         <button
-          class="mt-fp-form__submit"
+          class="od-fp-form__submit"
           v-if="!message.data.auto_submit"
           @click="_handleClick"
         >{{ message.data.submit_text }}</button>
@@ -152,9 +141,9 @@
 
       <div
         v-if="message.data.cancel_text && message.data.cancel_callback"
-        class="mt-fp-form__cancel-wrapper"
+        class="od-fp-form__cancel-wrapper"
       >
-        <button class="mt-fp-form__cancel" @click="_handleCancel">{{ message.data.cancel_text }}</button>
+        <button class="od-fp-form__cancel" @click="_handleCancel">{{ message.data.cancel_text }}</button>
       </div>
     </div>
 
@@ -191,10 +180,6 @@
       required: true
     },
     message: {
-      type: Object,
-      required: true
-    },
-    colors: {
       type: Object,
       required: true
     },
@@ -343,341 +328,360 @@
 };
 </script>
 
-<style scoped>
-.mt-fp-form__title {
-  margin-bottom: 20px;
-  width: 100%;
-  text-align: center;
-  color: var(--labelTextColor);
-}
-
-/* form --- form --- form ---  */
-
-.mt-fp-form {
-  background-color: var(--messageListBg);
+<style lang="scss">
+.od-fp-form {
+  background-color: var(--od-message-list-background);
   overflow-x: hidden;
   position: relative;
   flex: 1;
   min-height: 30px;
-}
-.mt-fp-form.loader {
-  overflow-y: hidden;
-}
 
-.mt-fp-form__elements {
-  width: 90%;
-  margin: 0 auto;
-  flex: 1;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding-top: 20px;
-  overflow-y: auto;
-}
+  .od-fp-form__title {
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+    color: var(--od-sent-message-text);
+  }
 
-.mt-fp-form__element {
-  position: relative;
-  width: 100%;
-  margin: 0 auto 18px;
-}
+  &.loader {
+    overflow-y: hidden;
+  }
 
-/* 🔥 custom css 🔥 */
-/* 🔥 custom css 🔥 */
+  .od-fp-form__elements {
+    width: 90%;
+    margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-top: 20px;
+    overflow-y: auto;
+  }
 
-.first_name,
-.last_name {
-  width: 47%;
-  padding: 0;
-  margin: 0 0 18px;
-}
+  .od-fp-form__element {
+    position: relative;
+    width: 100%;
+    margin: 0 auto 18px;
+  }
 
-/* 🔥 custom css 🔥 */
-/* 🔥 custom css 🔥 */
+  .first_name,
+  .last_name {
+    width: 47%;
+    padding: 0;
+    margin: 0 0 18px;
+  }
 
-/* error --- error --- error --- */
+  /* error --- error --- error --- */
 
-.mt-fp-form__error {
-  margin-bottom: 20px;
-  width: 100%;
-  text-align: center;
-}
+  .od-fp-form__error {
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+  }
 
-.mt-fp-form__error p {
-  margin-top: 10px;
-  color: var(--formHighlightColor);
-}
+  .od-fp-form__error p {
+    margin-top: 10px;
+    color: #da291c;
+  }
 
-/* labels --- labels --- labels ---  */
+  /* labels --- labels --- labels ---  */
 
-.mt-fp-form__label {
-  z-index: 1;
-  position: absolute;
-  top: -5px;
-  left: 10px;
-  background-color: white;
-  font-size: 13px;
-  line-height: 1;
-  margin: 0;
-  color: var(--labelTextColor);
-}
+  .od-fp-form__label {
+    z-index: 1;
+    position: absolute;
+    top: -5px;
+    left: 10px;
+    background-color: white;
+    font-size: 13px;
+    line-height: 1;
+    margin: 0;
+    color: var(--od-sent-message-text);
+  }
 
-.mt-fp-form__label--radio {
-  position: unset;
-  font-size: 16px;
-  font-weight: normal;
-  line-height: 1.38;
-  letter-spacing: normal;
-  color: #ffffff;
-  background-color: transparent;
-}
+  .od-fp-form__label--radio {
+    position: unset;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 1.38;
+    letter-spacing: normal;
+    color: #ffffff;
+    background-color: transparent;
+  }
 
-.mt-fp-form__label--error {
-  color: var(--btn-bg);
-}
+  .od-fp-form__label--error {
+    color: var(--od-button-background);
+  }
 
-.mt-fp-form__label--error:before {
-  content: "*";
-}
+  .od-fp-form__label--error:before {
+    content: "*";
+  }
 
-.mt-fp-form__label--error:after {
-  /* content: " Required"; */
-}
+  /* input --- input --- input ---  */
 
-/* input --- input --- input ---  */
+  .od-fp-form__input {
+    border-radius: 4px;
+    border: 1px solid #979797;
+    height: 40px;
+    padding: 0 10px;
+    width: 100%;
+  }
 
-.mt-fp-form__input {
-  border-radius: 4px;
-  border: 1px solid #979797;
-  height: 40px;
-  padding: 0 10px;
-  width: 100%;
-}
+  .od-fp-form__input--error {
+    outline: none;
+    border: 1px solid #da291c;
+  }
 
-.mt-fp-form__input--error {
-  outline: none;
-  border: 1px solid var(--formHighlightColor);
-}
+  .od-fp-form__input:focus {
+    outline: none;
+    border: 1px solid var(--od-button-background);
+  }
 
-.mt-fp-form__input:focus {
-  outline: none;
-  border: 1px solid var(--btn-bg);
-}
+  /* textarea -- */
+  .od-fp-form__textarea {
+    height: 100px;
+    padding: 10px;
+  }
 
-/* textarea -- */
-.mt-fp-form__textarea {
-  height: 100px;
-  padding: 10px;
-}
+  /*
+  styling <select> is notoriously difficult </select>
+  maybe look into https://cdnjs.com/libraries/bootstrap-select
+  */
 
-/*
-styling <select> is notoriously difficult </select>
-maybe look into https://cdnjs.com/libraries/bootstrap-select
-*/
+  .od-fp-form__select {
+    width: 100%;
+    display: block;
+    padding: 0.6em 1.4em 0.5em 0.8em;
+    font-size: 20px;
+    line-height: 2.5;
+    height: 40px;
+  }
 
-.mt-fp-form__select {
-  width: 100%;
-  display: block;
-  padding: 0.6em 1.4em 0.5em 0.8em;
-  font-size: 20px;
-  line-height: 2.5;
-  height: 40px;
-}
+  .od-fp-form__select:focus {
+    outline: none;
+    border: 1px solid var(--od-button-background);
+  }
 
-.mt-fp-form__select:focus {
-  outline: none;
-  border: 1px solid var(--btn-bg);
-}
+  .od-fp-form__select:active,
+  .od-fp-form__select:hover {
+    outline: none;
+    border: 1px solid var(--od-button-background);
+  }
 
-.mt-fp-form__select:active,
-.mt-fp-form__select:hover {
-  outline: none;
-  border: 1px solid var(--btn-bg);
-}
+  /*
+  v-select --- v-select --- v-select ---
+  https://vue-select.org/guide/css.html#overriding-default-styles
+  doesnt work though 🤦🏻‍♂️
+  */
 
-/*
-v-select --- v-select --- v-select ---
-https://vue-select.org/guide/css.html#overriding-default-styles
-doesnt work though 🤦🏻‍♂️
-*/
+  .vs__search {
+    font-size: 16px;
 
-.mt-fp-form__auto-select {
-  width: 100%;
-  display: block;
-  font-size: 20px;
-  line-height: 2.5;
-  height: 40px;
-  margin: 0;
-}
+    &::placeholder {
+      color: #757575
+    }
+  }
 
-.style-chooser .vs__search::placeholder,
-.style-chooser .vs__dropdown-toggle,
-.style-chooser .vs__dropdown-menu {
-  background: #dfe5fb;
-  border: none;
-  color: #394066;
-  text-transform: lowercase;
-  font-variant: small-caps;
-}
+  .vs__dropdown-toggle {
+    border-radius: 4px;
+    border: 1px solid #979797;
+    height: 40px;
+    width: 100%;
+    background: white;
+  }
 
-.style-chooser .vs__clear,
-.style-chooser .vs__open-indicator {
-  fill: #394066;
-}
+  .vs__selected {
+    font-size: 16px;
+    line-height: 1.8;
+  }
 
-/* radio --- radio --- radio ---  */
+  .vs__dropdown-menu {
+    font-size: 16px;
+  }
 
-.mt-fp-form__radio {
-  display: flex;
-  margin: 20px auto 20px;
-  padding: 0 0 0 30px;
-}
+  .od-fp-form__v-select--error .vs__dropdown-toggle {
+    outline: none;
+    border: 1px solid #da291c;
+  }
 
-.mt-fp-form__radio-btn {
-  margin-right: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
+  .od-fp-form__auto-select {
+    width: 100%;
+    display: block;
+    font-size: 20px;
+    line-height: 2.5;
+    height: 40px;
+    margin: 0;
+  }
 
-  width: 80px;
-}
+  .style-chooser .vs__search::placeholder,
+  .style-chooser .vs__dropdown-toggle,
+  .style-chooser .vs__dropdown-menu {
+    background: #dfe5fb;
+    border: none;
+    color: #394066;
+    text-transform: lowercase;
+    font-variant: small-caps;
+  }
 
-.mt-fp-form__radio-btn:first-child {
-  margin-left: 8px;
-}
+  .style-chooser .vs__clear,
+  .style-chooser .vs__open-indicator {
+    fill: #394066;
+  }
 
-.mt-fp-form__radio-btn input[type="radio"] {
-  opacity: 0;
-}
+  /* radio --- radio --- radio ---  */
 
-.mt-fp-form__radio-btn label {
-  font-size: 16px;
-  line-height: 1;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  cursor: pointer;
-  color: #ffffff;
-}
+  .od-fp-form__radio {
+    display: flex;
+    margin: 20px auto 20px;
+    padding: 0 0 0 30px;
+  }
 
-.mt-fp-form__radio-btn label:after {
-  content: "";
-  position: absolute;
+  .od-fp-form__radio-btn {
+    margin-right: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
 
-  left: -30px;
-  width: 15px;
-  height: 15px;
-  border-radius: 100%;
-  background-color: var(--btn-bg);
-  transition: 0.4s;
-  opacity: 0;
-}
+    width: 80px;
+  }
 
-.mt-fp-form__radio-btn input[type="radio"]:checked + label:after {
-  opacity: 1;
-}
+  .od-fp-form__radio-btn:first-child {
+    margin-left: 8px;
+  }
 
-.mt-fp-form__radio-btn label:before {
-  content: "";
-  position: absolute;
-  left: -38px;
-  top: -9px;
-  width: 32px;
-  height: 32px;
-  border-radius: 16px;
-  border: 1px solid #979797;
-}
-
-/* submit --- submit --- submit ---  */
-
-.mt-fp-form__submit-wrapper {
-  width: 100%;
-  text-align: center;
-}
-
-.mt-fp-form__submit {
-  color: var(--btn-text-color);
-  background-color: var(--btn-bg);
-  border: 1px solid var(--btn-border-color);
-  min-height: 60px;
-  width: 280px;
-  padding: 0 20px;
-  border-radius: 30px;
-  margin: 0 auto 20px;
-  font-size: 18px;
-}
-
-.mt-fp-form__submit:hover {
-  color: var(--btn-text-color-hover);
-  background-color: var(--btn-bg-hover);
-}
-
-.mt-fp-form__submit:focus {
-  outline: none;
-  border: 1px solid var(--btn-bg-hover);
-}
-
-/* cancel --- cancel --- cancel ---  */
-
-.mt-fp-form__cancel-wrapper {
-  width: 100%;
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.mt-fp-form__cancel {
-  color: var(--labelTextColor);
-}
-
-.mt-fp-form__cancel,
-.mt-fp-form__cancel:hover,
-.mt-fp-form__cancel:focus {
-  border: none;
-  outline: none;
-  background: none;
-  text-decoration: underline;
-}
-
-@keyframes confirmCloseChatAnim {
-  from {
+  .od-fp-form__radio-btn input[type="radio"] {
     opacity: 0;
   }
-  to {
+
+  .od-fp-form__radio-btn label {
+    font-size: 16px;
+    line-height: 1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    cursor: pointer;
+    color: #ffffff;
+  }
+
+  .od-fp-form__radio-btn label:after {
+    content: "";
+    position: absolute;
+
+    left: -30px;
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    background-color: var(--od-button-background);
+    transition: 0.4s;
+    opacity: 0;
+  }
+
+  .od-fp-form__radio-btn input[type="radio"]:checked + label:after {
     opacity: 1;
   }
-}
 
-.confirmCloseChat {
-  opacity: 0;
-}
+  .od-fp-form__radio-btn label:before {
+    content: "";
+    position: absolute;
+    left: -38px;
+    top: -9px;
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    border: 1px solid #979797;
+  }
 
-.confirmCloseChatAnimate {
-  animation: confirmCloseChatAnim 0.6s forwards;
-}
+  /* submit --- submit --- submit ---  */
 
-/* fp-loader --- fp-loader --- fp-loader ---  */
+  .od-fp-form__submit-wrapper {
+    width: 100%;
+    text-align: center;
+  }
 
-.fp-loader {
-  position: sticky;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.3);
-}
-.fp-loader svg {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-}
-.fp-loader svg path {
-  fill: var(--btn-bg)
+  .od-fp-form__submit {
+    color: var(--od-button-text);
+    background-color: var(--od-button-background);
+    border: 1px solid var(--od-button-background);
+    min-height: 60px;
+    width: 280px;
+    padding: 0 20px;
+    border-radius: 30px;
+    margin: 0 auto 20px;
+    font-size: 18px;
+  }
+
+  .od-fp-form__submit:hover {
+    color: var(--od-button-hover-background);
+    background-color: var(--od-button-hover-background);
+  }
+
+  .od-fp-form__submit:focus {
+    outline: none;
+    border: 1px solid var(--od-button-hover-background);
+  }
+
+  /* cancel --- cancel --- cancel ---  */
+
+  .od-fp-form__cancel-wrapper {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .od-fp-form__cancel {
+    color: var(--od-sent-message-text);
+  }
+
+  .od-fp-form__cancel,
+  .od-fp-form__cancel:hover,
+  .od-fp-form__cancel:focus {
+    border: none;
+    outline: none;
+    background: none;
+    text-decoration: underline;
+  }
+
+  @keyframes confirmCloseChatAnim {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .confirmCloseChat {
+    opacity: 0;
+  }
+
+  .confirmCloseChatAnimate {
+    animation: confirmCloseChatAnim 0.6s forwards;
+  }
+
+  /* fp-loader --- fp-loader --- fp-loader ---  */
+
+  .fp-loader {
+    position: sticky;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.3);
+  }
+  .fp-loader svg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+  .fp-loader svg path {
+    fill: var(--od-button-background)
+  }
 }
 </style>

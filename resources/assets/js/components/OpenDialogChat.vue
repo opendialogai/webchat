@@ -35,7 +35,7 @@
       >{{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}</b-nav-item>
     </b-nav>
 
-    <div v-show="commentsEnabled && activeTab == 'comments'" class="comments-container">
+    <div v-show="commentsEnabled && activeTab == 'comments'" class="od-comments-container">
       <div ref="opendialogWidgetSectionSelector" class="comment-section-selector-wrapper">
         <b-form-select
           v-if="sectionOptions.length"
@@ -51,7 +51,6 @@
         :key="commentsKey"
         :agent-profile="agentProfile"
         :callback-map="callbackMap"
-        :colours="colours"
         :comments-api-config="comments"
         :is-expand="isExpand"
         :is-mobile="isMobile"
@@ -67,7 +66,7 @@
         :user-external-id="userExternalId"
       />
     </div>
-    <div v-show="activeTab == 'webchat'" class="webchat-container">
+    <div v-show="activeTab == 'webchat'" class="od-webchat-container">
       <WebChat
         v-if="ready"
         :agent-profile="agentProfile"
@@ -75,7 +74,6 @@
         :can-close-chat="canCloseChat"
         :chatbot-avatar-path="chatbotAvatarPath"
         :chatbot-name="chatbotName"
-        :colours="colours"
         :hide-datetime-message="hideDatetimeMessage"
         :hide-message-time="hideMessageTime"
         :hide-typing-indicator-on-internal-messages="hideTypingIndOnInternalMessages"
@@ -145,66 +143,6 @@ export default {
       chatbotName: 'OD Bot',
       closedIntent: "",
       collectUserIp: true,
-      colours: {
-        header: {
-          bg: '#1b212a',
-          text: '#ffffff',
-        },
-        launcher: {
-          bg: '#1b212a',
-        },
-        messageList: {
-          bg: '#1b212a',
-        },
-        sentMessage: {
-          bg: '#0000ff',
-          text: '#ffffff',
-        },
-        receivedMessage: {
-          bg: '#ffffff',
-          text: '#1b212a',
-        },
-        userInput: {
-          bg: '#ffffff',
-          text: '#1b212a',
-        },
-        button: {
-          bg: '#00f',
-          hoverbg: 'transparent',
-          text: '#ffffff',
-          // 👇🏻 new
-          hoverText: "#ffffff",
-          border: "#1b212a",
-          hoverBorder: "#00f"
-        },
-        // 👇🏻 new
-        messageButton: {
-          bg: '#00f',
-          hoverbg: 'rgba(0, 0, 225, 0.5)',
-          text: '#ffffff',
-          //new 👇🏻
-          hoverText: "#ffffff",
-          border: "#00f",
-          hoverBorder: "rgba(0, 0, 225, 0.5)"
-        },
-        externalButton: {
-          bg: '#00f',
-          hoverbg: '#fff ',
-          text: '#ffffff',
-          //new 👇🏻
-          hoverText: "#ffffff",
-          border: "#575759",
-          hoverBorder: "#575759"
-        },
-        form: {
-          labelTextColor: '#ffffff',
-          formHighlightColor: '#da291c',
-          inputBorderColor: '#979797'
-        },
-        minimizeButton: {
-          bg: '#000000',
-        },
-      },
       comments: {},
       commentsKey: 0,
       commentsEnabled: true,
@@ -382,13 +320,6 @@ export default {
     getCssProps() {
       const cssVariables = {};
 
-      if (this.colours.header && this.colours.header.bg) {
-        cssVariables['--header-background-color'] = this.colours.header.bg;
-      }
-      if (this.colours.header && this.colours.header.text) {
-        cssVariables['--header-text-color'] = this.colours.header.text;
-      }
-
       // Starting height of 2px accounts for the bottom border.
       let headerHeight = 2;
       if (this.$refs.opendialogWidgetTabs) {
@@ -438,7 +369,7 @@ export default {
         if (event.data) {
           if (event.data.loadSettings) {
             sessionStorage.openDialogSettings = JSON.stringify(event.data.loadSettings);
-            this.$store.commit('setSettings', event.data.loadSettings);
+            this.$store.dispatch('updateSettings', event.data.loadSettings);
             this.initialiseSettings();
           }
 
@@ -693,62 +624,6 @@ export default {
         }
       }
 
-      if (config.colours) {
-        const { colours } = config;
-
-        if (colours.headerBackground) {
-          this.colours.header.bg = colours.headerBackground;
-        }
-        if (colours.headerText) {
-          this.colours.header.text = colours.headerText;
-        }
-        if (colours.launcherBackground) {
-          this.colours.launcher.bg = colours.launcherBackground;
-        }
-        if (colours.messageListBackground) {
-          this.colours.messageList.bg = colours.messageListBackground;
-        }
-        if (colours.sentMessageBackground) {
-          this.colours.sentMessage.bg = colours.sentMessageBackground;
-        }
-        if (colours.sentMessageText) {
-          this.colours.sentMessage.text = colours.sentMessageText;
-        }
-        if (colours.receivedMessageBackground) {
-          this.colours.receivedMessage.bg = colours.receivedMessageBackground;
-        }
-        if (colours.receivedMessageText) {
-          this.colours.receivedMessage.text = colours.receivedMessageText;
-        }
-        if (colours.userInputBackground) {
-          this.colours.userInput.bg = colours.userInputBackground;
-        }
-        if (colours.userInputText) {
-          this.colours.userInput.text = colours.userInputText;
-        }
-        if (colours.buttonBackground) {
-          this.colours.button.bg = colours.buttonBackground;
-        }
-        if (colours.buttonHoverBackground) {
-          this.colours.button.hoverbg = colours.buttonHoverBackground;
-        }
-        if (colours.buttonText) {
-          this.colours.button.text = colours.buttonText;
-        }
-        if (colours.externalButtonBackground) {
-          this.colours.externalButton.bg = colours.externalButtonBackground;
-        }
-        if (colours.externalButtonHoverBackground) {
-          this.colours.externalButton.hoverbg = colours.externalButtonHoverBackground;
-        }
-        if (colours.externalEuttonText) {
-          this.colours.externalButton.text = colours.externalEuttonText;
-        }
-        if (colours.minimizeButtonBackground) {
-          this.colours.minimizeButton.bg = colours.minimizeButtonBackground;
-        }
-      }
-
       if (config.user && !window._.isEmpty(config.user)) {
         this.user = config.user;
 
@@ -877,5 +752,50 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+.opendialog-chat-window {
+  .nav {
+    background-color: var(--od-header-text);
+    border-bottom: 1px solid var(--od-header-background);
+    color: var(--od-header-text);
+  }
+
+  .nav .nav-item a.nav-link {
+    color: var(--od-header-background);
+    font-size: 17px;
+  }
+
+  .nav .nav-item.active {
+    background-color: var(--od-header-background);
+  }
+
+  .nav .nav-item.active a.nav-link {
+    color: var(--od-header-text);
+    font-weight: 600;
+  }
+
+  .comment-section-selector-wrapper {
+    border-bottom: 1px solid var(--od-header-background);
+  }
+
+  .comment-section-selector-wrapper .comment-section-selector {
+    border: none;
+  }
+
+  .comments-enabled .nav .nav-item {
+    width: 40%;
+  }
+
+  .comments-enabled .nav .nav-item.active {
+    width: 60%;
+  }
+
+  .minimized-header {
+    cursor: pointer;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    background-color: var(--od-header-background);
+    color: var(--header-text-color);
+  }
+}
 </style>

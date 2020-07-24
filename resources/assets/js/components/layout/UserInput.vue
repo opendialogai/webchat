@@ -1,26 +1,24 @@
 <template>
-  <div class="user-input" :style="{backgroundColor: colors.messageList.bg}">
+  <div class="od-user-input">
     <ExternalButtons
       :externalButtons="externalButtons"
       :animate="animateExternalButtons"
       v-on:sendExternalButton="_submitExternalButton"
-      :colors="colors"
     />
 
-    <div v-if="file" class="file-container">
-      <span class="icon-file-message">
+    <div v-if="file" class="od-file-container">
+      <span class="od-icon-file-message">
         <img src="../assets/file.svg" alt="genericFileIcon" height="15" />
       </span>
       {{file.name}}
-      <span class="delete-file-message" @click="cancelFile()">
+      <span class="od-delete-file-message" @click="cancelFile()">
         <img src="../assets/close.svg" alt="close icon" height="10" title="Remove the file" />
       </span>
     </div>
 
     <form
-      class="user-input__form"
+      class="od-user-input__form"
       :class="{active: inputActive, disabled: !contentEditable}"
-      :style="{background: colors.userInput.bg}"
     >
       <div
         role="button"
@@ -31,19 +29,14 @@
         @input="onTextChange($event)"
         :contentEditable="contentEditable"
         :placeholder="placeholderText"
-        class="user-input__form-text-input"
+        class="od-user-input__form-text-input"
         ref="userInput"
-        :style="{color: colors.userInput.text}"
       ></div>
 
-      <div class="user-input__buttons">
+      <div class="od-user-input__buttons">
         <button
           @click.prevent="_submitText"
-          class="send-btn"
-          :style="{
-            '--send-btn-bg': colors.button.bg,
-            '--send-btn-hover-bg': colors.button.bg,
-          }"
+          class="od-send-btn"
         >{{ sendButtonText }}</button>
 
         <EndChatButton
@@ -91,10 +84,6 @@ export default {
       default: "Enter your message"
     },
     lastMessage: {
-      type: Object,
-      required: true
-    },
-    colors: {
       type: Object,
       required: true
     },
@@ -225,5 +214,104 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+.od-user-input {
+  background-color: var(--od-message-list-background);
+  position: relative;
+  width: 100%;
+
+  .od-user-input__form {
+    background-color: var(--od-user-input-background);
+    min-height: 55px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .od-user-input__form.active {
+    box-shadow: 0px -5px 20px 0px rgba(150, 165, 190, 0.2);
+  }
+
+  .od-user-input__form.disabled {
+    pointer-events: none;
+    background: #a9a9a9;
+  }
+
+  .od-user-input__form-text-input {
+    caret-color: currentColor;
+    color: var(--od-user-input-text);
+    display: inline-block;
+    height: 100%;
+    resize: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+    font-family: Gotham;
+    font-weight: 300;
+    font-stretch: normal;
+    font-style: normal;
+    font-size: 16px;
+    line-height: 1.38;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex: 1;
+    width: 100%;
+  }
+
+  .od-user-input__form-text-input:empty:before {
+    content: attr(placeholder);
+    display: block; /* For Firefox */
+    filter: contrast(15%);
+    outline: none;
+    cursor: text;
+  }
+
+  .od-user-input__buttons {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+
+    .od-user-input__button {
+      border: 1px solid var(--od-button-background);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      outline: none;
+      height: 100%;
+      width: 100%;
+    }
+
+    .od-send-btn {
+      background-color: var(--od-button-background);
+      border: none;
+      color: var(--od-button-text);
+      width: auto;
+      height: 50px;
+      padding: 2px 20px;
+      border-radius: 34.5px;
+      transition: 0.4s;
+      font-size: 18px;
+
+      &:hover {
+        background-color: var(--od-button-hover-background);
+      }
+
+      &:active,
+      &:focus {
+        outline: none;
+        border: none;
+      }
+    }
+  }
+}
 </style>

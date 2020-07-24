@@ -1,7 +1,7 @@
 <template>
-  <div class="sc-message--long-text" :style="messageColors" v-linkified>
+  <div class="od-message-long-text" v-linkified>
     <span v-html="data.text"></span>
-    <p v-if="data.meta" class='sc-message--meta' :style="{color: messageColors.color}">{{data.meta}}</p>
+    <p v-if="data.meta" class='od-message--meta'>{{data.meta}}</p>
   </div>
 </template>
 
@@ -11,17 +11,13 @@ export default {
     data: {
       type: Object,
       required: true
-    },
-    messageColors: {
-      type: Object,
-      required: true
     }
   }
 }
 </script>
 
-<style scoped>
-.sc-message--long-text {
+<style lang="scss">
+.od-message-long-text {
   padding: 17px 20px;
   border-radius: 6px;
   font-weight: 400;
@@ -31,17 +27,27 @@ export default {
   word-wrap: break-word;
   max-width: 100%;
   -webkit-font-smoothing: subpixel-antialiased;
+
+  .sent & {
+    background-color: var(--od-sent-message-background);
+    color: var(--od-sent-message-text);
+    max-width: calc(100% - 120px);
+    word-wrap: break-word;
+
+    .od-message--meta {
+      color: var(--od-sent-message-text);
+    }
+  }
+
+  .received & {
+    background-color: var(--od-received-message-background);
+    color: var(--od-received-message-text);
+    margin-right: 40px;
+
+    .od-message--meta {
+      color: var(--od-received-message-text);
+    }
+  }
 }
 
-.sc-message--content.sent .sc-message--long-text {
-  color: white;
-  background-color: #4e8cff;
-  max-width: calc(100% - 120px);
-  word-wrap: break-word;
-}
-.sc-message--content.received .sc-message--long-text {
-  color: #263238;
-  background-color: #f4f7f9;
-  margin-right: 40px;
-}
 </style>

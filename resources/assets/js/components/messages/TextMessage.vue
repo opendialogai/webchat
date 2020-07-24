@@ -2,7 +2,7 @@
   <div
     ref="message"
     @click="_handleClick"
-    class="mt mt-text"
+    class="od-message-text mt"
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
@@ -12,11 +12,10 @@
         'middle-message': this.data && this.data.middle,
         'last-message': this.data && this.data.last,
     }]"
-    :style="messageColors"
     v-linkified:options="{ format: function (value, type) { return '<span>' + value + '</span>'; } }"
   >
     <span class="fade-enter-active" v-html="data.text"></span>
-    <!-- <p v-if="data.meta" class="sc-message--meta" :style="{color: messageColors.color}">{{data.meta}}</p> -->
+    <!-- <p v-if="data.meta" class="sc-message--meta">{{data.meta}}</p> -->
       <p v-if="data.meta" class="sc-message--meta" >{{data.meta}}</p>
   </div>
 </template>
@@ -33,10 +32,6 @@ export default {
       required: true
     },
     data: {
-      type: Object,
-      required: true
-    },
-    messageColors: {
       type: Object,
       required: true
     },
@@ -100,8 +95,27 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+.od-message-text {
+  transition: width 0.3s linear, height 0.3s linear;
 
+  &.emit {
+    background-color: var(--od-sent-message-background);
+    color: var(--od-sent-message-text);
+  }
 
+  &.reap {
+    background-color: var(--od-received-message-background);
+    color: var(--od-received-message-text);
+  }
+
+  .linkified {
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+  }
+}
 
 </style>

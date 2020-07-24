@@ -2,8 +2,12 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import {resourceModule} from '@reststate/vuex';
+import camelToKebab from './mixins/camelToKebab';
+import hexToRgb from './mixins/hexToRgb';
 
 Vue.use(Vuex);
+
+const log = location.hostname === 'localhost'
 
 // Create the store.
 const store = new Vuex.Store({
@@ -17,19 +21,43 @@ const store = new Vuex.Store({
   },
   mutations: {
     setApiReady(state, val) {
+      log && console.log('setApiReady', val)
       state.apiReady = val;
     },
     setUuid(state, uuid) {
+      log && console.log('setUuid', uuid)
       state.uuid = uuid;
     },
     setSettings(state, settings) {
+      log && console.log('setSettings', settings)
       state.settings = settings;
     },
     setMessageMetaData(state, data) {
+      log && console.log('setMessageMetaData', data)
       state.messageMetaData = data;
-    },
+    }
   },
-  actions: {},
+  actions: {
+    updateSettings({commit}, payload) {
+      log && console.log('updateSettings', payload)
+      commit('setSettings', payload);
+      
+      const root = document.querySelector(':root')
+      let c = payload.colours ? payload.colours : {}
+      const headerRGB = hexToRgb(c.headerBackground)
+
+      c.headerBackgroundGradient = `linear-gradient(180deg, rgba(${headerRGB[0]},${headerRGB[1]},${headerRGB[2]},1) 0%, rgba(${headerRGB[0]},${headerRGB[1]},${headerRGB[2]},0) 100%)`
+  
+
+      for (const[key, val] of Object.entries(c)) {
+        if (val) {
+          let kebab = `--od-${camelToKebab(key)}`
+          root.style.setProperty(kebab, val);
+        }
+      }
+      
+    }
+  },
   getters: {},
 });
 

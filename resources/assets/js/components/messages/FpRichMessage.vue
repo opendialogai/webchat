@@ -1,8 +1,8 @@
 <template>
-  <div class="mt mt-message-fp-rich sc-message--fp-rich reap" :style="messageColors"  :class="[{
-        animate: this.data.animate,
+  <div class="od-message-fp-rich mt reap" :class="[{
+        animate: this.data.animate
     }]">
-    <div class="sc-message--fp-rich--title">{{ data.title }}</div>
+    <div class="od-message-fp-rich--title">{{ data.title }}</div>
   </div>
 </template>
 
@@ -13,15 +13,7 @@ export default {
       type: Object,
       required: true
     },
-    colors: {
-      type: Object,
-      required: true
-    },
     message: {
-      type: Object,
-      required: true
-    },
-    messageColors: {
       type: Object,
       required: true
     },
@@ -32,3 +24,17 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.od-message-fp-rich {
+  &.emit {
+    background-color: var(--od-sent-message-background);
+    color: var(--od-sent-message-text);
+  }
+
+  &.reap {
+    background-color: var(--od-received-message-background);
+    color: var(--od-received-message-text);
+  }
+}
+</style>

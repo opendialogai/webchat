@@ -1,25 +1,12 @@
 <template>
   <transition leave-active-class="fadeOut">
     <div
-      class="mt-typing-indicator"
+      class="od-message-typing"
       :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
         reap: this.author === 'them',
-    }]"
-      :style="messageColors"
-    >
-      <!-- <div class="all-blobs">
-        <div class="blob">
-          <div class="blob-content"></div>
-        </div>
-        <div class="blob">
-          <div class="blob-content"></div>
-        </div>
-        <div class="blob">
-          <div class="blob-content"></div>
-        </div>
-      </div>-->
+    }]">
       <div ref="typewriter" class="typewriter">
         <p>typing...</p>
       </div>
@@ -44,61 +31,87 @@ export default {
     author: {
       type: String,
       required: true
-    },
-    messageColors: {
-      type: Object,
-      required: true
     }
   }
 };
 </script>
-<style scoped>
-.typewriter {
-  width: 60px;
-}
-.typewriter p {
-  overflow: hidden; /* Ensures the content is not revealed until the animation */
-  border-right: 0.15em solid currentColor;
-  white-space: nowrap; /* Keeps the content on a single line */
-  margin: -8px auto 0px;
-  line-height: 1.5;
+<style lang="scss">
+@import '../../../sass/0-globals/_vars.scss';
+@import '../../../sass/0-globals/_animations.scss';
 
-  /* animation: typing 1s steps(9, end), blink-caret 0.75s step-end infinite; */
-  animation: typing 3s steps(9, end) infinite,
-    blink-caret 0.75s step-end infinite;
-}
+.od-message-typing.mt {
+  animation-duration: 0s;
+  background-color: transparent !important;
+  color: #efefeb !important;
+  font-size: 14px;
+  padding: 25px 20px 10px 5px;
 
-/* The typing effect */
-@keyframes typing {
-  0% {
-    width: 0;
-    opacity: 1;
+  @media (min-width: $media-med) {
+    padding: 15px 30px;
   }
 
-  /* Finish changes by here */
-  20% {
-    width: 100%;
+  .typewriter {
+    width: 60px;
   }
 
-  90% {
-    opacity: 1;
+  .typewriter p {
+    overflow: hidden; /* Ensures the content is not revealed until the animation */
+    border-right: 0.15em solid currentColor;
+    white-space: nowrap; /* Keeps the content on a single line */
+    margin: -8px auto 0px;
+    line-height: 1.5;
+    animation: typing 3s steps(9, end) infinite,
+      blink-caret 0.75s step-end infinite;
   }
 
-  /* Between 20% and 100%, nothing changes */
-  100% {
-    width: 100%;
-    opacity: 0;
-  }
-}
+  .all-blobs {
+    display: flex;
+    align-items: flex-start;
 
-/* The typewriter cursor effect */
-@keyframes blink-caret {
-  from,
-  to {
-    border-color: transparent;
+    height: 20px;
+    @media (min-width: $media-med) {
+      height: 30px;
+    }
   }
-  50% {
-    border-color: currentColor;
+
+  .blob {
+    height: 20px;
+    
+    @media (min-width: $media-med) {
+      height: 30px;
+    }
+    
+    width: 6px;
+    margin: 0 5px 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    &:nth-child(1) {
+      .blob-content {
+        animation-delay: 0s;
+      }
+    }
+
+    &:nth-child(2) {
+      .blob-content {
+        animation-delay: 0.2s;
+      }
+    }
+
+    &:nth-child(3) {
+      .blob-content {
+        animation-delay: 0.4s;
+      }
+    }
+  }
+
+  .blob-content {
+    max-height: 40px;
+    height: 30%;
+    background-color: black;
+    animation: andrewsBlobBob 1.2s infinite;
+    border-radius: 5px;
   }
 }
 </style>
