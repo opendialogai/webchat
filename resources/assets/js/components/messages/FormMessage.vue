@@ -1,21 +1,21 @@
 <template>
-  <div class="od-message-form mt sc-message--form" 
+  <div class="od-message-form mt od-message-form" 
       :class="[{
         emit : this.author === 'me',
         reap: this.author === 'them'
       }]">
-    <div class="sc-message--form--text" v-html="data.text"></div>
-    <div v-if="errors.length" class="sc-message--form--errors">
+    <div class="od-message-form--text" v-html="data.text"></div>
+    <div v-if="errors.length" class="od-message-form--errors">
       <div v-for="error in errors">
         <span v-html="error"></span>
       </div>
     </div>
-    <div v-for="element in data.elements" class="sc-message--form--element">
-      <span v-if="element.display" class="sc-message--form--element-label">{{ element.display }}:</span>
+    <div v-for="element in data.elements" class="od-message-form--element">
+      <span v-if="element.display" class="od-message-form--element-label">{{ element.display }}:</span>
 
       <template v-if="element.element_type == 'text'">
         <input
-          class="sc-message--form--element-input"
+          class="od-message-form--element-input"
           v-model="form.data[element.name].value"
           v-on:keyup.enter="_handleClick"
         />
@@ -23,7 +23,7 @@
       <template v-if="element.element_type == 'number'">
         <input
           type="number"
-          class="sc-message--form--element-input"
+          class="od-message-form--element-input"
           v-model="form.data[element.name].value"
           v-on:keyup.enter="_handleClick"
         />
@@ -31,21 +31,21 @@
       <template v-if="element.element_type == 'email'">
         <input
           type="email"
-          class="sc-message--form--element-input"
+          class="od-message-form--element-input"
           v-model="form.data[element.name].value"
           v-on:keyup.enter="_handleClick"
         />
       </template>
       <template v-if="element.element_type == 'textarea'">
         <textarea
-          class="sc-message--form--element-textarea"
+          class="od-message-form--element-textarea"
           v-model="form.data[element.name].value"
         />
       </template>
       <template v-if="element.element_type == 'select'">
         <select
           @change="onSelectChange"
-          class="sc-message--form--element-select"
+          class="od-message-form--element-select"
           v-model="form.data[element.name].value"
         >
           <option
@@ -172,6 +172,15 @@ export default {
 
 <style lang="scss">
 .od-message-form {
+  border-radius: 6px;
+  font-weight: 400;
+  line-height: 1.4;
+  word-wrap: break-word;
+  max-width: 100%;
+  -webkit-font-smoothing: subpixel-antialiased;
+  font-size: 15px;
+  padding: 7px 15px;
+
   &.emit {
     background-color: var(--od-sent-message-background);
     color: var(--od-sent-message-text);
@@ -182,63 +191,45 @@ export default {
     color: var(--od-received-message-text);
   }
 
-  &.sc-message--form {
-    padding: 17px 20px;
-    border-radius: 6px;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 1.4;
-    word-wrap: break-word;
-    max-width: 100%;
-    -webkit-font-smoothing: subpixel-antialiased;
-  }
-
-  &.sc-message--form .submit-button {
+  .submit-button {
     cursor: pointer;
-    border-radius: 15px;
     border: 1px solid transparent;
-    font-size: 14px;
-    padding: 12px 17px;
     margin-top: 5px;
     transition: 0.4s;
     color: var(--od-button-text);
     background-color: var(--od-button-background);
+    font-size: 14px;
+    padding: 7px 17px;
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 5px;
   }
 
-  &.sc-message--form .submit-button:hover {
+  .submit-button:hover {
     background-color: var(--od-button-hover-background);
     color: #0000ff;
     border: 1px solid #0000ff;
   }
 
-  .sc-message--content.sent .sc-message--form {
-    color: white;
-    background-color: #4e8cff;
-  }
-  .sc-message--content.received .sc-message--form {
-    color: #263238;
-    background-color: #f4f7f9;
-  }
-
-  &.sc-message--form .sc-message--form--text {
+  .od-message-form--text {
     margin-bottom: 10px;
   }
 
-  &.sc-message--form .sc-message--form--element {
+  .od-message-form--element {
     margin-bottom: 10px;
   }
 
-  &.sc-message--form .sc-message--form--element-label {
+  .od-message-form--element-label {
     margin-right: 5px;
     vertical-align: middle;
   }
-  &.sc-message--form .sc-message--form--element-input {
+  .od-message-form--element-input {
     font-size: 13px;
     border-radius: 5px;
     border: 1px solid #a9a9a9;
     padding: 2px 7px;
   }
-  &.sc-message--form .sc-message--form--element-textarea {
+  .od-message-form--element-textarea {
     font-size: 13px;
     border-radius: 5px;
     border: 1px solid #a9a9a9;
@@ -246,11 +237,11 @@ export default {
     width: 100%;
     min-height: 60px;
   }
-  &.sc-message--form .sc-message--form--element-select {
+  .od-message-form--element-select {
     font-size: 13px;
   }
 
-  &.sc-message--form .sc-message--form--errors {
+  .od-message-form--errors {
     background: #f55555;
     color: white;
     padding: 2px 7px;
@@ -258,26 +249,26 @@ export default {
     margin-bottom: 10px;
   }
 
-  .sc-message--form--element .vs__dropdown-toggle {
+  .od-message-form--element .vs__dropdown-toggle {
     background: white;
   }
-  .sc-message--form--element .vs__dropdown-toggle .vs__selected-options {
+  .od-message-form--element .vs__dropdown-toggle .vs__selected-options {
     min-height: 27px;
   }
-  .sc-message--form--element
+  .od-message-form--element
     .vs__dropdown-toggle
     .vs__selected-options
     .vs__selected {
     max-width: calc(100% - 5px);
   }
-  .sc-message--form--element
+  .od-message-form--element
     .vs__dropdown-toggle
     .vs__selected-options
     .vs__search {
     padding: 0;
     margin: 0;
   }
-  .sc-message--form--element
+  .od-message-form--element
     .vs__dropdown-toggle
     .vs__selected-options
     .vs__search:focus {
@@ -285,17 +276,17 @@ export default {
     margin: 4px 0 0;
     padding: 0 7px;
   }
-  .sc-message--form--element .vs__dropdown-menu {
+  .od-message-form--element .vs__dropdown-menu {
     min-width: 260px;
   }
-  .sc-message--form--element .vs__dropdown-menu .vs__dropdown-option {
+  .od-message-form--element .vs__dropdown-menu .vs__dropdown-option {
     white-space: normal;
     border-bottom: 1px solid lightgray;
   }
-  .sc-message--form--element .vs__dropdown-menu .vs__dropdown-option:last-child {
+  .od-message-form--element .vs__dropdown-menu .vs__dropdown-option:last-child {
     border-bottom: none;
   }
-  .sc-message--form--element .vs--single.vs--open .vs__selected {
+  .od-message-form--element .vs--single.vs--open .vs__selected {
     position: relative;
   }
 }

@@ -983,17 +983,91 @@ export default {
 };
 </script>
 
-<style scoped>
-/* var inherited from OpenDialogChat component???? */
-/* .loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: calc(100vh - var(--header-height));
-} */
+<style lang="scss">
+@import '../../sass/0-globals/_animations.scss';
 
 .web-chat {
   height: 100vh;
+
+  .close-chat {
+    display: flex;
+    justify-content: center;
+    margin-top: -30px;
+    margin-bottom: 10px;
+  }
+
+  .close-chat__button {
+    position: relative;
+    z-index: 1;
+    width: 70px;
+    height: 70px;
+    background-color: #313133;
+    border-radius: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #000000;
+    }
+  }
+
+  .close-chat__img {
+    width: 31px;
+    height: 30px;
+    object-fit: contain;
+    transition: transform 0.5s;
+  }
+
+  .confirmCloseChat {
+    opacity: 0;
+    text-align: right;
+  }
+
+  .confirmCloseChatButtons {
+    display: inline-block;
+  }
+
+  .confirmCloseChatAnimate {
+    animation: confirmCloseChatAnim 0.6s forwards;
+  }
+
+  .closeChatButtonAnimate {
+    animation: close-chat-spin 0.5s forwards;
+  }
+
+  .closeChatButtonReverseAnimate {
+    animation: reverse-close-chat-spin 0.5s forwards;
+  }
+
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* var inherited from OpenDialogChat component. */
+  //   height: calc(100vh - var(--header-height));
+  }
+
+  .loading-message {
+    font-size: 18px;
+    color: #b6b5ba;
+    margin-bottom: 17px;
+  }
+
+  .mobile .loading-message {
+    margin-bottom: 5px;
+  }
+
+  .loading-indicator span {
+    display: inline-block;
+    background-color: #b6b5ba;
+    width: 11px;
+    height: 11px;
+    border-radius: 100%;
+    margin-right: 4px;
+    animation: bob 2s infinite;
+  }
 }
 </style>

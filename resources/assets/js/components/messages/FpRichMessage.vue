@@ -1,8 +1,8 @@
 <template>
-  <div class="od-message-fp-rich mt mt-message-fp-rich sc-message--fp-rich reap" :class="[{
+  <div class="od-message-fp-rich mt reap" :class="[{
         animate: this.data.animate
     }]">
-    <div class="sc-message--fp-rich--title">{{ data.title }}</div>
+    <div class="od-message-fp-rich--title">{{ data.title }}</div>
   </div>
 </template>
 

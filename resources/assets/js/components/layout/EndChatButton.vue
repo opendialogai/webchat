@@ -75,3 +75,14 @@
     }
   }
 </script>
+
+<style lang="scss">
+.end-chat-btn,
+.end-chat-btn:hover,
+.end-chat-btn:focus {
+  border: none;
+  outline: none;
+  background: none;
+  text-decoration: underline;
+}
+</style>

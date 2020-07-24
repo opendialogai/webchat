@@ -752,5 +752,50 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+.opendialog-chat-window {
+  .nav {
+    background-color: var(--od-header-text);
+    border-bottom: 1px solid var(--od-header-background);
+    color: var(--od-header-text);
+  }
+
+  .nav .nav-item a.nav-link {
+    color: var(--od-header-background);
+    font-size: 17px;
+  }
+
+  .nav .nav-item.active {
+    background-color: var(--od-header-background);
+  }
+
+  .nav .nav-item.active a.nav-link {
+    color: var(--od-header-text);
+    font-weight: 600;
+  }
+
+  .comment-section-selector-wrapper {
+    border-bottom: 1px solid var(--od-header-background);
+  }
+
+  .comment-section-selector-wrapper .comment-section-selector {
+    border: none;
+  }
+
+  .comments-enabled .nav .nav-item {
+    width: 40%;
+  }
+
+  .comments-enabled .nav .nav-item.active {
+    width: 60%;
+  }
+
+  .minimized-header {
+    cursor: pointer;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    background-color: var(--od-header-background);
+    color: var(--header-text-color);
+  }
+}
 </style>

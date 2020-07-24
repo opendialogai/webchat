@@ -1,6 +1,6 @@
 <template>
   <div
-    class="od-button-response mt mt-button-response"
+    class="od-button-response mt"
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',

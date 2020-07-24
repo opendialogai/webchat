@@ -1,6 +1,6 @@
 <template>
-  <div class="od-long-user-input sc-user-long-input--container">
-    <div class="sc-user-long-input--message">
+  <div class="od-long-user-input od-long-user-input--container">
+    <div class="od-long-user-input--message">
       <template v-if="showConfirmationMessage">
         <span v-html="confirmationMessage"></span>
       </template>
@@ -8,7 +8,7 @@
         <span v-html="headerText"></span>
       </template>
     </div>
-    <form class="sc-user-long-input" :class="{active: inputActive}">
+    <form class="od-long-user-input__input" :class="{active: inputActive}">
       <div
         role="button"
         tabIndex="0"
@@ -19,23 +19,23 @@
         @paste="onPaste"
         :contentEditable="contentEditable"
         :placeholder="placeholder"
-        class="sc-user-long-input--text"
+        class="od-long-user-input--text"
         ref="userInput"
       >{{initialText}}</div>
-      <div class="sc-user-long-input--buttons">
+      <div class="od-long-user-input--buttons">
         <template v-if="showConfirmationMessage">
-          <div class="sc-user-long-input--button center">
+          <div class="od-long-user-input--button center">
             <button @click="submitYes">Yes</button>
             <button @click="submitEdit">Edit</button>
           </div>
         </template>
         <template v-else>
           <template v-if="maxInputCharacters">
-            <div class="sc-user-long-input--counter">
+            <div class="od-long-user-input--counter">
               {{ charactersCount }} / {{ maxInputCharacters }}
             </div>
           </template>
-          <div class="sc-user-long-input--button">
+          <div class="od-long-user-input--button">
             <button @click="submitText" :disabled="!charactersCount">{{ buttonText }}</button>
           </div>
         </template>
@@ -155,7 +155,7 @@ export default {
 
 <style lang="scss">
 .od-long-user-input {
-  .sc-user-long-input {
+  .od-long-user-input__input {
     background-color: var(--od-user-input-background);
     height: 100%;
     margin: 0px;
@@ -168,18 +168,18 @@ export default {
     transition: background-color .2s ease,box-shadow .2s ease;
   }
 
-  &.sc-user-long-input--container {
+  &.od-long-user-input--container {
     height: 100%;
     display: flex;
     flex-direction: column;
   }
 
-  .sc-user-long-input--message {
+  .od-long-user-input--message {
     padding: 25px 15px;
     background-color: white;
   }
 
-  .sc-user-long-input--text {
+  .od-long-user-input--text {
     color: var(--od-user-input-text);
     width: 100%;
     max-height: 100%;
@@ -203,7 +203,7 @@ export default {
     overflow-y: auto;
   }
 
-  .sc-user-long-input--text:empty:before {
+  .od-long-user-input--text:empty:before {
     content: attr(placeholder);
     display: block; /* For Firefox */
     /* color: rgba(86, 88, 103, 0.3); */
@@ -211,7 +211,7 @@ export default {
     outline: none;
   }
 
-  .sc-user-long-input--buttons {
+  .od-long-user-input--buttons {
     position: absolute;
     right: 0;
     bottom: 10px;
@@ -221,23 +221,23 @@ export default {
     width: 100%;
   }
 
-  .sc-user-long-input--counter {
+  .od-long-user-input--counter {
     margin-left: 15px;
   }
 
-  .sc-user-long-input--button {
+  .od-long-user-input--button {
     display: flex;
     margin-left: auto;
   }
 
-  .sc-user-long-input--button.center {
+  .od-long-user-input--button.center {
     margin-right: auto;
   }
-  .sc-user-long-input--button.center button:last-child {
+  .od-long-user-input--button.center button:last-child {
     margin-right: 0;
   }
 
-  .sc-user-long-input--button button {
+  .od-long-user-input--button button {
     cursor: pointer;
     color: white;
     background-color: #4e8cff;
@@ -248,28 +248,28 @@ export default {
     margin-right: 15px;
   }
 
-  .sc-user-long-input--button button:disabled {
+  .od-long-user-input--button button:disabled {
     background-color: #a9a9a9;
   }
 
-  .sc-user-long-input.active {
+  .od-long-user-input.active {
     box-shadow: none;
     background-color: white;
     box-shadow: 0px -5px 20px 0px rgba(150, 165, 190, 0.2);
   }
 
-  .sc-user-long-input--button label {
+  .od-long-user-input--button label {
     position: relative;
     height: 24px;
     padding-left: 3px;
     cursor: pointer;
   }
 
-  .sc-user-long-input--button label:hover path {
+  .od-long-user-input--button label:hover path {
     fill: rgba(86, 88, 103, 1);
   }
 
-  .sc-user-long-input--button input {
+  .od-long-user-input--button input {
     position: absolute;
     left: 0;
     top: 0;

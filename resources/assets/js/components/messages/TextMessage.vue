@@ -2,7 +2,7 @@
   <div
     ref="message"
     @click="_handleClick"
-    class="od-message-text mt mt-text"
+    class="od-message-text mt"
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
@@ -97,6 +97,8 @@ export default {
 
 <style lang="scss">
 .od-message-text {
+  transition: width 0.3s linear, height 0.3s linear;
+
   &.emit {
     background-color: var(--od-sent-message-background);
     color: var(--od-sent-message-text);
@@ -105,6 +107,14 @@ export default {
   &.reap {
     background-color: var(--od-received-message-background);
     color: var(--od-received-message-text);
+  }
+
+  .linkified {
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
   }
 }
 

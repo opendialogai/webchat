@@ -1,33 +1,33 @@
 <template>
   <div
-    class="od-full-page-rich-input mt-fpri"
+    class="od-full-page-rich-input"
     :class="{ loader: showLoader, isOpen: isOpen }"
   >
-    <div class="mt-fpri-wrapper">
+    <div class="od-full-page-rich-wrapper">
       <div v-if="message.data.title">
         <div
-          class="mt-fpri__title animateStartingState animateDelay1"
+          class="od-full-page-rich__title animateStartingState animateDelay1"
           :class="{animateSlideUp: isOpen}"
         >{{ message.data.title }}</div>
       </div>
 
       <div v-if="message.data.subtitle">
         <div
-          class="mt-fpri__subtitle animateStartingState animateDelay1"
+          class="od-full-page-rich__subtitle animateStartingState animateDelay1"
           :class="{animateSlideUp: isOpen}"
         >{{ message.data.subtitle }}</div>
       </div>
 
       <div v-if="message.data.text">
         <p
-          class="mt-fpri__text animateStartingState animateDelay1"
+          class="od-full-page-rich__text animateStartingState animateDelay1"
           :class="{animateSlideUp: isOpen}"
         >
           <span v-html="message.data.text"></span>
         </p>
       </div>
       <template v-if="message.data.image">
-        <div class="mt-fpri__image animateStartingState" :class="{animateSlideUp: isOpen}">
+        <div class="od-full-page-rich__image animateStartingState" :class="{animateSlideUp: isOpen}">
           <template v-if="message.data.image.url">
             <a
               :href="message.data.image.url"
@@ -44,7 +44,7 @@
 
 
       <template v-if="message.data.buttons.length">
-        <div class="mt-fpri__buttons">
+        <div class="od-full-page-rich__buttons">
           <template v-for="(button, idx) in message.data.buttons">
             <button
               v-if="button.display && button.text"
@@ -126,17 +126,17 @@ export default {
   overflow-x: hidden;
   min-height: 30px;
 
-  .mt-fpri.loader {
+  .od-full-page-rich.loader {
     overflow-y: hidden;
   }
 
-  .mt-fpri-wrapper {
+  .od-full-page-rich-wrapper {
     padding: 20px 0;
   }
 
   /* Title/Subtitle */
 
-  .mt-fpri__title {
+  .od-full-page-rich__title {
     font-family: PlayfairDisplay;
     font-size: 26px;
     font-weight: bold;
@@ -146,33 +146,33 @@ export default {
     margin: 0 10px 20px 10px;
     letter-spacing: 1px;
   }
-  .mt-fpri__subtitle {
+  .od-full-page-rich__subtitle {
     margin: 0 10px 20px 10px;
     color: #ffffff;
   }
 
-  .mt-fpri__text {
+  .od-full-page-rich__text {
     margin: 0 10px 35px 10px;
     line-height: 1.3em;
     color: #ffffff;
   }
 
   /* image */
-  .mt-fpri__image {
+  .od-full-page-rich__image {
     width: 100%;
     margin-bottom: 10px;
   }
 
   /* button */
 
-  .mt-fpri__buttons {
+  .od-full-page-rich__buttons {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
 
-  .mt-fpri__buttons button {
+  .od-full-page-rich__buttons button {
     margin-bottom: 10px;
 
     border: 1px solid;
@@ -200,19 +200,19 @@ export default {
     }
   }
 
-  .mt-fpri__buttons button {
+  .od-full-page-rich__buttons button {
     background-color: var(--od-button-background);
     color: var(--od-button-text);
     border: 2px solid var(--od-button-background);
   }
 
-  .mt-fpri__buttons button:hover {
+  .od-full-page-rich__buttons button:hover {
     background-color: var(--od-button-hover-background);
     color: var(--od-button-text);
     border: 2px solid var(--od-button-hover-background);
   }
 
-  .mt-fpri__buttons button.downloadButton {
+  .od-full-page-rich__buttons button.downloadButton {
     background: none !important;
     border: none !important;
     color: #ffffff !important;
@@ -223,7 +223,7 @@ export default {
     min-height: 0;
     margin-top: 30px;
   }
-  .mt-fpri__buttons button.downloadButton:before {
+  .od-full-page-rich__buttons button.downloadButton:before {
     content: "";
     width: 13px;
     height: 19px;
@@ -235,7 +235,7 @@ export default {
   }
 
   /* loader --- loader --- loader ---  */
-  @keyframes mt-fpri__button-fade-in {
+  @keyframes od-full-page-rich__button-fade-in {
     from {
       transform: translate(0px, 30px);
       opacity: 0;
@@ -246,8 +246,8 @@ export default {
     }
   }
 
-  .mt-fpri__button--animate {
-    animation: mt-fpri__button-fade-in 1s forwards;
+  .od-full-page-rich__button--animate {
+    animation: od-full-page-rich__button-fade-in 1s forwards;
   }
 
   .fp-loader {

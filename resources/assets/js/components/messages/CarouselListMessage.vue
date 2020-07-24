@@ -1,5 +1,5 @@
 <template>
-  <div class="od-carousel mt reap mt-carousel" :class="data.view_type">
+  <div class="od-carousel mt reap" :class="data.view_type">
     <template v-if="data.view_type == 'horizontal'">
       <slider
         direction="horizontal"
@@ -34,11 +34,11 @@
         </div>
       </slider>
 
-      <div class="sc-message--carousel-list--arrows">
-        <div v-if="showLeftArrow" class="sc-message--carousel-list--arrow-left" @click="previousPage">
+      <div class="od-carousel--arrows">
+        <div v-if="showLeftArrow" class="od-carousel--arrow-left" @click="previousPage">
           <img src="/vendor/webchat/images/left.svg" />
         </div>
-        <div v-if="showRightArrow" class="sc-message--carousel-list--arrow-right" @click="nextPage">
+        <div v-if="showRightArrow" class="od-carousel--arrow-right" @click="nextPage">
           <img src="/vendor/webchat/images/right.svg" />
         </div>
       </div>
@@ -137,26 +137,97 @@ export default {
 
 <style lang="scss">
 .od-carousel {
-  .sc-message--carousel-list--arrows {
+  .od-carousel--arrows {
     position: absolute;
     top: calc(50% - 25px);
     width: calc(100% - 6px);
     left: 3px;
   }
-  .sc-message--carousel-list--arrows div {
+  .od-carousel--arrows div {
     width: 20px;
     height: 20px;
     cursor: pointer;
   }
-  .sc-message--carousel-list--arrows img {
+  .od-carousel--arrows img {
     width: 100%;
   }
 
-  .sc-message--carousel-list--arrows .sc-message--carousel-list--arrow-left {
+  .od-carousel--arrows .od-carousel--arrow-left {
     float: left;
   }
-  .sc-message--carousel-list--arrows .sc-message--carousel-list--arrow-right {
+
+  .od-carousel--arrows .od-carousel--arrow-right {
     float: right;
+  }
+
+  &.vertical {
+    padding: 0;
+    columns: 2;
+    column-gap: 5px;
+    max-width: 100%;
+    width: 329px;
+    
+    @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
+      width: 265px;
+    }
+
+    > div {
+      display: inline-block;
+    }
+
+    .od-message-rich {
+      margin-left: 0;
+      border-radius: 6px;
+      padding: 10px;
+      margin: 0 0 5px 0;
+      width: 162px;
+      max-width: 162px;
+      transform: translateZ(0);
+      
+      @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
+        padding: 5px;
+        width: 162px;
+        max-width: 162px;
+      }
+
+      .od-message-rich--title {
+        font-size: 13px;
+      }
+
+      .od-message-rich--subtitle {
+        display: none;
+      }
+
+      .od-message-rich--text {
+        font-size: 12px;
+        &:before {
+          display: none;
+        }
+      }
+      .od-message-rich--image {
+        margin: -10px -10px 10px -10px;
+        height: 91px;
+        
+        @media screen and (max-width: 375px), only screen and (device-width: 414px) and (device-height: 896px) {
+          margin: -5px -5px 5px -5px;
+          height: 73px;
+        }
+      }
+    }
+  }
+
+  &.horizontal {
+    padding: 0 20px;
+    position: relative;
+    max-width: 100%;
+    width: 311px;
+
+    .od-message-rich {
+      margin-left: 10px;
+      margin-right: 10px;
+      border-radius: 6px;
+      max-width: 100%;
+    }
   }
 }
 </style>

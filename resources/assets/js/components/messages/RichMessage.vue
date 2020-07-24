@@ -1,20 +1,20 @@
 <template>
   <div
-    class="od-message-rich mt reap mt-message-rich sc-message--rich"
+    class="od-message-rich mt reap"
     :class="[{
       animate: this.data.animate,
       linkable: (this.data.callback || this.data.link),
     }]"
     @click="_handleMessageClick"
   >
-    <div class="sc-message--rich--title">{{ data.title }}</div>
-    <div class="sc-message--rich--subtitle">{{ data.subtitle }}</div>
-    <p class="sc-message--rich--text" v-linkified>
+    <div class="od-message-rich--title">{{ data.title }}</div>
+    <div class="od-message-rich--subtitle">{{ data.subtitle }}</div>
+    <p class="od-message-rich--text" v-linkified>
       <span v-html="data.text"></span>
     </p>
 
     <template v-if="data.image">
-      <div class="sc-message--rich--image">
+      <div class="od-message-rich--image">
         <template v-if="data.image.url">
           <a :href="data.image.url" :target="data.image.link_new_tab ? '_blank' : '_parent'"><img :src="data.image.src" /></a>
         </template>
@@ -25,7 +25,7 @@
     </template>
 
     <template v-if="data.buttons.length">
-      <div class="sc-message--rich--buttons">
+      <div class="od-message-rich--buttons">
         <button
           v-for="(button, idx) in data.buttons"
           :key="idx" @click="_handleClick(button)">
@@ -67,10 +67,20 @@ export default {
 
 <style lang="scss">
 
-.od-message-rich.sc-message--rich {
-  border-radius: 6px;
+.od-message-rich.mt {
+  background: var(--od-received-message-background);
+  border-radius: 10px;
+  box-shadow: 0 13px 12px 2px rgba(0, 0, 0, 0.14);
   padding: 0 10px;
   max-width: calc(100% - 40px);
+  width: 251px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &.linkable {
+    cursor: pointer;
+  }
 
   &.emit {
     background-color: var(--od-sent-message-background);
@@ -111,13 +121,71 @@ export default {
     }
   }
 
-  .sc-message--rich--image {
-    text-align: center;
-    margin-bottom: 10px;
+  .od-message-rich--title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 22px;
+    color: #000000;
   }
 
-  .sc-message--rich--image img {
+  .od-message-rich--subtitle {
+    font-size: 12px;
+    line-height: 16px;
+    color: #575759;
+    margin-top: 5px;
+  }
+
+  .od-message-rich--text {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #000000;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    -webkit-font-smoothing: subpixel-antialiased;
+
+    &:before {
+      content: "";
+      display: block;
+      width: 32px;
+      height: 3px;
+      background: #a3cae9;
+      margin: 5px 0 9px 0;
+    }
+  }
+
+  .od-message-rich--image {
+    text-align: center;
+    order: -1;
+    height: 141px;
+    margin: 0 -10px 10px;
+  }
+
+  .od-message-rich--image img {
     max-width: 100%;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+
+  .od-message-rich--buttons {
+    text-align: center;
+    margin: 10px -10px -10px -10px;
+
+    button {
+      background: #00f;
+      color: #fff;
+      font-size: 12px;
+      line-height: 16px;
+      padding: 7px 10px;
+      width: 100%;
+      border-radius: 0;
+
+      &:hover {
+        background: darken(#00f, 10);
+        text-decoration: none;
+      }
+    }
   }
 }
 

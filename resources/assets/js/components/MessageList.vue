@@ -1,5 +1,5 @@
 <template>
-  <div class="od-message-list" ref="scrollList">
+  <div class="od-messagelist" ref="scrollList">
     <Message
       v-for="(message, idx) in messages"
       v-show="shouldShowMessage(message)"
@@ -140,7 +140,7 @@ export default {
 </script>
 
 <style lang="scss">
-.od-message-list {
+.od-messagelist {
    background-color: var(--od-message-list-background);
 }
 </style>

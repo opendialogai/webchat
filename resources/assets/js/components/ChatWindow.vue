@@ -1,5 +1,5 @@
 <template>
-  <div class="od-chat-window od-sc-chat-window" :class="{opened: isOpen, closed: !isOpen, expanded: isExpand, fullscreen: fullScreen, iframe: iframe}">
+  <div class="od-chat-window" :class="{opened: isOpen, closed: !isOpen, expanded: isExpand, fullscreen: fullScreen, iframe: iframe}">
     <Header
       v-if="!fullScreen"
       :teamName="agentProfile.teamName"
@@ -321,5 +321,126 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+.od-chat-window::-webkit-scrollbar {
+  display: none;
+}
+
+.od-chat-window {
+  font-family: "Gotham", "Arial";
+  transition: 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  height: 100%;
+
+  &.iframe {
+    height: calc(100% - 55px);
+    margin: 0 auto;
+    border-radius: 10px;
+
+    @media (min-width: 450px) {
+      width: 423px;
+    }
+  }
+}
+
+.font-playfair {
+  font-family: "Playfair Display";
+}
+
+.od-chat-window.iframe {
+  &.closed {
+    height: auto;
+    padding-right: 20px;
+    transition: none;
+    @media (min-width: 450px) {
+      padding-right: 0;
+    }
+  }
+
+  &.opened {
+    box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.3);
+    margin: 0px auto 0;
+
+    @media (min-width: 767px) {
+      margin: 20px auto 0;
+    }
+  }
+}
+
+// 👇🏻👇🏻👇🏻 OLD style you might need for the comments tab and max/min buttons👇🏻👇🏻👇🏻
+
+// .od-chat-window {
+//   height: calc(100vh - var(--header-height)) !important;
+// }
+// .comments-disabled .od-chat-window {
+//   height: 100% !important;
+// }
+// .comments-enabled .sc-header {
+//     display: none !important;
+// }
+
+// @media (max-width: 450px) {
+//   .od-chat-window {
+//     width: 100%;
+//     height: 100%;
+//     max-height: 100%;
+//     right: 0px;
+//     bottom: 0px;
+//     border-radius: 0px;
+//   }
+//   .od-chat-window {
+//     transition: 0.1s ease-in-out;
+//   }
+//   .od-chat-window.closed {
+//     bottom: 0px;
+//   }
+// }
+
+/* .od-chat-window {
+  border: 10px dashed orange;
+  width: 370px;
+  height: calc(100% - 120px);
+  max-height: 590px;
+  position: fixed;
+  right: 25px;
+  bottom: 100px;
+  box-sizing: border-box;
+  box-shadow: 0px 7px 40px 2px rgba(148, 149, 150, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: 0.3s ease-in-out;
+  border-radius: 10px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+
+.sc-message--me {
+  text-align: right;
+}
+.sc-message--them {
+  text-align: left;
+}
+
+@media (max-width: 450px) {
+  .od-chat-window {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    right: 0px;
+    bottom: 0px;
+    border-radius: 0px;
+  }
+  .od-chat-window {
+    transition: 0.1s ease-in-out;
+  }
+  .od-chat-window.closed {
+    bottom: 0px;
+  }
+} */
+
 </style>

@@ -1,5 +1,6 @@
 <template>
-  <div class="od-form-response mt sc-message--form-response" :class="[{
+  <div class="od-form-response mt" 
+    :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
         reap: this.author === 'them',

@@ -68,7 +68,7 @@
   width: 100%;
   justify-content: flex-end;
   border-radius: unset;
-  
+
   .od-header__btm-fade {
     display: none;
   }
@@ -81,5 +81,34 @@
         fill: var(--od-button-background);
       }
     }
+  }
+}
+
+// user input
+.od-user-input {
+  .od-user-input__form {
+    background-color: #f4f7f9;
+  }
+
+  .od-user-input__form-text-input {
+    color: #565867;
+  }
+
+  .od-user-input__buttons .od-send-btn:hover {
+    background-color: darken(#00f, 10);
+  }
+}
+
+// full-page form 
+
+.od-fp-form {
+  .od-fp-form__submit:hover {
+    background-color: darken(#00f, 10);
+    color: var(--od-button-text);
+  }
+
+  .od-fp-form__submit:focus {
+    border: 1px solid darken(#00f, 10);
+    outline: none;
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <transition leave-active-class="fadeOut">
     <div
-      class="od-message-typing mt-typing-indicator"
+      class="od-message-typing"
       :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
@@ -48,64 +48,92 @@ export default {
 };
 </script>
 <style lang="scss">
-.od-message-text {
-  &.emit {
-    background-color: var(--od-sent-message-background);
-    color: var(--od-sent-message-text);
+@import '../../../sass/0-globals/_vars.scss';
+@import '../../../sass/0-globals/_animations.scss';
+
+.od-message-typing.mt {
+  animation-duration: 0s;
+  background-color: transparent !important;
+  color: #efefeb !important;
+  font-size: 14px;
+  padding: 25px 20px 10px 5px;
+
+  @media (min-width: $media-med) {
+    padding: 15px 30px;
   }
 
-  &.reap {
-    background-color: var(--od-received-message-background);
-    color: var(--od-received-message-text);
-  }
-}
-
-.typewriter {
-  width: 60px;
-}
-.typewriter p {
-  overflow: hidden; /* Ensures the content is not revealed until the animation */
-  border-right: 0.15em solid currentColor;
-  white-space: nowrap; /* Keeps the content on a single line */
-  margin: -8px auto 0px;
-  line-height: 1.5;
-
-  /* animation: typing 1s steps(9, end), blink-caret 0.75s step-end infinite; */
-  animation: typing 3s steps(9, end) infinite,
-    blink-caret 0.75s step-end infinite;
-}
-
-/* The typing effect */
-@keyframes typing {
-  0% {
-    width: 0;
-    opacity: 1;
+  .typewriter {
+    width: 60px;
   }
 
-  /* Finish changes by here */
-  20% {
-    width: 100%;
+  .typewriter p {
+    overflow: hidden; /* Ensures the content is not revealed until the animation */
+    border-right: 0.15em solid currentColor;
+    white-space: nowrap; /* Keeps the content on a single line */
+    margin: -8px auto 0px;
+    line-height: 1.5;
+    /* animation: typing 1s steps(9, end), blink-caret 0.75s step-end infinite; */
+    animation: typing 3s steps(9, end) infinite,
+      blink-caret 0.75s step-end infinite;
   }
 
-  90% {
-    opacity: 1;
+  .all-blobs {
+    display: flex;
+    align-items: flex-start;
+
+    height: 20px;
+    @media (min-width: $media-med) {
+      height: 30px;
+    }
   }
 
-  /* Between 20% and 100%, nothing changes */
-  100% {
-    width: 100%;
-    opacity: 0;
-  }
-}
+  .blob {
+    height: 20px;
+    @media (min-width: $media-med) {
+      height: 30px;
+    }
+    width: 6px;
+    margin: 0 5px 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 
-/* The typewriter cursor effect */
-@keyframes blink-caret {
-  from,
-  to {
-    border-color: transparent;
+    &:nth-child(1) {
+      .blob-content {
+        animation-delay: 0s;
+      }
+    }
+
+    &:nth-child(2) {
+      .blob-content {
+        animation-delay: 0.2s;
+      }
+    }
+
+    &:nth-child(3) {
+      .blob-content {
+        animation-delay: 0.4s;
+      }
+    }
   }
-  50% {
-    border-color: currentColor;
+
+  // /* SAFARI GLITCH */
+  // .all-blobs div:nth-child(1) {
+  //   animation-delay: -0s;
+  // }
+  // .all-blobs div:nth-child(2) {
+  //   animation-delay: -0.2s;
+  // }
+  // .all-blobs div:nth-child(3) {
+  //   animation-delay: -0.4s;
+  // }
+
+  .blob-content {
+    max-height: 40px;
+    height: 30%;
+    background-color: black;
+    animation: andrewsBlobBob 1.2s infinite;
+    border-radius: 5px;
   }
 }
 </style>
