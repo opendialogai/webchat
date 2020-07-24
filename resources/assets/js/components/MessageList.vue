@@ -140,7 +140,25 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../sass/0-globals/_vars.scss';
+
 .od-messagelist {
-   background-color: var(--od-message-list-background);
+  background-color: var(--od-message-list-background);
+  -ms-overflow-style: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 0 0;
+
+  @media (min-width: $media-med) {
+    padding: 40px 0 0;
+  }
+    
+  &.fadeUp-enter-active {
+    animation-duration: 0.5s;
+  }
+}
+
+.od-messagelist::-webkit-scrollbar {
+  display: none;
 }
 </style>
