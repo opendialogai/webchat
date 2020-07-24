@@ -33,6 +33,21 @@ function mergeSettings(webchatSettings) {
     }
 }
 
+function isObject(item) {
+    return (item && typeof item === 'object' && !Array.isArray(item));
+  }
+  
+  // deep merge (non-recursive) property defaults, config and window vars
+  function merge(src, tar) {
+    Object.keys(src).forEach(key => {
+      if (tar[key] && isObject(src[key])) {
+        src[key] = Object.assign(src[key], tar[key])
+      } else if (!tar[key]) {
+        tar[key] = src[key]
+      }
+    })
+  }
+
 function openChatWindow() {
     document.body.classList.add('chatbot-no-scroll');
 
@@ -91,10 +106,10 @@ async function getSettings(url) {
 
 if (window.openDialogSettings) {
     const { url } = window.openDialogSettings;
-    mergeSettings(defaultWebchatSettings);
+    merge(defaultWebchatSettings, window.openDialogSettings);
 
     getSettings(url).then((settings) => {
-        Object.assign(window.openDialogSettings, settings);
+        merge(window.openDialogSettings, settings);
 
         if (window.openDialogSettings.general.chatbotFullpageCssPath) {
             addCssToPage(window.openDialogSettings.general.chatbotFullpageCssPath);
