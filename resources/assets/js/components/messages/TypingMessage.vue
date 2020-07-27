@@ -6,19 +6,7 @@
         animate: this.data.animate,
         emit : this.author === 'me',
         reap: this.author === 'them',
-    }]"
-    >
-      <!-- <div class="all-blobs">
-        <div class="blob">
-          <div class="blob-content"></div>
-        </div>
-        <div class="blob">
-          <div class="blob-content"></div>
-        </div>
-        <div class="blob">
-          <div class="blob-content"></div>
-        </div>
-      </div>-->
+    }]">
       <div ref="typewriter" class="typewriter">
         <p>typing...</p>
       </div>
@@ -72,7 +60,6 @@ export default {
     white-space: nowrap; /* Keeps the content on a single line */
     margin: -8px auto 0px;
     line-height: 1.5;
-    /* animation: typing 1s steps(9, end), blink-caret 0.75s step-end infinite; */
     animation: typing 3s steps(9, end) infinite,
       blink-caret 0.75s step-end infinite;
   }
@@ -89,9 +76,11 @@ export default {
 
   .blob {
     height: 20px;
+    
     @media (min-width: $media-med) {
       height: 30px;
     }
+    
     width: 6px;
     margin: 0 5px 0 0;
     display: flex;
@@ -116,17 +105,6 @@ export default {
       }
     }
   }
-
-  // /* SAFARI GLITCH */
-  // .all-blobs div:nth-child(1) {
-  //   animation-delay: -0s;
-  // }
-  // .all-blobs div:nth-child(2) {
-  //   animation-delay: -0.2s;
-  // }
-  // .all-blobs div:nth-child(3) {
-  //   animation-delay: -0.4s;
-  // }
 
   .blob-content {
     max-height: 40px;

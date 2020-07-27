@@ -1,9 +1,5 @@
 <template>
-  <div class="od-message-form mt od-message-form" 
-      :class="[{
-        emit : this.author === 'me',
-        reap: this.author === 'them'
-      }]">
+  <div class="od-message-form mt od-message-form reap">
     <div class="od-message-form--text" v-html="data.text"></div>
     <div v-if="errors.length" class="od-message-form--errors">
       <div v-for="error in errors">
@@ -87,10 +83,6 @@ export default {
     },
     message: {
       type: Object,
-      required: true
-    },
-    author: {
-      type: String,
       required: true
     },
     onFormButtonClick: {
@@ -180,11 +172,6 @@ export default {
   -webkit-font-smoothing: subpixel-antialiased;
   font-size: 15px;
   padding: 7px 15px;
-
-  &.emit {
-    background-color: var(--od-sent-message-background);
-    color: var(--od-sent-message-text);
-  }
 
   &.reap {
     background-color: var(--od-received-message-background);
