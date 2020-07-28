@@ -4,13 +4,6 @@ import 'core-js/es/object';
 import defaultWebchatSettings from './default-webchat-settings';
 import {merge, addCssToPage} from './mixins/bootstrapFunctions';
 
-/**
- * Merges window.openDialogSettings with the settings from the database.
- * Anything set in window.openDialogSettings will take preference over anything from the database
- *
- * @param webchatSettings
- */
-
 function openChatWindow() {
     document.body.classList.add('chatbot-no-scroll');
 
@@ -65,10 +58,10 @@ async function getSettings(url) {
 
 if (window.openDialogSettings) {
     const { url } = window.openDialogSettings;
-    merge(defaultWebchatSettings, window.openDialogSettings);
 
     getSettings(url).then((settings) => {
-        merge(window.openDialogSettings, settings);
+        window.openDialogSettings = merge(window.openDialogSettings, settings);
+        window.openDialogSettings = merge(window.openDialogSettings, defaultWebchatSettings);
 
         if (window.openDialogSettings.general.chatbotFullpageCssPath) {
             addCssToPage(window.openDialogSettings.general.chatbotFullpageCssPath);

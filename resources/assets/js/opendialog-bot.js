@@ -4,6 +4,7 @@ import 'url-search-params-polyfill';
 import 'core-js/es/object';
 import {uuid} from 'vue-uuid';
 import defaultWebchatSettings from './default-webchat-settings';
+import { merge, addCssToPage } from './mixins/bootstrapFunctions';
 
 let query = '';
 
@@ -29,51 +30,6 @@ if (!String.prototype.endsWith) {
     const newThisLen = (thisLen === undefined || thisLen > this.length) ? this.length : thisLen;
     return this.substring(newThisLen - search.length, newThisLen) === search;
   };
-}
-
-function addCssToPage(href) {
-  const link = document.createElement('link');
-  link.setAttribute('rel', 'stylesheet');
-  link.setAttribute('type', 'text/css');
-  link.setAttribute('href', `${href}?${window.openDialogSettings.css_version}`);
-  document.getElementsByTagName('head')[0].appendChild(link);
-}
-/**
- * Merges window.openDialogSettings with the settings from the database.
- * Anything set in window.openDialogSettings will take preference over anything from the database
- *
- * @param webchatSettings
- */
-function mergeSettings(webchatSettings) {
-  console.log('mergeSettings', webchatSettings, window.openDialogSettings);
-  // eslint-disable-next-line no-restricted-syntax
-  for (const [key, value] of Object.entries(webchatSettings)) {
-    if (!window.openDialogSettings[key]) {
-      window.openDialogSettings[key] = value;
-    } else if (typeof value === 'object') {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const [key2, value2] of Object.entries(value)) {
-        if (typeof window.openDialogSettings[key][key2] === 'undefined') {
-          window.openDialogSettings[key][key2] = value2;
-        }
-      }
-    }
-  }
-}
-
-function isObject(item) {
-  return (item && typeof item === 'object' && !Array.isArray(item));
-}
-
-// deep merge (non-recursive) property defaults, config and window vars
-function merge(src, tar) {
-  Object.keys(src).forEach(key => {
-    if (tar[key] && isObject(src[key])) {
-      src[key] = Object.assign(src[key], tar[key])
-    } else if (!tar[key]) {
-      tar[key] = src[key]
-    }
-  })
 }
 
 /**
@@ -107,6 +63,7 @@ function openChatWindow(url, div = null) {
   ifrm.style.backgroundColor= 'transparent';
   ifrm.style.height = '120px';
   ifrm.style.width = '130px';
+  ifrm.frameBorder = '0';
   window.document.body.appendChild(ifrm);
 
   listeners.load = () => {
@@ -118,11 +75,7 @@ function openChatWindow(url, div = null) {
     }, '*');
 
     if (window.openDialogSettings.general.chatbotCssPath) {
-      const link = document.createElement('link');
-      link.setAttribute('rel', 'stylesheet');
-      link.setAttribute('type', 'text/css');
-      link.setAttribute('href', window.openDialogSettings.general.chatbotCssPath);
-      ifrm.contentWindow.document.getElementsByTagName('head')[0].appendChild(link);
+      addCssToPage(window.openDialogSettings.general.chatbotCssPath, ifrm.contentWindow.document)
     }
   };
 
@@ -315,8 +268,6 @@ function checkValidPath(testPath) {
 async function setupWebchat(url, userId, preloadedSettings = null) {
   const urlParams = new URLSearchParams(window.location.search);
 
-  merge(defaultWebchatSettings, window.openDialogSettings);
-
   let callbackId = null;
   if (urlParams.has('callback_id')) {
     callbackId = urlParams.get('callback_id');
@@ -324,15 +275,16 @@ async function setupWebchat(url, userId, preloadedSettings = null) {
   if (preloadedSettings === null) {
     try {
       let response = await getSettings(url, userId, window.openDialogSettings, callbackId, window.innerWidth);
-
-      merge(window.openDialogSettings, response);
+      window.openDialogSettings = merge(window.openDialogSettings, response);
 
     } catch (error) {
       console.error("Call to OpenDialog webchat settings failed:", error);
     }
   } else {
-    merge(window.openDialogSettings, preloadedSettings);
+    window.openDialogSettings = merge(window.openDialogSettings, preloadedSettings);
   }
+
+  window.openDialogSettings = merge(window.openDialogSettings, defaultWebchatSettings);
 
   const mobileWidth = (window.openDialogSettings.mobileWidth)
     ? window.openDialogSettings.mobileWidth : 480;
