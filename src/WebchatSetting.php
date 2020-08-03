@@ -42,16 +42,12 @@ class WebchatSetting extends Model
     public const MESSAGE_ANIMATION         = 'messageAnimation';
     public const USER_TYPE                 = 'userType';
     public const SHOW_MINIMIZED            = 'showMinimized';
-    public const CLOSED_INTENT             = 'closedIntent';
     public const OPEN_INTENT               = 'openIntent';
     public const NEW_USER_START_MINIMIZED       = 'newUserStartMinimized';
-    public const NEW_USER_CLOSED_CALLBACK       = 'newUserClosedCallback';
     public const NEW_USER_OPEN_CALLBACK         = 'newUserOpenCallback';
     public const RETURNING_USER_START_MINIMIZED = 'returningUserStartMinimized';
-    public const RETURNING_USER_CLOSED_CALLBACK = 'returningUserClosedCallback';
     public const RETURNING_USER_OPEN_CALLBACK   = 'returningUserOpenCallback';
     public const ONGOING_USER_START_MINIMIZED   = 'ongoingUserStartMinimized';
-    public const ONGOING_USER_CLOSED_CALLBACK   = 'ongoingUserClosedCallback';
     public const ONGOING_USER_OPEN_CALLBACK     = 'ongoingUserOpenCallback';
     public const HIDE_TYPING_INDICATOR_ON_INTERNAL_MESSAGES = 'hideTypingIndicatorOnInternalMessages';
 
@@ -152,11 +148,8 @@ class WebchatSetting extends Model
                     WebchatSetting::CHATBOT_NAME,
                     WebchatSetting::CHATBOT_AVATAR_PATH,
                     WebchatSetting::RESTART_BUTTON_CALLBACK,
-                    WebchatSetting::NEW_USER_CLOSED_CALLBACK,
                     WebchatSetting::NEW_USER_OPEN_CALLBACK,
-                    WebchatSetting::RETURNING_USER_CLOSED_CALLBACK,
                     WebchatSetting::RETURNING_USER_OPEN_CALLBACK,
-                    WebchatSetting::ONGOING_USER_CLOSED_CALLBACK,
                     WebchatSetting::ONGOING_USER_OPEN_CALLBACK,
                 ],
                 WebchatSetting::BOOLEAN => [
