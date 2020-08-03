@@ -1,0 +1,164 @@
+.opendialog-chat-window {
+  // Class-based animations
+  .animateStartingState {
+    opacity: 0;
+  }
+  
+  .animateSlideUp {
+    animation: slide-up 0.8s forwards;
+  }
+  
+  .animateDelay1 {
+    animation-delay: 0.2s;
+  }
+  
+  .animateDelay2 {
+    animation-delay: 0.5s;
+  }
+  
+  .animateDelay3 {
+    animation-delay: 0.8s;
+  }
+  
+  .animateDelay4 {
+    animation-delay: 2s;
+  }
+  
+  .button-delay1 {
+    animation-delay: 0.6s;
+  }
+  
+  .button-delay2 {
+    animation-delay: 0.75s;
+  }
+  
+  .button-delay3 {
+    animation-delay: 0.9s;
+  }
+  
+  .button-delay4 {
+    animation-delay: 1.05s;
+  }
+
+  // layout
+  .mt-wrapper {
+    max-width: 1000px;
+    width: calc(100% - 50px);
+
+    @media (min-width: 768px) {
+      padding-left: 85px;
+    }
+  }
+
+  // chat window
+  .od-chat-window {
+    font-family: 'Roboto', Arial, sans-serif;
+    font-weight: 400;
+  }
+
+  // header
+  .od-header {
+    border-image: linear-gradient(45deg, var(--od-icon-background), var(--od-icon-hover-background)) 1;
+    border-top-color: var(--od-icon-background);
+    border-top-style: solid;
+    border-top-width: 4px;
+    height: 68px;
+
+    @media (min-width: 768px) {
+      height: 88px;
+    }
+
+    .od-header-nav {
+      flex-direction: row;
+      justify-content: flex-start;
+      padding: 16px;
+
+      @media (min-width: 768px) {
+        margin: 0 auto;
+        padding: 16px 0;
+      }
+    }
+
+    .od-header-nav__logo {
+      order: 0;
+      margin: 0 16px 0 0;
+      width: auto;
+
+      @media (min-width: 768px) {
+        margin-right: 24px;
+      }
+
+      img {
+        height: 100%;
+      }
+    }
+
+    .od-header-nav__team-name {
+      order: 1;
+      width: auto;
+
+      span {
+        font-size: 16px;
+        font-weight: 700;
+      }
+    }
+
+    .od-header-nav__restart-button {
+      display: none;
+    }
+
+    .od-header-nav__download-button {
+      display: none;
+    }
+
+    .od-header__btm-fade {
+      display: none;
+    }
+  }
+
+  // message bubbles
+  .mt {
+    box-shadow: 0px 4px 8px 0px rgba(162, 182, 189, 0.45);
+    font-family: 'Roboto', Arial, sans-serif;
+    font-weight: 500;
+
+    &.reap {
+      padding-top: 29px;
+
+      @media (min-width: 768px) {
+        padding-top: 15px;
+      }
+    }
+  }
+
+  // avatar
+  .od-author.mt {
+    background: linear-gradient(to left top, var(--od-icon-background), var(--od-icon-hover-background));
+    border-radius: 50%;
+    box-shadow: none;
+    height: 43px;
+    padding: 3px;
+    width: 43px;
+
+    @media (min-width: 768px) {
+      height: 59px;
+      width: 59px;
+    }
+
+    &.reap {
+      margin: 0 0 -22px 16px;
+
+      @media (min-width: 768px) {
+        margin: 0 0 -70px -85px;
+      }
+    }
+
+    img.avatar {
+      height: auto;
+      width: 100%;
+    }
+  }
+
+}
+
+

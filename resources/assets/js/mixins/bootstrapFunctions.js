@@ -1,11 +1,11 @@
-import _ from 'lodash';
+import deepMerge from 'lodash/merge';
 
 export function isObject(item) {
   return (item && typeof item === 'object' && !Array.isArray(item));
 }
 
 export function merge(src, tar) {
-  return _.merge({}, tar, src)
+  return deepMerge({}, tar, src);
 }
 
 export function addCssToPage(href, el) {

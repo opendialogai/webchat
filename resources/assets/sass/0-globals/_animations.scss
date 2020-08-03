@@ -119,3 +119,14 @@
     transform: scale(1);
   }
 }
+
+@keyframes slide-up {
+  from {
+    transform: translate(0px, 30px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0px, 0px);
+    opacity: 1;
+  }
+}
