@@ -2,51 +2,7 @@ import 'promise-polyfill/src/polyfill';
 import 'whatwg-fetch';
 import 'core-js/es/object';
 import defaultWebchatSettings from './default-webchat-settings';
-
-function addCssToPage(href) {
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('type', 'text/css');
-    link.setAttribute('href', `${href}?${window.openDialogSettings.css_version}`);
-    document.getElementsByTagName('body')[0].appendChild(link);
-}
-
-/**
- * Merges window.openDialogSettings with the settings from the database.
- * Anything set in window.openDialogSettings will take preference over anything from the database
- *
- * @param webchatSettings
- */
-function mergeSettings(webchatSettings) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const [key, value] of Object.entries(webchatSettings)) {
-        if (!window.openDialogSettings[key]) {
-            window.openDialogSettings[key] = value;
-        } else if (typeof value === 'object') {
-            // eslint-disable-next-line no-restricted-syntax
-            for (const [key2, value2] of Object.entries(value)) {
-                if (typeof window.openDialogSettings[key][key2] === 'undefined') {
-                    window.openDialogSettings[key][key2] = value2;
-                }
-            }
-        }
-    }
-}
-
-function isObject(item) {
-    return (item && typeof item === 'object' && !Array.isArray(item));
-  }
-  
-  // deep merge (non-recursive) property defaults, config and window vars
-  function merge(src, tar) {
-    Object.keys(src).forEach(key => {
-      if (tar[key] && isObject(src[key])) {
-        src[key] = Object.assign(src[key], tar[key])
-      } else if (!tar[key]) {
-        tar[key] = src[key]
-      }
-    })
-  }
+import {merge, addCssToPage} from './mixins/bootstrapFunctions';
 
 function openChatWindow() {
     document.body.classList.add('chatbot-no-scroll');
@@ -59,11 +15,7 @@ function openChatWindow() {
     }, '*');
 
     if (window.openDialogSettings.general.chatbotCssPath) {
-        const link = document.createElement('link');
-        link.setAttribute('rel', 'stylesheet');
-        link.setAttribute('type', 'text/css');
-        link.setAttribute('href', window.openDialogSettings.general.chatbotCssPath);
-        window.document.getElementsByTagName('head')[0].appendChild(link);
+        addCssToPage(window.openDialogSettings.general.chatbotCssPath);
     }
 
     window.addEventListener('message', (event) => {
@@ -106,10 +58,10 @@ async function getSettings(url) {
 
 if (window.openDialogSettings) {
     const { url } = window.openDialogSettings;
-    merge(defaultWebchatSettings, window.openDialogSettings);
 
     getSettings(url).then((settings) => {
-        merge(window.openDialogSettings, settings);
+        window.openDialogSettings = merge(window.openDialogSettings, settings);
+        window.openDialogSettings = merge(window.openDialogSettings, defaultWebchatSettings);
 
         if (window.openDialogSettings.general.chatbotFullpageCssPath) {
             addCssToPage(window.openDialogSettings.general.chatbotFullpageCssPath);
