@@ -118,13 +118,6 @@ class SettingsEndpointTest extends TestCase
         $setting->parent()->associate($generalSetting);
         $setting->save();
 
-        $setting2 = new WebchatSetting();
-        $setting2->name = 'newUserClosedCallback';
-        $setting2->value = 'new_user_closed_callback';
-        $setting2->type = 'string';
-        $setting2->parent()->associate($generalSetting);
-        $setting2->save();
-
         $setting3 = new WebchatSetting();
         $setting3->name = 'newUserOpenCallback';
         $setting3->value = 'new_user_open_callback';
@@ -139,13 +132,6 @@ class SettingsEndpointTest extends TestCase
         $setting4->parent()->associate($generalSetting);
         $setting4->save();
 
-        $setting5 = new WebchatSetting();
-        $setting5->name = 'returningUserClosedCallback';
-        $setting5->value = 'returning_user_closed_callback';
-        $setting5->type = 'string';
-        $setting5->parent()->associate($generalSetting);
-        $setting5->save();
-
         $setting6 = new WebchatSetting();
         $setting6->name = 'returningUserOpenCallback';
         $setting6->value = 'returning_user_open_callback';
@@ -159,13 +145,6 @@ class SettingsEndpointTest extends TestCase
         $setting7->type = 'boolean';
         $setting7->parent()->associate($generalSetting);
         $setting7->save();
-
-        $setting8 = new WebchatSetting();
-        $setting8->name = 'ongoingUserClosedCallback';
-        $setting8->value = 'ongoing_user_closed_callback';
-        $setting8->type = 'string';
-        $setting8->parent()->associate($generalSetting);
-        $setting8->save();
 
         $setting9 = new WebchatSetting();
         $setting9->name = 'ongoingUserOpenCallback';
@@ -187,7 +166,6 @@ class SettingsEndpointTest extends TestCase
             ->assertJson([
                 'userType' => 'new',
                 'showMinimized' => true,
-                'closedIntent' => 'new_user_closed_callback',
                 'openIntent' => 'new_user_open_callback',
             ], TRUE);
 
@@ -202,7 +180,6 @@ class SettingsEndpointTest extends TestCase
             ->assertJson([
                 'userType' => 'ongoing',
                 'showMinimized' => false,
-                'closedIntent' => 'ongoing_user_closed_callback',
                 'openIntent' => 'ongoing_user_open_callback',
             ], TRUE);
 
@@ -217,7 +194,6 @@ class SettingsEndpointTest extends TestCase
             ->assertJson([
                 'userType' => 'returning',
                 'showMinimized' => false,
-                'closedIntent' => 'returning_user_closed_callback',
                 'openIntent' => 'returning_user_open_callback',
             ], TRUE);
     }

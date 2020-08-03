@@ -56,7 +56,6 @@ class WebchatSettings
 
         $config[WebchatSetting::USER_TYPE] = ChatbotUser::NEW_USER;
         $config[WebchatSetting::SHOW_MINIMIZED] = false;
-        $config[WebchatSetting::CLOSED_INTENT] = 'CLOSED_MESSAGE';
         $config[WebchatSetting::OPEN_INTENT] = 'WELCOME';
 
         $userId = $request->get('user_id') ?? null;
@@ -97,19 +96,16 @@ class WebchatSettings
         switch ($userType) {
             case ChatbotUser::NEW_USER:
                 $settings[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::NEW_USER_START_MINIMIZED] ?? false;
-                $settings[WebchatSetting::CLOSED_INTENT] = $general[WebchatSetting::NEW_USER_CLOSED_CALLBACK] ?? null;
                 $settings[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::NEW_USER_OPEN_CALLBACK] ?? null;
                 break;
 
             case ChatbotUser::RETURNING_USER:
                 $settings[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::RETURNING_USER_START_MINIMIZED] ?? false;
-                $settings[WebchatSetting::CLOSED_INTENT] = $general[WebchatSetting::RETURNING_USER_CLOSED_CALLBACK] ?? null;
                 $settings[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::RETURNING_USER_OPEN_CALLBACK] ?? null;
                 break;
 
             case ChatbotUser::ONGOING_USER:
                 $settings[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::ONGOING_USER_START_MINIMIZED] ?? false;
-                $settings[WebchatSetting::CLOSED_INTENT] = $general[WebchatSetting::ONGOING_USER_CLOSED_CALLBACK] ?? null;
                 $settings[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::ONGOING_USER_OPEN_CALLBACK] ?? null;
                 break;
         }
