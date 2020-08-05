@@ -3,7 +3,7 @@
     <button
       v-if="!confirmCloseChat"
       @click.stop="toggleConfirmCloseChat"
-      class="end-chat-btn"
+      class="od-end-chat-btn"
       :class="{confirmCloseChatAnimate: !confirmCloseChat}"
     >{{ endChatText }}</button>
     <div
@@ -77,9 +77,9 @@
 </script>
 
 <style lang="scss">
-.end-chat-btn,
-.end-chat-btn:hover,
-.end-chat-btn:focus {
+.od-end-chat-btn,
+.od-end-chat-btn:hover,
+.od-end-chat-btn:focus {
   border: none;
   outline: none;
   background: none;
