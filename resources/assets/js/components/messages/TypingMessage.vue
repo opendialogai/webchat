@@ -1,28 +1,29 @@
 <template>
   <transition leave-active-class="fadeOut">
     <div
-      class="od-message-typing"
+      class="od-message-typing mt"
       :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
         reap: this.author === 'them',
     }]">
-      <div ref="typewriter" class="typewriter">
-        <p>typing...</p>
+      <div class="all-blobs">
+        <div class="blob">
+          <div class="blob-content"></div>
+        </div>
+        <div class="blob">
+          <div class="blob-content"></div>
+        </div>
+        <div class="blob">
+          <div class="blob-content"></div>
+        </div>
       </div>
     </div>
   </transition>
 </template>
 <script>
 export default {
-  methods: {
-    ctaText() {
-      setTimeout(() => {
-        this.$refs.typewriter.classList.add("typewriter");
-      }, 1000);
-    }
-  },
-
+  methods: {},
   props: {
     data: {
       type: Object,
@@ -75,43 +76,42 @@ export default {
   }
 
   .blob {
-    height: 20px;
-    
-    @media (min-width: $media-med) {
-      height: 30px;
-    }
-    
-    width: 6px;
-    margin: 0 5px 0 0;
+    height: 22px;
+    margin: 0 16px 0 0;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
 
     &:nth-child(1) {
       .blob-content {
+        background-color: var(--od-icon-background);
         animation-delay: 0s;
       }
     }
 
     &:nth-child(2) {
       .blob-content {
+        background-color: var(--od-button-background);
         animation-delay: 0.2s;
       }
     }
 
     &:nth-child(3) {
+      margin-right: 0;
+
       .blob-content {
+        background-color: var(--od-icon-hover-background);
         animation-delay: 0.4s;
       }
     }
   }
 
   .blob-content {
-    max-height: 40px;
-    height: 30%;
-    background-color: black;
-    animation: andrewsBlobBob 1.2s infinite;
+    max-height: 22px;
+    height: 45%;
+    animation: andrewsBlobBob 1.1s infinite;
     border-radius: 5px;
+    width: 10px;
   }
 }
 </style>
