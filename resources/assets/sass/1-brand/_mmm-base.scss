@@ -43,7 +43,7 @@
   // layout
   .mt-wrapper {
     max-width: 1000px;
-    width: calc(100% - 50px);
+    width: calc(100% - 32px);
 
     @media (min-width: 768px) {
       padding: 0 85px;
@@ -224,13 +224,37 @@
 
   // user input
   .od-user-input {
-    padding: 0 85px 80px 85px;
+    padding: 0 16px 16px;
+
+    @media (min-width: $media-med) {
+      padding: 0 85px 80px 85px;
+    }
 
     .od-user-input__form {
       box-shadow:  0px 19px 24px 0px rgba(162, 182, 189, 0.45);
       border-radius: 24px;
+      height: auto;
       max-width: 830px;
+      max-height: 230px;
       padding: 40px 24px 24px;
+      transition: min-height 0.3s linear;
+
+      &.disabled {
+        background: var(--od-message-list-background);
+        box-shadow: none;
+        height: 0;
+        min-height: 0;
+        overflow: hidden;
+        padding: 0;
+
+        .od-user-input__form-text-input {
+          visibility: hidden;
+        }
+
+        .od-send-btn {
+          visibility: hidden;
+        }
+      }
     }
 
     .od-user-input__form-text-input {
@@ -258,6 +282,65 @@
   // end chat
   .od-end-chat-btn {
     display: none;
+  }
+
+  // external buttons
+  .od-external-buttons {
+    margin: 0 -16px;
+    max-width: 830px;
+
+    @media (min-width: $media-med) {
+      margin: 0 auto;
+    }
+
+    .od-external-buttons__row {
+      align-items: center;
+      display: flex;
+      height: 68px;
+      padding: 0;
+
+      @media (min-width: $media-med) {
+        height: 120px;
+      }
+    }
+
+    .od-external-button {
+      .od-external-button__button {
+        font-size: 16px;
+        line-height: 20px;
+        margin: 10px 12px;
+        padding: 14px 16px;
+      }
+    }
+
+    .od-external-buttons__left-arrow,
+    .od-external-buttons__right-arrow {
+      height: 68px;
+      padding: 16px;
+      width: 68px;
+
+      @media (min-width: $media-med) {
+        height: 120px;
+        padding: 27px;
+        width: 120px;
+      }
+    }
+
+    .od-external-buttons__left-arrow {
+      left: -34px;
+
+      @media (min-width: $media-med) {
+        left: -60px;
+      }
+    }
+  
+    .od-external-buttons__right-arrow {
+      right: -34px;
+
+      @media (min-width: $media-med) {
+        right: -60px;
+      }
+    }
   }
 }
 

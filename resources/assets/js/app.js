@@ -15,6 +15,7 @@ import VueJsCookie from 'vue-js-cookie';
 import store from '@/store';
 
 import linkify from 'vue-linkify'
+import { longClickDirective } from 'vue-long-click'
 import Launcher from './components/Launcher.vue'
 
 require('@/bootstrap');
@@ -41,6 +42,7 @@ window.Vue.prototype.$chat = {
 }
 
 window.Vue.directive('linkified', linkify)
+window.Vue.directive('longclick', longClickDirective({delay: 0, interval: 400}))
 
 // eslint-disable-next-line no-unused-vars
 const { app } = new window.Vue({
