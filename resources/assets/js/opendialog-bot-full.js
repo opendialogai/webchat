@@ -4,6 +4,17 @@ import 'core-js/es/object';
 import defaultWebchatSettings from './default-webchat-settings';
 import {merge, addCssToPage} from './mixins/bootstrapFunctions';
 
+const dev = location.hostname === 'localhost'
+
+if (!dev) {
+    // prompt the user when they attempt to reload/leave the page
+    // this is extremely irritating whilst developing so not applicable for localhost!
+    window.addEventListener('beforeunload', e => {
+        e.preventDefault(); 
+        e.returnValue = '';
+    });
+}
+
 function openChatWindow() {
     document.body.classList.add('chatbot-no-scroll');
 
