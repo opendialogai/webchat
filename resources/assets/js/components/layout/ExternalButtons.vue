@@ -70,13 +70,13 @@ export default {
         this.showLeftArrow = false
         this.showRightArrow = false
 
-        setTimeout(() => {
+        this.$nextTick(() => {
           if (this.$refs.externalButtonsRow) {
             if (this.$refs.externalButtonsRow.scrollWidth > (this.$refs.externalButtonsRow.offsetWidth + this.$refs.externalButtonsRow.scrollLeft)) {
               this.showRightArrow = true
             }
           }
-        }, 1600)
+        })
       }
     }
   },

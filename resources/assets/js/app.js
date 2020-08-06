@@ -42,7 +42,7 @@ window.Vue.prototype.$chat = {
 }
 
 window.Vue.directive('linkified', linkify)
-window.Vue.directive('longclick', longClickDirective({delay: 0, interval: 400}))
+window.Vue.directive('longclick', longClickDirective({delay: 10, interval: 100}))
 
 // eslint-disable-next-line no-unused-vars
 const { app } = new window.Vue({
