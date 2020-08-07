@@ -4,3 +4,5 @@
 /public
 .phpunit.result.cache
 /images
+/resources/assets/sass/1-brand/*.*
+/resources/assets/sass/client-custom.scss
