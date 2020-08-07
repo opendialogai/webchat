@@ -1,6 +1,7 @@
 import 'promise-polyfill/src/polyfill';
 import 'whatwg-fetch';
 import 'core-js/es/object';
+import {uuid} from 'vue-uuid';
 import defaultWebchatSettings from './default-webchat-settings';
 import {merge, addCssToPage} from './mixins/bootstrapFunctions';
 
@@ -11,6 +12,7 @@ function openChatWindow() {
     window.postMessage({
         openDialogSettings: window.openDialogSettings,
         loadSettings: window.openDialogSettings,
+        loadUuid: sessionStorage.uuid ? sessionStorage.uuid : uuid.v4(),
         newPathname: window.location.pathname,
     }, '*');
 
