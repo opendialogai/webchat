@@ -3,7 +3,10 @@
 @import "./0-globals/vars";
 @import "./0-globals/animations";
 
+
+// base OD styles
+// @import './1-brand/open-dialog';
+
 // import required brand scss files below
-// for whitelabel projects, import the base styles first and then brand specific overrides 
 @import './1-brand/mmm-base';
 
