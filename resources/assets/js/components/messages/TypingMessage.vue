@@ -1,28 +1,29 @@
 <template>
   <transition leave-active-class="fadeOut">
     <div
-      class="od-message-typing"
+      class="od-message-typing mt"
       :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
         reap: this.author === 'them',
     }]">
-      <div ref="typewriter" class="typewriter">
-        <p>typing...</p>
+      <div class="all-blobs">
+        <div class="blob">
+          <div class="blob-content"></div>
+        </div>
+        <div class="blob">
+          <div class="blob-content"></div>
+        </div>
+        <div class="blob">
+          <div class="blob-content"></div>
+        </div>
       </div>
     </div>
   </transition>
 </template>
 <script>
 export default {
-  methods: {
-    ctaText() {
-      setTimeout(() => {
-        this.$refs.typewriter.classList.add("typewriter");
-      }, 1000);
-    }
-  },
-
+  methods: {},
   props: {
     data: {
       type: Object,

@@ -173,7 +173,7 @@ export default {
     margin: 10px -10px -10px -10px;
 
     button {
-      background: #00f;
+      background: var(--od-button-background);
       color: #fff;
       font-size: 12px;
       line-height: 16px;
@@ -182,7 +182,7 @@ export default {
       border-radius: 0;
 
       &:hover {
-        background: darken(#00f, 10);
+        background: var(--od-button-hover-background);
         text-decoration: none;
       }
     }

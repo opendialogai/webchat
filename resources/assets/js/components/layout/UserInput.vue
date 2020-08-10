@@ -37,7 +37,15 @@
         <button
           @click.prevent="_submitText"
           class="od-send-btn"
-        >{{ sendButtonText }}</button>
+        >{{ sendButtonText }}
+          <span class="od-send-btn__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15">
+              <g fill="#FFF">
+                  <path d="M8.521 11.864l-2.617-1.496c-.116-.066-.21-.012-.21.122v3.363c0 .887.471 1.062 1.05.389l1.82-2.124c.074-.084.054-.198-.043-.253zM16.138.142L.671 5.298c-.841.28-.9.87-.13 1.31l4.12 2.355c.097.054.25.048.34-.017l8.192-5.728c.456-.319.493-.273.082.102L6.34 9.657c-.099.09-.084.217.032.283l6.006 3.432c.48.275 1 .064 1.152-.468L16.953.924c.183-.64-.184-.992-.815-.782z"/>
+              </g>
+          </svg>
+          </span>
+        </button>
 
         <EndChatButton
           @close-chat="closeChat"
@@ -311,6 +319,11 @@ export default {
         outline: none;
         border: none;
       }
+    }
+
+    .od-send-btn__icon {
+      display: none;
+      margin-left: 12px;
     }
   }
 }

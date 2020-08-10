@@ -18,7 +18,8 @@
     />
     <Message
       v-if="showTypingIndicator"
-      :message="{author: 'them', type: 'typing'}"
+      :message="{author: 'them', type: 'typing', data: {}, mode: 'webchat'}"
+      :mode-data="{}"
       :chatImageUrl="chatImageUrl"
       :onLinkClick="onLinkClick"
       :onButtonClick="onButtonClick"
