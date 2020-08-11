@@ -6,6 +6,13 @@
       v-on:sendExternalButton="_submitExternalButton"
     />
 
+    <Autocomplete
+      v-if="lastMessage.type === 'autocomplete'"
+      :data="lastMessage.data"
+      :message="lastMessage"
+      :onButtonClick="onButtonClick"
+    />
+
     <div v-if="file" class="od-file-container">
       <span class="od-icon-file-message">
         <img src="../assets/file.svg" alt="genericFileIcon" height="15" />
@@ -17,6 +24,7 @@
     </div>
 
     <form
+      v-if="lastMessage.type !== 'autocomplete'"
       class="od-user-input__form"
       :class="{active: inputActive, disabled: !contentEditable}"
     >
@@ -60,11 +68,13 @@
 
 import ExternalButtons from "./ExternalButtons.vue";
 import EndChatButton from "./EndChatButton";
+import Autocomplete from '../messages/Autocomplete';
 
 export default {
   components: {
     EndChatButton,
-    ExternalButtons
+    ExternalButtons,
+    Autocomplete
   },
   props: {
     contentEditable: {

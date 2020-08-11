@@ -145,6 +145,7 @@
   import chatIcon from "./assets/chat-icon.svg";
   import HandToHumanMessage from "./messages/HandToHumanMessage";
   import MetaMessage from "./messages/MetaMessage";
+  import Autocomplete from './messages/Autocomplete';
 
 export default {
   data() {
@@ -169,6 +170,7 @@ export default {
     AuthorMessage,
     HandToHumanMessage,
     MetaMessage,
+    Autocomplete
   },
   props: {
     message: {

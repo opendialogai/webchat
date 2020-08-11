@@ -38,6 +38,9 @@ export default {
       type: String,
       required: false
     }
+  },
+  mounted() {
+    console.log('author', this.data)
   }
 };
 </script>
