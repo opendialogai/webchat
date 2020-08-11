@@ -1,5 +1,5 @@
 <template>
-  <div class="od-autocomplete" :class="{'od-autocomplete--expanded': results.length > -1}">
+  <div class="od-autocomplete" :class="{'od-autocomplete--expanded': results.length}">
     <div class="od-autocomplete__search-container">
       <input 
         v-model="searchTerm" 
@@ -17,23 +17,22 @@
       </span>
       <button v-show="results.length" class="od-autocomplete__submit" @click.prevent="_handleClick()">{{data.submit_text}}</button>
     </div>
-    <div class="od-autocomplete__results">
+    <div v-show="results.length" class="od-autocomplete__results">
       <p>{{data.title}}</p>
-      <vue-scrollbar classes="od-autocomplete__scrollable" ref="Scrollbar">
+      <perfect-scrollbar class="od-autocomplete__scrollable">
         <ul class="od-autocomplete__results-list">
           <li @click="_handleClick(result.name)" v-for="(result, i) in results" :key="i">{{result.name}}</li>
         </ul>
-      </vue-scrollbar>
+      </perfect-scrollbar>
     </div>
   </div>
 </template>
 
 <script>
-import VueScrollbar from 'vue2-scrollbar'
 
 export default {
   components: {
-    VueScrollbar
+    
   },
   props: {
     data: {
@@ -51,39 +50,8 @@ export default {
   },
   data() {
     return {
-        searchTerm: 'my',
-        results: [
-  {
-    "name": "Mymedo-pen"
-  },
-  {
-    "name": "Mymedacol"
-  },
-  {
-    "name": "Mymedafix"
-  },
-  {
-    "name": "Mymedamol"
-  },
-  {
-    "name": "Mymediril"
-  },
-  {
-    "name": "Mymedivir"
-  },
-  {
-    "name": "Mymedocol"
-  },
-  {
-    "name": "Mymedaject"
-  },
-  {
-    "name": "Mymedatabs"
-  },
-  {
-    "name": "Mymedixine"
-  }
-]
+        searchTerm: '',
+        results: []
     };
   },
   methods: {
