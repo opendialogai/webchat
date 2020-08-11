@@ -85,6 +85,10 @@ export default {
   },
   computed: {
     searchTermRemainder() {
+      if (!this.searchTerm || this.searchTerm === '') {
+        return ''
+      }
+
       const l = this.searchTerm.length
       const firstResult = this.results.length ? this.results[0].name.toLowerCase() : null
       
