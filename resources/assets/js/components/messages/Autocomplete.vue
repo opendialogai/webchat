@@ -19,15 +19,22 @@
     </div>
     <div class="od-autocomplete__results">
       <p>{{data.title}}</p>
-      <ul class="od-autocomplete__results-list">
-        <li @click="_handleClick(result.name)" v-for="(result, i) in results" :key="i">{{result.name}}</li>
-      </ul>
+      <vue-scrollbar classes="od-autocomplete__scrollable" ref="Scrollbar">
+        <ul class="od-autocomplete__results-list">
+          <li @click="_handleClick(result.name)" v-for="(result, i) in results" :key="i">{{result.name}}</li>
+        </ul>
+      </vue-scrollbar>
     </div>
   </div>
 </template>
 
 <script>
+import VueScrollbar from 'vue2-scrollbar'
+
 export default {
+  components: {
+    VueScrollbar
+  },
   props: {
     data: {
       type: Object,
