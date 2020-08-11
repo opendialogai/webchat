@@ -56,6 +56,16 @@ const store = new Vuex.Store({
         }
       }
       
+    },
+    fetchAutocomplete({}, payload) {
+      return new Promise((resolve, reject) => {
+        axios.get(payload).then(res => {
+          resolve(res.data)
+        }).catch(err => {
+          console.log(err)
+          reject()
+        })
+      })
     }
   },
   getters: {},

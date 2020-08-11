@@ -24,7 +24,6 @@
     </div>
 
     <form
-      v-if="lastMessage.type !== 'autocomplete'"
       class="od-user-input__form"
       :class="{active: inputActive, disabled: !contentEditable}"
     >
