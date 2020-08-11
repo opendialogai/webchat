@@ -21,7 +21,15 @@
       <p>{{data.title}}</p>
       <perfect-scrollbar class="od-autocomplete__scrollable">
         <ul class="od-autocomplete__results-list">
-          <li @click="_handleClick(result.name)" v-for="(result, i) in results" :key="i">{{result.name}}</li>
+          <li 
+            tabindex="0" 
+            @keyup.tab="searchTerm = result.name" 
+            @keyup.enter="_handleClick(result.name)" 
+            @click="_handleClick(result.name)" 
+            v-for="(result, i) in results" 
+            :key="i">
+              {{result.name}}
+            </li>
         </ul>
       </perfect-scrollbar>
     </div>
