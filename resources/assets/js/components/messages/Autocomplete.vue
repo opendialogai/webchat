@@ -40,9 +40,6 @@
 <script>
 
 export default {
-  components: {
-    
-  },
   props: {
     data: {
       type: Object,
