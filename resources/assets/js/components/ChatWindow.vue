@@ -15,6 +15,7 @@
       :showFullPageFormInput="showFullPageFormInput"
       :showFullPageRichInput="showFullPageRichInput"
     />
+    <ProgressBar v-show="$store.state.messageMetaData.progressPercent !== null" />
     <MessageList
       v-if="showMessages"
       :messages="messages"
@@ -79,6 +80,7 @@
   import FullPageFormInput from './messages/inputs/FullPageFormInput.vue'
   import FullPageRichInput from './messages/inputs/FullPageRichInput.vue'
   import LongTextUserInput from './messages/inputs/LongTextUserInput.vue'
+  import ProgressBar from './layout/ProgressBar';
 
 export default {
   components: {
@@ -87,7 +89,8 @@ export default {
     UserInput,
     FullPageFormInput,
     FullPageRichInput,
-    LongTextUserInput
+    LongTextUserInput,
+    ProgressBar
   },
   props: {
     contentEditable: {
