@@ -65,6 +65,7 @@ export default {
     left: 0;
     position: absolute;
     top: 0;
+    transition: width 0.4s ease-out;
 
     &:after {
       background-color: var(--od-icon-background);
