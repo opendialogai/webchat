@@ -15,7 +15,9 @@
       :showFullPageFormInput="showFullPageFormInput"
       :showFullPageRichInput="showFullPageRichInput"
     />
-    <ProgressBar v-show="$store.state.messageMetaData.progressPercent !== null" />
+    <transition name="fade">
+      <ProgressBar v-show="$store.state.messageMetaData.progressPercent !== null" />
+    </transition>
     <MessageList
       v-if="showMessages"
       :messages="messages"

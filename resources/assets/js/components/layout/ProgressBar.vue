@@ -30,11 +30,11 @@ export default {
 
 .od-progress-bar {
   background-color: var(--od-message-list-background);
-  height: 40px;
+  min-height: 40px;
   padding: 16px;
 
   @media (min-width: $media-med) {
-    height: 50px;
+    min-height: 50px;
   }
 
   .od-progress-bar__wrapper {
@@ -50,6 +50,7 @@ export default {
     background-color: #c8c8c8;
     flex: 1 0 auto;
     height: 2px;
+    margin-right: 16px;
     max-width: 136px;
     position: relative;
 
@@ -81,6 +82,7 @@ export default {
 
   .od-progress-bar__label {
     font-size: 13px;
+    max-width: 40%;
   }
 }
 </style>
