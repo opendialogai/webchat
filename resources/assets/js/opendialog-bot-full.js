@@ -3,7 +3,7 @@ import 'whatwg-fetch';
 import 'core-js/es/object';
 import {uuid} from 'vue-uuid';
 import defaultWebchatSettings from './default-webchat-settings';
-import {merge, addCssToPage} from './mixins/bootstrapFunctions';
+import {merge, addCssToPage, getSettings} from './mixins/bootstrapFunctions';
 
 const dev = location.hostname === 'localhost'
 
@@ -59,20 +59,25 @@ function openChatWindow() {
     });
 }
 
-/**
- * Gets the webchat settings from the database
- * @returns {Promise<any>}
- */
-async function getSettings(url) {
-    const response = await fetch(`${url}/webchat-config`);
-    const json = await response.json();
-    return json;
-}
-
 if (window.openDialogSettings) {
     const { url } = window.openDialogSettings;
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = (window.openDialogSettings.user && window.openDialogSettings.user.email) ?
+      window.openDialogSettings.user.email : null;
 
-    getSettings(url).then((settings) => {
+    let callbackId = null;
+
+    if (urlParams.has('callback_id')) {
+    callbackId = urlParams.get('callback_id');
+    }
+
+    if (userId) {
+      sessionStorage.uuid = userId;
+    } else if (!sessionStorage.uuid) {
+      sessionStorage.uuid = uuid.v4();
+    }
+
+    getSettings(url, userId, window.openDialogSettings, callbackId, window.innerWidth).then((settings) => {
         window.openDialogSettings = merge(window.openDialogSettings, settings);
         window.openDialogSettings = merge(window.openDialogSettings, defaultWebchatSettings);
 

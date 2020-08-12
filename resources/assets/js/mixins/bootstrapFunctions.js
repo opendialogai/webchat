@@ -20,4 +20,68 @@ export function addCssToPage(href, el) {
   }
 }
 
-export default {isObject, merge, addCssToPage}
+export function locationOrSpoof() {
+  if (window.location.href.startsWith(window.openDialogSettings.url + '/admin/demo')
+    && document.getElementById('spoof-url') !== null) {
+    return document.getElementById('spoof-url').value;
+  } else if (typeof spoofUrl !== 'undefined') {
+    return spoofUrl;
+  } else {
+    return window.location.href;
+  }
+}
+
+export function getTags() {
+  let tags = {};
+  let variables = ['userInfo'];
+
+  variables.forEach((variable) => {
+    if (typeof window[variable] !== 'undefined') {
+      try {
+        tags[variable] = JSON.parse(window[variable]);
+      } catch (e) {
+        tags[variable] = {};
+      }
+    }
+  });
+
+  return tags;
+}
+
+export function getSettings(url, userId = '', customSettings = null, callbackId = null, width = null) {
+  let configUrlObj = new URLSearchParams();
+  configUrlObj.append('url', locationOrSpoof());
+
+  if (userId) {
+    configUrlObj.append('user_id', userId);
+  } else if (sessionStorage.uuid) {
+    configUrlObj.append('user_id', sessionStorage.uuid);
+  }
+
+  if (callbackId) {
+    configUrlObj.append('callback_id', callbackId);
+  }
+
+  if (width) {
+    configUrlObj.append('width', width);
+  }
+
+  const configUrl = `${url}/webchat-config?${configUrlObj.toString()}`;
+
+  return fetch(configUrl, {
+    url: configUrl,
+    method: 'POST',
+    body: JSON.stringify({
+      custom_settings: customSettings,
+      tags: getTags(),
+    }),
+  }).then(response => {
+    if (response.status !== 200) {
+      return Promise.reject(response.statusText);
+    } else {
+      return response.json();
+    }
+  })
+}
+
+export default {isObject, merge, addCssToPage, getSettings, locationOrSpoof}
