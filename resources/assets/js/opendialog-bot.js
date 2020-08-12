@@ -4,7 +4,7 @@ import 'url-search-params-polyfill';
 import 'core-js/es/object';
 import {uuid} from 'vue-uuid';
 import defaultWebchatSettings from './default-webchat-settings';
-import { merge, addCssToPage } from './mixins/bootstrapFunctions';
+import { merge, addCssToPage, locationOrSpoof, getSettings } from './mixins/bootstrapFunctions';
 
 let query = '';
 
@@ -143,82 +143,14 @@ function openChatWindow(url, div = null) {
   return ifrm;
 }
 
-/**
- * Gets the webchat settings from the database
- * @returns {Promise<Response>}
- */
-function getSettings(url, userId = '', customSettings = null, callbackId = null, width = null) {
-  let configUrlObj = new URLSearchParams();
-  configUrlObj.append('url', locationOrSpoof());
-
-  if (userId) {
-    configUrlObj.append('user_id', userId);
-  } else if (sessionStorage.uuid) {
-    configUrlObj.append('user_id', sessionStorage.uuid);
-  }
-
-  if (callbackId) {
-    configUrlObj.append('callback_id', callbackId);
-  }
-
-  if (width) {
-    configUrlObj.append('width', width);
-  }
-  let configUrl = `${url}/webchat-config?${configUrlObj.toString()}`;
-
-  return fetch(configUrl, {
-    url: configUrl,
-    method: 'POST',
-    body: JSON.stringify({
-      custom_settings: customSettings,
-      tags: getTags(),
-    }),
-  })
-    .then((response) => {
-      if (response.status !== 200) {
-        return Promise.reject(response.statusText);
-      } else {
-        return response.json();
-      }
-    });
-}
-
 let spoofUrl;
 function setSpoofUrl(url) {
   spoofUrl = url;
 }
 
-function locationOrSpoof() {
-  if (window.location.href.startsWith(window.openDialogSettings.url + '/admin/demo')
-    && document.getElementById('spoof-url') !== null) {
-    return document.getElementById('spoof-url').value;
-  } else if (typeof spoofUrl !== 'undefined') {
-    return spoofUrl;
-  } else {
-    return window.location.href;
-  }
-}
-
 function locationOrSpoofQueryParams() {
   let url = new URL(locationOrSpoof());
   return url.search;
-}
-
-function getTags() {
-  let tags = {};
-  let variables = ['userInfo'];
-
-  variables.forEach((variable) => {
-    if (typeof window[variable] !== 'undefined') {
-      try {
-        tags[variable] = JSON.parse(window[variable]);
-      } catch (e) {
-        tags[variable] = {};
-      }
-    }
-  });
-
-  return tags;
 }
 
 /**
