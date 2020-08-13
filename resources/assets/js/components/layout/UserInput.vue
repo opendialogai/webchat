@@ -20,19 +20,21 @@
       class="od-user-input__form"
       :class="{active: inputActive, disabled: !contentEditable}"
     >
-      <textarea
-        tabindex="0"
-        @focus="setInputActive(true)"
-        @blur="setInputActive(false)"
-        @keydown="handleKey"
-        @input="onTextChange($event)"
-        :placeholder="placeholderText"
-        class="od-user-input__form-text-input"
-        ref="userInput"
-        v-model="msgText"
-        :maxlength="textLimit ? textLimit : ''"
-      ></textarea>
-      <span v-if="textLimit" class="od-user-input__max-chars">{{msgText.length}}/{{textLimit}}</span>
+      <div>
+        <textarea
+          tabindex="0"
+          @focus="setInputActive(true)"
+          @blur="setInputActive(false)"
+          @keydown="handleKey"
+          @input="onTextChange($event)"
+          :placeholder="placeholderText"
+          class="od-user-input__form-text-input"
+          ref="userInput"
+          v-model="msgText"
+          :maxlength="textLimit ? textLimit : ''"
+        ></textarea>
+        <span v-if="textLimit" class="od-user-input__max-chars">{{msgText.length}}/{{textLimit}}</span>
+      </div>
 
       <div class="od-user-input__buttons">
         <button
@@ -146,7 +148,6 @@ export default {
     },
     handleKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
-        console.log('handleKey', event)
         this._submitText(event);
         this.$parent.$parent.$emit("vbc-user-not-typing");
         this.textEntered = false;
@@ -241,19 +242,22 @@ export default {
     display: flex;
     flex-direction: column;
     padding: 20px;
-    position: relative;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
     width: 100%;
     max-width: 700px;
     margin: 0 auto;
+
+    > div {
+      position: relative;
+    }
   }
 
   .od-user-input__max-chars {
+    bottom: 0;
     color: var(--od-user-input-text);
     font-size: 13px;
     position: absolute;
-    right: 24px;
-    top: 22px;
+    right: 0;
   }
 
   .od-user-input__form.active {
