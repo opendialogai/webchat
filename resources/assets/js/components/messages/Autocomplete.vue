@@ -66,7 +66,7 @@ export default {
         return false
       }
 
-      this.message.data.callback_value = term ? term : this.searchTerm
+      this.message.data.callback_value = term ? `${this.message.data.attribute_name}.${term}` : `${this.message.data.attribute_name}.${this.searchTerm}`
 
       this.onButtonClick(false, this.message.data)
     },
