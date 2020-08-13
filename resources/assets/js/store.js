@@ -16,7 +16,9 @@ const store = new Vuex.Store({
     uuid: sessionStorage.uuid || null,
     settings: sessionStorage.openDialogSettings ? JSON.parse(sessionStorage.openDialogSettings) : null,
     messageMetaData: {
-      teamName: null
+      teamName: null,
+      progressPercent: null,
+      progressText: null
     }
   },
   mutations: {
@@ -32,9 +34,11 @@ const store = new Vuex.Store({
       log && console.log('setSettings', settings)
       state.settings = settings;
     },
-    setMessageMetaData(state, data) {
-      log && console.log('setMessageMetaData', data)
-      state.messageMetaData = data;
+    setMessageMetaData(state, payload) {
+      log && console.log('setMessageMetaData', payload)
+      Object.keys(payload).forEach(key => {
+        state.messageMetaData[key] = payload[key]
+      })
     }
   },
   actions: {
