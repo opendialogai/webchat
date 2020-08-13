@@ -494,7 +494,7 @@ export default {
             author: "me",
             callback_id: msg.callback,
             data: {
-              text: msg.callback_value,
+              text: msg.callback_text ? msg.callback_text : msg.callback_value,
               value: msg.callback_value
             }
           });

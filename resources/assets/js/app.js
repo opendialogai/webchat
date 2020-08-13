@@ -16,6 +16,9 @@ import store from '@/store';
 
 import linkify from 'vue-linkify'
 import { longClickDirective } from 'vue-long-click'
+import PerfectScrollbar from 'vue2-perfect-scrollbar'
+import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
+
 import Launcher from './components/Launcher.vue'
 
 require('@/bootstrap');
@@ -34,6 +37,7 @@ window.Vue.component('beautiful-chat', Launcher)
 window.Vue.use(UUID);
 window.Vue.use(BootstrapVue);
 window.Vue.use(VueJsCookie);
+window.Vue.use(PerfectScrollbar)
 
 window.Vue.prototype.$chat = {
     _setDynamicContainer: function(dynamicContainer) {
