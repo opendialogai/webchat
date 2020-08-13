@@ -15,7 +15,7 @@
             <button
               v-if="button.display && button.text && button.type === 'inline'"
               :key="idx"
-              @click="_handleClick(button)"
+              @[shouldClear]="_handleClick(button)"
               class="od-message-button__inline-button"
               :class="button.type">
               <span v-html="button.text"></span>
@@ -39,7 +39,7 @@
           <button
             v-if="button.display && button.text && button.type !== 'inline'"
             :key="idx"
-            @click="_handleClick(button)"
+            @[shouldClear]="_handleClick(button)"
             v-html="button.text"
             class="od-message-button__buttons-wrapper__button fade-enter-active"
             :class="button.type"
@@ -77,6 +77,11 @@ export default {
         this.$refs.message.style.height = null;
       }
       this.onButtonClick(button, this.message);
+    }
+  },
+  computed: {
+    shouldClear() {
+      return this.data.clear_after_interaction ? '~click' : 'click'
     }
   },
   mounted() {
