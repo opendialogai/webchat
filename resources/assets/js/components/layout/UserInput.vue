@@ -20,18 +20,19 @@
       class="od-user-input__form"
       :class="{active: inputActive, disabled: !contentEditable}"
     >
-      <div
-        role="button"
+      <textarea
         tabindex="0"
         @focus="setInputActive(true)"
         @blur="setInputActive(false)"
         @keydown="handleKey"
         @input="onTextChange($event)"
-        :contentEditable="contentEditable"
         :placeholder="placeholderText"
         class="od-user-input__form-text-input"
         ref="userInput"
-      ></div>
+        v-model="msgText"
+        :maxlength="textLimit ? textLimit : ''"
+      ></textarea>
+      <span v-if="textLimit" class="od-user-input__max-chars">{{msgText.length}}/{{textLimit}}</span>
 
       <div class="od-user-input__buttons">
         <button
@@ -57,7 +58,7 @@
 
 
 <script>
-
+import {mapState} from 'vuex';
 import ExternalButtons from "./ExternalButtons.vue";
 import EndChatButton from "./EndChatButton";
 
@@ -105,6 +106,7 @@ export default {
       file: null,
       inputActive: false,
       textEntered: false,
+      msgText: null
     };
   },
   computed: {
@@ -122,6 +124,9 @@ export default {
         return "Send";
       }
     },
+    ...mapState({
+      textLimit: state => state.messageMetaData.textLimit
+    })
   },
   created() {
     this.onTextChange = _.debounce(this.onTextChangeForDebouncing, 500);
@@ -141,6 +146,7 @@ export default {
     },
     handleKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
+        console.log('handleKey', event)
         this._submitText(event);
         this.$parent.$parent.$emit("vbc-user-not-typing");
         this.textEntered = false;
@@ -148,7 +154,7 @@ export default {
       }
     },
     onTextChangeForDebouncing(event) {
-      if (event.target.innerHTML === "" || event.target.innerHTML === "<br>") {
+      if (this.msgText === "" || this.msgText === "<br>") {
         // Input is empty, turn off the typing indicator.
         if (this.textEntered === true) {
           this.$parent.$parent.$emit("vbc-user-not-typing");
@@ -157,7 +163,7 @@ export default {
       } else {
         // Input is not empty, turn on the typing indicator if
         // it's not already.
-        this.$parent.$parent.$emit("vbc-user-typing", event.target.innerHTML);
+        this.$parent.$parent.$emit("vbc-user-typing", this.msgText);
         this.textEntered = true;
       }
     },
@@ -165,7 +171,7 @@ export default {
       this.onButtonClick(button, this.lastMessage);
     },
     _submitText(event) {
-      const text = this.$refs.userInput.textContent;
+      const text = this.msgText;
       const file = this.file;
       if (file) {
         if (text && text.length > 0) {
@@ -175,7 +181,7 @@ export default {
             data: { text, file }
           });
           this.file = null;
-          this.$refs.userInput.innerHTML = "";
+          this.msgText = "";
         } else {
           this.onSubmit({
             author: "me",
@@ -191,7 +197,7 @@ export default {
             type: "text",
             data: { text }
           });
-          this.$refs.userInput.innerHTML = "";
+          this.msgText = "";
         }
       }
     },
@@ -235,10 +241,19 @@ export default {
     display: flex;
     flex-direction: column;
     padding: 20px;
+    position: relative;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
     width: 100%;
     max-width: 700px;
     margin: 0 auto;
+  }
+
+  .od-user-input__max-chars {
+    color: var(--od-user-input-text);
+    font-size: 13px;
+    position: absolute;
+    right: 24px;
+    top: 22px;
   }
 
   .od-user-input__form.active {
