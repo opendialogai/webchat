@@ -82,6 +82,7 @@ export default {
   }
 
   .od-progress-bar__label {
+    color: var(--od-received-message-text);
     font-size: 13px;
     max-width: 40%;
   }
