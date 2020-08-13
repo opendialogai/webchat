@@ -72,7 +72,6 @@ export default {
   },
   methods: {
     _handleClick(button) {
-      console.log('handleClick', button, this.message)
       if (this.data.animate) {
         this.$refs.message.style.height = null;
       }
