@@ -13,6 +13,7 @@
         <option :value="null">- Year -</option>
         <option v-for="(year, i) in years" :key="i" :value="year">{{year}}</option>
       </select>
+      {{valid}}
     </div>
   </div>
 </template>
@@ -41,6 +42,7 @@ export default {
       selectedMonth: null,
       selectedYear: null,
       minDate: '2018-09-01',
+      dayRequired: true
     };
   },
   methods: {},
@@ -60,14 +62,31 @@ export default {
         }
       },
       days() {
+        let arr = []
+
         if (this.selectedYear && this.selectedMonth) {
           let dayCount = moment(`${this.selectedMonth}-${this.selectedYear}`, 'MMMM-YYYY').daysInMonth() + 1
-          return [...Array(dayCount).keys()].slice(1)
+          arr = [...Array(dayCount).keys()].slice(1)
         } else if (this.selectedMonth) {
           let dayCount = moment(this.selectedMonth, 'MMMM').daysInMonth() + 1
-          return [...Array(dayCount).keys()].slice(1)
+          arr = [...Array(dayCount).keys()].slice(1)
         } else {
-          return [...Array(32).keys()].map(x => x.toString()).slice(1)
+          arr = [...Array(32).keys()].slice(1)
+        }
+
+        if (!arr.includes(this.selectedDay)) {
+          this.selectedDay = null
+        }
+
+        return arr
+      },
+      valid() {
+        if (this.dayRequired || this.selectedDay !== null) {
+          return moment([this.selectedYear, moment(this.selectedMonth, 'MMMM').month(), this.selectedDay]).isValid()
+        } else if (this.data.month_required) {
+          return (this.selectedMonth !== null && this.selectedYear !== null)
+        } else {
+          return this.selectedYear !== null
         }
       }
   }
