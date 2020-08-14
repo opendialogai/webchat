@@ -17,7 +17,7 @@
           <button
             v-if="button.display && button.text"
             :key="idx"
-            @click="_handleClick(button)"
+            @[shouldClear]="_handleClick(button)"
             v-html="button.text"
             class="od-message-button__buttons-wrapper__button fade-enter-active"
             :class="button.type"
@@ -54,6 +54,11 @@ export default {
         this.$refs.message.style.height = null;
       }
       this.onButtonClick(button, this.message);
+    }
+  },
+  computed: {
+    shouldClear() {
+      return this.data.clear_after_interaction ? '~click' : 'click'
     }
   },
   mounted() {

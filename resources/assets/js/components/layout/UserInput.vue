@@ -3,6 +3,7 @@
     <ExternalButtons
       :externalButtons="externalButtons"
       :animate="animateExternalButtons"
+      :shouldClear="lastMessage.data.clear_after_interaction"
       v-on:sendExternalButton="_submitExternalButton"
     />
 

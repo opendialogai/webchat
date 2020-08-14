@@ -31,7 +31,7 @@
               v-if="externalButton.display && externalButton.text"
               class="od-external-button__button"
               :class="(buttonClicked == idx) ? 'od-external-button__button--clicked' : ''"
-              @click="_handleClick(externalButton, idx)"
+              @[submitAction]="_handleClick(externalButton, idx)"
               ref="externalButton"
               :key="idx">
               <span v-html="externalButton.text"></span>
@@ -53,6 +53,11 @@ export default {
     externalButtons: {
       type: Array,
       default: () => []
+    },
+    shouldClear: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {
@@ -78,6 +83,11 @@ export default {
           }
         })
       }
+    }
+  },
+  computed: {
+    submitAction() {
+      return this.shouldClear ? '~click' : 'click'
     }
   },
   methods: {
