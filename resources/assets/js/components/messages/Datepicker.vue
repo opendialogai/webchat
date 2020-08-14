@@ -15,6 +15,7 @@
       </select>
       {{valid}}
     </div>
+    <button class="od-datepicker__submit" @click="submit()">{{data.submit_text}}</button>
   </div>
 </template>
 
@@ -41,28 +42,19 @@ export default {
       selectedDay: null,
       selectedMonth: null,
       selectedYear: null,
-      minDate: '2018-09-01',
+      minDate: moment('2020-02-20', 'YYYY-MM-DD'),
+      //minDate: this.data.min_date === 'today' ? moment() : moment(this.data.min_date, 'YYYY-MM-DD'),
+      maxDate: this.data.max_date === 'today' ? moment() : moment(this.data.max_date, 'YYYY-MM-DD'),
       dayRequired: true
     };
   },
-  methods: {},
-  computed: {
-      years() {
-        const maxYear = this.data.max_date === 'today' ? parseInt(moment().format('YYYY')) : parseInt(moment(this.data.max_date).format('YYYY'))
-        const minYear = parseInt(moment(this.minDate).format('YYYY'))
-        const diff = maxYear - minYear + 1
-
-        return Array.from({length: diff}, (v, i) => maxYear - diff + i + 1 + '').reverse()
-      },
-      months() {
-        if (parseInt(this.selectedYear) === moment(this.minDate).year()) {
-          return moment.months().slice(moment(this.minDate).month())
-        } else {
-          return moment.months()
-        }
-      },
-      days() {
-        let arr = []
+  methods: {
+    submit() {
+      const date = moment([this.selectedYear, moment(this.selectedMonth, 'MMMM').month(), this.selectedDay]).format('YYYY-MM-DD')
+      console.log('submit', date)
+    },
+    constructDayArray() {
+      let arr = []
 
         if (this.selectedYear && this.selectedMonth) {
           let dayCount = moment(`${this.selectedMonth}-${this.selectedYear}`, 'MMMM-YYYY').daysInMonth() + 1
@@ -72,6 +64,49 @@ export default {
           arr = [...Array(dayCount).keys()].slice(1)
         } else {
           arr = [...Array(32).keys()].slice(1)
+        }
+
+        return arr
+    }
+  },
+  computed: {
+      years() {
+        const maxYear = this.maxDate.year()
+        const minYear = this.minDate.year()
+        const diff = maxYear - minYear + 1
+
+        return Array.from({length: diff}, (v, i) => maxYear - diff + i + 1 + '').reverse()
+      },
+      months() {
+        let months = []
+
+        if (parseInt(this.selectedYear) === this.minDate.year() 
+          && parseInt(this.selectedYear) === this.maxDate.year()) {
+          months = moment.months().slice(this.minDate.month(), this.maxDate.month() + 1)
+          return months
+        } 
+
+        if (parseInt(this.selectedYear) === this.minDate.year()) {
+          months = moment.months().slice(this.minDate.month())
+          return months
+        } 
+        
+        if (parseInt(this.selectedYear) === this.maxDate.year()) {
+          months = moment.months().slice(0, this.maxDate.month() + 1)
+          return months
+        }
+
+        return moment.months()
+      },
+      days() {
+        let arr = this.constructDayArray()
+
+        if (moment(this.selectedMonth, 'MMMM').month() === this.maxDate.month() && parseInt(this.selectedYear) === this.maxDate.year()) {
+          arr = arr.slice(0, this.maxDate.date())
+        }
+
+        if (moment(this.selectedMonth, 'MMMM').month() === this.minDate.month() && parseInt(this.selectedYear) === this.minDate.year()) {
+          arr = arr.slice(this.minDate.date() -1, arr.length)
         }
 
         if (!arr.includes(this.selectedDay)) {
