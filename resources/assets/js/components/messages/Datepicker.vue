@@ -50,8 +50,16 @@ export default {
   },
   methods: {
     submit() {
-      const date = moment([this.selectedYear, moment(this.selectedMonth, 'MMMM').month(), this.selectedDay]).format('YYYY-MM-DD')
-      console.log('submit', date)
+      const date = moment([this.selectedYear, moment(this.selectedMonth, 'MMMM').month(), this.selectedDay])
+
+      if (!this.valid) {
+        return
+      }
+
+      this.message.data.callback_value = date.format('YYYY-MM-DD')
+      this.message.data.callback_text = date.format('MMMM Do YYYY')
+
+      this.onButtonClick(false, this.message.data)
     },
     constructDayArray() {
       let arr = []
@@ -109,7 +117,7 @@ export default {
           arr = arr.slice(this.minDate.date() -1, arr.length)
         }
 
-        if (!arr.includes(this.selectedDay)) {
+        if (!arr.includes(parseInt(this.selectedDay))) {
           this.selectedDay = null
         }
 
