@@ -1,5 +1,6 @@
 <template>
   <div class="od-datepicker">
+    <input type="date" class="od-datepicker__mobile-picker" :min="minStr" :max="maxStr" @change="dateSelected($event.target.value)">
     <div class="od-datepicker__wrapper">
       <select v-model="selectedDay" :required="data.days_required" class="od-datepicker__dropdown">
         <option :value="null">- Day -</option>
@@ -45,7 +46,8 @@ export default {
       minDate: moment('2020-02-20', 'YYYY-MM-DD'),
       //minDate: this.data.min_date === 'today' ? moment() : moment(this.data.min_date, 'YYYY-MM-DD'),
       maxDate: this.data.max_date === 'today' ? moment() : moment(this.data.max_date, 'YYYY-MM-DD'),
-      dayRequired: true
+      dayRequired: true,
+      selectedDate: null
     };
   },
   methods: {
@@ -75,6 +77,12 @@ export default {
         }
 
         return arr
+    },
+    dateSelected(val) {
+      const date = moment(val, 'YYYY-MM-DD')
+      this.selectedDay = date.date()
+      this.selectedMonth = date.format('MMMM')
+      this.selectedYear = date.year()
     }
   },
   computed: {
@@ -131,6 +139,12 @@ export default {
         } else {
           return this.selectedYear !== null
         }
+      },
+      minStr() {
+        return this.minDate.format('YYYY-MM-DD')
+      },
+      maxStr() {
+        return this.maxDate.format('YYYY-MM-DD')
       }
   }
 };
