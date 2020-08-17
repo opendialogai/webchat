@@ -6,6 +6,7 @@
         type="text" 
         :placeholder="data.title" 
         class="od-autocomplete__search"
+        :maxlength="textLimit ? textLimit : ''"
         @keyup.enter.prevent="_handleClick()"
         @keydown.tab="results.length ? selectFirst() : false" 
         @keyup="search()"
@@ -17,6 +18,7 @@
         </span>
       </span>
       <button v-show="searchTerm.length || results.length" class="od-autocomplete__submit" @click.prevent="_handleClick()">{{data.submit_text}}</button>
+      <span v-if="textLimit" class="od-autocomplete__max-chars">{{searchTerm.length}}/{{textLimit}}</span>
     </div>
     <div v-show="results.length" class="od-autocomplete__results">
       <p>{{data.title}}</p>
@@ -38,6 +40,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex';
 
 export default {
   props: {
@@ -102,7 +105,10 @@ export default {
       str += `${this.data.query_param_name}=${this.searchTerm}`
       
       return str
-    }
+    },
+    ...mapState({
+      textLimit: state => state.messageMetaData.textLimit
+    })
   }
 };
 </script>
@@ -161,6 +167,14 @@ export default {
         outline: none;
         border: none;
     }
+  }
+
+  .od-autocomplete__max-chars {
+    bottom: -16px;
+    color: var(--od-user-input-text);
+    font-size: 13px;
+    position: absolute;
+    right: 0;
   }
 }
 </style>
