@@ -14,9 +14,8 @@
         <option :value="null">- Year -</option>
         <option v-for="(year, i) in years" :key="i" :value="year">{{year}}</option>
       </select>
-      {{valid}}
     </div>
-    <button class="od-datepicker__submit" @click="submit()">{{data.submit_text}}</button>
+    <button class="od-datepicker__submit" :disabled="!valid" @click="submit()">{{data.submit_text}}</button>
   </div>
 </template>
 
@@ -43,10 +42,8 @@ export default {
       selectedDay: null,
       selectedMonth: null,
       selectedYear: null,
-      minDate: moment('2020-02-20', 'YYYY-MM-DD'),
-      //minDate: this.data.min_date === 'today' ? moment() : moment(this.data.min_date, 'YYYY-MM-DD'),
+      minDate: this.data.min_date === 'today' ? moment() : moment(this.data.min_date, 'YYYY-MM-DD'),
       maxDate: this.data.max_date === 'today' ? moment() : moment(this.data.max_date, 'YYYY-MM-DD'),
-      dayRequired: true,
       selectedDate: null
     };
   },
@@ -58,8 +55,13 @@ export default {
         return
       }
 
-      this.message.data.callback_value = date.format('YYYY-MM-DD')
-      this.message.data.callback_text = date.format('MMMM Do YYYY')
+      if (!date.isValid()) {
+        this.message.data.callback_value = this.callbackVal
+        this.message.data.callback_text = `${this.selectedDay ? this.selectedDay : ''} ${this.selectedMonth ? this.selectedMonth : ''} ${this.selectedYear ? this.selectedYear : ''}`
+      } else {
+        this.message.data.callback_value = date.format('YYYY-MM-DD')
+        this.message.data.callback_text = date.format('MMMM Do YYYY')
+      }
 
       this.onButtonClick(false, this.message.data)
     },
@@ -86,66 +88,69 @@ export default {
     }
   },
   computed: {
-      years() {
-        const maxYear = this.maxDate.year()
-        const minYear = this.minDate.year()
-        const diff = maxYear - minYear + 1
+    years() {
+      const maxYear = this.maxDate.year()
+      const minYear = this.minDate.year()
+      const diff = maxYear - minYear + 1
 
-        return Array.from({length: diff}, (v, i) => maxYear - diff + i + 1 + '').reverse()
-      },
-      months() {
-        let months = []
+      return Array.from({length: diff}, (v, i) => maxYear - diff + i + 1 + '').reverse()
+    },
+    months() {
+      let months = []
 
-        if (parseInt(this.selectedYear) === this.minDate.year() 
-          && parseInt(this.selectedYear) === this.maxDate.year()) {
-          months = moment.months().slice(this.minDate.month(), this.maxDate.month() + 1)
-          return months
-        } 
+      if (parseInt(this.selectedYear) === this.minDate.year() 
+        && parseInt(this.selectedYear) === this.maxDate.year()) {
+        months = moment.months().slice(this.minDate.month(), this.maxDate.month() + 1)
+        return months
+      } 
 
-        if (parseInt(this.selectedYear) === this.minDate.year()) {
-          months = moment.months().slice(this.minDate.month())
-          return months
-        } 
-        
-        if (parseInt(this.selectedYear) === this.maxDate.year()) {
-          months = moment.months().slice(0, this.maxDate.month() + 1)
-          return months
-        }
-
-        return moment.months()
-      },
-      days() {
-        let arr = this.constructDayArray()
-
-        if (moment(this.selectedMonth, 'MMMM').month() === this.maxDate.month() && parseInt(this.selectedYear) === this.maxDate.year()) {
-          arr = arr.slice(0, this.maxDate.date())
-        }
-
-        if (moment(this.selectedMonth, 'MMMM').month() === this.minDate.month() && parseInt(this.selectedYear) === this.minDate.year()) {
-          arr = arr.slice(this.minDate.date() -1, arr.length)
-        }
-
-        if (!arr.includes(parseInt(this.selectedDay))) {
-          this.selectedDay = null
-        }
-
-        return arr
-      },
-      valid() {
-        if (this.dayRequired || this.selectedDay !== null) {
-          return moment([this.selectedYear, moment(this.selectedMonth, 'MMMM').month(), this.selectedDay]).isValid()
-        } else if (this.data.month_required) {
-          return (this.selectedMonth !== null && this.selectedYear !== null)
-        } else {
-          return this.selectedYear !== null
-        }
-      },
-      minStr() {
-        return this.minDate.format('YYYY-MM-DD')
-      },
-      maxStr() {
-        return this.maxDate.format('YYYY-MM-DD')
+      if (parseInt(this.selectedYear) === this.minDate.year()) {
+        months = moment.months().slice(this.minDate.month())
+        return months
+      } 
+      
+      if (parseInt(this.selectedYear) === this.maxDate.year()) {
+        months = moment.months().slice(0, this.maxDate.month() + 1)
+        return months
       }
+
+      return moment.months()
+    },
+    days() {
+      let arr = this.constructDayArray()
+
+      if (moment(this.selectedMonth, 'MMMM').month() === this.maxDate.month() && parseInt(this.selectedYear) === this.maxDate.year()) {
+        arr = arr.slice(0, this.maxDate.date())
+      }
+
+      if (moment(this.selectedMonth, 'MMMM').month() === this.minDate.month() && parseInt(this.selectedYear) === this.minDate.year()) {
+        arr = arr.slice(this.minDate.date() -1, arr.length)
+      }
+
+      if (!arr.includes(parseInt(this.selectedDay))) {
+        this.selectedDay = null
+      }
+
+      return arr
+    },
+    valid() {
+      if (this.dayRequired || this.selectedDay !== null) {
+        return moment([this.selectedYear, moment(this.selectedMonth, 'MMMM').month(), this.selectedDay]).isValid()
+      } else if (this.data.month_required) {
+        return (this.selectedMonth !== null && this.selectedYear !== null)
+      } else {
+        return this.selectedYear !== null
+      }
+    },
+    minStr() {
+      return this.minDate.format('YYYY-MM-DD')
+    },
+    maxStr() {
+      return this.maxDate.format('YYYY-MM-DD')
+    },
+    callbackVal() {
+      return `${this.selectedYear}${this.selectedMonth ? '-'+moment(this.selectedMonth, 'MMMM').format('MM') : ''}${this.selectedMonth && this.selectedDay ? '-'+this.selectedDay : ''}`
+    }
   }
 };
 </script>
@@ -154,6 +159,59 @@ export default {
 @import '../../../sass/0-globals/_vars.scss';
 
 .od-datepicker {
+  align-items: center;
+  background-color: var(--od-user-input-background);
+  min-height: 55px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
 
+  .od-datepicker__mobile-picker {
+    @media (min-width: $media-med) {
+      display: none;
+    }
+  }
+
+  .od-datepicker__wrapper {
+    pointer-events: none;
+    visibility: hidden;
+
+    @media (min-width: $media-med) {
+      pointer-events: all;
+      visibility: visible;
+    }
+  }
+
+  .od-datepicker__submit {
+    background-color: var(--od-button-background);
+    border: none;
+    color: var(--od-button-text);
+    width: auto;
+    height: 50px;
+    padding: 2px 20px;
+    border-radius: 34.5px;
+    transition: 0.4s;
+    font-size: 18px;
+    margin-top: 16px;
+
+    &:hover {
+        background-color: var(--od-button-hover-background);
+    }
+
+    &:active,
+    &:focus {
+        outline: none;
+        border: none;
+    }
+
+    &:disabled {
+      background-color: #c8c8c8;
+    }
+  }
 }
 </style>
