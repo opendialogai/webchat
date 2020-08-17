@@ -70,17 +70,17 @@ export default {
     constructDayArray() {
       let arr = []
 
-        if (this.selectedYear && this.selectedMonth) {
-          let dayCount = moment(`${this.selectedMonth}-${this.selectedYear}`, 'MMMM-YYYY').daysInMonth() + 1
-          arr = [...Array(dayCount).keys()].slice(1)
-        } else if (this.selectedMonth) {
-          let dayCount = moment(this.selectedMonth, 'MMMM').daysInMonth() + 1
-          arr = [...Array(dayCount).keys()].slice(1)
-        } else {
-          arr = [...Array(32).keys()].slice(1)
-        }
+      if (this.selectedYear && this.selectedMonth) {
+        let dayCount = moment(`${this.selectedMonth}-${this.selectedYear}`, 'MMMM-YYYY').daysInMonth() + 1
+        arr = [...Array(dayCount).keys()].slice(1)
+      } else if (this.selectedMonth) {
+        let dayCount = moment(this.selectedMonth, 'MMMM').daysInMonth() + 1
+        arr = [...Array(dayCount).keys()].slice(1)
+      } else {
+        arr = [...Array(32).keys()].slice(1)
+      }
 
-        return arr
+      return arr
     },
     dateSelected(val) {
       const date = moment(val, 'YYYY-MM-DD')
