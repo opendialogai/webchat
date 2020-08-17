@@ -1,6 +1,6 @@
 <template>
   <div class="od-datepicker">
-    <input type="date" class="od-datepicker__mobile-picker" :min="minStr" :max="maxStr" @change="dateSelected($event.target.value)">
+    <p>{{data.text}}</p>
     <div class="od-datepicker__wrapper">
       <select v-model="selectedDay" :required="data.days_required" class="od-datepicker__dropdown">
         <option :value="null">- Day -</option>
@@ -14,6 +14,8 @@
         <option :value="null">- Year -</option>
         <option v-for="(year, i) in years" :key="i" :value="year">{{year}}</option>
       </select>
+      <input v-if="data.day_required" type="date" class="od-datepicker__mobile-picker" :min="minStr" :max="maxStr" @change="dateSelected($event.target.value)" pattern="\d{4}-\d{2}-\d{2}">
+      <input v-else type="month" class="od-datepicker__mobile-picker" :min="minStr" :max="maxStr" @change="dateSelected($event.target.value)" pattern="[0-9]{4}-[0-9]{2}">
     </div>
     <button class="od-datepicker__submit" :disabled="!valid" @click="submit()">{{data.submit_text}}</button>
   </div>
@@ -60,7 +62,7 @@ export default {
         this.message.data.callback_text = `${this.selectedDay ? this.selectedDay : ''} ${this.selectedMonth ? this.selectedMonth : ''} ${this.selectedYear ? this.selectedYear : ''}`
       } else {
         this.message.data.callback_value = date.format('YYYY-MM-DD')
-        this.message.data.callback_text = date.format('MMMM Do YYYY')
+        this.message.data.callback_text = date.format('Do MMMM YYYY')
       }
 
       this.onButtonClick(false, this.message.data)
@@ -101,20 +103,19 @@ export default {
       if (parseInt(this.selectedYear) === this.minDate.year() 
         && parseInt(this.selectedYear) === this.maxDate.year()) {
         months = moment.months().slice(this.minDate.month(), this.maxDate.month() + 1)
-        return months
-      } 
-
-      if (parseInt(this.selectedYear) === this.minDate.year()) {
+      } else if (parseInt(this.selectedYear) === this.minDate.year()) {
         months = moment.months().slice(this.minDate.month())
-        return months
-      } 
-      
-      if (parseInt(this.selectedYear) === this.maxDate.year()) {
+      } else if (parseInt(this.selectedYear) === this.maxDate.year()) {
         months = moment.months().slice(0, this.maxDate.month() + 1)
-        return months
+      } else {
+        months = moment.months()
       }
 
-      return moment.months()
+      if (!months.includes(this.selectedMonth)) {
+        this.selectedMonth = null
+      }
+
+      return months
     },
     days() {
       let arr = this.constructDayArray()
@@ -134,7 +135,7 @@ export default {
       return arr
     },
     valid() {
-      if (this.dayRequired || this.selectedDay !== null) {
+      if (this.data.day_required || this.selectedDay !== null) {
         return moment([this.selectedYear, moment(this.selectedMonth, 'MMMM').month(), this.selectedDay]).isValid()
       } else if (this.data.month_required) {
         return (this.selectedMonth !== null && this.selectedYear !== null)
@@ -143,10 +144,10 @@ export default {
       }
     },
     minStr() {
-      return this.minDate.format('YYYY-MM-DD')
+      return this.data.day_required ? this.minDate.format('YYYY-MM-DD') : this.minDate.format('YYYY-MM')
     },
     maxStr() {
-      return this.maxDate.format('YYYY-MM-DD')
+      return this.data.day_required ? this.maxDate.format('YYYY-MM-DD') : this.maxDate.format('YYYY-MM')
     },
     callbackVal() {
       return `${this.selectedYear}${this.selectedMonth ? '-'+moment(this.selectedMonth, 'MMMM').format('MM') : ''}${this.selectedMonth && this.selectedDay ? '-'+this.selectedDay : ''}`
@@ -171,19 +172,49 @@ export default {
   max-width: 700px;
   margin: 0 auto;
 
+  p {
+    color: var(--od-user-input-text);
+    font-weight: 500;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+
   .od-datepicker__mobile-picker {
+    height: 100%;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+
+    &::-webkit-calendar-picker-indicator {
+      background: transparent;
+      left: 0;
+      position: absolute;
+      top: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
     @media (min-width: $media-med) {
       display: none;
     }
   }
 
   .od-datepicker__wrapper {
-    pointer-events: none;
-    visibility: hidden;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
 
-    @media (min-width: $media-med) {
-      pointer-events: all;
-      visibility: visible;
+    select {
+      flex: 1 0 auto;
+      max-width: 32%;
+
+      @media (min-width: $media-x-sml) {
+        max-width: 31%;
+      }
     }
   }
 
