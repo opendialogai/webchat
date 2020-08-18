@@ -4,7 +4,7 @@
       v-show="lastUsefulMessage.type === 'button' && lastUsefulMessage.data.external"
       :externalButtons="externalButtons"
       :animate="animateExternalButtons"
-      :shouldClear="lastUsefulMessage.data.clear_after_interaction"
+      :shouldClear="lastUsefulMessage.data ? lastUsefulMessage.data.clear_after_interaction : null"
       v-on:sendExternalButton="_submitExternalButton"
     />
 
