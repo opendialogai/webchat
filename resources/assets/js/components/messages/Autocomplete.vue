@@ -4,7 +4,7 @@
       <input 
         v-model="searchTerm" 
         type="text" 
-        :placeholder="data.title" 
+        :placeholder="data.placeholder" 
         class="od-autocomplete__search"
         :maxlength="textLimit ? textLimit : ''"
         @keyup.enter.prevent="_handleClick()"
