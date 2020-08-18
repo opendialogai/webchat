@@ -1,14 +1,15 @@
 <template>
   <div class="od-user-input">
     <ExternalButtons
+      v-show="lastUsefulMessage.type === 'button' && lastUsefulMessage.data.external"
       :externalButtons="externalButtons"
       :animate="animateExternalButtons"
-      :shouldClear="lastMessage.data.clear_after_interaction"
+      :shouldClear="lastUsefulMessage.data.clear_after_interaction"
       v-on:sendExternalButton="_submitExternalButton"
     />
 
     <Autocomplete
-      v-if="lastMessage.type === 'autocomplete'"
+      v-if="lastUsefulMessage.type === 'autocomplete'"
       :data="lastMessage.data"
       :message="lastMessage"
       :onButtonClick="onButtonClick"
@@ -68,7 +69,7 @@
 
 
 <script>
-import {mapState} from 'vuex';
+import {mapState, mapGetters} from 'vuex';
 import ExternalButtons from "./ExternalButtons.vue";
 import EndChatButton from "./EndChatButton";
 import Autocomplete from '../messages/Autocomplete';
@@ -138,7 +139,10 @@ export default {
     },
     ...mapState({
       textLimit: state => state.messageMetaData.textLimit
-    })
+    }),
+    ...mapGetters([
+      'lastUsefulMessage'
+    ])
   },
   created() {
     this.onTextChange = _.debounce(this.onTextChangeForDebouncing, 500);

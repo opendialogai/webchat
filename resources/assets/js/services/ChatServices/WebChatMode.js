@@ -322,6 +322,8 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
       sendMessageReceivedEvent(message, webChatComponent);
     }
   }
+
+  return webChatComponent.messageList
 };
 
 WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatComponent) {

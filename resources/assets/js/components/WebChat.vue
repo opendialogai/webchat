@@ -434,10 +434,12 @@ export default {
         })
       }
 
-      chatService.sendRequest(newMsg, this).then(
+      /* chatService.sendRequest(newMsg, this).then(
         response => chatService.sendResponseSuccess(response, newMsg, this),
         () => chatService.sendResponseError(null, newMsg, this)
-      );
+      ); */
+
+      this.$store.dispatch('sendMessage', {sentMsg: newMsg, webChat: this})
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {

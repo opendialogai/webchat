@@ -4,6 +4,7 @@ import axios from 'axios';
 import {resourceModule} from '@reststate/vuex';
 import camelToKebab from './mixins/camelToKebab';
 import hexToRgb from './mixins/hexToRgb';
+import chatService from "./services/ChatService";
 
 Vue.use(Vuex);
 
@@ -20,7 +21,8 @@ const store = new Vuex.Store({
       progressPercent: null,
       progressText: null,
       textLimit: null
-    }
+    },
+    messageList: []
   },
   mutations: {
     setApiReady(state, val) {
@@ -40,11 +42,14 @@ const store = new Vuex.Store({
       Object.keys(payload).forEach(key => {
         state.messageMetaData[key] = payload[key]
       })
+    },
+    updateMessageList(state, payload) {
+      log && console.log('updateMessageList', payload)
+      state.messageList = payload
     }
   },
   actions: {
     updateSettings({commit}, payload) {
-      log && console.log('updateSettings', payload)
       commit('setSettings', payload);
       
       const root = document.querySelector(':root')
@@ -62,6 +67,13 @@ const store = new Vuex.Store({
       }
       
     },
+    sendMessage({commit}, payload) {
+      log && console.log('sendMessage', payload.sentMsg)
+      chatService.sendRequest(payload.sentMsg, payload.webChat).then(
+        response => commit('updateMessageList', chatService.sendResponseSuccess(response, payload.sentMsg, payload.webChat)),
+        () => chatService.sendResponseError(null, payload.sentMsg, payload.webChat)
+      );
+    },
     fetchAutocomplete({}, payload) {
       return new Promise((resolve, reject) => {
         axios.get(payload).then(res => {
@@ -73,7 +85,12 @@ const store = new Vuex.Store({
       })
     }
   },
-  getters: {},
+  getters: {
+    lastUsefulMessage: state => {
+      const msg = state.messageList.filter(msg => msg.type !== 'typing' && msg.type !== 'author').pop()
+      return msg ? msg : {}
+    }
+  },
 });
 
 const commentConfig = {};
