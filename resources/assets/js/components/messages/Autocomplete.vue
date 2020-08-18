@@ -11,10 +11,7 @@
         @keyup="search()"
         ref="input">
       <span class="od-autocomplete__search-term">
-        {{searchTerm}}
-        <span @click="_handleClick(results[0].name)">
-          {{searchTermRemainder}}
-        </span>
+        {{searchTerm}}<span @click="_handleClick(results[0].name)">{{searchTermRemainder}}</span>
       </span>
       <button v-show="searchTerm.length || results.length" class="od-autocomplete__submit" @click.prevent="_handleClick()">{{data.submit_text}}</button>
     </div>
