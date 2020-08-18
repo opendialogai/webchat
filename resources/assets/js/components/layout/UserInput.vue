@@ -14,6 +14,13 @@
       :onButtonClick="onButtonClick"
     />
 
+    <Datepicker
+      v-if="lastMessage.type === 'date-picker'"
+      :data="lastMessage.data"
+      :message="lastMessage"
+      :onButtonClick="onButtonClick"
+    />
+
     <div v-if="file" class="od-file-container">
       <span class="od-icon-file-message">
         <img src="../assets/file.svg" alt="genericFileIcon" height="15" />
@@ -72,12 +79,14 @@ import {mapState} from 'vuex';
 import ExternalButtons from "./ExternalButtons.vue";
 import EndChatButton from "./EndChatButton";
 import Autocomplete from '../messages/Autocomplete';
+import Datepicker from '../messages/Datepicker';
 
 export default {
   components: {
     EndChatButton,
     ExternalButtons,
-    Autocomplete
+    Autocomplete,
+    Datepicker
   },
   props: {
     contentEditable: {
