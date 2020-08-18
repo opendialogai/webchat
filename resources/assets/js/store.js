@@ -22,7 +22,14 @@ const store = new Vuex.Store({
       progressText: null,
       textLimit: null
     },
-    messageList: []
+    messageList: [],
+    availableInputs: [
+      'autocomplete',
+      'date-picker',
+      'external-button'
+    ],
+    userInputType: 'default',
+    currentMessage: {}
   },
   mutations: {
     setApiReady(state, val) {
@@ -46,6 +53,18 @@ const store = new Vuex.Store({
     updateMessageList(state, payload) {
       log && console.log('updateMessageList', payload)
       state.messageList = payload
+    },
+    updateInputType(state, payload) {
+      log && console.log('updateInputType', payload)
+      if (state.availableInputs.includes(payload)) {
+        state.userInputType = payload
+      } else {
+        state.userInputType = 'default'
+      }
+    },
+    updateCurrentMessage(state, payload) {
+      log && console.log('updateCurrentMessage', payload)
+      state.currentMessage = payload
     }
   },
   actions: {
@@ -67,12 +86,23 @@ const store = new Vuex.Store({
       }
       
     },
-    sendMessage({commit}, payload) {
+    sendMessage({dispatch}, payload) {
       log && console.log('sendMessage', payload.sentMsg)
-      chatService.sendRequest(payload.sentMsg, payload.webChat).then(
-        response => commit('updateMessageList', chatService.sendResponseSuccess(response, payload.sentMsg, payload.webChat)),
-        () => chatService.sendResponseError(null, payload.sentMsg, payload.webChat)
-      );
+      chatService.sendRequest(payload.sentMsg, payload.webChat).then(response => {
+        dispatch('constructMessageList', {response: response, ...payload})
+      }).catch(err => {
+        console.log(err)
+        chatService.sendResponseError(null, payload.sentMsg, payload.webChat)
+      })
+    },
+    constructMessageList({commit}, payload) {
+      chatService.sendResponseSuccess(payload.response, payload.sentMsg, payload.webChat).then(response => {
+        const msg = response.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author').pop()
+        
+        commit('updateMessageList', response)
+        commit('updateCurrentMessage', msg)
+        commit('updateInputType', msg.type === 'button' && msg.data.external ? 'external-button' : msg.type)
+      })
     },
     fetchAutocomplete({}, payload) {
       return new Promise((resolve, reject) => {
@@ -85,13 +115,7 @@ const store = new Vuex.Store({
       })
     }
   },
-  getters: {
-    lastUsefulMessage: state => {
-      const msg = state.messageList.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author').pop()
-      log && console.log('lastUsefulMessage', msg)
-      return msg ? msg : {}
-    }
-  },
+  getters: {}
 });
 
 const commentConfig = {};

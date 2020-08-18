@@ -1,20 +1,5 @@
 <template>
   <div class="od-user-input">
-    <ExternalButtons
-      v-show="lastUsefulMessage.type === 'button' && lastUsefulMessage.data.external"
-      :externalButtons="externalButtons"
-      :animate="animateExternalButtons"
-      :shouldClear="lastUsefulMessage.data ? lastUsefulMessage.data.clear_after_interaction : null"
-      v-on:sendExternalButton="_submitExternalButton"
-    />
-
-    <Autocomplete
-      v-if="lastUsefulMessage.type === 'autocomplete'"
-      :data="lastUsefulMessage.data"
-      :message="lastUsefulMessage"
-      :onButtonClick="onButtonClick"
-    />
-
     <div v-if="file" class="od-file-container">
       <span class="od-icon-file-message">
         <img src="../assets/file.svg" alt="genericFileIcon" height="15" />
@@ -25,7 +10,23 @@
       </span>
     </div>
 
+    <ExternalButtons
+      v-show="userInputType === 'external-button'"
+      :externalButtons="externalButtons"
+      :animate="animateExternalButtons"
+      :shouldClear="currentMessage.data ? currentMessage.data.clear_after_interaction : null"
+      v-on:sendExternalButton="_submitExternalButton"
+    />
+
+    <Autocomplete
+      v-if="userInputType === 'autocomplete'"
+      :data="currentMessage.data"
+      :message="currentMessage"
+      :onButtonClick="onButtonClick"
+    />
+
     <form
+      v-if="userInputType === 'default'"
       class="od-user-input__form"
       :class="{active: inputActive, disabled: !contentEditable}"
     >
@@ -69,7 +70,7 @@
 
 
 <script>
-import {mapState, mapGetters} from 'vuex';
+import {mapState} from 'vuex';
 import ExternalButtons from "./ExternalButtons.vue";
 import EndChatButton from "./EndChatButton";
 import Autocomplete from '../messages/Autocomplete';
@@ -138,11 +139,10 @@ export default {
       }
     },
     ...mapState({
-      textLimit: state => state.messageMetaData.textLimit
-    }),
-    ...mapGetters([
-      'lastUsefulMessage'
-    ])
+      textLimit: state => state.messageMetaData.textLimit,
+      currentMessage: state => state.currentMessage,
+      userInputType: state => state.userInputType
+    })
   },
   created() {
     this.onTextChange = _.debounce(this.onTextChangeForDebouncing, 500);
