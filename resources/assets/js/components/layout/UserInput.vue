@@ -3,6 +3,7 @@
     <ExternalButtons
       :externalButtons="externalButtons"
       :animate="animateExternalButtons"
+      :shouldClear="lastMessage.data.clear_after_interaction"
       v-on:sendExternalButton="_submitExternalButton"
     />
 
@@ -34,18 +35,21 @@
       class="od-user-input__form"
       :class="{active: inputActive, disabled: !contentEditable}"
     >
-      <div
-        role="button"
-        tabindex="0"
-        @focus="setInputActive(true)"
-        @blur="setInputActive(false)"
-        @keydown="handleKey"
-        @input="onTextChange($event)"
-        :contentEditable="contentEditable"
-        :placeholder="placeholderText"
-        class="od-user-input__form-text-input"
-        ref="userInput"
-      ></div>
+      <div>
+        <textarea
+          tabindex="0"
+          @focus="setInputActive(true)"
+          @blur="setInputActive(false)"
+          @keydown="handleKey"
+          @input="onTextChange($event)"
+          :placeholder="placeholderText"
+          class="od-user-input__form-text-input"
+          ref="userInput"
+          v-model="msgText"
+          :maxlength="textLimit ? textLimit : ''"
+        ></textarea>
+        <span v-if="textLimit" class="od-user-input__max-chars">{{msgText.length}}/{{textLimit}}</span>
+      </div>
 
       <div class="od-user-input__buttons">
         <button
@@ -71,7 +75,7 @@
 
 
 <script>
-
+import {mapState} from 'vuex';
 import ExternalButtons from "./ExternalButtons.vue";
 import EndChatButton from "./EndChatButton";
 import Autocomplete from '../messages/Autocomplete';
@@ -123,6 +127,7 @@ export default {
       file: null,
       inputActive: false,
       textEntered: false,
+      msgText: null
     };
   },
   computed: {
@@ -140,6 +145,9 @@ export default {
         return "Send";
       }
     },
+    ...mapState({
+      textLimit: state => state.messageMetaData.textLimit
+    })
   },
   created() {
     this.onTextChange = _.debounce(this.onTextChangeForDebouncing, 500);
@@ -166,7 +174,7 @@ export default {
       }
     },
     onTextChangeForDebouncing(event) {
-      if (event.target.innerHTML === "" || event.target.innerHTML === "<br>") {
+      if (this.msgText === "" || this.msgText === "<br>") {
         // Input is empty, turn off the typing indicator.
         if (this.textEntered === true) {
           this.$parent.$parent.$emit("vbc-user-not-typing");
@@ -175,7 +183,7 @@ export default {
       } else {
         // Input is not empty, turn on the typing indicator if
         // it's not already.
-        this.$parent.$parent.$emit("vbc-user-typing", event.target.innerHTML);
+        this.$parent.$parent.$emit("vbc-user-typing", this.msgText);
         this.textEntered = true;
       }
     },
@@ -183,7 +191,7 @@ export default {
       this.onButtonClick(button, this.lastMessage);
     },
     _submitText(event) {
-      const text = this.$refs.userInput.textContent;
+      const text = this.msgText;
       const file = this.file;
       if (file) {
         if (text && text.length > 0) {
@@ -193,7 +201,7 @@ export default {
             data: { text, file }
           });
           this.file = null;
-          this.$refs.userInput.innerHTML = "";
+          this.msgText = "";
         } else {
           this.onSubmit({
             author: "me",
@@ -209,7 +217,7 @@ export default {
             type: "text",
             data: { text }
           });
-          this.$refs.userInput.innerHTML = "";
+          this.msgText = "";
         }
       }
     },
@@ -257,6 +265,18 @@ export default {
     width: 100%;
     max-width: 700px;
     margin: 0 auto;
+
+    > div {
+      position: relative;
+    }
+  }
+
+  .od-user-input__max-chars {
+    bottom: 0;
+    color: var(--od-user-input-text);
+    font-size: 13px;
+    position: absolute;
+    right: 0;
   }
 
   .od-user-input__form.active {

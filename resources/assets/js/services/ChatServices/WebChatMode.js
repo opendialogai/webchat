@@ -156,7 +156,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             webChatComponent.showMessages = true;
           }
 
-          if (!webChatComponent.hideTypingIndicatorOnInternalMessages) {
+          if (!webChatComponent.hideTypingIndicatorOnInternalMessages && message.type !== 'autocomplete') {
             if (messageIndex < totalMessages - 1) {
               webChatComponent.$nextTick(() => {
                 webChatComponent.$nextTick(() => {

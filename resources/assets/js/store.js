@@ -18,7 +18,8 @@ const store = new Vuex.Store({
     messageMetaData: {
       teamName: null,
       progressPercent: null,
-      progressText: null
+      progressText: null,
+      textLimit: null
     }
   },
   mutations: {

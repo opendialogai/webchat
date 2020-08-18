@@ -7,17 +7,39 @@
         emit : this.author === 'me',
     }]"
   >
-    <div class="mt reap od-message-button__text" v-linkified>
-      <span v-html="data.text"></span>
+    <div class="mt reap od-message-button__text">
+      <span v-html="data.text" v-linkified></span>
+      <template v-if="data.buttons.length && !data.external">
+        <div class="od-message-button__inline-buttons">
+          <template v-for="(button, idx) in data.buttons">
+            <button
+              v-if="button.display && button.text && button.type === 'inline'"
+              :key="idx"
+              @[shouldClear]="_handleClick(button)"
+              class="od-message-button__inline-button"
+              :class="button.type">
+              <span v-html="button.text"></span>
+              <span v-if="button.download" class="od-message-button__button-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
+                  <g fill="var(--od-button-text)">
+                    <path d="M2.604 0.375L0 2.771 2.604 2.771z"/>
+                    <path d="M3.646.167v3.647H-.001v13.02h12.5L12.5.167H3.646zm6.25 13.541H2.604v-1.042h7.292v1.042zm0-2.604H2.604v-1.041h7.292v1.041zm0-2.604H2.604V7.458h7.292V8.5z"/>
+                  </g>
+                </svg>
+              </span>
+            </button>
+          </template>
+        </div>
+      </template>
     </div>
 
     <template v-if="data.buttons.length && !data.external">
       <div class="od-message-button__buttons-wrapper reap fade-enter-active">
         <template v-for="(button, idx) in data.buttons">
           <button
-            v-if="button.display && button.text"
+            v-if="button.display && button.text && button.type !== 'inline'"
             :key="idx"
-            @click="_handleClick(button)"
+            @[shouldClear]="_handleClick(button)"
             v-html="button.text"
             class="od-message-button__buttons-wrapper__button fade-enter-active"
             :class="button.type"
@@ -54,6 +76,11 @@ export default {
         this.$refs.message.style.height = null;
       }
       this.onButtonClick(button, this.message);
+    }
+  },
+  computed: {
+    shouldClear() {
+      return this.data.clear_after_interaction ? '~click' : 'click'
     }
   },
   mounted() {
@@ -129,6 +156,31 @@ export default {
     animation-delay: 0.6s;
     background-color: var(--od-received-message-background);
     color: var(--od-received-message-text);
+  }
+
+  .od-message-button__inline-buttons {
+    margin-top: 10px;
+  }
+
+  .od-message-button__inline-button {
+    background-color: var(--od-button-background);
+    border: 2px solid var(--od-button-background);
+    color: var(--od-button-text);
+    margin: 3px 5px 3px 0;
+    padding: 14px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 17px;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    transition: 0.4s;
+
+    .od-message-button__button-icon {
+      margin-left: 16px;
+      position: relative;
+      top: -2px;
+    }
   }
   
   .od-message-button__buttons-wrapper__button {
