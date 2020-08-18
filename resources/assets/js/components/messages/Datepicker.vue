@@ -58,10 +58,10 @@ export default {
       }
 
       if (!date.isValid()) {
-        this.message.data.callback_value = this.callbackVal
+        this.message.data.callback_value = `${this.message.data.attribute_name}.${this.callbackVal}`
         this.message.data.callback_text = `${this.selectedDay ? this.selectedDay : ''} ${this.selectedMonth ? this.selectedMonth : ''} ${this.selectedYear ? this.selectedYear : ''}`
       } else {
-        this.message.data.callback_value = date.format('YYYY-MM-DD')
+        this.message.data.callback_value = `${this.message.data.attribute_name}.${date.format('YYYY-MM-DD')}`
         this.message.data.callback_text = date.format('Do MMMM YYYY')
       }
 
