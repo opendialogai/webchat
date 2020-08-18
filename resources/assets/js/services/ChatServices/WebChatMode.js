@@ -53,7 +53,7 @@ function sendMessageReceivedEvent (message, webChatComponent) {
 WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
   if (response.data instanceof Array) {
     let index = 0;
-    let totalMessages = response.data.length;
+    let totalMessages = response.data.filter(msg => msg !== false).length;
     let typingMessage;
     let clearCtaText = true;
 
@@ -156,7 +156,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             webChatComponent.showMessages = true;
           }
 
-          if (!webChatComponent.hideTypingIndicatorOnInternalMessages && message.type !== 'autocomplete') {
+          if (!webChatComponent.hideTypingIndicatorOnInternalMessages) {
             if (messageIndex < totalMessages - 1) {
               webChatComponent.$nextTick(() => {
                 webChatComponent.$nextTick(() => {
@@ -180,6 +180,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
         index += 1;
       }
     });
+
   } else if (response.data) {
     const message = response.data;
 

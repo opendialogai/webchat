@@ -88,6 +88,7 @@ const store = new Vuex.Store({
   getters: {
     lastUsefulMessage: state => {
       const msg = state.messageList.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author').pop()
+      log && console.log('lastUsefulMessage', msg)
       return msg ? msg : {}
     }
   },

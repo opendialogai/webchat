@@ -10,8 +10,8 @@
 
     <Autocomplete
       v-if="lastUsefulMessage.type === 'autocomplete'"
-      :data="lastMessage.data"
-      :message="lastMessage"
+      :data="lastUsefulMessage.data"
+      :message="lastUsefulMessage"
       :onButtonClick="onButtonClick"
     />
 
