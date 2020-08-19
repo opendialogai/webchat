@@ -4,6 +4,7 @@ import axios from 'axios';
 import {resourceModule} from '@reststate/vuex';
 import camelToKebab from './mixins/camelToKebab';
 import hexToRgb from './mixins/hexToRgb';
+import chatService from "./services/ChatService";
 
 Vue.use(Vuex);
 
@@ -20,7 +21,15 @@ const store = new Vuex.Store({
       progressPercent: null,
       progressText: null,
       textLimit: null
-    }
+    },
+    messageList: [],
+    availableInputs: [
+      'autocomplete',
+      'date-picker',
+      'external-button'
+    ],
+    userInputType: 'default',
+    currentMessage: {}
   },
   mutations: {
     setApiReady(state, val) {
@@ -40,11 +49,26 @@ const store = new Vuex.Store({
       Object.keys(payload).forEach(key => {
         state.messageMetaData[key] = payload[key]
       })
+    },
+    updateMessageList(state, payload) {
+      log && console.log('updateMessageList', payload)
+      state.messageList = payload
+    },
+    updateInputType(state, payload) {
+      log && console.log('updateInputType', payload)
+      if (state.availableInputs.includes(payload)) {
+        state.userInputType = payload
+      } else {
+        state.userInputType = 'default'
+      }
+    },
+    updateCurrentMessage(state, payload) {
+      log && console.log('updateCurrentMessage', payload)
+      state.currentMessage = payload
     }
   },
   actions: {
     updateSettings({commit}, payload) {
-      log && console.log('updateSettings', payload)
       commit('setSettings', payload);
       
       const root = document.querySelector(':root')
@@ -62,6 +86,24 @@ const store = new Vuex.Store({
       }
       
     },
+    sendMessage({dispatch}, payload) {
+      log && console.log('sendMessage', payload.sentMsg)
+      chatService.sendRequest(payload.sentMsg, payload.webChat).then(response => {
+        dispatch('constructMessageList', {response: response, ...payload})
+      }).catch(err => {
+        console.log(err)
+        chatService.sendResponseError(null, payload.sentMsg, payload.webChat)
+      })
+    },
+    constructMessageList({commit}, payload) {
+      chatService.sendResponseSuccess(payload.response, payload.sentMsg, payload.webChat).then(response => {
+        const msg = response.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author').pop()
+        
+        commit('updateMessageList', response)
+        commit('updateCurrentMessage', msg)
+        commit('updateInputType', msg.type === 'button' && msg.data.external ? 'external-button' : msg.type)
+      })
+    },
     fetchAutocomplete({}, payload) {
       return new Promise((resolve, reject) => {
         axios.get(payload).then(res => {
@@ -73,7 +115,7 @@ const store = new Vuex.Store({
       })
     }
   },
-  getters: {},
+  getters: {}
 });
 
 const commentConfig = {};

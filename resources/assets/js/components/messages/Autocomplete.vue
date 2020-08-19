@@ -17,7 +17,8 @@
       <button v-show="searchTerm.length || results.length" class="od-autocomplete__submit" @click.prevent="_handleClick()">{{data.submit_text}}</button>
       <span v-if="textLimit" class="od-autocomplete__max-chars">{{searchTerm.length}}/{{textLimit}}</span>
     </div>
-    <div v-show="results.length" class="od-autocomplete__results">
+    <transition name="delayed-fade">
+      <div v-show="results.length" class="od-autocomplete__results">
       <p>{{data.title}}</p>
       <perfect-scrollbar class="od-autocomplete__scrollable">
         <ul class="od-autocomplete__results-list">
@@ -33,6 +34,7 @@
         </ul>
       </perfect-scrollbar>
     </div>
+    </transition>
   </div>
 </template>
 
