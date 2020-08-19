@@ -72,6 +72,8 @@ export default {
       this.message.data.callback_text = term ? term : this.searchTerm
 
       this.onButtonClick(false, this.message.data)
+      this.searchTerm = ''
+      this.results = []
     },
     selectFirst() {
       this.searchTerm = this.results[0].name
