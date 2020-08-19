@@ -65,7 +65,9 @@
         />
       </div>
     </form>
-    <button v-if="skipButton" @click.once="onButtonClick(skipButton, currentMessage);" class="od-user-input__skip">{{skipButton.text}}</button>
+    <div class="od-user-input__skip-wrapper">
+      <button v-if="skipButton" @click.once="onButtonClick(skipButton, currentMessage);" class="od-user-input__skip">{{skipButton.text}}<span>&rsaquo;</span></button>
+    </div>
   </div>
 </template>
 
@@ -363,6 +365,27 @@ export default {
     .od-send-btn__icon {
       display: none;
       margin-left: 12px;
+    }
+  }
+
+  .od-user-input__skip-wrapper {
+    text-align: center;
+  }
+
+  .od-user-input__skip {
+    background-color: var(--od-user-input-background);
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0px 4px 8px 0px rgba(189, 187, 182, 0.29);
+    color: var(--od-button-background);
+    font-size: 14px;
+    line-height: 19px;
+    margin: 16px auto;
+    padding: 5px 16px;
+
+    span {
+      font-size: 18px;
+      margin-left: 8px;
     }
   }
 }
