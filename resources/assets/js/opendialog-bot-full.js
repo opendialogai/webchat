@@ -4,6 +4,7 @@ import 'core-js/es/object';
 import {uuid} from 'vue-uuid';
 import defaultWebchatSettings from './default-webchat-settings';
 import {merge, addCssToPage, getSettings} from './mixins/bootstrapFunctions';
+import Timer from './mixins/timer';
 
 const dev = location.hostname === 'localhost'
 
@@ -14,6 +15,10 @@ if (!dev) {
         e.preventDefault(); 
         e.returnValue = '';
     });
+}
+
+function reloadChatBot() {
+    console.log('reload')
 }
 
 function openChatWindow() {
@@ -57,6 +62,17 @@ function openChatWindow() {
             }
         }
     });
+
+    // timer events
+    document.querySelector('.opendialog-chat-window').addEventListener('click', () => {
+        t.reset()
+    })
+
+    document.querySelector('.opendialog-chat-window').addEventListener('keydown', () => {
+        t.reset()
+    })
+
+    t.start()
 }
 
 if (window.openDialogSettings) {
@@ -83,6 +99,10 @@ if (window.openDialogSettings) {
 
         if (window.openDialogSettings.general.chatbotFullpageCssPath) {
             addCssToPage(window.openDialogSettings.general.chatbotFullpageCssPath);
+        }
+
+        if (window.openDialogSettings.sessionDuration) {
+            const t = new Timer(5000, reloadChatBot)
         }
 
         openChatWindow();
