@@ -99,22 +99,10 @@ const store = new Vuex.Store({
     constructMessageList({commit}, payload) {
       chatService.sendResponseSuccess(payload.response, payload.sentMsg, payload.webChat).then(response => {
         const msg = response.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author' && isSkip(msg) !== 'skip').pop()
-        let tmp = [...response]
-        
-        let type = isSkip(tmp.slice(-1)[0]);
-
-        while (
-          type === 'typing'
-          || type === 'author'
-          || type === 'skip'
-        ) {
-          type = isSkip(tmp.slice(-1)[0])
-          tmp.pop()
-        }
 
         commit('updateMessageList', [...response])
         commit('updateCurrentMessage', msg)
-        commit('updateInputType', type)
+        commit('updateInputType', msg.type === 'button' && msg.data.external ? 'external-button' : msg.type)
       })
     },
     fetchAutocomplete({}, payload) {
