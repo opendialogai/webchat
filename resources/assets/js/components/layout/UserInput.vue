@@ -127,7 +127,7 @@ export default {
       file: null,
       inputActive: false,
       textEntered: false,
-      msgText: null
+      msgText: ''
     };
   },
   computed: {
