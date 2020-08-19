@@ -1,26 +1,5 @@
 <template>
   <div class="od-user-input">
-    <ExternalButtons
-      :externalButtons="externalButtons"
-      :animate="animateExternalButtons"
-      :shouldClear="lastMessage.data.clear_after_interaction"
-      v-on:sendExternalButton="_submitExternalButton"
-    />
-
-    <Autocomplete
-      v-if="lastMessage.type === 'autocomplete'"
-      :data="lastMessage.data"
-      :message="lastMessage"
-      :onButtonClick="onButtonClick"
-    />
-
-    <Datepicker
-      v-if="lastMessage.type === 'date-picker'"
-      :data="lastMessage.data"
-      :message="lastMessage"
-      :onButtonClick="onButtonClick"
-    />
-
     <div v-if="file" class="od-file-container">
       <span class="od-icon-file-message">
         <img src="../assets/file.svg" alt="genericFileIcon" height="15" />
@@ -31,7 +10,30 @@
       </span>
     </div>
 
+    <ExternalButtons
+      v-show="userInputType === 'external-button'"
+      :externalButtons="externalButtons"
+      :animate="animateExternalButtons"
+      :shouldClear="currentMessage.data ? currentMessage.data.clear_after_interaction : null"
+      v-on:sendExternalButton="_submitExternalButton"
+    />
+
+    <Autocomplete
+      v-if="userInputType === 'autocomplete'"
+      :data="currentMessage.data"
+      :message="currentMessage"
+      :onButtonClick="onButtonClick"
+    />
+
+    <Datepicker
+      v-if="userInputType === 'date-picker'"
+      :data="currentMessage.data"
+      :message="currentMessage"
+      :onButtonClick="onButtonClick"
+    />
+
     <form
+      v-if="userInputType === 'default'"
       class="od-user-input__form"
       :class="{active: inputActive, disabled: !contentEditable}"
     >
@@ -70,6 +72,9 @@
         />
       </div>
     </form>
+    <div class="od-user-input__skip-wrapper">
+      <button v-if="skipButton" @click.once="onButtonClick(skipButton, currentMessage);" class="od-user-input__skip">{{skipButton.text}}<span>&rsaquo;</span></button>
+    </div>
   </div>
 </template>
 
@@ -146,8 +151,15 @@ export default {
       }
     },
     ...mapState({
-      textLimit: state => state.messageMetaData.textLimit
-    })
+      textLimit: state => state.messageMetaData.textLimit,
+      currentMessage: state => state.currentMessage,
+      userInputType: state => state.userInputType
+    }),
+    skipButton() {
+      if (this.currentMessage.type === 'button' && this.currentMessage.data.external) {
+        return this.currentMessage.data.buttons.find(btn => btn.type === 'skip')
+      }
+    }
   },
   created() {
     this.onTextChange = _.debounce(this.onTextChangeForDebouncing, 500);
@@ -362,6 +374,27 @@ export default {
     .od-send-btn__icon {
       display: none;
       margin-left: 12px;
+    }
+  }
+
+  .od-user-input__skip-wrapper {
+    text-align: center;
+  }
+
+  .od-user-input__skip {
+    background-color: var(--od-user-input-background);
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0px 4px 8px 0px rgba(189, 187, 182, 0.29);
+    color: var(--od-button-background);
+    font-size: 14px;
+    line-height: 19px;
+    margin: 16px auto;
+    padding: 5px 16px;
+
+    span {
+      font-size: 18px;
+      margin-left: 8px;
     }
   }
 }
