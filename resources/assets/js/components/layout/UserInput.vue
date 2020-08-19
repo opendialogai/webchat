@@ -25,6 +25,13 @@
       :onButtonClick="onButtonClick"
     />
 
+    <Datepicker
+      v-if="userInputType === 'date-picker'"
+      :data="currentMessage.data"
+      :message="currentMessage"
+      :onButtonClick="onButtonClick"
+    />
+
     <form
       v-if="userInputType === 'default'"
       class="od-user-input__form"
@@ -77,12 +84,14 @@ import {mapState} from 'vuex';
 import ExternalButtons from "./ExternalButtons.vue";
 import EndChatButton from "./EndChatButton";
 import Autocomplete from '../messages/Autocomplete';
+import Datepicker from '../messages/Datepicker';
 
 export default {
   components: {
     EndChatButton,
     ExternalButtons,
-    Autocomplete
+    Autocomplete,
+    Datepicker
   },
   props: {
     contentEditable: {
