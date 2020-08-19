@@ -3,22 +3,24 @@ import 'whatwg-fetch';
 import 'core-js/es/object';
 import {uuid} from 'vue-uuid';
 import defaultWebchatSettings from './default-webchat-settings';
-import {merge, addCssToPage, getSettings} from './mixins/bootstrapFunctions';
-import Timer from './mixins/timer';
+import {merge, addCssToPage, getSettings, initTimer} from './mixins/bootstrapFunctions';
 
 const dev = location.hostname === 'localhost'
 
 if (!dev) {
     // prompt the user when they attempt to reload/leave the page
     // this is extremely irritating whilst developing so not applicable for localhost!
-    window.addEventListener('beforeunload', e => {
-        e.preventDefault(); 
-        e.returnValue = '';
-    });
+    window.addEventListener('beforeunload', showReloadWarning);
+}
+
+function showReloadWarning(e) {
+    e.preventDefault(); 
+    e.returnValue = '';
 }
 
 function reloadChatBot() {
-    console.log('reload')
+    window.removeEventListener('beforeunload', showReloadWarning);
+    location.reload()
 }
 
 function openChatWindow() {
@@ -62,17 +64,6 @@ function openChatWindow() {
             }
         }
     });
-
-    // timer events
-    document.querySelector('.opendialog-chat-window').addEventListener('click', () => {
-        t.reset()
-    })
-
-    document.querySelector('.opendialog-chat-window').addEventListener('keydown', () => {
-        t.reset()
-    })
-
-    t.start()
 }
 
 if (window.openDialogSettings) {
@@ -102,7 +93,8 @@ if (window.openDialogSettings) {
         }
 
         if (window.openDialogSettings.sessionDuration) {
-            const t = new Timer(5000, reloadChatBot)
+            const el = document.querySelector('.opendialog-chat-window')
+            initTimer(el, window.openDialogSettings.sessionDuration, reloadChatBot)
         }
 
         openChatWindow();

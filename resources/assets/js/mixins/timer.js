@@ -1,6 +1,6 @@
 export default class Timer {
   constructor(duration, callback) {
-    this.duration = duration
+    this.duration = duration * 60000 // convert minutes to ms
     this.callback = callback
     this.timer = null
   }
