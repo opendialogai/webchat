@@ -14,6 +14,8 @@
           class="od-message-form--element-input"
           v-model="form.data[element.name].value"
           v-on:keyup.enter="_handleClick"
+          :minlength="element.min"
+          :maxlength="element.max"
         />
       </template>
       <template v-if="element.element_type == 'number'">
@@ -22,6 +24,8 @@
           class="od-message-form--element-input"
           v-model="form.data[element.name].value"
           v-on:keyup.enter="_handleClick"
+          :min="element.min"
+          :max="element.max"
         />
       </template>
       <template v-if="element.element_type == 'email'">
@@ -30,12 +34,16 @@
           class="od-message-form--element-input"
           v-model="form.data[element.name].value"
           v-on:keyup.enter="_handleClick"
+          :minlength="element.min"
+          :maxlength="element.max"
         />
       </template>
       <template v-if="element.element_type == 'textarea'">
         <textarea
           class="od-message-form--element-textarea"
           v-model="form.data[element.name].value"
+          :minlength="element.min"
+          :maxlength="element.max"
         />
       </template>
       <template v-if="element.element_type == 'select'">
@@ -141,6 +149,20 @@ export default {
             );
           }
         }
+
+        if (element.element_type === 'number' && element.max && this.form.data[element.name].value > element.max) {
+          this.errors.push(
+                  "<em>" + element.display + "</em> field is too large"
+          );
+        }
+
+        if (element.element_type === 'number' && element.min && this.form.data[element.name].value < element.min) {
+          this.errors.push(
+                  "<em>" + element.display + "</em> field is too small"
+          );
+        }
+
+
       });
     },
     isEmpty(value) {
