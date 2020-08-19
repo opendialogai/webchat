@@ -7,7 +7,7 @@
         emit : this.author === 'me',
     }]"
   >
-    <div class="mt reap od-message-button__text">
+    <div v-if="data.text" class="mt reap od-message-button__text">
       <span v-html="data.text" v-linkified></span>
       <template v-if="data.buttons.length && !data.external">
         <div class="od-message-button__inline-buttons">

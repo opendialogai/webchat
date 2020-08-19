@@ -65,6 +65,7 @@
         />
       </div>
     </form>
+    <button v-if="skipButton" @click.once="onButtonClick(skipButton, currentMessage);" class="od-user-input__skip">{{skipButton.text}}</button>
   </div>
 </template>
 
@@ -142,7 +143,12 @@ export default {
       textLimit: state => state.messageMetaData.textLimit,
       currentMessage: state => state.currentMessage,
       userInputType: state => state.userInputType
-    })
+    }),
+    skipButton() {
+      if (this.currentMessage.type === 'button' && this.currentMessage.data.external) {
+        return this.currentMessage.data.buttons.find(btn => btn.type === 'skip')
+      }
+    }
   },
   created() {
     this.onTextChange = _.debounce(this.onTextChangeForDebouncing, 500);

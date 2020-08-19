@@ -304,7 +304,7 @@ export default {
       if (this.messages.length > 0) {
         const lastMessage = this.messages[this.messages.length - 1]
         if (lastMessage.type === 'button' && lastMessage.data.external) {
-          return lastMessage.data.buttons
+          return lastMessage.data.buttons.filter(btn => btn.type !== 'skip')
         }
       }
 

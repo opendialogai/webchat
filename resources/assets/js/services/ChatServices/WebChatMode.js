@@ -335,8 +335,6 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
       }
     }
   })
-
-  //return webChatComponent.messageList
 };
 
 WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatComponent) {
