@@ -35,7 +35,7 @@
     <form
       v-if="userInputType === 'default'"
       class="od-user-input__form"
-      :class="{active: inputActive, disabled: !contentEditable}"
+      :class="{active: inputActive, disabled: currentMessage.data ? currentMessage.data.disable_text : !contentEditable}"
     >
       <div>
         <textarea
