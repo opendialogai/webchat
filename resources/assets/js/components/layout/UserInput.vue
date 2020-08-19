@@ -153,11 +153,14 @@ export default {
     ...mapState({
       textLimit: state => state.messageMetaData.textLimit,
       currentMessage: state => state.currentMessage,
-      userInputType: state => state.userInputType
+      userInputType: state => state.userInputType,
+      messageList: state => state.messageList
     }),
     skipButton() {
-      if (this.currentMessage.type === 'button' && this.currentMessage.data.external) {
-        return this.currentMessage.data.buttons.find(btn => btn.type === 'skip')
+      const last = this.messageList[this.messageList.length -1]
+      
+      if (last && last.type === 'button' && last.data.external) {
+        return last.data.buttons.find(btn => btn.type === 'skip')
       }
     }
   },

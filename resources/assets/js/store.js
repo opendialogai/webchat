@@ -4,6 +4,7 @@ import axios from 'axios';
 import {resourceModule} from '@reststate/vuex';
 import camelToKebab from './mixins/camelToKebab';
 import hexToRgb from './mixins/hexToRgb';
+import isSkip from './mixins/isSkip';
 import chatService from "./services/ChatService";
 
 Vue.use(Vuex);
@@ -97,11 +98,23 @@ const store = new Vuex.Store({
     },
     constructMessageList({commit}, payload) {
       chatService.sendResponseSuccess(payload.response, payload.sentMsg, payload.webChat).then(response => {
-        const msg = response.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author').pop()
+        const msg = response.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author' && isSkip(msg) !== 'skip').pop()
+        let tmp = [...response]
         
-        commit('updateMessageList', response)
+        let type = isSkip(tmp.slice(-1)[0]);
+
+        while (
+          type === 'typing'
+          || type === 'author'
+          || type === 'skip'
+        ) {
+          type = isSkip(tmp.slice(-1)[0])
+          tmp.pop()
+        }
+
+        commit('updateMessageList', [...response])
         commit('updateCurrentMessage', msg)
-        commit('updateInputType', msg.type === 'button' && msg.data.external ? 'external-button' : msg.type)
+        commit('updateInputType', type)
       })
     },
     fetchAutocomplete({}, payload) {

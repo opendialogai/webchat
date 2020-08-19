@@ -1,4 +1,5 @@
 import axios from "axios";
+import isSkip from "../../mixins/isSkip";
 
 const moment = require("moment-timezone");
 
@@ -160,7 +161,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             }
   
             if (!webChatComponent.hideTypingIndicatorOnInternalMessages) {
-              if (messageIndex < totalMessages - 1) {
+              if (messageIndex < totalMessages - 1 && isSkip(message) !== 'skip') {
                 webChatComponent.$nextTick(() => {
                   webChatComponent.$nextTick(() => {
                     typingMessage = {
