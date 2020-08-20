@@ -66,4 +66,8 @@ ChatService.prototype.setModeInstance = function(number) {
   this.getActiveService().setModeInstance(number);
 };
 
+ChatService.prototype.getDataLayerEventName = function() {
+  return this.getActiveService().getDataLayerEventName();
+}
+
 export default new ChatService();

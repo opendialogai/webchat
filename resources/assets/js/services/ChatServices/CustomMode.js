@@ -4,6 +4,7 @@ let CustomMode = function() {
   this.name = "custom";
   this.typingIndicatorMessages = null;
   this.modeInstance = 0;
+  this.dataLayerEventName = 'message_sent_to_live_agent';
 };
 
 CustomMode.prototype.sendRequest = async function(message, webChatComponent) {
@@ -106,10 +107,7 @@ CustomMode.prototype.addMessageToMessageList = function(textMessage, webChatComp
   };
 
   webChatComponent.messageList.push(message);
-  let event = "message_sent_to_agent";
-  if (textMessage.source === 2) {
-      event = "message_received_from_agent";
-  }
+  let event = "message_received_from_agent";
 
   window.parent.postMessage(
       { dataLayerEvent: event },
@@ -168,6 +166,10 @@ CustomMode.prototype.clearTypingIndicator = function(webChatComponent) {
 
 CustomMode.prototype.setModeInstance = function(number) {
   this.modeInstance = number;
+};
+
+CustomMode.prototype.getDataLayerEventName = function () {
+  return this.dataLayerEventName;
 };
 
 export default CustomMode;
