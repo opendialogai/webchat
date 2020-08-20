@@ -73,7 +73,7 @@
       </div>
     </form>
     <div class="od-user-input__skip-wrapper">
-      <button v-if="skipButton" @click.once="onButtonClick(skipButton, currentMessage);" class="od-user-input__skip">{{skipButton.text}}<span>&rsaquo;</span></button>
+      <button v-if="skipButton" :key="timestamp" @click.once="onButtonClick(skipButton, currentMessage);" class="od-user-input__skip">{{skipButton.text}}<span>&rsaquo;</span></button>
     </div>
   </div>
 </template>
@@ -85,6 +85,7 @@ import ExternalButtons from "./ExternalButtons.vue";
 import EndChatButton from "./EndChatButton";
 import Autocomplete from '../messages/Autocomplete';
 import Datepicker from '../messages/Datepicker';
+import moment from 'moment';
 
 export default {
   components: {
@@ -162,6 +163,13 @@ export default {
       if (last && last.type === 'button' && last.data.external) {
         return last.data.buttons.find(btn => btn.type === 'skip')
       }
+    },
+    timestamp() {
+      let dateStr = `${this.currentMessage.data.date} ${moment().year()}`
+      let ISODate = moment(dateStr, 'ddd DD MMM YYYY').format('YYYY-MM-DD')
+      let time = moment().format('HH:mm:ss')
+
+      return moment(`${ISODate} ${time}`).unix()
     }
   },
   created() {
