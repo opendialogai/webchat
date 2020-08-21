@@ -3,17 +3,24 @@ import 'whatwg-fetch';
 import 'core-js/es/object';
 import {uuid} from 'vue-uuid';
 import defaultWebchatSettings from './default-webchat-settings';
-import {merge, addCssToPage, getSettings, setVh} from './mixins/bootstrapFunctions';
+import {merge, addCssToPage, getSettings, initTimer, setVh} from './mixins/bootstrapFunctions';
 
 const dev = location.hostname === 'localhost'
 
 if (!dev) {
     // prompt the user when they attempt to reload/leave the page
     // this is extremely irritating whilst developing so not applicable for localhost!
-    window.addEventListener('beforeunload', e => {
-        e.preventDefault(); 
-        e.returnValue = '';
-    });
+    window.addEventListener('beforeunload', showReloadWarning);
+}
+
+function showReloadWarning(e) {
+    e.preventDefault(); 
+    e.returnValue = '';
+}
+
+function reloadChatBot() {
+    window.removeEventListener('beforeunload', showReloadWarning);
+    location.reload()
 }
 
 function openChatWindow() {
@@ -88,6 +95,11 @@ if (window.openDialogSettings) {
 
         if (window.openDialogSettings.general.chatbotFullpageCssPath) {
             addCssToPage(window.openDialogSettings.general.chatbotFullpageCssPath);
+        }
+
+        if (window.openDialogSettings.sessionDuration) {
+            const el = document.querySelector('.opendialog-chat-window')
+            initTimer(el, window.openDialogSettings.sessionDuration, reloadChatBot)
         }
 
         openChatWindow();
