@@ -1,7 +1,22 @@
 import deepMerge from 'lodash/merge';
+import Timer from './timer';
 
 export function isObject(item) {
   return (item && typeof item === 'object' && !Array.isArray(item));
+}
+
+export function initTimer(el, duration, callback) {
+  const t = new Timer(duration, callback)
+
+  el.addEventListener('click', () => {
+    t.reset()
+  })
+
+  el.addEventListener('keydown', () => {
+    t.reset()
+  })
+
+  t.start()
 }
 
 export function merge(src, tar) {

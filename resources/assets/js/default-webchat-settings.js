@@ -1,6 +1,7 @@
 export default {
     "url": "",
     "mobileWidth": "1",
+    "sessionDuration": 120,
     "general": {
         "url": "/web-chat",
         "teamName": "Webchat",
