@@ -3,7 +3,7 @@ import 'whatwg-fetch';
 import 'core-js/es/object';
 import {uuid} from 'vue-uuid';
 import defaultWebchatSettings from './default-webchat-settings';
-import {merge, addCssToPage, getSettings} from './mixins/bootstrapFunctions';
+import {merge, addCssToPage, getSettings, setVh} from './mixins/bootstrapFunctions';
 
 const dev = location.hostname === 'localhost'
 
@@ -18,6 +18,7 @@ if (!dev) {
 
 function openChatWindow() {
     document.body.classList.add('chatbot-no-scroll');
+    setVh()
 
     // Send settings to the chat widget.
     window.postMessage({
@@ -57,6 +58,10 @@ function openChatWindow() {
             }
         }
     });
+
+    window.addEventListener('resize', () => {
+        setVh()
+    })
 }
 
 if (window.openDialogSettings) {
