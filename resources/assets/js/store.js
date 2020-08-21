@@ -30,7 +30,8 @@ const store = new Vuex.Store({
       'external-button'
     ],
     userInputType: 'default',
-    currentMessage: {}
+    currentMessage: {},
+    fetching: false
   },
   mutations: {
     setApiReady(state, val) {
@@ -66,6 +67,10 @@ const store = new Vuex.Store({
     updateCurrentMessage(state, payload) {
       log && console.log('updateCurrentMessage', payload)
       state.currentMessage = payload
+    },
+    updateFetching(state, payload) {
+      log && console.log('updateFetching', payload)
+      state.fetching = payload
     }
   },
   actions: {
@@ -87,8 +92,11 @@ const store = new Vuex.Store({
       }
       
     },
-    sendMessage({dispatch}, payload) {
+    sendMessage({dispatch, commit}, payload) {
       log && console.log('sendMessage', payload.sentMsg)
+      
+      commit('updateFetching', true)
+
       chatService.sendRequest(payload.sentMsg, payload.webChat).then(response => {
         dispatch('constructMessageList', {response: response, ...payload})
       }).catch(err => {
@@ -103,6 +111,7 @@ const store = new Vuex.Store({
         commit('updateMessageList', [...response])
         commit('updateCurrentMessage', msg)
         commit('updateInputType', msg.type === 'button' && msg.data.external ? 'external-button' : msg.type)
+        commit('updateFetching', false)
       })
     },
     fetchAutocomplete({}, payload) {

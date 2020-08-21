@@ -1,5 +1,5 @@
 <template>
-  <div class="od-user-input">
+  <div class="od-user-input" :class="{'od-user-input--fetching' : fetching}">
     <div v-if="file" class="od-file-container">
       <span class="od-icon-file-message">
         <img src="../assets/file.svg" alt="genericFileIcon" height="15" />
@@ -155,7 +155,8 @@ export default {
       textLimit: state => state.messageMetaData.textLimit,
       currentMessage: state => state.currentMessage,
       userInputType: state => state.userInputType,
-      messageList: state => state.messageList
+      messageList: state => state.messageList,
+      fetching: state => state.fetching
     }),
     skipButton() {
       const last = this.messageList[this.messageList.length -1]
@@ -243,6 +244,7 @@ export default {
           this.msgText = "";
         }
       }
+      this.$refs.userInput.blur()
     },
     _handleFileSubmit(file) {
       this.file = file;
@@ -276,6 +278,11 @@ export default {
   background-color: var(--od-message-list-background);
   position: relative;
   width: 100%;
+
+  &.od-user-input--fetching {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 
   .od-user-input__form {
     background-color: var(--od-user-input-background);

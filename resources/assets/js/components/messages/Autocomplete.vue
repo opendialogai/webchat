@@ -74,6 +74,7 @@ export default {
       this.onButtonClick(false, this.message.data)
       this.searchTerm = ''
       this.results = []
+      this.$refs.input.blur();
     },
     selectFirst() {
       this.searchTerm = this.results[0].name
