@@ -256,7 +256,7 @@ export default {
 
 // special wrapper for author message (avatar) only
 .mt-wrapper-author {
-  z-index: 1;
+  z-index: 10;
 }
 
 .mt-wrapper.fadeUp-enter-active {

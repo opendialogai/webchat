@@ -2,7 +2,7 @@
   <div class="od-autocomplete" :class="{'od-autocomplete--expanded': results.length}">
     <div class="od-autocomplete__search-container">
       <input 
-        v-model="searchTerm" 
+        :value="searchTerm" 
         type="text" 
         :placeholder="data.placeholder" 
         class="od-autocomplete__search"
@@ -10,6 +10,8 @@
         @keyup.enter.prevent="_handleClick()"
         @keydown.tab="results.length ? selectFirst() : false" 
         @keyup="search()"
+        @input="searchTerm = $event.target.value"
+        autocomplete="off"
         ref="input">
       <span class="od-autocomplete__search-term">
         {{searchTerm}}<span @click="_handleClick(results[0].name)">{{searchTermRemainder}}</span>
