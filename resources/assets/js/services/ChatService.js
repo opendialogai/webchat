@@ -11,6 +11,7 @@ let ChatService = function() {
     mode: "webchat",
     options: {}
   };
+  this.previousMode = "webchat";
 };
 
 ChatService.prototype.getModeData = function() {
@@ -18,6 +19,7 @@ ChatService.prototype.getModeData = function() {
 };
 
 ChatService.prototype.setModeData = function(modeData) {
+  this.previousMode = this.modeData.mode !== modeData.mode ? this.modeData.mode : this.previousMode;
   this.modeData = modeData;
   this.getActiveService().setModeInstance(modeData.modeInstance);
 };
@@ -26,8 +28,16 @@ ChatService.prototype.getMode = function() {
   return this.modeData.mode;
 };
 
+ChatService.prototype.getPreviousMode = function() {
+  return this.previousMode;
+};
+
 ChatService.prototype.getActiveService = function() {
   return this.services[this.getMode()];
+};
+
+ChatService.prototype.getPreviousService = function() {
+  return this.services[this.getPreviousMode()];
 };
 
 ChatService.prototype.sendRequest = function(message, webChatComponent) {
@@ -62,6 +72,10 @@ ChatService.prototype.destroyChat = function(webChatComponent) {
   return this.getActiveService().destroyChat(webChatComponent);
 };
 
+ChatService.prototype.postDestroyChat = function(webChatComponent) {
+  return this.getPreviousService().postDestroyChat(webChatComponent);
+};
+
 ChatService.prototype.setModeInstance = function(number) {
   this.getActiveService().setModeInstance(number);
 };
@@ -69,5 +83,23 @@ ChatService.prototype.setModeInstance = function(number) {
 ChatService.prototype.getDataLayerEventName = function() {
   return this.getActiveService().getDataLayerEventName();
 }
+
+ChatService.prototype.modeDataUpdated = async function (newValue, oldValue, webChatComponent) {
+  const modeHasChanged = newValue.mode !== oldValue.mode;
+
+  if (modeHasChanged) {
+    await this.destroyChat(webChatComponent);
+  }
+
+  this.setModeData(newValue);
+
+  if (modeHasChanged) {
+    await this.postDestroyChat(webChatComponent);
+  }
+
+  if (modeHasChanged) {
+    await this.initialiseChat(webChatComponent);
+  }
+};
 
 export default new ChatService();

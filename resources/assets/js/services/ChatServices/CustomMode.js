@@ -37,30 +37,58 @@ CustomMode.prototype.sendResponseSuccess = function(response, sentMessage, webCh
   response.forEach((message) => {
     this.addMessageToMessageList(message, webChatComponent);
   });
+
+  return Promise.resolve(webChatComponent.messageList);
 };
 
 CustomMode.prototype.sendResponseError = function(error, sentMessage, webChatComponent) {
-    return new Promise((resolve, reject) => resolve());
+    return Promise.resolve();
 };
 
 CustomMode.prototype.sendTypingRequest = function(response, webChatComponent) {
-    return new Promise((resolve, reject) => resolve());
+    return Promise.resolve();
 };
 
 CustomMode.prototype.sendTypingResponseSuccess = function(response, webChatComponent) {
-    return new Promise((resolve, reject) => resolve());
+    return Promise.resolve();
 };
 
 CustomMode.prototype.sendTypingResponseError = function(error, webChatComponent) {
-    return new Promise((resolve, reject) => resolve());
+    return Promise.resolve();
 };
 
 CustomMode.prototype.initialiseChat = async function(webChatComponent) {
+  webChatComponent.contentEditable = false;
   this.setTeamName('Waiting for agent...', webChatComponent);
+  return Promise.resolve();
 };
 
 CustomMode.prototype.destroyChat = async function(webChatComponent) {
-  return new Promise((resolve, reject) => resolve());
+  let modeDataInSession = webChatComponent.getModeDataInSession();
+  modeDataInSession.modeInstance++;
+  webChatComponent.setChatMode(modeDataInSession);
+  return Promise.resolve();
+};
+
+CustomMode.prototype.postDestroyChat = function(webChatComponent) {
+  // Convert the original hand-to-Human message to a text message
+  let filteredMessageList = webChatComponent.messageList.filter(
+    message =>
+      message.mode === "webchat" && message.type === "hand-to-human"
+  );
+  let handToHumanMessage = filteredMessageList[filteredMessageList.length - 1];
+
+  handToHumanMessage.type = "text";
+  handToHumanMessage.data.text = handToHumanMessage.data.elements.text;
+
+  webChatComponent.sendMessage({
+    type: "trigger",
+    author: "me",
+    callback_id: handToHumanMessage.data.elements.callback_id,
+    data: {}
+  });
+
+  return Promise.resolve();
 };
 
 CustomMode.prototype.addAuthorMessage = function(message, webChatComponent) {

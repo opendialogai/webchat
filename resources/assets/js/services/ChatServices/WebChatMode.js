@@ -378,25 +378,34 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
 };
 
 WebChatMode.prototype.sendTypingRequest = function(message, webChatComponent) {
-  return new Promise((resolve, reject) => resolve());
+  return Promise.resolve();
 };
 
 WebChatMode.prototype.sendTypingResponseSuccess = function(response, webChatComponent) {
-  return new Promise((resolve, reject) => resolve());
+  return Promise.resolve();
 };
 
 WebChatMode.prototype.sendTypingResponseError = function(error, webChatComponent) {
-  return new Promise((resolve, reject) => resolve());
+  return Promise.resolve();
 };
 
 WebChatMode.prototype.initialiseChat = function(webChatComponent) {
-  return new Promise((resolve, reject) => resolve());
+  webChatComponent.contentEditable = true;
+  webChatComponent.chatbotAvatar = webChatComponent.chatbotAvatarPath;
+  return Promise.resolve();
 };
 
-WebChatMode.prototype.destroyChat = function(webChatComponent) {};
+WebChatMode.prototype.destroyChat = function(webChatComponent) {
+  return Promise.resolve();
+};
+
+WebChatMode.prototype.postDestroyChat = function(webChatComponent) {
+  return Promise.resolve();
+};
 
 WebChatMode.prototype.setModeInstance = function(number) {
   this.modeInstance = number;
+  return Promise.resolve();
 };
 
 WebChatMode.prototype.getDataLayerEventName = function () {
