@@ -2,7 +2,7 @@ import WebChatMode from "./ChatServices/WebChatMode";
 import CustomMode from "./ChatServices/CustomMode";
 
 let ChatService = function() {
-  this.services = {
+  this.modes = {
     webchat: new WebChatMode(),
     custom: new CustomMode(),
   };
@@ -14,6 +14,10 @@ let ChatService = function() {
   this.previousMode = "webchat";
 };
 
+ChatService.prototype.hasMode = function(mode) {
+  return mode in this.modes;
+};
+
 ChatService.prototype.getModeData = function() {
   return this.modeData;
 };
@@ -21,7 +25,7 @@ ChatService.prototype.getModeData = function() {
 ChatService.prototype.setModeData = function(modeData) {
   this.previousMode = this.modeData.mode !== modeData.mode ? this.modeData.mode : this.previousMode;
   this.modeData = modeData;
-  this.getActiveService().setModeInstance(modeData.modeInstance);
+  this.getActiveMode().setModeInstance(modeData.modeInstance);
 };
 
 ChatService.prototype.getMode = function() {
@@ -32,56 +36,56 @@ ChatService.prototype.getPreviousMode = function() {
   return this.previousMode;
 };
 
-ChatService.prototype.getActiveService = function() {
-  return this.services[this.getMode()];
+ChatService.prototype.getActiveMode = function() {
+  return this.modes[this.getMode()];
 };
 
-ChatService.prototype.getPreviousService = function() {
-  return this.services[this.getPreviousMode()];
+ChatService.prototype.getPreviousActiveMode = function() {
+  return this.modes[this.getPreviousMode()];
 };
 
 ChatService.prototype.sendRequest = function(message, webChatComponent) {
-  return this.getActiveService().sendRequest(message, webChatComponent);
+  return this.getActiveMode().sendRequest(message, webChatComponent);
 };
 
 ChatService.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
-  return this.getActiveService().sendResponseSuccess(response, sentMessage, webChatComponent);
+  return this.getActiveMode().sendResponseSuccess(response, sentMessage, webChatComponent);
 };
 
 ChatService.prototype.sendResponseError = function(error, sentMessage, webChatComponent) {
-  return this.getActiveService().sendResponseError(error, sentMessage, webChatComponent);
+  return this.getActiveMode().sendResponseError(error, sentMessage, webChatComponent);
 };
 
 ChatService.prototype.sendTypingRequest = function(message, webChatComponent) {
-  return this.getActiveService().sendTypingRequest(message, webChatComponent);
+  return this.getActiveMode().sendTypingRequest(message, webChatComponent);
 };
 
 ChatService.prototype.sendTypingResponseSuccess = function(response, webChatComponent) {
-  return this.getActiveService().sendTypingResponseSuccess(response, webChatComponent);
+  return this.getActiveMode().sendTypingResponseSuccess(response, webChatComponent);
 };
 
 ChatService.prototype.sendTypingResponseError = function(error, webChatComponent) {
-  return this.getActiveService().sendTypingResponseError(error, webChatComponent);
+  return this.getActiveMode().sendTypingResponseError(error, webChatComponent);
 };
 
 ChatService.prototype.initialiseChat = function(webChatComponent) {
-  return this.getActiveService().initialiseChat(webChatComponent);
+  return this.getActiveMode().initialiseChat(webChatComponent);
 };
 
 ChatService.prototype.destroyChat = function(webChatComponent) {
-  return this.getActiveService().destroyChat(webChatComponent);
+  return this.getActiveMode().destroyChat(webChatComponent);
 };
 
-ChatService.prototype.postDestroyChat = function(webChatComponent) {
-  return this.getPreviousService().postDestroyChat(webChatComponent);
+ChatService.prototype.postDestroyChat = function(oldModeData, webChatComponent) {
+  return this.getPreviousActiveMode().postDestroyChat(oldModeData, webChatComponent);
 };
 
 ChatService.prototype.setModeInstance = function(number) {
-  this.getActiveService().setModeInstance(number);
+  this.getActiveMode().setModeInstance(number);
 };
 
 ChatService.prototype.getDataLayerEventName = function() {
-  return this.getActiveService().getDataLayerEventName();
+  return this.getActiveMode().getDataLayerEventName();
 }
 
 ChatService.prototype.modeDataUpdated = async function (newValue, oldValue, webChatComponent) {
@@ -94,7 +98,7 @@ ChatService.prototype.modeDataUpdated = async function (newValue, oldValue, webC
   this.setModeData(newValue);
 
   if (modeHasChanged) {
-    await this.postDestroyChat(webChatComponent);
+    await this.postDestroyChat(oldValue, webChatComponent);
   }
 
   if (modeHasChanged) {

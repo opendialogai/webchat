@@ -696,7 +696,9 @@ export default {
 
       const isOpen = this.isOpen;
 
-      this.sendChatOpenMessage();
+      if (!this.isCustomModeInSession()) {
+        this.sendChatOpenMessage();
+      }
     },
     sendChatOpenMessage() {
       const callback = this.openIntent;
@@ -756,8 +758,8 @@ export default {
               currentMessage.author = "them";
             }
 
-            // Convert to the right message type for display
-            if (currentMessage.type === "hand-to-human") {
+            // Convert to the right message type for display (hand-to-human included for backwards compatibility)
+            if (currentMessage.type === "hand-to-system" || currentMessage.type === "hand-to-human") {
               currentMessage.data.text = currentMessage.data.elements.text;
               currentMessage.type = "text";
             }

@@ -34,9 +34,11 @@ CustomMode.prototype.sendResponseSuccess = function(response, sentMessage, webCh
     firstMessage.skip = true;
   }
 
-  response.forEach((message) => {
-    this.addMessageToMessageList(message, webChatComponent);
-  });
+  if (response) {
+    response.forEach((message) => {
+      this.addMessageToMessageList(message, webChatComponent);
+    });
+  }
 
   return Promise.resolve(webChatComponent.messageList);
 };
@@ -58,7 +60,7 @@ CustomMode.prototype.sendTypingResponseError = function(error, webChatComponent)
 };
 
 CustomMode.prototype.initialiseChat = async function(webChatComponent) {
-  webChatComponent.contentEditable = false;
+  webChatComponent.contentEditable = true;
   this.setTeamName('Waiting for agent...', webChatComponent);
   return Promise.resolve();
 };
@@ -70,21 +72,23 @@ CustomMode.prototype.destroyChat = async function(webChatComponent) {
   return Promise.resolve();
 };
 
-CustomMode.prototype.postDestroyChat = function(webChatComponent) {
+CustomMode.prototype.postDestroyChat = function(oldModeData, webChatComponent) {
   // Convert the original hand-to-Human message to a text message
   let filteredMessageList = webChatComponent.messageList.filter(
     message =>
-      message.mode === "webchat" && message.type === "hand-to-human"
+      message.mode === "webchat" && message.type === "hand-to-system"
   );
   let handToHumanMessage = filteredMessageList[filteredMessageList.length - 1];
 
-  handToHumanMessage.type = "text";
-  handToHumanMessage.data.text = handToHumanMessage.data.elements.text;
+  if (handToHumanMessage) {
+    handToHumanMessage.type = "text";
+    handToHumanMessage.data.text = handToHumanMessage.data.elements.text;
+  }
 
   webChatComponent.sendMessage({
     type: "trigger",
     author: "me",
-    callback_id: handToHumanMessage.data.elements.callback_id,
+    callback_id: oldModeData.options.callback_id,
     data: {}
   });
 

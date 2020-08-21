@@ -399,7 +399,7 @@ WebChatMode.prototype.destroyChat = function(webChatComponent) {
   return Promise.resolve();
 };
 
-WebChatMode.prototype.postDestroyChat = function(webChatComponent) {
+WebChatMode.prototype.postDestroyChat = function(oldModeData, webChatComponent) {
   return Promise.resolve();
 };
 

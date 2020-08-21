@@ -97,8 +97,8 @@
       :isOpen="isOpen"
     />
 
-    <HandToHumanMessage
-      v-else-if="message.type === 'hand-to-human'"
+    <HandToSystemMessage
+      v-else-if="message.type === 'hand-to-system'"
       :data="message.data"
       :author="message.author"
       :type="message.type"
@@ -143,11 +143,11 @@
   import TypingMessage from "./messages/TypingMessage.vue";
   import AuthorMessage from "./messages/AuthorMessage.vue";
   import chatIcon from "./assets/chat-icon.svg";
-  import HandToHumanMessage from "./messages/HandToHumanMessage";
+  import HandToSystemMessage from "./messages/HandToSystemMessage";
   import MetaMessage from "./messages/MetaMessage";
   import Autocomplete from './messages/Autocomplete';
 
-export default {
+  export default {
   data() {
     return {
       authorName: null,
@@ -168,7 +168,7 @@ export default {
     LongTextMessage,
     TypingMessage,
     AuthorMessage,
-    HandToHumanMessage,
+    HandToSystemMessage,
     MetaMessage,
     Autocomplete
   },
