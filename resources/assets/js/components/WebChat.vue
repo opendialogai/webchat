@@ -592,8 +592,11 @@ export default {
       link.setAttribute('download',fileName);
       document.body.appendChild(link);
       link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
+
+      setTimeout(() => {
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      }, 1000);
     },
     onListButtonClick(button, msg) {
       this.onButtonClick(button, msg);
