@@ -24,7 +24,7 @@ class HistoryController
      */
     public function export($user_id)
     {
-        $ignoredMessageTypes = ['chat_open', 'cta', 'hand-to-human'];
+        $ignoredMessageTypes = ['chat_open', 'cta', 'empty', 'hand-to-human'];
 
         $chatbotUser = ChatbotUser::where('user_id', $user_id)->first();
 
