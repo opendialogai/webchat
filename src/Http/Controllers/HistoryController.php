@@ -119,6 +119,10 @@ class HistoryController
             $messageText = $message->data['text'];
         } elseif ($message->type == self::FORM_RESPONSE) {
             $messageText = 'Form submitted';
+
+            if (env('SHOW_FULL_FORM_RESPONSE', false)) {
+                $messageText .= "\n" . $message->data['text'];
+            }
         } else {
             $messageText = $this->stripTags($message->message);
         }
