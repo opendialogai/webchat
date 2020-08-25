@@ -66,12 +66,14 @@ export default {
   },
   methods: {
     _handleClick(term) {
-      if ((!this.searchTerm || this.searchTerm === '') && !term) {
+      let str = term ? term.trim() : this.searchTerm.trim()
+      
+      if (!str.length) {
         return false
       }
 
-      this.message.data.callback_value = term ? `${this.message.data.attribute_name}.${term}` : `${this.message.data.attribute_name}.${this.searchTerm}`
-      this.message.data.callback_text = term ? term : this.searchTerm
+      this.message.data.callback_value = term ? `${this.message.data.attribute_name}.${term}` : `${this.message.data.attribute_name}.${str}`
+      this.message.data.callback_text = term ? term : str
 
       this.onButtonClick(false, this.message.data)
       this.searchTerm = ''
