@@ -15,6 +15,7 @@ class HistoryController
     public const TEXT_EXTERNAL = 'text_external';
     public const CHATBOT = 'Bot';
     public const CHATBOT_USER = 'You';
+    public const BUTTON = 'button';
     public const BUTTON_RESPONSE = 'button_response';
     public const FORM_RESPONSE = 'form_response';
 
@@ -33,12 +34,12 @@ class HistoryController
             if (!in_array($message->type, $ignoredMessageTypes)) {
                 $author = $this->getMessageAuthor($message);
 
-                $messageText = $this->getMessageText($message);
+                if ($messageText = $this->getMessageText($message)) {
+                    $date = Carbon::createFromFormat('Y-m-d H:i:s.u', $message->microtime)
+                      ->format('Y-m-d H:i');
 
-                $date = Carbon::createFromFormat('Y-m-d H:i:s.u', $message->microtime)
-                  ->format('Y-m-d H:i');
-
-                $text .= sprintf("%s - %s: %s\n", $date, $author, $messageText);
+                    $text .= sprintf("%s - %s: %s\n", $date, $author, $messageText);
+                }
             }
         }
 
@@ -115,7 +116,9 @@ class HistoryController
     {
         $this->stripTags($message->message);
 
-        if ($message->type == self::BUTTON_RESPONSE) {
+        if ($message->type == self::BUTTON) {
+            return (!empty($message->message)) ? $message->message : false;
+        } elseif ($message->type == self::BUTTON_RESPONSE) {
             $messageText = $message->data['text'];
         } elseif ($message->type == self::FORM_RESPONSE) {
             $messageText = 'Form submitted';
