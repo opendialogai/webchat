@@ -280,7 +280,6 @@ export default {
   width: 100%;
 
   &.od-user-input--fetching {
-    opacity: 0.5;
     pointer-events: none;
   }
 
