@@ -66,9 +66,15 @@ function openChatWindow() {
         }
     });
 
-    window.addEventListener('resize', () => {
-        setVh()
-    })
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+            setVh()
+        })
+    } else {
+        window.addEventListener('resize', () => {
+            setVh()
+        })
+    }
 }
 
 if (window.openDialogSettings) {
