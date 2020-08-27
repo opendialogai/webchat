@@ -23,13 +23,9 @@
       :showRestartButton="showRestartButton"
       :showTypingIndicator="showTypingIndicator"
       :alwaysScrollToBottom="alwaysScrollToBottom"
-      :showLongTextInput="showLongTextInput"
       :showFullPageFormInput="showFullPageFormInput"
       :showFullPageRichInput="showFullPageRichInput"
       :showMessages="showMessages"
-      :maxInputCharacters="maxInputCharacters"
-      :headerText="headerText"
-      :buttonText="buttonText"
       :confirmationMessage="confirmationMessage"
       :initialText="initialText"
       :fullScreen="fullScreen"
@@ -120,10 +116,6 @@ export default {
       type: Boolean,
       default: () => true
     },
-    showLongTextInput: {
-      type: Boolean,
-      default: () => false
-    },
     showFullPageFormInput: {
       type: Boolean,
       default: () => false
@@ -143,18 +135,6 @@ export default {
     fpRichInputMessage: {
       type: Object,
       default: () => {}
-    },
-    maxInputCharacters: {
-      type: Number,
-      default: 0
-    },
-    headerText: {
-      type: String,
-      default: ''
-    },
-    buttonText: {
-      type: String,
-      default: 'Submit'
     },
     confirmationMessage: {
       type: String,

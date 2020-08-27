@@ -42,12 +42,9 @@
         :show-expand-button="false"
         :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
-        :show-long-text-input="showLongTextInput"
         :show-full-page-form-input="showFullPageFormInput"
         :show-full-page-rich-input="showFullPageRichInput"
         :show-messages="showMessages"
-        :max-input-characters="maxInputCharacters"
-        :button-text="buttonText"
         :always-scroll-to-bottom="true"
         :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
@@ -82,6 +79,7 @@
 import axios from "axios";
 import chatService from "../services/ChatService";
 import SessionStorageMixin from "../mixins/SessionStorageMixin";
+import {mapState} from 'vuex'
 
 const moment = require("moment-timezone");
 
@@ -147,14 +145,6 @@ export default {
     useHumanAvatar: Boolean,
     useBotName: Boolean,
     useHumanName: Boolean,
-    user: {
-      type: Object,
-      required: true
-    },
-    userInfo: {
-      type: Object,
-      required: true
-    },
     userTimezone: {
       type: String,
       required: true
@@ -171,7 +161,6 @@ export default {
   mixins: [SessionStorageMixin],
   data() {
     return {
-      buttonText: "Submit",
       closeChatButtonReverseAnimate: false,
       confirmationMessage: null,
       contentEditable: false,
@@ -179,17 +168,13 @@ export default {
       fpFormInputMessage: {},
       fpRichInputMessage: {},
       headerHeight: 0,
-      headerText: "",
       id: "",
       initialText: null,
       isOpen: this.chatIsOpen,
       loading: true,
-      maxInputCharacters: 0,
       messageList: [],
       placeholder: "Enter your message",
-      referrerUrl: '',
       showCloseChatButton: false,
-      showLongTextInput: false,
       showFullPageFormInput: false,
       showFullPageRichInput: false,
       showMessages: true,
@@ -296,9 +281,9 @@ export default {
   created() {
     if (window.self !== window.top) {
       this.showCloseChatButton = true;
-      this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
+      this.$store.commit('updateReferralUrl', document.referrer.match(/^.+:\/\/[^\/]+/)[0])
     } else {
-      this.referrerUrl = document.location.origin;
+      this.$store.commit('updateReferralUrl', document.location.origin)
     }
 
     this.id = `webchat-${this.$uuid.v4()}`;
@@ -350,6 +335,9 @@ export default {
       }
     });
   },
+  computed: {
+    ...mapState(['referrerUrl', 'user', 'uuid'])
+  },
   methods: {
     dateTimezoneFormat(message) {
       if (this.userTimezone !== "utc") {
@@ -368,80 +356,7 @@ export default {
       }
     },
     sendMessage(msg) {
-      const newMsg = msg;
-
-      newMsg.mode = this.modeData.mode;
-      newMsg.modeInstance = this.modeData.modeInstance;
-
-      newMsg.data.date = moment()
-        .tz("UTC")
-        .format("ddd D MMM");
-      newMsg.data.time = moment()
-        .tz("UTC")
-        .format("hh:mm:ss A");
-
-      newMsg.user_id = this.user.email ? this.user.email : this.$store.state.uuid;
-      newMsg.user = this.user;
-
-      if (
-        !newMsg.user.name &&
-        newMsg.user.first_name &&
-        newMsg.user.last_name
-      ) {
-        newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
-      }
-
-      // Give the message an id.
-      newMsg.id = this.$uuid.v4();
-
-      if (newMsg.type === "chat_open") {
-        if (this.userInfo) {
-          Object.keys(this.userInfo).forEach(key => {
-            newMsg.user[key] = this.userInfo[key];
-          });
-        }
-      }
-
-      if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
-        if (this.useHumanName || this.useHumanAvatar) {
-          const authorMsg = this.newAuthorMessage(newMsg);
-
-          this.messageList.push(authorMsg);
-        }
-
-        this.buttonText = "Submit";
-        this.headerText = "";
-        this.maxInputCharacters = 0;
-        this.showLongTextInput = false;
-        this.messageList.push(newMsg);
-      }
-
-      if (newMsg.type === "text" && newMsg.data.text.length > 0) {
-        let event = 'message_sent_to_chatbot';
-        if (chatService.getMode() === "custom") {
-            event = 'message_sent_to_live_agent';
-        }
-        window.parent.postMessage(
-          { dataLayerEvent: event },
-          this.referrerUrl
-        );
-      }
-      if (newMsg.type === "button_response") {
-        const events = ['user_clicked_button_in_chatbot', 'message_sent_to_chatbot']
-        events.forEach((eventName) => {
-          window.parent.postMessage(
-            { dataLayerEvent: { event: eventName, label: newMsg.data.text} },
-            this.referrerUrl
-          );
-        })
-      }
-
-      /* chatService.sendRequest(newMsg, this).then(
-        response => chatService.sendResponseSuccess(response, newMsg, this),
-        () => chatService.sendResponseError(null, newMsg, this)
-      ); */
-
-      this.$store.dispatch('sendMessage', {sentMsg: newMsg, webChat: this})
+      this.$store.dispatch('sendMessage', {sentMsg: msg, webChat: this})
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {
@@ -569,7 +484,7 @@ export default {
         { dataLayerEvent: { event: 'download_chat_transcript'} },
         this.referrerUrl
       );
-      const userId = this.user && this.user.email ? this.user.email : this.$store.state.uuid;
+      const userId = this.user && this.user.email ? this.user.email : this.uuid;
       axios({
         method: 'get',
         url: `/user/${userId}/history/file`,
@@ -767,7 +682,7 @@ export default {
     getChatHistory() {
       this.loading = true;
 
-      const userId = this.user && this.user.email ? this.user.email : this.$store.state.uuid;
+      const userId = this.user && this.user.email ? this.user.email : this.uuid;
 
       const ignoreTypes = "chat_open,trigger,cta,text_external";
 

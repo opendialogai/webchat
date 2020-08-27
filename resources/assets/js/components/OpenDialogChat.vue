@@ -93,8 +93,6 @@
         :use-human-avatar="useHumanAvatar"
         :use-bot-name="useBotName"
         :use-human-name="useHumanName"
-        :user="user"
-        :user-info="userInfo"
         :user-timezone="userTimezone"
         :user-external-id="userExternalId"
         :mode-data="modeData"
@@ -180,7 +178,6 @@ export default {
       useHumanAvatar: false,
       useBotName: false,
       useHumanName: false,
-      user: {},
       userTimezone: '',
       userFirstName: '',
       userLastName: '',
@@ -193,7 +190,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['apiReady']),
+    ...mapState(['apiReady', 'userInfo', 'user']),
     ready() {
       return (
         this.settingsInitialised &&
@@ -353,7 +350,7 @@ export default {
       const browser = `${browserInfo.name} ${browserInfo.version}`;
       const timezone = jstz.determine().name();
 
-      this.userInfo = {
+      const userInfo = {
         ipAddress,
         country,
         browserLanguage,
@@ -361,6 +358,8 @@ export default {
         browser,
         timezone,
       };
+
+      this.$store.commit('updateUserInfo', userInfo)
 
       this.timezoneInitialised = true;
 
@@ -385,8 +384,7 @@ export default {
 
           if (event.data.customUserSettings) {
             Object.keys(event.data.customUserSettings).forEach(key => {
-              if (this.user.custom === undefined) this.user.custom = {};
-              this.user.custom[key] = event.data.customUserSettings[key];
+              this.$store.commit('updateUser', {key: event.data.customerUserSettings[key]})
             });
           }
 
@@ -414,8 +412,10 @@ export default {
       axios
         .get("https://ipinfo.io/")
         .then(response => {
-          this.userInfo.ipAddress = response.data.ip;
-          this.userInfo.country = response.data.country;
+          this.$store.commit('updateUserInfo', {
+            ipAddress: response.data.ip,
+            country: response.data.country
+          })
           this.ipAddressInitialised = true;
         })
         .catch(() => {
@@ -625,7 +625,7 @@ export default {
       }
 
       if (config.user && !window._.isEmpty(config.user)) {
-        this.user = config.user;
+        this.$store.commit('updateUser', config.user)
 
         if (config.user.email) {
           this.userUuid = config.user.email;

@@ -35,11 +35,8 @@
       :hideMessageTime="hideMessageTime"
     />
 
-    <template v-if="showLongTextInput">
+    <template v-if="$store.state.showLongTextInput">
       <LongTextUserInput
-        :headerText="headerText"
-        :maxInputCharacters="maxInputCharacters"
-        :buttonText="buttonText"
         :confirmationMessage="confirmationMessage"
         :onSubmit="onUserInputSubmit"
         :placeholder="placeholder"
@@ -203,10 +200,6 @@ export default {
       type: Boolean,
       default: () => false
     },
-    showLongTextInput: {
-      type: Boolean,
-      default: () => false
-    },
     showFullPageFormInput: {
       type: Boolean,
       default: () => false
@@ -222,18 +215,6 @@ export default {
     hideMessageTime: {
       type: Boolean,
       default: () => false
-    },
-    maxInputCharacters: {
-      type: Number,
-      default: 0
-    },
-    headerText: {
-      type: String,
-      default: ''
-    },
-    buttonText: {
-      type: String,
-      default: 'Submit'
     },
     confirmationMessage: {
       type: String,
