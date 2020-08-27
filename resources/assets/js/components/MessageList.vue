@@ -123,7 +123,7 @@ export default {
     shouldShowMessage(message) {
       let isModeSame = message.mode === this.modeData.mode;
       let isWebchatMode = message.mode === 'webchat';
-      let isCustomMode = message.mode === 'custom';
+      let isCustomMode = !isWebchatMode;
       let isFromSameInstance = message.modeInstance === this.modeData.modeInstance;
       return (isModeSame && isWebchatMode) || (isModeSame && isCustomMode && isFromSameInstance);
     },
@@ -153,7 +153,7 @@ export default {
   @media (min-width: $media-med) {
     padding: 40px 0 0;
   }
-    
+
   &.fadeUp-enter-active {
     animation-duration: 0.5s;
   }
