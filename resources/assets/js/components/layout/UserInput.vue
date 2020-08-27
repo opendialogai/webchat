@@ -159,7 +159,7 @@ export default {
     }),
     skipButton() {
       const last = this.messageList[this.messageList.length -1]
-      
+
       if (last && last.type === 'button' && last.data.external) {
         return last.data.buttons.find(btn => btn.type === 'skip')
       }
@@ -248,14 +248,7 @@ export default {
       this.file = file;
     },
     closeChat(event, messageText = 'End chat') {
-      if (this.modeData.mode === 'custom') {
-        this.$emit('setChatMode', {
-          mode: 'webchat',
-          options: {
-            'callback_id': this.modeData.options.callback_id
-          }
-        });
-      } else {
+      if (this.modeData.mode === 'webchat') {
         this.$parent.$parent.$parent.sendMessage({
           type: "button_response",
           author: "me",
@@ -263,6 +256,13 @@ export default {
           data: {
             text: messageText,
             value: ''
+          }
+        });
+      } else {
+        this.$emit('setChatMode', {
+          mode: 'webchat',
+          options: {
+            'callback_id': this.modeData.options.callback_id
           }
         });
       }
