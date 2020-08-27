@@ -312,6 +312,8 @@ export default {
       }
     }
 
+    this.$store.commit('updateRootComponent', this)
+
     this.userName = `${this.user.first_name} ${this.user.last_name}`;
     this.fetchMessages();
 

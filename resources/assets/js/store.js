@@ -31,7 +31,8 @@ const store = new Vuex.Store({
     ],
     userInputType: 'default',
     currentMessage: {},
-    fetching: false
+    fetching: false,
+    rootComponent: null
   },
   mutations: {
     setApiReady(state, val) {
@@ -71,6 +72,10 @@ const store = new Vuex.Store({
     updateFetching(state, payload) {
       log && console.log('updateFetching', payload)
       state.fetching = payload
+    },
+    updateRootComponent(state, payload) {
+      log && console.log('updateRootComponent', payload)
+      state.rootComponent = payload
     }
   },
   actions: {
@@ -122,6 +127,31 @@ const store = new Vuex.Store({
           reject()
         })
       })
+    },
+    buttonClick({dispatch, state}, payload) {
+      console.log('buttonClick', payload.button, payload.data)
+      const button = payload.button;
+      const msg = payload.data;
+
+      if (!button) {
+        if (msg.link) {
+          window.open(msg.link, "_blank");
+        } else {
+          dispatch('sendMessage', {
+            sentMsg: {
+              type: "button_response",
+              author: "me",
+              callback_id: msg.callback,
+              data: {
+                text: msg.callback_text ? msg.callback_text : msg.callback_value,
+                value: msg.callback_value
+              }
+            },
+            webChat: state.rootComponent
+          })
+        }
+        return;
+      }
     }
   },
   getters: {}

@@ -75,6 +75,7 @@ export default {
       this.message.data.callback_value = term ? `${this.message.data.attribute_name}.${term}` : `${this.message.data.attribute_name}.${str}`
       this.message.data.callback_text = term ? term : str
 
+      //this.$store.dispatch('buttonClick', {button: false, data: this.message.data})
       this.onButtonClick(false, this.message.data)
       this.searchTerm = ''
       this.results = []
