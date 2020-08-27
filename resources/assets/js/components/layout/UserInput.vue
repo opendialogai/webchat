@@ -136,6 +136,13 @@ export default {
       msgText: ''
     };
   },
+  watch: {
+    fetching(newVal) {
+      if (newVal) {
+        this.msgText = ''
+      }
+    }
+  },
   computed: {
     placeholderText () {
       if (this.$store.state.settings.bot && this.$store.state.settings.bot.inputPlaceholder) {
