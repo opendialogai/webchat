@@ -71,6 +71,7 @@
     <button
       class="submit-button"
       v-if="!data.auto_submit"
+      :disabled="fetching || currentMessage !== message"
       @click="_handleClick"
     >{{ data.submit_text }}</button>
   </div>
@@ -79,6 +80,7 @@
 <script>
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
+import {mapState} from 'vuex'
 
 export default {
   components: {
@@ -105,6 +107,12 @@ export default {
       },
       errors: []
     };
+  },
+  computed: {
+    ...mapState({
+      fetching: state => state.fetching,
+      currentMessage: state => state.currentMessage
+    })
   },
   methods: {
     onSelectChange() {
@@ -212,12 +220,17 @@ export default {
     width: 100%;
     border-radius: 12px;
     margin-bottom: 5px;
+
+    &[disabled] {
+      background: #c8c8c8;
+      pointer-events: none;
+    }
   }
 
   .submit-button:hover {
     background-color: var(--od-button-hover-background);
-    color: #0000ff;
-    border: 1px solid #0000ff;
+    color: var(--od-button-text);
+    border: 1px solid transparent;
   }
 
   .od-message-form--text {
