@@ -78,11 +78,11 @@ CustomMode.prototype.postDestroyChat = function(oldModeData, webChatComponent) {
     message =>
       message.mode === "webchat" && message.type === "hand-to-system"
   );
-  let handToHumanMessage = filteredMessageList[filteredMessageList.length - 1];
+  let handToSystemMessage = filteredMessageList[filteredMessageList.length - 1];
 
-  if (handToHumanMessage) {
-    handToHumanMessage.type = "text";
-    handToHumanMessage.data.text = handToHumanMessage.data.elements.text;
+  if (handToSystemMessage) {
+    handToSystemMessage.type = "text";
+    handToSystemMessage.data.text = handToSystemMessage.data.elements.text;
   }
 
   webChatComponent.sendMessage({
