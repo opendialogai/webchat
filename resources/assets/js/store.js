@@ -24,7 +24,7 @@ const store = new Vuex.Store({
     },
     userInfo: {},
     referrerUrl: '',
-    showLongTextInput: true,
+    showLongTextInput: false,
     messageMetaData: {
       teamName: null,
       progressPercent: null,
@@ -166,7 +166,7 @@ const store = new Vuex.Store({
       }
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
-        if (state.rootComponent.useHumanName || state.rootComponent.useHumanAvatar) {
+        if (state.settings.general.useHumanName || state.settings.general.useHumanAvatar) {
           const authorMsg = state.rootComponent.newAuthorMessage(newMsg);
 
           state.rootComponent.messageList.push(authorMsg);
@@ -186,7 +186,7 @@ const store = new Vuex.Store({
         }
         window.parent.postMessage(
           { dataLayerEvent: event },
-          state.rootComponent.referrerUrl
+          state.referrerUrl
         );
       }
       if (newMsg.type === "button_response") {
@@ -194,7 +194,7 @@ const store = new Vuex.Store({
         events.forEach((eventName) => {
           window.parent.postMessage(
             { dataLayerEvent: { event: eventName, label: newMsg.data.text} },
-            state.rootComponent.referrerUrl
+            state.referrerUrl
           );
         })
       }

@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 const moment = require('moment-timezone');
 
@@ -78,8 +78,6 @@ export default {
       required: true,
     },
     showExpandButton: Boolean,
-    useBotAvatar: Boolean,
-    useHumanAvatar: Boolean,
     user: {
       type: Object,
       required: true,
@@ -155,6 +153,12 @@ export default {
       this.comments = comments;
       this.processComments();
     });
+  },
+  computed: {
+    ...mapState({
+      useHumanAvatar: state => state.settings.general.useHumanAvatar,
+      useBotAvatar: state => state.settings.general.useBotAvatar
+    })
   },
   methods: {
     ...mapActions({

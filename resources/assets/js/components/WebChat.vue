@@ -141,10 +141,6 @@ export default {
     },
     showRestartButton: Boolean,
     showExpandButton: Boolean,
-    useBotAvatar: Boolean,
-    useHumanAvatar: Boolean,
-    useBotName: Boolean,
-    useHumanName: Boolean,
     userTimezone: {
       type: String,
       required: true
@@ -281,9 +277,9 @@ export default {
   created() {
     if (window.self !== window.top) {
       this.showCloseChatButton = true;
-      this.$store.commit('updateReferralUrl', document.referrer.match(/^.+:\/\/[^\/]+/)[0])
+      //this.$store.commit('updateReferralUrl', document.referrer.match(/^.+:\/\/[^\/]+/)[0])
     } else {
-      this.$store.commit('updateReferralUrl', document.location.origin)
+      //this.$store.commit('updateReferralUrl', document.location.origin)
     }
 
     this.id = `webchat-${this.$uuid.v4()}`;
@@ -336,7 +332,15 @@ export default {
     });
   },
   computed: {
-    ...mapState(['referrerUrl', 'user', 'uuid'])
+    ...mapState({
+      referrerUrl: state => state.referrerUrl,
+      user: state => state.user,
+      uuid: state => state.uuid,
+      useHumanName: state => state.settings.general.useHumanName,
+      useHumanAvatar: state => state.settings.general.useHumanAvatar,
+      useBotName: state => state.settings.general.useBotName,
+      useBotAvatar: state => state.settings.general.useBotAvatar
+    })
   },
   methods: {
     dateTimezoneFormat(message) {

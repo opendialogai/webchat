@@ -59,8 +59,6 @@
         :parent-url="parentUrl"
         :section-id="sectionId"
         :show-expand-button="false"
-        :use-bot-avatar="useBotAvatar"
-        :use-human-avatar="useHumanAvatar"
         :user="user"
         :user-timezone="userTimezone"
         :user-external-id="userExternalId"
@@ -89,10 +87,6 @@
         :restart-button-callback="restartButtonCallback"
         :show-expand-button="false"
         :show-restart-button="showRestartButton"
-        :use-bot-avatar="useBotAvatar"
-        :use-human-avatar="useHumanAvatar"
-        :use-bot-name="useBotName"
-        :use-human-name="useHumanName"
         :user-timezone="userTimezone"
         :user-external-id="userExternalId"
         :mode-data="modeData"
@@ -161,7 +155,6 @@ export default {
       openIntent: '',
       parentUrl: '',
       pathInitialised: false,
-      referrerUrl: '',
       restartButtonCallback: '',
       sectionCustomFilters: {},
       sectionFilterPathPattern: '',
@@ -174,10 +167,6 @@ export default {
       showRestartButton: false,
       showTabs: false,
       timezoneInitialised: false,
-      useBotAvatar: false,
-      useHumanAvatar: false,
-      useBotName: false,
-      useHumanName: false,
       userTimezone: '',
       userFirstName: '',
       userLastName: '',
@@ -190,7 +179,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['apiReady', 'userInfo', 'user']),
+    ...mapState(['apiReady', 'userInfo', 'user', 'referrerUrl']),
     ready() {
       return (
         this.settingsInitialised &&
@@ -245,10 +234,10 @@ export default {
   },
   created() {
     if (window.self !== window.top) {
-      this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
+      this.$store.commit('updateReferralUrl', document.referrer.match(/^.+:\/\/[^\/]+/)[0])
     } else {
       this.isOpen = true;
-      this.referrerUrl = document.location.origin;
+      this.$store.commit('updateReferralUrl', document.location.origin)
     }
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -557,22 +546,6 @@ export default {
 
         if (general.messageDelay) {
           this.messageDelay = general.messageDelay;
-        }
-
-        if (general.useBotAvatar) {
-          this.useBotAvatar = general.useBotAvatar;
-        }
-
-        if (general.useHumanAvatar) {
-          this.useHumanAvatar = general.useHumanAvatar;
-        }
-
-        if (general.useBotName) {
-          this.useBotName = general.useBotName;
-        }
-
-        if (general.useHumanName) {
-          this.useHumanName = general.useHumanName;
         }
 
         if (Object.prototype.hasOwnProperty.call(general, 'collectUserIp')) {
