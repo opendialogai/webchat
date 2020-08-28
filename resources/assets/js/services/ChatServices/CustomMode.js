@@ -4,6 +4,7 @@ let CustomMode = function() {
   this.name = "custom";
   this.typingIndicatorMessages = null;
   this.modeInstance = 0;
+  this.dataLayerEventName = 'message_sent_to_live_agent';
 };
 
 CustomMode.prototype.sendRequest = async function(message, webChatComponent) {
@@ -33,33 +34,65 @@ CustomMode.prototype.sendResponseSuccess = function(response, sentMessage, webCh
     firstMessage.skip = true;
   }
 
-  response.forEach((message) => {
-    this.addMessageToMessageList(message, webChatComponent);
-  });
+  if (response) {
+    response.forEach((message) => {
+      this.addMessageToMessageList(message, webChatComponent);
+    });
+  }
+
+  return Promise.resolve(webChatComponent.messageList);
 };
 
 CustomMode.prototype.sendResponseError = function(error, sentMessage, webChatComponent) {
-    return new Promise((resolve, reject) => resolve());
+    return Promise.resolve();
 };
 
 CustomMode.prototype.sendTypingRequest = function(response, webChatComponent) {
-    return new Promise((resolve, reject) => resolve());
+    return Promise.resolve();
 };
 
 CustomMode.prototype.sendTypingResponseSuccess = function(response, webChatComponent) {
-    return new Promise((resolve, reject) => resolve());
+    return Promise.resolve();
 };
 
 CustomMode.prototype.sendTypingResponseError = function(error, webChatComponent) {
-    return new Promise((resolve, reject) => resolve());
+    return Promise.resolve();
 };
 
 CustomMode.prototype.initialiseChat = async function(webChatComponent) {
+  webChatComponent.contentEditable = true;
   this.setTeamName('Waiting for agent...', webChatComponent);
+  return Promise.resolve();
 };
 
 CustomMode.prototype.destroyChat = async function(webChatComponent) {
-  return new Promise((resolve, reject) => resolve());
+  let modeDataInSession = webChatComponent.getModeDataInSession();
+  modeDataInSession.modeInstance++;
+  webChatComponent.setChatMode(modeDataInSession);
+  return Promise.resolve();
+};
+
+CustomMode.prototype.postDestroyChat = function(oldModeData, webChatComponent) {
+  // Convert the original hand-to-Human message to a text message
+  let filteredMessageList = webChatComponent.messageList.filter(
+    message =>
+      message.mode === "webchat" && message.type === "hand-to-system"
+  );
+  let handToSystemMessage = filteredMessageList[filteredMessageList.length - 1];
+
+  if (handToSystemMessage) {
+    handToSystemMessage.type = "text";
+    handToSystemMessage.data.text = handToSystemMessage.data.elements.text;
+  }
+
+  webChatComponent.sendMessage({
+    type: "trigger",
+    author: "me",
+    callback_id: oldModeData.options.callback_id,
+    data: {}
+  });
+
+  return Promise.resolve();
 };
 
 CustomMode.prototype.addAuthorMessage = function(message, webChatComponent) {
@@ -106,10 +139,7 @@ CustomMode.prototype.addMessageToMessageList = function(textMessage, webChatComp
   };
 
   webChatComponent.messageList.push(message);
-  let event = "message_sent_to_agent";
-  if (textMessage.source === 2) {
-      event = "message_received_from_agent";
-  }
+  let event = "message_received_from_agent";
 
   window.parent.postMessage(
       { dataLayerEvent: event },
@@ -168,6 +198,10 @@ CustomMode.prototype.clearTypingIndicator = function(webChatComponent) {
 
 CustomMode.prototype.setModeInstance = function(number) {
   this.modeInstance = number;
+};
+
+CustomMode.prototype.getDataLayerEventName = function () {
+  return this.dataLayerEventName;
 };
 
 export default CustomMode;
