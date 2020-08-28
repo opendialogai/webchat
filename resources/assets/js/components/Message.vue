@@ -256,6 +256,7 @@ export default {
 
 // special wrapper for author message (avatar) only
 .mt-wrapper-author {
+  pointer-events: none;
   z-index: 10;
 }
 
