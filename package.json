@@ -40,7 +40,7 @@
         "img-loader": "^3.0.1",
         "mini-css-extract-plugin": "^0.8.0",
         "node-sass": "^4.13.0",
-        "standard": "^11.0.0",
+        "standard": "^14.3.4",
         "uglifyjs-webpack-plugin": "^2.2.0",
         "url-loader": "^2.3.0",
         "vue-hot-reload-api": "^2.3.4",
