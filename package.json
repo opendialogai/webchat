@@ -28,7 +28,7 @@
         "sass": "^1.23.7",
         "sass-loader": "^7.3.1",
         "vue": "^2.6.10",
-        "@babel/core": "^7.7.5",
+        "@babel/core": "^7.11.5",
         "@babel/preset-env": "^7.7.6",
         "babel-loader": "^8.0.6",
         "css-loader": "^3.3.2",
@@ -54,7 +54,7 @@
         "webpack-merge": "^4.2.2"
     },
     "dependencies": {
-        "@babel/core": "^7.7.4",
+        "@babel/core": "^7.11.5",
         "@babel/preset-env": "^7.7.4",
         "@reststate/vuex": "0.1.1",
         "babel-preset-env": "^1.7.0",
