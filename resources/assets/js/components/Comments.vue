@@ -69,15 +69,7 @@ export default {
     userTimezone: {
       type: String,
       required: true,
-    },
-    userExternalId: {
-      type: String,
-      required: true,
-    },
-    userUuid: {
-      type: String,
-      required: true,
-    },
+    }
   },
   data() {
     return {
@@ -140,7 +132,8 @@ export default {
   computed: {
     ...mapState({
       useHumanAvatar: state => state.settings.general.useHumanAvatar,
-      useBotAvatar: state => state.settings.general.useBotAvatar
+      useBotAvatar: state => state.settings.general.useBotAvatar,
+      userExternalId: state => state.user.external_id
     })
   },
   methods: {

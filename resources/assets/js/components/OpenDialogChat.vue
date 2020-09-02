@@ -57,7 +57,6 @@
         :show-expand-button="false"
         :user="user"
         :user-timezone="userTimezone"
-        :user-external-id="userExternalId"
       />
     </div>
     <div v-show="activeTab == 'webchat'" class="od-webchat-container">
@@ -71,13 +70,9 @@
         :chat-is-open="isOpen"
         :show-history="showHistory"
         :number-of-messages="numberOfMessages"
-        :message-animation="messageAnimation"
         :show-expand-button="false"
         :user-timezone="userTimezone"
-        :user-external-id="userExternalId"
         :mode-data="modeData"
-        :closed-intent="closedIntent"
-        :open-intent="openIntent"
         @expandChat="expandChat"
         @toggleChatOpen="toggleChatOpen"
         @newMessage="newWebChatMessage"
@@ -116,7 +111,6 @@ export default {
         imageUrl: null,
       },
       canCloseChat: true,
-      closedIntent: "",
       collectUserIp: true,
       comments: {},
       commentsKey: 0,
@@ -130,8 +124,6 @@ export default {
       isOpen: false,
       showHistory: false,
       numberOfMessages: 10,
-      messageAnimation: false,
-      openIntent: '',
       pathInitialised: false,
       sectionCustomFilters: {},
       sectionFilterPathPattern: '',
@@ -144,9 +136,7 @@ export default {
       showTabs: false,
       timezoneInitialised: false,
       userTimezone: '',
-      userFirstName: '',
       userLastName: '',
-      userExternalId: '',
       modeData: {
         mode: 'webchat',
         modeInstance: 0,
@@ -520,14 +510,6 @@ export default {
           this.canCloseChat = false;
         }
 
-        if (general.hideTypingIndicatorOnInternalMessages) {
-          this.hideTypingIndOnInternalMessages = general.hideTypingIndicatorOnInternalMessages;
-        }
-
-        if (general.messageAnimation) {
-          this.messageAnimation = general.messageAnimation;
-        }
-
         if (config.disableExpandChat) {
           this.showExpandButton = false;
         }
@@ -535,22 +517,6 @@ export default {
 
       if (config.user && !window._.isEmpty(config.user)) {
         this.$store.commit('updateUser', config.user)
-
-        if (config.user.email) {
-          this.userUuid = config.user.email;
-        }
-
-        if (config.user.first_name) {
-          this.userFirstName = config.user.first_name;
-        }
-
-        if (config.user.last_name) {
-          this.userLastName = config.user.last_name;
-        }
-
-        if (config.user.external_id) {
-          this.userExternalId = config.user.external_id;
-        }
       }
 
       if (config.comments) {
@@ -591,13 +557,6 @@ export default {
             this.numberOfMessages = config.webchatHistory.numberOfMessages;
           }
         }
-      }
-
-      if (config.closedIntent) {
-        this.closedIntent = config.closedIntent;
-      }
-      if (config.openIntent) {
-        this.openIntent = config.openIntent;
       }
 
       if (config.newPathname !== undefined) {

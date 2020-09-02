@@ -90,29 +90,15 @@ export default {
     },
     canCloseChat: Boolean,
     chatIsOpen: Boolean,
-    closedIntent: {
-      type: String,
-      default: ""
-    },
-    hideTypingIndicatorOnInternalMessages: Boolean,
     isExpand: Boolean,
     isMobile: Boolean,
-    messageAnimation: Boolean,
     showHistory: Boolean,
     numberOfMessages: {
       type: Number,
       required: true
     },
-    openIntent: {
-      type: String,
-      default: ""
-    },
     showExpandButton: Boolean,
     userTimezone: {
-      type: String,
-      required: true
-    },
-    userExternalId: {
       type: String,
       required: true
     },
@@ -310,11 +296,14 @@ export default {
       chatbotName: state => state.settings.general.chatbotName,
       callbackMap: state => state.settings.general.callbackMap || [],
       restartButtonCallback: state => state.settings.general.restartButtonCallback || '',
-      hideDatetimeMessage: state => state.settings.general.hideDatetimeMessage
+      hideDatetimeMessage: state => state.settings.general.hideDatetimeMessage,
+      hideTypingIndicatorOnInternalMessages: state => state.settings.general.hideTypingIndicatorOnInternalMessages,
+      messageAnimation: state => state.settings.general.messageAnimation,
+      openIntent: state => state.settings.openIntent || ''
     })
   },
   mounted() {
-    console.log(this.hideDatetimeMessage)
+    console.log(this.openIntent)
   },
   methods: {
     dateTimezoneFormat(message) {
