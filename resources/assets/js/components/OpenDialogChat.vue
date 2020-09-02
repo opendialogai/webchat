@@ -64,7 +64,6 @@
         v-if="ready"
         :agent-profile="agentProfile"
         :can-close-chat="canCloseChat"
-        :hide-typing-indicator-on-internal-messages="hideTypingIndOnInternalMessages"
         :is-expand="isExpand"
         :is-mobile="isMobile"
         :chat-is-open="isOpen"
@@ -116,7 +115,6 @@ export default {
       commentsKey: 0,
       commentsEnabled: true,
       cssProps: {},
-      hideTypingIndOnInternalMessages: false,
       ipAddressInitialised: false,
       isExpand: false,
       isMinimized: false,
