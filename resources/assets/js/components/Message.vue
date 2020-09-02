@@ -275,6 +275,7 @@
   padding: 15px 20px;
   line-height: 1.6;
   font-size: 14px;
+  word-break: break-word;
   @media (min-width: $media-sml) {
     font-size: 16px;
   }
