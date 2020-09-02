@@ -47,10 +47,6 @@ export default {
       type: Object,
       required: true,
     },
-    callbackMap: {
-      type: Array,
-      required: true,
-    },
     canCloseChat: Boolean,
     commentsApiConfig: {
       type: Object,
@@ -60,18 +56,6 @@ export default {
     isMobile: Boolean,
     isOpen: Boolean,
     loadHistory: Boolean,
-    messageDelay: {
-      type: Number,
-      required: true,
-    },
-    newMessageIcon: {
-      type: String,
-      required: true,
-    },
-    parentUrl: {
-      type: String,
-      required: true,
-    },
     sectionId: {
       type: String,
       default: '',
@@ -101,7 +85,6 @@ export default {
       authorNameMapping: '',
       authorType: '',
       buttonText: 'Add Comment',
-      chatbotAvatarPath: '',
       commentDateMapping: '',
       comments: [],
       commentTextMapping: '',

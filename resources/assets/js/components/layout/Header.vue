@@ -55,6 +55,8 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 export default {
   data() {
     return {
@@ -103,10 +105,6 @@ export default {
       type: Function,
       required: true
     },
-    showRestartButton: {
-      type: Boolean,
-      default: () => false
-    },
     showExpandButton: {
       type: Boolean,
       default: true
@@ -131,6 +129,11 @@ export default {
       this.referrerUrl = document.location.origin;
     }
   },
+  computed: {
+    ...mapState({
+      showRestartButton: state => state.settings.general.showRestartButton
+    })
+  }
 };
 </script>
 

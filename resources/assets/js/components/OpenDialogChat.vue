@@ -50,13 +50,9 @@
         v-if="ready && apiReady && sectionId"
         :key="commentsKey"
         :agent-profile="agentProfile"
-        :callback-map="callbackMap"
         :comments-api-config="comments"
         :is-expand="isExpand"
         :is-mobile="isMobile"
-        :message-delay="messageDelay"
-        :new-message-icon="newMessageIcon"
-        :parent-url="parentUrl"
         :section-id="sectionId"
         :show-expand-button="false"
         :user="user"
@@ -68,12 +64,7 @@
       <WebChat
         v-if="ready"
         :agent-profile="agentProfile"
-        :callback-map="callbackMap"
         :can-close-chat="canCloseChat"
-        :chatbot-avatar-path="chatbotAvatarPath"
-        :chatbot-name="chatbotName"
-        :hide-datetime-message="hideDatetimeMessage"
-        :hide-message-time="hideMessageTime"
         :hide-typing-indicator-on-internal-messages="hideTypingIndOnInternalMessages"
         :is-expand="isExpand"
         :is-mobile="isMobile"
@@ -81,12 +72,7 @@
         :show-history="showHistory"
         :number-of-messages="numberOfMessages"
         :message-animation="messageAnimation"
-        :message-delay="messageDelay"
-        :new-message-icon="newMessageIcon"
-        :parent-url="parentUrl"
-        :restart-button-callback="restartButtonCallback"
         :show-expand-button="false"
-        :show-restart-button="showRestartButton"
         :user-timezone="userTimezone"
         :user-external-id="userExternalId"
         :mode-data="modeData"
@@ -129,18 +115,13 @@ export default {
         teamName: 'Opendialog Webchat',
         imageUrl: null,
       },
-      callbackMap: [],
       canCloseChat: true,
-      chatbotAvatarPath: '',
-      chatbotName: 'OD Bot',
       closedIntent: "",
       collectUserIp: true,
       comments: {},
       commentsKey: 0,
       commentsEnabled: true,
       cssProps: {},
-      hideDatetimeMessage: false,
-      hideMessageTime: false,
       hideTypingIndOnInternalMessages: false,
       ipAddressInitialised: false,
       isExpand: false,
@@ -150,12 +131,8 @@ export default {
       showHistory: false,
       numberOfMessages: 10,
       messageAnimation: false,
-      messageDelay: 1000,
-      newMessageIcon: '',
       openIntent: '',
-      parentUrl: '',
       pathInitialised: false,
-      restartButtonCallback: '',
       sectionCustomFilters: {},
       sectionFilterPathPattern: '',
       sectionFilterQuery: '',
@@ -164,7 +141,6 @@ export default {
       sectionQueryString: '',
       settingsInitialised: false,
       showExpandButton: true,
-      showRestartButton: false,
       showTabs: false,
       timezoneInitialised: false,
       userTimezone: '',
@@ -513,10 +489,6 @@ export default {
       this.pathInitialised = true;
     },
     setConfig(config) {
-      if (config.parentUrl) {
-        this.parentUrl = config.parentUrl;
-      }
-
       if (config.expandChat) {
         if (!this.isExpand || !this.isOpen) {
           this.expandChat(true);
@@ -527,10 +499,6 @@ export default {
         if (this.isExpand) {
           this.expandChat();
         }
-      }
-
-      if (config.newMessageIcon) {
-        this.newMessageIcon = config.newMessageIcon;
       }
 
       if (config.general) {
@@ -544,44 +512,12 @@ export default {
           this.agentProfile.imageUrl = general.logo;
         }
 
-        if (general.messageDelay) {
-          this.messageDelay = general.messageDelay;
-        }
-
         if (Object.prototype.hasOwnProperty.call(general, 'collectUserIp')) {
           this.collectUserIp = general.collectUserIp;
         }
 
-        if (general.chatbotAvatarPath) {
-          this.chatbotAvatarPath = general.chatbotAvatarPath;
-        }
-
-        if (general.chatbotName) {
-          this.chatbotName = general.chatbotName;
-        }
-
-        if (general.callbackMap) {
-          this.callbackMap = general.callbackMap;
-        }
-
         if (general.disableCloseChat) {
           this.canCloseChat = false;
-        }
-
-        if (general.showRestartButton) {
-          this.showRestartButton = general.showRestartButton;
-        }
-
-        if (general.restartButtonCallback) {
-          this.restartButtonCallback = general.restartButtonCallback;
-        }
-
-        if (general.hideDatetimeMessage) {
-          this.hideDatetimeMessage = general.hideDatetimeMessage;
-        }
-
-        if (general.hideMessageTime) {
-          this.hideMessageTime = general.hideMessageTime;
         }
 
         if (general.hideTypingIndicatorOnInternalMessages) {

@@ -40,7 +40,6 @@
         :on-download="download"
         :content-editable="contentEditable"
         :show-expand-button="false"
-        :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
         :show-full-page-form-input="showFullPageFormInput"
         :show-full-page-rich-input="showFullPageRichInput"
@@ -53,7 +52,6 @@
         :fp-form-input-message="fpFormInputMessage"
         :fp-rich-input-message="fpRichInputMessage"
         :cta-text="ctaText"
-        :hide-message-time="hideMessageTime"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
         @vbc-user-typing="userTyping"
@@ -90,26 +88,12 @@ export default {
       type: Object,
       required: true
     },
-    callbackMap: {
-      type: Array,
-      required: true
-    },
     canCloseChat: Boolean,
-    chatbotAvatarPath: {
-      type: String,
-      default: ""
-    },
-    chatbotName: {
-      type: String,
-      default: ""
-    },
     chatIsOpen: Boolean,
     closedIntent: {
       type: String,
       default: ""
     },
-    hideDatetimeMessage: Boolean,
-    hideMessageTime: Boolean,
     hideTypingIndicatorOnInternalMessages: Boolean,
     isExpand: Boolean,
     isMobile: Boolean,
@@ -119,27 +103,10 @@ export default {
       type: Number,
       required: true
     },
-    messageDelay: {
-      type: Number,
-      required: true
-    },
-    newMessageIcon: {
-      type: String,
-      required: true
-    },
     openIntent: {
       type: String,
       default: ""
     },
-    parentUrl: {
-      type: String,
-      required: true
-    },
-    restartButtonCallback: {
-      type: String,
-      default: ""
-    },
-    showRestartButton: Boolean,
     showExpandButton: Boolean,
     userTimezone: {
       type: String,
@@ -177,7 +144,6 @@ export default {
       showTypingIndicator: false,
       users: [],
       userName: "",
-      chatbotAvatar: this.chatbotAvatarPath,
       chatMode: "webchat",
       canRestart: true,
     };
@@ -336,8 +302,19 @@ export default {
       useHumanName: state => state.settings.general.useHumanName,
       useHumanAvatar: state => state.settings.general.useHumanAvatar,
       useBotName: state => state.settings.general.useBotName,
-      useBotAvatar: state => state.settings.general.useBotAvatar
+      useBotAvatar: state => state.settings.general.useBotAvatar,
+      parentUrl: state => state.settings.parentUrl || '',
+      newMessageIcon: state => state.settings.newMessageIcon,
+      messageDelay: state => state.settings.general.messageDelay || 1000,
+      chatbotAvatar: state => state.settings.general.chatbotAvatarPath || '',
+      chatbotName: state => state.settings.general.chatbotName,
+      callbackMap: state => state.settings.general.callbackMap || [],
+      restartButtonCallback: state => state.settings.general.restartButtonCallback || '',
+      hideDatetimeMessage: state => state.settings.general.hideDatetimeMessage
     })
+  },
+  mounted() {
+    console.log(this.hideDatetimeMessage)
   },
   methods: {
     dateTimezoneFormat(message) {
@@ -889,7 +866,6 @@ export default {
     },
     async setupWebchatMode() {
       this.contentEditable = false;
-      this.chatbotAvatar = this.chatbotAvatarPath;
 
       await chatService.initialiseChat(this);
     },

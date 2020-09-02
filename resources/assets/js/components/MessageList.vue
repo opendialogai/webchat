@@ -14,7 +14,6 @@
       :mode-data="modeData"
       :isOpen="isOpen"
       @setChatMode="setChatMode"
-      :hideMessageTime="hideMessageTime"
     />
     <Message
       v-if="showTypingIndicator"
@@ -46,10 +45,6 @@ export default {
       default: chatIcon
     },
     showTypingIndicator: {
-      type: Boolean,
-      default: () => false
-    },
-    hideMessageTime: {
       type: Boolean,
       default: () => false
     },

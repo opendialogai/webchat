@@ -20,7 +20,6 @@
       :contentEditable="contentEditable"
       :showExpandButton="showExpandButton"
       :placeholder="placeholder"
-      :showRestartButton="showRestartButton"
       :showTypingIndicator="showTypingIndicator"
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :showFullPageFormInput="showFullPageFormInput"
@@ -34,7 +33,6 @@
       :ctaText="ctaText"
       :mode-data="modeData"
       @setChatMode="setChatMode"
-      :hideMessageTime="hideMessageTime"
     />
   </div>
 </template>
@@ -72,10 +70,6 @@ export default {
       type: Boolean,
       default: true
     },
-    hideMessageTime: {
-      type: Boolean,
-      default: false
-    },
     agentProfile: {
       type: Object,
       required: true
@@ -107,10 +101,6 @@ export default {
     placeholder: {
       type: String,
       default: 'Enter your message'
-    },
-    showRestartButton: {
-      type: Boolean,
-      default: () => false
     },
     showTypingIndicator: {
       type: Boolean,

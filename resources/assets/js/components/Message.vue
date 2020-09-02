@@ -128,6 +128,7 @@
 </template>
 
 <script>
+  import {mapState} from 'vuex'
   import DatetimeFakeMessage from "./messages/DatetimeFakeMessage.vue";
   import CarouselListMessage from "./messages/CarouselListMessage.vue";
   import ListMessage from "./messages/ListMessage.vue";
@@ -197,10 +198,6 @@ export default {
       type: Function,
       required: true
     },
-    hideMessageTime: {
-      type: Boolean,
-      default: false
-    },
     read: {
       type: Boolean
     },
@@ -223,6 +220,11 @@ export default {
     ) {
       this.authorName = this.message.user.name;
     }
+  },
+  computed: {
+    ...mapState({
+      hideMessageTime: state => state.settings.general.hideMessageTime
+    })
   },
   methods: {
     setChatMode(mode) {

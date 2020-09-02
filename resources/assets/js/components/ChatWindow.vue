@@ -7,7 +7,6 @@
       :onClose="onClose"
       :onExpand="onExpand"
       :showExpandButton="showExpandButton"
-      :showRestartButton="showRestartButton"
       :onRestartButtonClick="onRestartButtonClick"
       :onDownload="onDownload"
       :isOpen="isOpen"
@@ -32,7 +31,6 @@
       :mode-data="modeData"
       :isOpen="isOpen"
       @setChatMode="setChatMode"
-      :hideMessageTime="hideMessageTime"
     />
 
     <template v-if="$store.state.showLongTextInput">
@@ -192,10 +190,6 @@ export default {
       type: String,
       default: 'Write a reply'
     },
-    showRestartButton: {
-      type: Boolean,
-      default: () => false
-    },
     showTypingIndicator: {
       type: Boolean,
       default: () => false
@@ -211,10 +205,6 @@ export default {
     showMessages: {
       type: Boolean,
       default: () => true
-    },
-    hideMessageTime: {
-      type: Boolean,
-      default: () => false
     },
     confirmationMessage: {
       type: String,
