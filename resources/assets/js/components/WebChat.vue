@@ -277,9 +277,6 @@ export default {
   created() {
     if (window.self !== window.top) {
       this.showCloseChatButton = true;
-      //this.$store.commit('updateReferralUrl', document.referrer.match(/^.+:\/\/[^\/]+/)[0])
-    } else {
-      //this.$store.commit('updateReferralUrl', document.location.origin)
     }
 
     this.id = `webchat-${this.$uuid.v4()}`;
