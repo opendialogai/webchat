@@ -8,7 +8,7 @@ export default {
     },
     isCustomModeInSession() {
       let sessionStorageSettings = this.getModeDataInSession();
-      return sessionStorageSettings && sessionStorageSettings.mode === 'custom';
+      return sessionStorageSettings && sessionStorageSettings.mode !== 'webchat';
     }
   }
 }

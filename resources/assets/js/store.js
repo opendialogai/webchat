@@ -180,10 +180,7 @@ const store = new Vuex.Store({
       }
 
       if (newMsg.type === "text" && newMsg.data.text.length > 0) {
-        let event = 'message_sent_to_chatbot';
-        if (chatService.getMode() === "custom") {
-            event = 'message_sent_to_live_agent';
-        }
+        let event = chatService.getDataLayerEventName();
         window.parent.postMessage(
           { dataLayerEvent: event },
           state.referrerUrl

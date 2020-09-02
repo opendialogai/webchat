@@ -79,7 +79,7 @@ import chatService from "../services/ChatService";
 import SessionStorageMixin from "../mixins/SessionStorageMixin";
 import {mapState} from 'vuex'
 
-const moment = require("moment-timezone");
+  const moment = require("moment-timezone");
 
 export default {
   name: "WebChat",
@@ -184,46 +184,8 @@ export default {
         }, 1000);
       }
     },
-    modeData(newValue, oldValue) {
-      if (newValue.mode !== oldValue.mode) {
-        if (oldValue.mode === "custom") {
-          this.destroyCustomMode();
-        } else if (oldValue.mode === "webchat") {
-          this.destroyWebchatMode();
-        }
-      }
-
-      chatService.setModeData(newValue);
-
-      if (oldValue.mode === "custom" && newValue.mode === "webchat") {
-        // Convert the Hand-to-Human message to a text message
-        let filteredMessageList = this.messageList.filter(
-          message =>
-            message.mode === "webchat" && message.type === "hand-to-human"
-        );
-        let handToHumanMessage =
-          filteredMessageList[filteredMessageList.length - 1];
-
-        if (handToHumanMessage) {
-          handToHumanMessage.type = "text";
-          handToHumanMessage.data.text = handToHumanMessage.data.elements.text;
-        }
-
-        this.sendMessage({
-          type: "trigger",
-          author: "me",
-          callback_id: newValue.options.callback_id,
-          data: {}
-        });
-      }
-
-      if (newValue.mode === "custom") {
-        if (oldValue.mode !== "custom") {
-          this.setupCustomMode();
-        }
-      } else if (newValue.mode === "webchat") {
-        this.setupWebchatMode();
-      }
+    async modeData(newValue, oldValue) {
+      await chatService.modeDataUpdated(newValue, oldValue, this);
     }
   },
   created() {
@@ -629,7 +591,9 @@ export default {
 
       const isOpen = this.isOpen;
 
-      this.sendChatOpenMessage();
+      if (!this.isCustomModeInSession()) {
+        this.sendChatOpenMessage();
+      }
     },
     sendChatOpenMessage() {
       const callback = this.openIntent;
@@ -689,8 +653,8 @@ export default {
               currentMessage.author = "them";
             }
 
-            // Convert to the right message type for display
-            if (currentMessage.type === "hand-to-human") {
+            // Convert to the right message type for display (hand-to-human included for backwards compatibility)
+            if (currentMessage.type === "hand-to-system" || currentMessage.type === "hand-to-human") {
               currentMessage.data.text = currentMessage.data.elements.text;
               currentMessage.type = "text";
             }
@@ -837,26 +801,6 @@ export default {
     },
     setChatMode(data) {
       this.$emit("setChatMode", data);
-    },
-    async destroyCustomMode() {
-      await chatService.destroyChat(this);
-
-      let modeDataInSession = this.getModeDataInSession();
-      modeDataInSession.modeInstance++;
-      this.setChatMode(modeDataInSession);
-    },
-    async destroyWebchatMode() {
-      await chatService.destroyChat(this);
-    },
-    async setupCustomMode() {
-      this.contentEditable = true;
-
-      await chatService.initialiseChat(this);
-    },
-    async setupWebchatMode() {
-      this.contentEditable = false;
-
-      await chatService.initialiseChat(this);
     },
     userTyping(text) {
       chatService
