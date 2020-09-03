@@ -20,9 +20,7 @@
         :is-expand="true"
         :is-open="isOpen"
         :message-list="messageList"
-        :on-button-click="onButtonClick"
         :on-form-button-click="onFormButtonClick"
-        :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
         :on-message-was-sent="onMessageWasSent"
         :open="openComments"
@@ -152,9 +150,7 @@ export default {
     expandChat() {
       this.$emit('expandChat');
     },
-    onButtonClick() {},
     onFormButtonClick() {},
-    onListButtonClick() {},
     onLinkClick() {},
     onMessageWasSent(msg) {
       // Format the new comment for JSON:API.

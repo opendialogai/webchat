@@ -46,20 +46,16 @@ export default {
     message: {
       type: Object,
       required: true
-    },
-    onButtonClick: {
-      type: Function,
-      required: true
     }
   },
   methods: {
     _handleMessageClick() {
       if (this.data.callback || this.data.link) {
-        this.onButtonClick(null, this.data)
+        this.$store.dispatch('buttonClick', {button: null, data: this.data})
       }
     },
     _handleClick(button) {
-      this.onButtonClick(button, this.message)
+      this.$store.dispatch('buttonClick', {button, data: this.message})
     }
   }
 }

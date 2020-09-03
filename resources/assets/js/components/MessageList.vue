@@ -7,9 +7,7 @@
       :read="message.read"
       :chatImageUrl="chatImageUrl"
       :key="message.id"
-      :onButtonClick="onButtonClick"
       :onLinkClick="onLinkClick"
-      :onListButtonClick="onListButtonClick"
       :onFormButtonClick="onFormButtonClick"
       :mode-data="modeData"
       :isOpen="isOpen"
@@ -21,8 +19,6 @@
       :mode-data="{}"
       :chatImageUrl="chatImageUrl"
       :onLinkClick="onLinkClick"
-      :onButtonClick="onButtonClick"
-      :onListButtonClick="onListButtonClick"
       :onFormButtonClick="onFormButtonClick"
     />
   </div>
@@ -52,15 +48,7 @@ export default {
       type: Boolean,
       required: true
     },
-    onButtonClick: {
-      type: Function,
-      required: true
-    },
     onFormButtonClick: {
-      type: Function,
-      required: true
-    },
-    onListButtonClick: {
       type: Function,
       required: true
     },

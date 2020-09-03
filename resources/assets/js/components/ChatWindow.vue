@@ -24,9 +24,7 @@
       :chatImageUrl="agentProfile.imageUrl"
       :showTypingIndicator="showTypingIndicator"
       :alwaysScrollToBottom="alwaysScrollToBottom"
-      :onButtonClick="onButtonClick"
       :onFormButtonClick="onFormButtonClick"
-      :onListButtonClick="onListButtonClick"
       :onLinkClick="onLinkClick"
       :mode-data="modeData"
       :isOpen="isOpen"
@@ -145,15 +143,7 @@ export default {
       type: Function,
       required: true
     },
-    onButtonClick: {
-      type: Function,
-      required: true
-    },
     onFormButtonClick: {
-      type: Function,
-      required: true
-    },
-    onListButtonClick: {
       type: Function,
       required: true
     },

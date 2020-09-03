@@ -11,9 +11,7 @@
       :isExpand="isExpand"
       :onClose="close"
       :onExpand="expand"
-      :onButtonClick="onButtonClick"
       :onFormButtonClick="onFormButtonClick"
-      :onListButtonClick="onListButtonClick"
       :onRestartButtonClick="onRestartButtonClick"
       :onDownload="onDownload"
       :onLinkClick="onLinkClick"
@@ -130,15 +128,7 @@ export default {
       type: String,
       default: 'Are you sure you want to submit?'
     },
-    onButtonClick: {
-      type: Function,
-      required: true
-    },
     onFormButtonClick: {
-      type: Function,
-      required: true
-    },
-    onListButtonClick: {
       type: Function,
       required: true
     },

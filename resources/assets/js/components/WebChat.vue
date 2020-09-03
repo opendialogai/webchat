@@ -32,9 +32,7 @@
         :on-full-page-form-input-cancel="onFullPageFormInputCancel"
         :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
-        :on-button-click="onButtonClick"
         :on-form-button-click="onFormButtonClick"
-        :on-list-button-click="onListButtonClick"
         :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
         :on-download="download"
@@ -330,84 +328,7 @@ export default {
     },
     onFullPageRichInputSubmit(button) {
       const msg = this.messageList[this.messageList.length - 1];
-      this.onButtonClick(button, msg);
-    },
-    onButtonClick(button, msg) {
       this.$store.dispatch('buttonClick', {button: button, data: msg})
-      /* if (!button) {
-        if (msg.link) {
-          window.open(msg.link, "_blank");
-        } else {
-          this.sendMessage({
-            type: "button_response",
-            author: "me",
-            callback_id: msg.callback,
-            data: {
-              text: msg.callback_text ? msg.callback_text : msg.callback_value,
-              value: msg.callback_value
-            }
-          });
-        }
-        return;
-      }
-
-      if (msg.data.external) {
-        await new Promise(resolve => setTimeout(resolve, 300));
-      }
-
-      if (button.phone_number) {
-        const telephone = `tel:${button.phone_number}`;
-
-        this.onLinkClick(telephone, button.phone_number);
-        window.open(telephone);
-        return;
-      }
-
-      if (button.tab_switch) {
-        this.$emit("switchToCommentsTab");
-        return;
-      }
-
-      if (button.link) {
-        this.onLinkClick(button.link, button.text);
-
-        if (button.link_new_tab) {
-          window.open(button.link, "_blank");
-        } else {
-          window.open(button.link, "_parent");
-        }
-        return;
-      }
-
-      if (button.download) {
-        this.download();
-        return;
-      }
-
-      if (!this.isExpand) {
-        this.expandChat();
-      }
-
-      if (msg.type === "fp-rich") {
-        const index = this.messageList.indexOf(msg);
-        this.messageList.splice(index, 1);
-
-        if (this.messageList[index - 1].type === "author") {
-          this.messageList.splice(index - 1, 1);
-        }
-      } else if (msg.data.clear_after_interaction) {
-        this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
-      }
-
-      this.sendMessage({
-        type: "button_response",
-        author: "me",
-        callback_id: button.callback_id,
-        data: {
-          text: button.text,
-          value: button.value
-        }
-      }); */
     },
     download() {
       window.parent.postMessage(
@@ -444,9 +365,6 @@ export default {
         link.remove();
         window.URL.revokeObjectURL(url);
       }, 1000);
-    },
-    onListButtonClick(button, msg) {
-      this.onButtonClick(button, msg);
     },
     onLinkClick(url, text) {
       this.$store.dispatch('linkClick', {url: url, text: text})

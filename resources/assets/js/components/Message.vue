@@ -26,14 +26,12 @@
       v-else-if="message.type === 'list' && message.data.view_type === 'list'"
       :message="message"
       :data="message.data"
-      :onButtonClick="onListButtonClick"
     />
 
     <CarouselListMessage
       v-else-if="message.type === 'list'"
       :message="message"
       :data="message.data"
-      :onButtonClick="onButtonClick"
       :onLinkClick="onLinkClick"
       :author="message.author"
     />
@@ -53,7 +51,6 @@
       v-else-if="message.type === 'button'"
       :message="message"
       :data="message.data"
-      :onButtonClick="onButtonClick"
       :author="message.author"
     />
 
@@ -87,7 +84,6 @@
       v-else-if="message.type === 'rich'"
       :message="message"
       :data="message.data"
-      :onButtonClick="onButtonClick"
     />
 
     <FpRichMessage
@@ -182,15 +178,7 @@
       type: String,
       default: chatIcon
     },
-    onButtonClick: {
-      type: Function,
-      required: true
-    },
     onFormButtonClick: {
-      type: Function,
-      required: true
-    },
-    onListButtonClick: {
       type: Function,
       required: true
     },
