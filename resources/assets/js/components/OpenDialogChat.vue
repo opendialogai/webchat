@@ -539,12 +539,12 @@ export default {
 
       if (config.triggerConversation) {
         // FIXME pass this to child component.
-        this.sendMessage({
+        this.$store.dispatch('sendMessage', {
           type: 'trigger',
           author: this.$store.state.uuid,
           callback_id: config.triggerConversation.callback_id,
-          data: {},
-        });
+          data: {}
+        })
       }
 
       if (config.webchatHistory !== undefined) {

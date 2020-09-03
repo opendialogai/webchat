@@ -127,11 +127,11 @@ const store = new Vuex.Store({
       
     },
     sendMessage({dispatch, commit, state}, payload) {
-      log && console.log('sendMessage', payload.sentMsg)
+      log && console.log('sendMessage', payload)
       
       commit('updateFetching', true)
 
-      let newMsg = Object.assign({}, payload.sentMsg);
+      let newMsg = Object.assign({}, payload);
 
       newMsg.mode = state.rootComponent.modeData.mode;
       newMsg.modeInstance = state.rootComponent.modeData.modeInstance;
@@ -196,11 +196,11 @@ const store = new Vuex.Store({
         })
       }
 
-      chatService.sendRequest(newMsg, payload.webChat).then(response => {
-        dispatch('constructMessageList', {response: response, ...payload})
+      chatService.sendRequest(newMsg, state.rootComponent).then(response => {
+        dispatch('constructMessageList', {response: response, sentMsg: newMsg, webChat: state.rootComponent})
       }).catch(err => {
         console.log(err)
-        chatService.sendResponseError(null, newMsg, payload.webChat)
+        chatService.sendResponseError(null, newMsg, state.rootComponent)
       })
     },
     constructMessageList({commit}, payload) {
@@ -223,7 +223,20 @@ const store = new Vuex.Store({
         })
       })
     },
-    buttonClick({dispatch, state}, payload) {
+    linkClick({dispatch, state}, payload) {
+      window.parent.postMessage(
+        { dataLayerEvent: { event: 'url_clicked', url: payload.url, text: payload.text } },
+        this.referrerUrl);
+
+      dispatch('sendMessage', {
+        type: "url_click",
+        author: state.uuid,
+        data: {
+          url: payload.url
+        }
+      })
+    },
+    async buttonClick({dispatch, state}, payload) {
       console.log('buttonClick', payload.button, payload.data)
       const button = payload.button;
       const msg = payload.data;
@@ -233,20 +246,75 @@ const store = new Vuex.Store({
           window.open(msg.link, "_blank");
         } else {
           dispatch('sendMessage', {
-            sentMsg: {
-              type: "button_response",
-              author: "me",
-              callback_id: msg.callback,
-              data: {
-                text: msg.callback_text ? msg.callback_text : msg.callback_value,
-                value: msg.callback_value
-              }
-            },
-            webChat: state.rootComponent
+            type: "button_response",
+            author: "me",
+            callback_id: msg.callback,
+            data: {
+              text: msg.callback_text ? msg.callback_text : msg.callback_value,
+              value: msg.callback_value
+            }
           })
         }
         return;
       }
+
+      if (msg.data.external) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+
+      if (button.phone_number) {
+        const telephone = `tel:${button.phone_number}`;
+
+        dispatch('linkClick', {url: telephone, text: button.phone_number})
+        window.open(telephone);
+        return;
+      }
+
+      if (button.tab_switch) {
+        state.rootComponent.$emit("switchToCommentsTab");
+        return;
+      }
+
+      if (button.link) {
+        dispatch('linkClick', {url: button.link, text: button.text})
+
+        if (button.link_new_tab) {
+          window.open(button.link, "_blank");
+        } else {
+          window.open(button.link, "_parent");
+        }
+        return;
+      }
+
+      if (button.download) {
+        state.rootComponent.download();
+        return;
+      }
+
+      if (!state.rootComponent.isExpand) {
+        state.rootComponent.expandChat();
+      }
+
+      if (msg.type === "fp-rich") {
+        const index = state.rootComponent.messageList.indexOf(msg);
+        state.rootComponent.messageList.splice(index, 1);
+
+        if (state.rootComponent.messageList[index - 1].type === "author") {
+          state.rootComponent.messageList.splice(index - 1, 1);
+        }
+      } else if (msg.data.clear_after_interaction) {
+        state.rootComponent.messageList[state.rootComponent.messageList.indexOf(msg)].data.buttons = [];
+      }
+
+      dispatch('sendMessage', {
+        type: "button_response",
+        author: "me",
+        callback_id: button.callback_id,
+        data: {
+          text: button.text,
+          value: button.value
+        }
+      })
     }
   },
   getters: {}

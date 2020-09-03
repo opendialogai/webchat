@@ -285,7 +285,7 @@ export default {
       }
     },
     sendMessage(msg) {
-      this.$store.dispatch('sendMessage', {sentMsg: msg, webChat: this})
+      this.$store.dispatch('sendMessage', msg)
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {
@@ -316,7 +316,7 @@ export default {
         ].data.callback_id;
       }
 
-      this.sendMessage(msgToSend);
+      this.$store.dispatch('sendMessage', msgToSend)
       this.placeholder = "Write a reply";
     },
     openChat() {},
@@ -332,8 +332,9 @@ export default {
       const msg = this.messageList[this.messageList.length - 1];
       this.onButtonClick(button, msg);
     },
-    async onButtonClick(button, msg) {
-      if (!button) {
+    onButtonClick(button, msg) {
+      this.$store.dispatch('buttonClick', {button: button, data: msg})
+      /* if (!button) {
         if (msg.link) {
           window.open(msg.link, "_blank");
         } else {
@@ -406,7 +407,7 @@ export default {
           text: button.text,
           value: button.value
         }
-      });
+      }); */
     },
     download() {
       window.parent.postMessage(
@@ -448,7 +449,8 @@ export default {
       this.onButtonClick(button, msg);
     },
     onLinkClick(url, text) {
-      window.parent.postMessage(
+      this.$store.dispatch('linkClick', {url: url, text: text})
+      /* window.parent.postMessage(
           { dataLayerEvent: { event: 'url_clicked', url: url, text: text } },
           this.referrerUrl
       );
@@ -458,7 +460,7 @@ export default {
         data: {
           url
         }
-      });
+      }); */
     },
     onFormButtonClick(data, msg) {
       window.parent.postMessage(
@@ -484,12 +486,12 @@ export default {
 
       responseData.text = newMessageText.join("\n");
 
-      this.sendMessage({
+      this.$store.dispatch('sendMessage', {
         type: "form_response",
         author: "me",
         callback_id: msg.data.callback_id,
         data: responseData
-      });
+      })
     },
     onFormCancelClick(msg) {
       window.parent.postMessage(
@@ -497,21 +499,22 @@ export default {
         this.referrerUrl
       );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
-      this.sendMessage({
+
+      this.$store.dispatch('sendMessage', {
         type: "form_response",
         author: "me",
         callback_id: msg.data.cancel_callback,
         data:{text: msg.data.cancel_text}
-      });
+      })
     },
     onRestartButtonClick() {
       if (this.canRestart) {
         this.canRestart = false;
-        this.sendMessage({
+        this.$store.dispatch('sendMessage', {
           type: 'trigger',
           author: 'me',
           callback_id: this.restartButtonCallback,
-          data: {},
+          data: {}
         }).then(() => {
           setTimeout(() => {
             this.canRestart = true;
@@ -607,7 +610,7 @@ export default {
           }
         };
 
-        this.sendMessage(message);
+        this.$store.dispatch('sendMessage', message)
       }
     },
     getChatHistory() {

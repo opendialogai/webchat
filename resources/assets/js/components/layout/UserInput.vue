@@ -258,7 +258,7 @@ export default {
     },
     closeChat(event, messageText = 'End chat') {
       if (this.modeData.mode === 'webchat') {
-        this.$parent.$parent.$parent.sendMessage({
+        this.$store.dispatch('sendMessage', {
           type: "button_response",
           author: "me",
           callback_id: "intent.app.end_chat",
@@ -266,7 +266,7 @@ export default {
             text: messageText,
             value: ''
           }
-        });
+        })
       } else {
         this.$emit('setChatMode', {
           mode: 'webchat',
