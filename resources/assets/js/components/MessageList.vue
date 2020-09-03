@@ -7,7 +7,6 @@
       :read="message.read"
       :chatImageUrl="chatImageUrl"
       :key="message.id"
-      :onLinkClick="onLinkClick"
       :onFormButtonClick="onFormButtonClick"
       :mode-data="modeData"
       :isOpen="isOpen"
@@ -18,7 +17,6 @@
       :message="{author: 'them', type: 'typing', data: {}, mode: 'webchat'}"
       :mode-data="{}"
       :chatImageUrl="chatImageUrl"
-      :onLinkClick="onLinkClick"
       :onFormButtonClick="onFormButtonClick"
     />
   </div>
@@ -49,10 +47,6 @@ export default {
       required: true
     },
     onFormButtonClick: {
-      type: Function,
-      required: true
-    },
-    onLinkClick: {
       type: Function,
       required: true
     },

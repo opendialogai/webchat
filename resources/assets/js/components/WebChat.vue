@@ -33,7 +33,6 @@
         :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
         :on-form-button-click="onFormButtonClick"
-        :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
         :on-download="download"
         :content-editable="contentEditable"
@@ -365,20 +364,6 @@ export default {
         link.remove();
         window.URL.revokeObjectURL(url);
       }, 1000);
-    },
-    onLinkClick(url, text) {
-      this.$store.dispatch('linkClick', {url: url, text: text})
-      /* window.parent.postMessage(
-          { dataLayerEvent: { event: 'url_clicked', url: url, text: text } },
-          this.referrerUrl
-      );
-      this.sendMessage({
-        type: "url_click",
-        author: this.$store.state.uuid,
-        data: {
-          url
-        }
-      }); */
     },
     onFormButtonClick(data, msg) {
       window.parent.postMessage(

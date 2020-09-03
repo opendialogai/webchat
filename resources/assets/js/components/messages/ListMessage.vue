@@ -7,7 +7,6 @@
         :data="item"
         :author="message.author"
         :type="message.type"
-        :onLinkClick="onLinkClick"
       />
       <ButtonMessage
         v-else-if="item.message_type === 'button'"

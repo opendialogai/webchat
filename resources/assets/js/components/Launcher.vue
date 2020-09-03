@@ -14,7 +14,6 @@
       :onFormButtonClick="onFormButtonClick"
       :onRestartButtonClick="onRestartButtonClick"
       :onDownload="onDownload"
-      :onLinkClick="onLinkClick"
       :contentEditable="contentEditable"
       :showExpandButton="showExpandButton"
       :placeholder="placeholder"
@@ -129,10 +128,6 @@ export default {
       default: 'Are you sure you want to submit?'
     },
     onFormButtonClick: {
-      type: Function,
-      required: true
-    },
-    onLinkClick: {
       type: Function,
       required: true
     },

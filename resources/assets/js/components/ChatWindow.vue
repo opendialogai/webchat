@@ -25,7 +25,6 @@
       :showTypingIndicator="showTypingIndicator"
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :onFormButtonClick="onFormButtonClick"
-      :onLinkClick="onLinkClick"
       :mode-data="modeData"
       :isOpen="isOpen"
       @setChatMode="setChatMode"
@@ -144,10 +143,6 @@ export default {
       required: true
     },
     onFormButtonClick: {
-      type: Function,
-      required: true
-    },
-    onLinkClick: {
       type: Function,
       required: true
     },

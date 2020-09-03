@@ -19,7 +19,6 @@
       :data="message.data"
       :author="message.author"
       :type="message.type"
-      :onLinkClick="onLinkClick"
     />
 
     <ListMessage
@@ -32,7 +31,6 @@
       v-else-if="message.type === 'list'"
       :message="message"
       :data="message.data"
-      :onLinkClick="onLinkClick"
       :author="message.author"
     />
 
@@ -179,10 +177,6 @@
       default: chatIcon
     },
     onFormButtonClick: {
-      type: Function,
-      required: true
-    },
-    onLinkClick: {
       type: Function,
       required: true
     },
