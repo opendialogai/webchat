@@ -58,7 +58,6 @@
         :contentEditable="contentEditable"
         :showEmoji="showEmoji"
         :onSubmit="onUserInputSubmit"
-        :onButtonClick="onButtonClick"
         :externalButtons="externalButtons"
         :animateExternalButtons="animateExternalButtons"
         :lastMessage="lastMessage"

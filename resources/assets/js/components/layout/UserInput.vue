@@ -15,21 +15,19 @@
       :externalButtons="externalButtons"
       :animate="animateExternalButtons"
       :shouldClear="currentMessage.data ? currentMessage.data.clear_after_interaction : null"
-      v-on:sendExternalButton="_submitExternalButton"
+      v-on:sendExternalButton="_handleClick"
     />
 
     <Autocomplete
       v-if="userInputType === 'autocomplete'"
       :data="currentMessage.data"
       :message="currentMessage"
-      :onButtonClick="onButtonClick"
     />
 
     <Datepicker
       v-if="userInputType === 'date-picker'"
       :data="currentMessage.data"
       :message="currentMessage"
-      :onButtonClick="onButtonClick"
     />
 
     <form
@@ -73,7 +71,7 @@
       </div>
     </form>
     <div class="od-user-input__skip-wrapper">
-      <button v-if="skipButton" :key="timestamp" @click.once="onButtonClick(skipButton, currentMessage);" class="od-user-input__skip">{{skipButton.text}}<span>&rsaquo;</span></button>
+      <button v-if="skipButton" :key="timestamp" @click.once="_handleClick(skipButton, currentMessage);" class="od-user-input__skip">{{skipButton.text}}<span>&rsaquo;</span></button>
     </div>
   </div>
 </template>
@@ -108,10 +106,6 @@ export default {
       default: false
     },
     onSubmit: {
-      type: Function,
-      required: true
-    },
-    onButtonClick: {
       type: Function,
       required: true
     },
@@ -218,8 +212,12 @@ export default {
         this.textEntered = true;
       }
     },
-    _submitExternalButton(button) {
-      this.onButtonClick(button, this.lastMessage);
+    _handleClick(button, msg) {
+      if (!msg) {
+        msg = this.lastMessage
+      }
+
+      this.$store.dispatch('buttonClick', {button, data: msg})
     },
     _submitText(event) {
       const text = this.msgText;

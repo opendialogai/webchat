@@ -33,10 +33,6 @@ export default {
     message: {
       type: Object,
       required: true
-    },
-    onButtonClick: {
-      type: Function,
-      required: true
     }
   },
   data() {
@@ -65,7 +61,7 @@ export default {
         this.message.data.callback_text = date.format('Do MMMM YYYY')
       }
 
-      this.onButtonClick(false, this.message.data)
+      this.$store.dispatch('buttonClick', {button: false, data: this.message.data})
     },
     constructDayArray() {
       let arr = []
