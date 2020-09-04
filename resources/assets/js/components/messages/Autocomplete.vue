@@ -70,7 +70,9 @@ export default {
         return false
       }
 
-      this.message.data.callback_value = term ? `${this.message.data.attribute_name}.${term}` : `${this.message.data.attribute_name}.${str}`
+      const attr = str.replace(/\.+$/, "")
+
+      this.message.data.callback_value = term ? `${this.message.data.attribute_name}.${term}` : `${this.message.data.attribute_name}.${attr}`
       this.message.data.callback_text = term ? term : str
 
       this.$store.dispatch('buttonClick', {button: false, data: this.message.data})
