@@ -5,7 +5,7 @@ import {resourceModule} from '@reststate/vuex';
 import camelToKebab from './mixins/camelToKebab';
 import hexToRgb from './mixins/hexToRgb';
 import isSkip from './mixins/isSkip';
-import chatService from "./services/ChatService";
+import ChatService from "./services/ChatService";
 import {uuid} from 'vue-uuid';
 import moment from 'moment'
 
@@ -41,9 +41,16 @@ const store = new Vuex.Store({
     currentMessage: {},
     fetching: false,
     rootComponent: null,
-    placeholder: 'Enter your message'
+    placeholder: 'Enter your message',
+    chatService: null
   },
   mutations: {
+    initChatservice(state) {
+      console.log('initChatService')
+      const c = new ChatService
+      c.init()
+      state.chatService = c
+    },
     setApiReady(state, val) {
       log && console.log('setApiReady', val)
       state.apiReady = val;
@@ -64,7 +71,7 @@ const store = new Vuex.Store({
     },
     updateMessageList(state, payload) {
       log && console.log('updateMessageList', payload)
-      state.messageList = payload
+      state.messageList.push(payload)
     },
     updateInputType(state, payload) {
       log && console.log('updateInputType', payload)
@@ -185,7 +192,7 @@ const store = new Vuex.Store({
       }
 
       if (newMsg.type === "text" && newMsg.data.text.length > 0) {
-        let event = chatService.getDataLayerEventName();
+        let event = state.chatService.getDataLayerEventName();
         window.parent.postMessage(
           { dataLayerEvent: event },
           state.referrerUrl
@@ -201,25 +208,18 @@ const store = new Vuex.Store({
         })
       }
 
-      chatService.sendRequest(newMsg, state.rootComponent).then(response => {
+      state.chatService.sendRequest(newMsg, state.rootComponent).then(response => {
         dispatch('constructMessageList', {response: response, sentMsg: newMsg, webChat: state.rootComponent})
       }).catch(err => {
         console.log(err)
-        chatService.sendResponseError(null, newMsg, state.rootComponent)
+        state.chatService.sendResponseError(null, newMsg, state.rootComponent)
       })
     },
-    constructMessageList({commit}, payload) {
-      chatService.sendResponseSuccess(payload.response, payload.sentMsg, payload.webChat).then(response => {
-        const msgList = response.msgList
-        const msg = msgList.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author' && isSkip(msg) !== 'skip').pop()
+    constructMessageList({commit, state}, payload) {
+      state.chatService.sendResponseSuccess(payload.response, payload.sentMsg, payload.webChat).then(response => {
+        const msg = state.messageList.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author' && isSkip(msg) !== 'skip').pop()
 
-        commit('updateMessageList', [...msgList])
         commit('updateCurrentMessage', msg)
-
-        if (response.placeholder) {
-          commit('updatePlaceholder', response.placeholder)
-        }
-
         commit('updateInputType', msg.type === 'button' && msg.data.external ? 'external-button' : msg.type)
         commit('updateFetching', false)
       })
@@ -237,7 +237,7 @@ const store = new Vuex.Store({
     linkClick({dispatch, state}, payload) {
       window.parent.postMessage(
         { dataLayerEvent: { event: 'url_clicked', url: payload.url, text: payload.text } },
-        this.referrerUrl);
+        state.referrerUrl);
 
       dispatch('sendMessage', {
         type: "url_click",
@@ -357,6 +357,20 @@ const store = new Vuex.Store({
         author: "me",
         callback_id: msg.data.callback_id,
         data: responseData
+      })
+    }, 
+    formCancel({dispatch, state}, payload) {
+      window.parent.postMessage(
+        { dataLayerEvent: { event: 'form_cancelled', 'callback_id': payload.data.cancel_callback }},
+        state.referrerUrl
+      );
+      state.rootComponent.messageList[state.rootComponent.messageList.indexOf(payload)].type = "text";
+
+      dispatch('sendMessage', {
+        type: "form_response",
+        author: "me",
+        callback_id: payload.data.cancel_callback,
+        data:{text: payload.data.cancel_text}
       })
     }
   },

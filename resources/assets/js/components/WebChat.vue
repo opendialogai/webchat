@@ -68,7 +68,6 @@
 
 <script>
 import axios from "axios";
-import chatService from "../services/ChatService";
 import SessionStorageMixin from "../mixins/SessionStorageMixin";
 import {mapState} from 'vuex'
 
@@ -114,7 +113,6 @@ export default {
       initialText: null,
       isOpen: this.chatIsOpen,
       loading: true,
-      messageList: [],
       showCloseChatButton: false,
       showFullPageFormInput: false,
       showFullPageRichInput: false,
@@ -177,10 +175,11 @@ export default {
       }
     },
     async modeData(newValue, oldValue) {
-      await chatService.modeDataUpdated(newValue, oldValue, this);
+      await this.chatService.modeDataUpdated(newValue, oldValue, this);
     }
   },
   created() {
+    this.$store.commit('initChatservice')
     if (window.self !== window.top) {
       this.showCloseChatButton = true;
     }
@@ -236,6 +235,8 @@ export default {
   },
   computed: {
     ...mapState({
+      chatService: state => state.chatService,
+      messageList: state => state.messageList,
       referrerUrl: state => state.referrerUrl,
       user: state => state.user,
       uuid: state => state.uuid,
@@ -665,10 +666,10 @@ export default {
       this.$emit("setChatMode", data);
     },
     userTyping(text) {
-      chatService
+      this.chatService
         .sendTypingRequest(text, this)
-        .then(response => chatService.sendTypingResponseSuccess(response, this))
-        .catch(() => chatService.sendTypingResponseError(null, this));
+        .then(response => this.chatService.sendTypingResponseSuccess(response, this))
+        .catch(() => this.chatService.sendTypingResponseError(null, this));
     },
     updateMessageMetaData(message) {
       this.$store.commit('setMessageMetaData', message.data.elements);
