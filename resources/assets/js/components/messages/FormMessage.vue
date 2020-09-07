@@ -94,10 +94,6 @@ export default {
     message: {
       type: Object,
       required: true
-    },
-    onFormButtonClick: {
-      type: Function,
-      required: true
     }
   },
   data() {
@@ -124,7 +120,7 @@ export default {
       this.validateForm();
 
       if (!this.errors.length) {
-        this.onFormButtonClick(this.form.data, this.message);
+        this.$store.dispatch('formSubmit', {data: this.form.data, msg: this.message})
       }
     },
     validateEmail(emailAddress) {

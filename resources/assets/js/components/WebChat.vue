@@ -28,11 +28,8 @@
         :is-open="isOpen"
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
-        :on-full-page-form-input-submit="onFullPageFormInputSubmit"
         :on-full-page-form-input-cancel="onFullPageFormInputCancel"
-        :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
-        :on-form-button-click="onFormButtonClick"
         :on-restart-button-click="onRestartButtonClick"
         :on-download="download"
         :content-editable="contentEditable"
@@ -42,7 +39,6 @@
         :show-full-page-rich-input="showFullPageRichInput"
         :show-messages="showMessages"
         :always-scroll-to-bottom="true"
-        :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
         :mode-data="modeData"
@@ -119,7 +115,6 @@ export default {
       isOpen: this.chatIsOpen,
       loading: true,
       messageList: [],
-      placeholder: "Enter your message",
       showCloseChatButton: false,
       showFullPageFormInput: false,
       showFullPageRichInput: false,
@@ -314,20 +309,12 @@ export default {
       }
 
       this.$store.dispatch('sendMessage', msgToSend)
-      this.placeholder = "Write a reply";
+      this.$store.commit('updatePlaceholder', 'Write a reply')
     },
     openChat() {},
-    onFullPageFormInputSubmit(data) {
-      const msg = this.messageList[this.messageList.length - 1];
-      this.onFormButtonClick(data, msg);
-    },
     onFullPageFormInputCancel() {
       const msg = this.messageList[this.messageList.length - 1];
       this.onFormCancelClick(msg);
-    },
-    onFullPageRichInputSubmit(button) {
-      const msg = this.messageList[this.messageList.length - 1];
-      this.$store.dispatch('buttonClick', {button: button, data: msg})
     },
     download() {
       window.parent.postMessage(
@@ -364,37 +351,6 @@ export default {
         link.remove();
         window.URL.revokeObjectURL(url);
       }, 1000);
-    },
-    onFormButtonClick(data, msg) {
-      window.parent.postMessage(
-          { dataLayerEvent: { event: 'form_submitted', form_id: msg.data.callback_id, form_text: msg.data.text }},
-          this.referrerUrl
-      );
-      this.messageList[this.messageList.indexOf(msg)].type = "text";
-
-      const responseData = {};
-      const newMessageText = [];
-
-      msg.data.elements.forEach(element => {
-        responseData[element.name] = data[element.name].value;
-
-        if (element.display) {
-          newMessageText.push(
-            `${element.display}: ${data[element.name].value}`
-          );
-        } else {
-          newMessageText.push(data[element.name].value);
-        }
-      });
-
-      responseData.text = newMessageText.join("\n");
-
-      this.$store.dispatch('sendMessage', {
-        type: "form_response",
-        author: "me",
-        callback_id: msg.data.callback_id,
-        data: responseData
-      })
     },
     onFormCancelClick(msg) {
       window.parent.postMessage(

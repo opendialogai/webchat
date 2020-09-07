@@ -180,7 +180,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             }
 
             if (messageIndex >= totalMessages -1) {
-              resolve(webChatComponent.messageList)
+              resolve({msgList: webChatComponent.messageList})
             }
           }, (messageIndex + 1) * webChatComponent.messageDelay);
 
@@ -234,7 +234,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
 
             webChatComponent.contentEditable = !message.data.disable_text;
 
-            resolve(webChatComponent.messageList)
+            resolve({msgList: webChatComponent.messageList})
           }, webChatComponent.messageDelay);
         } else {
           // If we don't get data about whether to disable the editor, turn it on
@@ -311,10 +311,6 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               webChatComponent.headerText = message.data.text;
             }
 
-            if (message.data.placeholder) {
-              webChatComponent.placeholder = message.data.placeholder;
-            }
-
             if (message.data.initial_text) {
               webChatComponent.initialText = message.data.initial_text;
             } else {
@@ -331,7 +327,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             webChatComponent.showMessages = false;
           }
 
-          resolve(webChatComponent.messageList)
+          resolve({msgList: webChatComponent.messageList, placeholder: message.data.placeholder})
         }, webChatComponent.messageDelay);
         sendMessageReceivedEvent(message, webChatComponent);
       }

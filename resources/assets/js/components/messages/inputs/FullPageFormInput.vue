@@ -171,10 +171,6 @@
     vSelect
   },
   props: {
-    onSubmit: {
-      type: Function,
-      required: true
-    },
     onCancel: {
       type: Function,
       required: true
@@ -275,7 +271,7 @@
         if (this.errors.length) {
           this.attemptedSubmit = true;
         } else {
-          this.onSubmit(this.form.data);
+          this.$store.dispatch('formSubmit', {data: this.form.data, msg: this.$store.state.currentMessage})
 
           this.showLoader = true;
         }

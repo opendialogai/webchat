@@ -66,10 +66,6 @@ export default {
       type: Number,
       default: 0
     },
-    placeholder: {
-      type: String,
-      default: 'Write a reply'
-    },
     confirmationMessage: {
       type: String,
       default: 'Are you sure you want to submit?'

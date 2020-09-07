@@ -20,10 +20,8 @@
         :is-expand="true"
         :is-open="isOpen"
         :message-list="messageList"
-        :on-form-button-click="onFormButtonClick"
         :on-message-was-sent="onMessageWasSent"
         :open="openComments"
-        :placeholder="placeholder"
         :show-expand-button="false"
         :show-messages="showMessages"
         :show-typing-indicator="false"
@@ -83,7 +81,6 @@ export default {
       maxInputCharacters: 0,
       messageList: [],
       messageListReady: false,
-      placeholder: 'Type a message',
       sectionMapping: '',
       sectionType: '',
       showLongTextInput: false,
@@ -114,6 +111,7 @@ export default {
     action = 'comments/loadWhere';
     getter = 'comments/where';
 
+    this.$store.commit('updatePlaceholder', 'Type a message')
 
     this.$store.dispatch(action, { filter }).then(() => {
       let comments = [];
@@ -149,7 +147,6 @@ export default {
     expandChat() {
       this.$emit('expandChat');
     },
-    onFormButtonClick() {},
     onMessageWasSent(msg) {
       // Format the new comment for JSON:API.
       const commentData = {

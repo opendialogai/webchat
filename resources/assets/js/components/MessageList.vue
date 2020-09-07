@@ -7,7 +7,6 @@
       :read="message.read"
       :chatImageUrl="chatImageUrl"
       :key="message.id"
-      :onFormButtonClick="onFormButtonClick"
       :mode-data="modeData"
       :isOpen="isOpen"
       @setChatMode="setChatMode"
@@ -17,7 +16,6 @@
       :message="{author: 'them', type: 'typing', data: {}, mode: 'webchat'}"
       :mode-data="{}"
       :chatImageUrl="chatImageUrl"
-      :onFormButtonClick="onFormButtonClick"
     />
   </div>
 </template>
@@ -44,10 +42,6 @@ export default {
     },
     alwaysScrollToBottom: {
       type: Boolean,
-      required: true
-    },
-    onFormButtonClick: {
-      type: Function,
       required: true
     },
     modeData: {

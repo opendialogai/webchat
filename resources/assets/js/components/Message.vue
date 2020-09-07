@@ -63,7 +63,6 @@
       :message="message"
       :data="message.data"
       :author="message.author"
-      :onFormButtonClick="onFormButtonClick"
     />
 
     <FormResponseMessage
@@ -175,10 +174,6 @@
     chatImageUrl: {
       type: String,
       default: chatIcon
-    },
-    onFormButtonClick: {
-      type: Function,
-      required: true
     },
     read: {
       type: Boolean

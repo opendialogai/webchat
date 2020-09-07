@@ -24,7 +24,6 @@
       :chatImageUrl="agentProfile.imageUrl"
       :showTypingIndicator="showTypingIndicator"
       :alwaysScrollToBottom="alwaysScrollToBottom"
-      :onFormButtonClick="onFormButtonClick"
       :mode-data="modeData"
       :isOpen="isOpen"
       @setChatMode="setChatMode"
@@ -40,14 +39,12 @@
     <template v-else-if="showFullPageFormInput">
       <FullPageFormInput
         :message="fpFormInputMessage"
-        :onSubmit="onFullPageFormInputSubmit"
         :onCancel="onFullPageFormInputCancel"
         :isOpen="isOpen" />
     </template>
     <template v-else-if="showFullPageRichInput">
       <FullPageRichInput
         :message="fpRichInputMessage"
-        :onSubmit="onFullPageRichInputSubmit"
         :isOpen="isOpen" />
     </template>
     <template v-else>
@@ -122,27 +119,15 @@ export default {
       type: Function,
       required: true
     },
-    onFullPageFormInputSubmit: {
-      type: Function,
-      required: true
-    },
     onFullPageFormInputCancel: {
         type: Function,
         required: true
-    },
-    onFullPageRichInputSubmit: {
-      type: Function,
-      required: true
     },
     onClose: {
       type: Function,
       required: true
     },
     onExpand: {
-      type: Function,
-      required: true
-    },
-    onFormButtonClick: {
       type: Function,
       required: true
     },

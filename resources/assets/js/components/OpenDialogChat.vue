@@ -489,6 +489,10 @@ export default {
         }
       }
 
+      if (config.bot && config.bot.inputPlaceholder) {
+        this.$store.commit('updatePlaceholder', config.bot.inputPlaceholder)
+      }
+
       if (config.general) {
         const { general } = config;
 

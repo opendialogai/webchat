@@ -40,7 +40,8 @@ const store = new Vuex.Store({
     userInputType: 'default',
     currentMessage: {},
     fetching: false,
-    rootComponent: null
+    rootComponent: null,
+    placeholder: 'Enter your message'
   },
   mutations: {
     setApiReady(state, val) {
@@ -72,6 +73,10 @@ const store = new Vuex.Store({
       } else {
         state.userInputType = 'default'
       }
+    },
+    updatePlaceholder(state, payload) {
+      log && console.log('updatePlaceholder', payload)
+      state.placeholder = payload
     },
     updateCurrentMessage(state, payload) {
       log && console.log('updateCurrentMessage', payload)
@@ -205,10 +210,16 @@ const store = new Vuex.Store({
     },
     constructMessageList({commit}, payload) {
       chatService.sendResponseSuccess(payload.response, payload.sentMsg, payload.webChat).then(response => {
-        const msg = response.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author' && isSkip(msg) !== 'skip').pop()
+        const msgList = response.msgList
+        const msg = msgList.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author' && isSkip(msg) !== 'skip').pop()
 
-        commit('updateMessageList', [...response])
+        commit('updateMessageList', [...msgList])
         commit('updateCurrentMessage', msg)
+
+        if (response.placeholder) {
+          commit('updatePlaceholder', response.placeholder)
+        }
+
         commit('updateInputType', msg.type === 'button' && msg.data.external ? 'external-button' : msg.type)
         commit('updateFetching', false)
       })
@@ -314,6 +325,38 @@ const store = new Vuex.Store({
           text: button.text,
           value: button.value
         }
+      })
+    },
+    formSubmit({dispatch, state}, payload) {
+      const {data, msg} = payload
+      window.parent.postMessage(
+        { dataLayerEvent: { event: 'form_submitted', form_id: msg.data.callback_id, form_text: msg.data.text }},
+        state.referrerUrl
+      );
+      state.rootComponent.messageList[state.rootComponent.messageList.indexOf(msg)].type = "text";
+
+      const responseData = {};
+      const newMessageText = [];
+
+      msg.data.elements.forEach(element => {
+        responseData[element.name] = data[element.name].value;
+
+        if (element.display) {
+          newMessageText.push(
+            `${element.display}: ${data[element.name].value}`
+          );
+        } else {
+          newMessageText.push(data[element.name].value);
+        }
+      });
+
+      responseData.text = newMessageText.join("\n");
+
+      dispatch('sendMessage', {
+        type: "form_response",
+        author: "me",
+        callback_id: msg.data.callback_id,
+        data: responseData
       })
     }
   },

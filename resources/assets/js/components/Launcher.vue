@@ -3,20 +3,16 @@
     <ChatWindow
       :messageList="messageList"
       :onUserInputSubmit="onMessageWasSent"
-      :onFullPageFormInputSubmit="onFullPageFormInputSubmit"
       :onFullPageFormInputCancel="onFullPageFormInputCancel"
-      :onFullPageRichInputSubmit="onFullPageRichInputSubmit"
       :agentProfile="agentProfile"
       :isOpen="isOpen"
       :isExpand="isExpand"
       :onClose="close"
       :onExpand="expand"
-      :onFormButtonClick="onFormButtonClick"
       :onRestartButtonClick="onRestartButtonClick"
       :onDownload="onDownload"
       :contentEditable="contentEditable"
       :showExpandButton="showExpandButton"
-      :placeholder="placeholder"
       :showTypingIndicator="showTypingIndicator"
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :showFullPageFormInput="showFullPageFormInput"
@@ -75,17 +71,9 @@ export default {
       type: Function,
       required: true
     },
-    onFullPageFormInputSubmit: {
-      type: Function,
-      required: true
-    },
     onFullPageFormInputCancel: {
         type: Function,
         required: true
-    },
-    onFullPageRichInputSubmit: {
-      type: Function,
-      required: true
     },
     ctaText: {
       type: Array,
@@ -94,10 +82,6 @@ export default {
     messageList: {
       type: Array,
       default: () => []
-    },
-    placeholder: {
-      type: String,
-      default: 'Enter your message'
     },
     showTypingIndicator: {
       type: Boolean,
@@ -126,10 +110,6 @@ export default {
     confirmationMessage: {
       type: String,
       default: 'Are you sure you want to submit?'
-    },
-    onFormButtonClick: {
-      type: Function,
-      required: true
     },
     onRestartButtonClick: {
       type: Function,
