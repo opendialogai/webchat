@@ -7,24 +7,15 @@
       :read="message.read"
       :chatImageUrl="chatImageUrl"
       :key="message.id"
-      :onButtonClick="onButtonClick"
-      :onLinkClick="onLinkClick"
-      :onListButtonClick="onListButtonClick"
-      :onFormButtonClick="onFormButtonClick"
       :mode-data="modeData"
       :isOpen="isOpen"
       @setChatMode="setChatMode"
-      :hideMessageTime="hideMessageTime"
     />
     <Message
       v-if="showTypingIndicator"
       :message="{author: 'them', type: 'typing', data: {}, mode: 'webchat'}"
       :mode-data="{}"
       :chatImageUrl="chatImageUrl"
-      :onLinkClick="onLinkClick"
-      :onButtonClick="onButtonClick"
-      :onListButtonClick="onListButtonClick"
-      :onFormButtonClick="onFormButtonClick"
     />
   </div>
 </template>
@@ -49,28 +40,8 @@ export default {
       type: Boolean,
       default: () => false
     },
-    hideMessageTime: {
-      type: Boolean,
-      default: () => false
-    },
     alwaysScrollToBottom: {
       type: Boolean,
-      required: true
-    },
-    onButtonClick: {
-      type: Function,
-      required: true
-    },
-    onFormButtonClick: {
-      type: Function,
-      required: true
-    },
-    onListButtonClick: {
-      type: Function,
-      required: true
-    },
-    onLinkClick: {
-      type: Function,
       required: true
     },
     modeData: {

@@ -1,9 +1,10 @@
+import store from '../store'
 import WebChatMode from "./ChatServices/WebChatMode";
 import CustomMode from "./ChatServices/CustomMode";
 
 let ChatService = function() {
   this.modes = {
-    webchat: new WebChatMode(),
+    webchat: null,
     custom: new CustomMode(),
   };
 
@@ -106,4 +107,8 @@ ChatService.prototype.modeDataUpdated = async function (newValue, oldValue, webC
   }
 };
 
-export default new ChatService();
+ChatService.prototype.init = function() {
+  this.modes.webchat = new WebChatMode(store)
+}
+
+export default ChatService;

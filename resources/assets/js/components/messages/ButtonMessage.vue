@@ -64,10 +64,6 @@ export default {
     message: {
       type: Object,
       required: true
-    },
-    onButtonClick: {
-      type: Function,
-      required: true
     }
   },
   methods: {
@@ -75,7 +71,8 @@ export default {
       if (this.data.animate) {
         this.$refs.message.style.height = null;
       }
-      this.onButtonClick(button, this.message);
+
+      this.$store.dispatch('buttonClick', {button, data: this.message})
     }
   },
   computed: {

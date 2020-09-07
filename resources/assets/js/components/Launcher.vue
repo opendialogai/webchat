@@ -3,33 +3,21 @@
     <ChatWindow
       :messageList="messageList"
       :onUserInputSubmit="onMessageWasSent"
-      :onFullPageFormInputSubmit="onFullPageFormInputSubmit"
       :onFullPageFormInputCancel="onFullPageFormInputCancel"
-      :onFullPageRichInputSubmit="onFullPageRichInputSubmit"
       :agentProfile="agentProfile"
       :isOpen="isOpen"
       :isExpand="isExpand"
       :onClose="close"
       :onExpand="expand"
-      :onButtonClick="onButtonClick"
-      :onFormButtonClick="onFormButtonClick"
-      :onListButtonClick="onListButtonClick"
       :onRestartButtonClick="onRestartButtonClick"
       :onDownload="onDownload"
-      :onLinkClick="onLinkClick"
       :contentEditable="contentEditable"
       :showExpandButton="showExpandButton"
-      :placeholder="placeholder"
-      :showRestartButton="showRestartButton"
       :showTypingIndicator="showTypingIndicator"
       :alwaysScrollToBottom="alwaysScrollToBottom"
-      :showLongTextInput="showLongTextInput"
       :showFullPageFormInput="showFullPageFormInput"
       :showFullPageRichInput="showFullPageRichInput"
       :showMessages="showMessages"
-      :maxInputCharacters="maxInputCharacters"
-      :headerText="headerText"
-      :buttonText="buttonText"
       :confirmationMessage="confirmationMessage"
       :initialText="initialText"
       :fullScreen="fullScreen"
@@ -38,7 +26,6 @@
       :ctaText="ctaText"
       :mode-data="modeData"
       @setChatMode="setChatMode"
-      :hideMessageTime="hideMessageTime"
     />
   </div>
 </template>
@@ -76,10 +63,6 @@ export default {
       type: Boolean,
       default: true
     },
-    hideMessageTime: {
-      type: Boolean,
-      default: false
-    },
     agentProfile: {
       type: Object,
       required: true
@@ -88,17 +71,9 @@ export default {
       type: Function,
       required: true
     },
-    onFullPageFormInputSubmit: {
-      type: Function,
-      required: true
-    },
     onFullPageFormInputCancel: {
         type: Function,
         required: true
-    },
-    onFullPageRichInputSubmit: {
-      type: Function,
-      required: true
     },
     ctaText: {
       type: Array,
@@ -108,21 +83,9 @@ export default {
       type: Array,
       default: () => []
     },
-    placeholder: {
-      type: String,
-      default: 'Enter your message'
-    },
-    showRestartButton: {
-      type: Boolean,
-      default: () => false
-    },
     showTypingIndicator: {
       type: Boolean,
       default: () => true
-    },
-    showLongTextInput: {
-      type: Boolean,
-      default: () => false
     },
     showFullPageFormInput: {
       type: Boolean,
@@ -144,37 +107,9 @@ export default {
       type: Object,
       default: () => {}
     },
-    maxInputCharacters: {
-      type: Number,
-      default: 0
-    },
-    headerText: {
-      type: String,
-      default: ''
-    },
-    buttonText: {
-      type: String,
-      default: 'Submit'
-    },
     confirmationMessage: {
       type: String,
       default: 'Are you sure you want to submit?'
-    },
-    onButtonClick: {
-      type: Function,
-      required: true
-    },
-    onFormButtonClick: {
-      type: Function,
-      required: true
-    },
-    onListButtonClick: {
-      type: Function,
-      required: true
-    },
-    onLinkClick: {
-      type: Function,
-      required: true
     },
     onRestartButtonClick: {
       type: Function,

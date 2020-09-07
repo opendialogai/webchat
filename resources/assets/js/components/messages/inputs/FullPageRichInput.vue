@@ -80,10 +80,6 @@
 <script>
 export default {
   props: {
-    onSubmit: {
-      type: Function,
-      required: true
-    },
     message: {
       type: Object,
       required: true
@@ -106,7 +102,8 @@ export default {
   methods: {
     _handleClick(button) {
       if (!this.showLoader) {
-        this.onSubmit(button);
+        //this.onSubmit(button);
+        this.$store.dispatch('buttonClick', {button: button, data: this.message.data})
 
         if (!button.download && !button.link) {
           this.showLoader = true;

@@ -34,18 +34,14 @@ export default {
     data: {
       type: Object,
       required: true
-    },
-    onLinkClick: {
-      type: Function,
-      required: true
     }
   },
   methods: {
     _handleClick(e) {
       if (e.target.tagName === "A") {
-        this.onLinkClick(e.target.href, e.target.offsetParent.textContent);
+        this.$store.dispatch('linkClick', {url: e.target.href, text: e.target.offsetParent.textContent})
       } else if (e.target.offsetParent.tagName === 'A') {
-          this.onLinkClick(e.target.offsetParent.href, e.target.offsetParent.textContent);
+        this.$store.dispatch('linkClick', {url: e.target.offsetParent.href, text: e.target.offsetParent.textContent})
       }
     }
   },

@@ -50,56 +50,28 @@
         v-if="ready && apiReady && sectionId"
         :key="commentsKey"
         :agent-profile="agentProfile"
-        :callback-map="callbackMap"
         :comments-api-config="comments"
         :is-expand="isExpand"
         :is-mobile="isMobile"
-        :message-delay="messageDelay"
-        :new-message-icon="newMessageIcon"
-        :parent-url="parentUrl"
         :section-id="sectionId"
         :show-expand-button="false"
-        :use-bot-avatar="useBotAvatar"
-        :use-human-avatar="useHumanAvatar"
         :user="user"
         :user-timezone="userTimezone"
-        :user-external-id="userExternalId"
       />
     </div>
     <div v-show="activeTab == 'webchat'" class="od-webchat-container">
       <WebChat
         v-if="ready"
         :agent-profile="agentProfile"
-        :callback-map="callbackMap"
         :can-close-chat="canCloseChat"
-        :chatbot-avatar-path="chatbotAvatarPath"
-        :chatbot-name="chatbotName"
-        :hide-datetime-message="hideDatetimeMessage"
-        :hide-message-time="hideMessageTime"
-        :hide-typing-indicator-on-internal-messages="hideTypingIndOnInternalMessages"
         :is-expand="isExpand"
         :is-mobile="isMobile"
         :chat-is-open="isOpen"
         :show-history="showHistory"
         :number-of-messages="numberOfMessages"
-        :message-animation="messageAnimation"
-        :message-delay="messageDelay"
-        :new-message-icon="newMessageIcon"
-        :parent-url="parentUrl"
-        :restart-button-callback="restartButtonCallback"
         :show-expand-button="false"
-        :show-restart-button="showRestartButton"
-        :use-bot-avatar="useBotAvatar"
-        :use-human-avatar="useHumanAvatar"
-        :use-bot-name="useBotName"
-        :use-human-name="useHumanName"
-        :user="user"
-        :user-info="userInfo"
         :user-timezone="userTimezone"
-        :user-external-id="userExternalId"
         :mode-data="modeData"
-        :closed-intent="closedIntent"
-        :open-intent="openIntent"
         @expandChat="expandChat"
         @toggleChatOpen="toggleChatOpen"
         @newMessage="newWebChatMessage"
@@ -137,19 +109,12 @@ export default {
         teamName: 'Opendialog Webchat',
         imageUrl: null,
       },
-      callbackMap: [],
       canCloseChat: true,
-      chatbotAvatarPath: '',
-      chatbotName: 'OD Bot',
-      closedIntent: "",
       collectUserIp: true,
       comments: {},
       commentsKey: 0,
       commentsEnabled: true,
       cssProps: {},
-      hideDatetimeMessage: false,
-      hideMessageTime: false,
-      hideTypingIndOnInternalMessages: false,
       ipAddressInitialised: false,
       isExpand: false,
       isMinimized: false,
@@ -157,14 +122,7 @@ export default {
       isOpen: false,
       showHistory: false,
       numberOfMessages: 10,
-      messageAnimation: false,
-      messageDelay: 1000,
-      newMessageIcon: '',
-      openIntent: '',
-      parentUrl: '',
       pathInitialised: false,
-      referrerUrl: '',
-      restartButtonCallback: '',
       sectionCustomFilters: {},
       sectionFilterPathPattern: '',
       sectionFilterQuery: '',
@@ -173,18 +131,10 @@ export default {
       sectionQueryString: '',
       settingsInitialised: false,
       showExpandButton: true,
-      showRestartButton: false,
       showTabs: false,
       timezoneInitialised: false,
-      useBotAvatar: false,
-      useHumanAvatar: false,
-      useBotName: false,
-      useHumanName: false,
-      user: {},
       userTimezone: '',
-      userFirstName: '',
       userLastName: '',
-      userExternalId: '',
       modeData: {
         mode: 'webchat',
         modeInstance: 0,
@@ -193,7 +143,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['apiReady']),
+    ...mapState(['apiReady', 'userInfo', 'user', 'referrerUrl']),
     ready() {
       return (
         this.settingsInitialised &&
@@ -248,10 +198,10 @@ export default {
   },
   created() {
     if (window.self !== window.top) {
-      this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
+      this.$store.commit('updateReferralUrl', document.referrer.match(/^.+:\/\/[^\/]+/)[0])
     } else {
       this.isOpen = true;
-      this.referrerUrl = document.location.origin;
+      this.$store.commit('updateReferralUrl', document.location.origin)
     }
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -353,7 +303,7 @@ export default {
       const browser = `${browserInfo.name} ${browserInfo.version}`;
       const timezone = jstz.determine().name();
 
-      this.userInfo = {
+      const userInfo = {
         ipAddress,
         country,
         browserLanguage,
@@ -361,6 +311,8 @@ export default {
         browser,
         timezone,
       };
+
+      this.$store.commit('updateUserInfo', userInfo)
 
       this.timezoneInitialised = true;
 
@@ -385,8 +337,7 @@ export default {
 
           if (event.data.customUserSettings) {
             Object.keys(event.data.customUserSettings).forEach(key => {
-              if (this.user.custom === undefined) this.user.custom = {};
-              this.user.custom[key] = event.data.customUserSettings[key];
+              this.$store.commit('updateUser', {key: event.data.customerUserSettings[key]})
             });
           }
 
@@ -414,8 +365,10 @@ export default {
       axios
         .get("https://ipinfo.io/")
         .then(response => {
-          this.userInfo.ipAddress = response.data.ip;
-          this.userInfo.country = response.data.country;
+          this.$store.commit('updateUserInfo', {
+            ipAddress: response.data.ip,
+            country: response.data.country
+          })
           this.ipAddressInitialised = true;
         })
         .catch(() => {
@@ -524,10 +477,6 @@ export default {
       this.pathInitialised = true;
     },
     setConfig(config) {
-      if (config.parentUrl) {
-        this.parentUrl = config.parentUrl;
-      }
-
       if (config.expandChat) {
         if (!this.isExpand || !this.isOpen) {
           this.expandChat(true);
@@ -540,8 +489,8 @@ export default {
         }
       }
 
-      if (config.newMessageIcon) {
-        this.newMessageIcon = config.newMessageIcon;
+      if (config.bot && config.bot.inputPlaceholder) {
+        this.$store.commit('updatePlaceholder', config.bot.inputPlaceholder)
       }
 
       if (config.general) {
@@ -555,68 +504,12 @@ export default {
           this.agentProfile.imageUrl = general.logo;
         }
 
-        if (general.messageDelay) {
-          this.messageDelay = general.messageDelay;
-        }
-
-        if (general.useBotAvatar) {
-          this.useBotAvatar = general.useBotAvatar;
-        }
-
-        if (general.useHumanAvatar) {
-          this.useHumanAvatar = general.useHumanAvatar;
-        }
-
-        if (general.useBotName) {
-          this.useBotName = general.useBotName;
-        }
-
-        if (general.useHumanName) {
-          this.useHumanName = general.useHumanName;
-        }
-
         if (Object.prototype.hasOwnProperty.call(general, 'collectUserIp')) {
           this.collectUserIp = general.collectUserIp;
         }
 
-        if (general.chatbotAvatarPath) {
-          this.chatbotAvatarPath = general.chatbotAvatarPath;
-        }
-
-        if (general.chatbotName) {
-          this.chatbotName = general.chatbotName;
-        }
-
-        if (general.callbackMap) {
-          this.callbackMap = general.callbackMap;
-        }
-
         if (general.disableCloseChat) {
           this.canCloseChat = false;
-        }
-
-        if (general.showRestartButton) {
-          this.showRestartButton = general.showRestartButton;
-        }
-
-        if (general.restartButtonCallback) {
-          this.restartButtonCallback = general.restartButtonCallback;
-        }
-
-        if (general.hideDatetimeMessage) {
-          this.hideDatetimeMessage = general.hideDatetimeMessage;
-        }
-
-        if (general.hideMessageTime) {
-          this.hideMessageTime = general.hideMessageTime;
-        }
-
-        if (general.hideTypingIndicatorOnInternalMessages) {
-          this.hideTypingIndOnInternalMessages = general.hideTypingIndicatorOnInternalMessages;
-        }
-
-        if (general.messageAnimation) {
-          this.messageAnimation = general.messageAnimation;
         }
 
         if (config.disableExpandChat) {
@@ -625,23 +518,7 @@ export default {
       }
 
       if (config.user && !window._.isEmpty(config.user)) {
-        this.user = config.user;
-
-        if (config.user.email) {
-          this.userUuid = config.user.email;
-        }
-
-        if (config.user.first_name) {
-          this.userFirstName = config.user.first_name;
-        }
-
-        if (config.user.last_name) {
-          this.userLastName = config.user.last_name;
-        }
-
-        if (config.user.external_id) {
-          this.userExternalId = config.user.external_id;
-        }
+        this.$store.commit('updateUser', config.user)
       }
 
       if (config.comments) {
@@ -666,12 +543,12 @@ export default {
 
       if (config.triggerConversation) {
         // FIXME pass this to child component.
-        this.sendMessage({
+        this.$store.dispatch('sendMessage', {
           type: 'trigger',
           author: this.$store.state.uuid,
           callback_id: config.triggerConversation.callback_id,
-          data: {},
-        });
+          data: {}
+        })
       }
 
       if (config.webchatHistory !== undefined) {
@@ -682,13 +559,6 @@ export default {
             this.numberOfMessages = config.webchatHistory.numberOfMessages;
           }
         }
-      }
-
-      if (config.closedIntent) {
-        this.closedIntent = config.closedIntent;
-      }
-      if (config.openIntent) {
-        this.openIntent = config.openIntent;
       }
 
       if (config.newPathname !== undefined) {

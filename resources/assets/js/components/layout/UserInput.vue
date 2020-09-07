@@ -15,21 +15,19 @@
       :externalButtons="externalButtons"
       :animate="animateExternalButtons"
       :shouldClear="currentMessage.data ? currentMessage.data.clear_after_interaction : null"
-      v-on:sendExternalButton="_submitExternalButton"
+      v-on:sendExternalButton="_handleClick"
     />
 
     <Autocomplete
       v-if="userInputType === 'autocomplete'"
       :data="currentMessage.data"
       :message="currentMessage"
-      :onButtonClick="onButtonClick"
     />
 
     <Datepicker
       v-if="userInputType === 'date-picker'"
       :data="currentMessage.data"
       :message="currentMessage"
-      :onButtonClick="onButtonClick"
     />
 
     <form
@@ -44,7 +42,7 @@
           @blur="setInputActive(false)"
           @keydown="handleKey"
           @input="onTextChange($event)"
-          :placeholder="placeholderText"
+          :placeholder="placeholder"
           class="od-user-input__form-text-input"
           ref="userInput"
           v-model="msgText"
@@ -73,7 +71,7 @@
       </div>
     </form>
     <div class="od-user-input__skip-wrapper">
-      <button v-if="skipButton" :key="timestamp" @click.once="onButtonClick(skipButton, currentMessage);" class="od-user-input__skip">{{skipButton.text}}<span>&rsaquo;</span></button>
+      <button v-if="skipButton" :key="timestamp" @click.once="_handleClick(skipButton, currentMessage);" class="od-user-input__skip">{{skipButton.text}}<span>&rsaquo;</span></button>
     </div>
   </div>
 </template>
@@ -111,14 +109,6 @@ export default {
       type: Function,
       required: true
     },
-    onButtonClick: {
-      type: Function,
-      required: true
-    },
-    placeholder: {
-      type: String,
-      default: "Enter your message"
-    },
     lastMessage: {
       type: Object,
       required: true
@@ -144,13 +134,6 @@ export default {
     }
   },
   computed: {
-    placeholderText () {
-      if (this.$store.state.settings.bot && this.$store.state.settings.bot.inputPlaceholder) {
-        return this.$store.state.settings.bot.inputPlaceholder;
-      } else {
-        return this.placeholder;
-      }
-    },
     sendButtonText () {
       if (this.$store.state.settings.bot && this.$store.state.settings.bot.sendButtonText) {
         return this.$store.state.settings.bot.sendButtonText;
@@ -163,7 +146,8 @@ export default {
       currentMessage: state => state.currentMessage,
       userInputType: state => state.userInputType,
       messageList: state => state.messageList,
-      fetching: state => state.fetching
+      fetching: state => state.fetching,
+      placeholder: state => state.placeholder
     }),
     skipButton() {
       const last = this.messageList[this.messageList.length -1]
@@ -218,8 +202,12 @@ export default {
         this.textEntered = true;
       }
     },
-    _submitExternalButton(button) {
-      this.onButtonClick(button, this.lastMessage);
+    _handleClick(button, msg) {
+      if (!msg) {
+        msg = this.lastMessage
+      }
+
+      this.$store.dispatch('buttonClick', {button, data: msg})
     },
     _submitText(event) {
       const text = this.msgText;
@@ -258,7 +246,7 @@ export default {
     },
     closeChat(event, messageText = 'End chat') {
       if (this.modeData.mode === 'webchat') {
-        this.$parent.$parent.$parent.sendMessage({
+        this.$store.dispatch('sendMessage', {
           type: "button_response",
           author: "me",
           callback_id: "intent.app.end_chat",
@@ -266,7 +254,7 @@ export default {
             text: messageText,
             value: ''
           }
-        });
+        })
       } else {
         this.$emit('setChatMode', {
           mode: 'webchat',

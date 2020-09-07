@@ -7,7 +7,6 @@
       :onClose="onClose"
       :onExpand="onExpand"
       :showExpandButton="showExpandButton"
-      :showRestartButton="showRestartButton"
       :onRestartButtonClick="onRestartButtonClick"
       :onDownload="onDownload"
       :isOpen="isOpen"
@@ -25,21 +24,13 @@
       :chatImageUrl="agentProfile.imageUrl"
       :showTypingIndicator="showTypingIndicator"
       :alwaysScrollToBottom="alwaysScrollToBottom"
-      :onButtonClick="onButtonClick"
-      :onFormButtonClick="onFormButtonClick"
-      :onListButtonClick="onListButtonClick"
-      :onLinkClick="onLinkClick"
       :mode-data="modeData"
       :isOpen="isOpen"
       @setChatMode="setChatMode"
-      :hideMessageTime="hideMessageTime"
     />
 
-    <template v-if="showLongTextInput">
+    <template v-if="$store.state.showLongTextInput">
       <LongTextUserInput
-        :headerText="headerText"
-        :maxInputCharacters="maxInputCharacters"
-        :buttonText="buttonText"
         :confirmationMessage="confirmationMessage"
         :onSubmit="onUserInputSubmit"
         :placeholder="placeholder"
@@ -48,14 +39,12 @@
     <template v-else-if="showFullPageFormInput">
       <FullPageFormInput
         :message="fpFormInputMessage"
-        :onSubmit="onFullPageFormInputSubmit"
         :onCancel="onFullPageFormInputCancel"
         :isOpen="isOpen" />
     </template>
     <template v-else-if="showFullPageRichInput">
       <FullPageRichInput
         :message="fpRichInputMessage"
-        :onSubmit="onFullPageRichInputSubmit"
         :isOpen="isOpen" />
     </template>
     <template v-else>
@@ -63,7 +52,6 @@
         :contentEditable="contentEditable"
         :showEmoji="showEmoji"
         :onSubmit="onUserInputSubmit"
-        :onButtonClick="onButtonClick"
         :externalButtons="externalButtons"
         :animateExternalButtons="animateExternalButtons"
         :lastMessage="lastMessage"
@@ -131,39 +119,15 @@ export default {
       type: Function,
       required: true
     },
-    onFullPageFormInputSubmit: {
-      type: Function,
-      required: true
-    },
     onFullPageFormInputCancel: {
         type: Function,
         required: true
-    },
-    onFullPageRichInputSubmit: {
-      type: Function,
-      required: true
     },
     onClose: {
       type: Function,
       required: true
     },
     onExpand: {
-      type: Function,
-      required: true
-    },
-    onButtonClick: {
-      type: Function,
-      required: true
-    },
-    onFormButtonClick: {
-      type: Function,
-      required: true
-    },
-    onListButtonClick: {
-      type: Function,
-      required: true
-    },
-    onLinkClick: {
       type: Function,
       required: true
     },
@@ -195,15 +159,7 @@ export default {
       type: String,
       default: 'Write a reply'
     },
-    showRestartButton: {
-      type: Boolean,
-      default: () => false
-    },
     showTypingIndicator: {
-      type: Boolean,
-      default: () => false
-    },
-    showLongTextInput: {
       type: Boolean,
       default: () => false
     },
@@ -218,22 +174,6 @@ export default {
     showMessages: {
       type: Boolean,
       default: () => true
-    },
-    hideMessageTime: {
-      type: Boolean,
-      default: () => false
-    },
-    maxInputCharacters: {
-      type: Number,
-      default: 0
-    },
-    headerText: {
-      type: String,
-      default: ''
-    },
-    buttonText: {
-      type: String,
-      default: 'Submit'
     },
     confirmationMessage: {
       type: String,

@@ -3,9 +3,10 @@ import isSkip from "../../mixins/isSkip";
 
 const moment = require("moment-timezone");
 
-let WebChatMode = function() {
+let WebChatMode = function(store) {
   this.name = "webchat";
   this.dataLayerEventName = 'message_sent_to_chatbot';
+  this.$store = store
 };
 
 WebChatMode.prototype.sendRequest = function(message, webChatComponent) {
@@ -89,8 +90,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               !message.data.hideavatar
             ) {
               const authorMsg = webChatComponent.newAuthorMessage(message);
-
-              webChatComponent.messageList.push(authorMsg);
+              this.$store.commit('updateMessageList', authorMsg)
             }
 
             typingMessage = {
@@ -101,7 +101,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
                 animate: webChatComponent.messageAnimation
               }
             };
-            webChatComponent.messageList.push(typingMessage);
+            this.$store.commit('updateMessageList', typingMessage)
           }
 
           setTimeout(() => {
@@ -140,7 +140,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               }
 
               message.mode = webChatComponent.modeData.mode;
-              webChatComponent.messageList.push(message);
+              this.$store.commit('updateMessageList', message)
             }
 
             if (message.data) {
@@ -173,14 +173,14 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
                         animate: webChatComponent.messageAnimation
                       }
                     };
-                    webChatComponent.messageList.push(typingMessage);
+                    this.$store.commit('updateMessageList', typingMessage)
                   });
                 });
               }
             }
 
             if (messageIndex >= totalMessages -1) {
-              resolve(webChatComponent.messageList)
+              resolve()
             }
           }, (messageIndex + 1) * webChatComponent.messageDelay);
 
@@ -202,8 +202,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             !message.data.hideavatar
           ) {
             const authorMsg = webChatComponent.newAuthorMessage(message);
-
-            webChatComponent.messageList.push(authorMsg);
+            this.$store.commit('updateMessageList', authorMsg)
           }
 
           typingMessage = {
@@ -214,7 +213,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               animate: webChatComponent.messageAnimation
             }
           };
-          webChatComponent.messageList.push(typingMessage);
+          this.$store.commit('updateMessageList', typingMessage)
 
           setTimeout(() => {
             webChatComponent.$emit("newMessage", message);
@@ -234,7 +233,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
 
             webChatComponent.contentEditable = !message.data.disable_text;
 
-            resolve(webChatComponent.messageList)
+            resolve()
           }, webChatComponent.messageDelay);
         } else {
           // If we don't get data about whether to disable the editor, turn it on
@@ -249,8 +248,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             !message.data.hideavatar
           ) {
             const authorMsg = webChatComponent.newAuthorMessage(message);
-
-            webChatComponent.messageList.push(authorMsg);
+            this.$store.commit('updateMessageList', authorMsg)
           }
 
           typingMessage = {
@@ -261,7 +259,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               animate: webChatComponent.messageAnimation
             }
           };
-          webChatComponent.messageList.push(typingMessage);
+          this.$store.commit('updateMessageList', typingMessage)
         }
 
         setTimeout(() => {
@@ -307,12 +305,12 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               webChatComponent.buttonText = message.data.submit_text;
             }
 
-            if (message.data.text) {
-              webChatComponent.headerText = message.data.text;
+            if (message.data.placeholder) {
+              this.$store.commit('updatePlaceholder', response.placeholder)
             }
 
-            if (message.data.placeholder) {
-              webChatComponent.placeholder = message.data.placeholder;
+            if (message.data.text) {
+              webChatComponent.headerText = message.data.text;
             }
 
             if (message.data.initial_text) {
@@ -331,7 +329,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             webChatComponent.showMessages = false;
           }
 
-          resolve(webChatComponent.messageList)
+          resolve()
         }, webChatComponent.messageDelay);
         sendMessageReceivedEvent(message, webChatComponent);
       }
@@ -356,7 +354,7 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
 
   if (webChatComponent.useBotName || webChatComponent.useBotAvatar) {
     const authorMsg = webChatComponent.newAuthorMessage(message);
-    webChatComponent.messageList.push(authorMsg);
+    this.$store.commit('updateMessageList', authorMsg)
   }
 
   let typingMessage = {
@@ -367,7 +365,8 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
       animate: webChatComponent.messageAnimation
     }
   };
-  webChatComponent.messageList.push(typingMessage);
+
+  this.$store.commit('updateMessageList', typingMessage)
 
   setTimeout(() => {
     typingMessage.type = message.type;

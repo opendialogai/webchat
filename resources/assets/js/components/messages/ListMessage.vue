@@ -7,13 +7,11 @@
         :data="item"
         :author="message.author"
         :type="message.type"
-        :onLinkClick="onLinkClick"
       />
       <ButtonMessage
         v-else-if="item.message_type === 'button'"
         :message="message"
         :data="item"
-        :onButtonClick="onButtonClick"
       />
       <ImageMessage
         v-else-if="item.message_type === 'image'"
@@ -23,7 +21,6 @@
         v-else-if="item.message_type === 'rich'"
         :message="message"
         :data="item"
-        :onButtonClick="onButtonClick"
       />
     </div>
   </div>
@@ -49,10 +46,6 @@ export default {
     },
     message: {
       type: Object,
-      required: true
-    },
-    onButtonClick: {
-      type: Function,
       required: true
     }
   }

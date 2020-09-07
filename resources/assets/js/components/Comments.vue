@@ -20,13 +20,8 @@
         :is-expand="true"
         :is-open="isOpen"
         :message-list="messageList"
-        :on-button-click="onButtonClick"
-        :on-form-button-click="onFormButtonClick"
-        :on-list-button-click="onListButtonClick"
-        :on-link-click="onLinkClick"
         :on-message-was-sent="onMessageWasSent"
         :open="openComments"
-        :placeholder="placeholder"
         :show-expand-button="false"
         :show-messages="showMessages"
         :show-typing-indicator="false"
@@ -36,7 +31,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 const moment = require('moment-timezone');
 
@@ -45,10 +40,6 @@ export default {
   props: {
     agentProfile: {
       type: Object,
-      required: true,
-    },
-    callbackMap: {
-      type: Array,
       required: true,
     },
     canCloseChat: Boolean,
@@ -60,26 +51,12 @@ export default {
     isMobile: Boolean,
     isOpen: Boolean,
     loadHistory: Boolean,
-    messageDelay: {
-      type: Number,
-      required: true,
-    },
-    newMessageIcon: {
-      type: String,
-      required: true,
-    },
-    parentUrl: {
-      type: String,
-      required: true,
-    },
     sectionId: {
       type: String,
       default: '',
       required: true,
     },
     showExpandButton: Boolean,
-    useBotAvatar: Boolean,
-    useHumanAvatar: Boolean,
     user: {
       type: Object,
       required: true,
@@ -87,15 +64,7 @@ export default {
     userTimezone: {
       type: String,
       required: true,
-    },
-    userExternalId: {
-      type: String,
-      required: true,
-    },
-    userUuid: {
-      type: String,
-      required: true,
-    },
+    }
   },
   data() {
     return {
@@ -103,7 +72,6 @@ export default {
       authorNameMapping: '',
       authorType: '',
       buttonText: 'Add Comment',
-      chatbotAvatarPath: '',
       commentDateMapping: '',
       comments: [],
       commentTextMapping: '',
@@ -113,7 +81,6 @@ export default {
       maxInputCharacters: 0,
       messageList: [],
       messageListReady: false,
-      placeholder: 'Type a message',
       sectionMapping: '',
       sectionType: '',
       showLongTextInput: false,
@@ -144,6 +111,7 @@ export default {
     action = 'comments/loadWhere';
     getter = 'comments/where';
 
+    this.$store.commit('updatePlaceholder', 'Type a message')
 
     this.$store.dispatch(action, { filter }).then(() => {
       let comments = [];
@@ -155,6 +123,13 @@ export default {
       this.comments = comments;
       this.processComments();
     });
+  },
+  computed: {
+    ...mapState({
+      useHumanAvatar: state => state.settings.general.useHumanAvatar,
+      useBotAvatar: state => state.settings.general.useBotAvatar,
+      userExternalId: state => state.user.external_id
+    })
   },
   methods: {
     ...mapActions({
@@ -172,10 +147,6 @@ export default {
     expandChat() {
       this.$emit('expandChat');
     },
-    onButtonClick() {},
-    onFormButtonClick() {},
-    onListButtonClick() {},
-    onLinkClick() {},
     onMessageWasSent(msg) {
       // Format the new comment for JSON:API.
       const commentData = {

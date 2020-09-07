@@ -28,35 +28,23 @@
         :is-open="isOpen"
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
-        :on-full-page-form-input-submit="onFullPageFormInputSubmit"
         :on-full-page-form-input-cancel="onFullPageFormInputCancel"
-        :on-full-page-rich-input-submit="onFullPageRichInputSubmit"
         :message-list="messageList"
-        :on-button-click="onButtonClick"
-        :on-form-button-click="onFormButtonClick"
-        :on-list-button-click="onListButtonClick"
-        :on-link-click="onLinkClick"
         :on-restart-button-click="onRestartButtonClick"
         :on-download="download"
         :content-editable="contentEditable"
         :show-expand-button="false"
-        :show-restart-button="showRestartButton"
         :show-typing-indicator="showTypingIndicator"
-        :show-long-text-input="showLongTextInput"
         :show-full-page-form-input="showFullPageFormInput"
         :show-full-page-rich-input="showFullPageRichInput"
         :show-messages="showMessages"
-        :max-input-characters="maxInputCharacters"
-        :button-text="buttonText"
         :always-scroll-to-bottom="true"
-        :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
         :mode-data="modeData"
         :fp-form-input-message="fpFormInputMessage"
         :fp-rich-input-message="fpRichInputMessage"
         :cta-text="ctaText"
-        :hide-message-time="hideMessageTime"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
         @vbc-user-typing="userTyping"
@@ -79,9 +67,9 @@
 </template>
 
 <script>
-  import axios from "axios";
-  import chatService from "../services/ChatService";
-  import SessionStorageMixin from "../mixins/SessionStorageMixin";
+import axios from "axios";
+import SessionStorageMixin from "../mixins/SessionStorageMixin";
+import {mapState} from 'vuex'
 
   const moment = require("moment-timezone");
 
@@ -92,74 +80,17 @@ export default {
       type: Object,
       required: true
     },
-    callbackMap: {
-      type: Array,
-      required: true
-    },
     canCloseChat: Boolean,
-    chatbotAvatarPath: {
-      type: String,
-      default: ""
-    },
-    chatbotName: {
-      type: String,
-      default: ""
-    },
     chatIsOpen: Boolean,
-    closedIntent: {
-      type: String,
-      default: ""
-    },
-    hideDatetimeMessage: Boolean,
-    hideMessageTime: Boolean,
-    hideTypingIndicatorOnInternalMessages: Boolean,
     isExpand: Boolean,
     isMobile: Boolean,
-    messageAnimation: Boolean,
     showHistory: Boolean,
     numberOfMessages: {
       type: Number,
       required: true
     },
-    messageDelay: {
-      type: Number,
-      required: true
-    },
-    newMessageIcon: {
-      type: String,
-      required: true
-    },
-    openIntent: {
-      type: String,
-      default: ""
-    },
-    parentUrl: {
-      type: String,
-      required: true
-    },
-    restartButtonCallback: {
-      type: String,
-      default: ""
-    },
-    showRestartButton: Boolean,
     showExpandButton: Boolean,
-    useBotAvatar: Boolean,
-    useHumanAvatar: Boolean,
-    useBotName: Boolean,
-    useHumanName: Boolean,
-    user: {
-      type: Object,
-      required: true
-    },
-    userInfo: {
-      type: Object,
-      required: true
-    },
     userTimezone: {
-      type: String,
-      required: true
-    },
-    userExternalId: {
       type: String,
       required: true
     },
@@ -171,7 +102,6 @@ export default {
   mixins: [SessionStorageMixin],
   data() {
     return {
-      buttonText: "Submit",
       closeChatButtonReverseAnimate: false,
       confirmationMessage: null,
       contentEditable: false,
@@ -179,24 +109,17 @@ export default {
       fpFormInputMessage: {},
       fpRichInputMessage: {},
       headerHeight: 0,
-      headerText: "",
       id: "",
       initialText: null,
       isOpen: this.chatIsOpen,
       loading: true,
-      maxInputCharacters: 0,
-      messageList: [],
-      placeholder: "Enter your message",
-      referrerUrl: '',
       showCloseChatButton: false,
-      showLongTextInput: false,
       showFullPageFormInput: false,
       showFullPageRichInput: false,
       showMessages: true,
       showTypingIndicator: false,
       users: [],
       userName: "",
-      chatbotAvatar: this.chatbotAvatarPath,
       chatMode: "webchat",
       canRestart: true,
     };
@@ -252,15 +175,13 @@ export default {
       }
     },
     async modeData(newValue, oldValue) {
-      await chatService.modeDataUpdated(newValue, oldValue, this);
+      await this.chatService.modeDataUpdated(newValue, oldValue, this);
     }
   },
   created() {
+    this.$store.commit('initChatservice')
     if (window.self !== window.top) {
       this.showCloseChatButton = true;
-      this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
-    } else {
-      this.referrerUrl = document.location.origin;
     }
 
     this.id = `webchat-${this.$uuid.v4()}`;
@@ -273,6 +194,8 @@ export default {
         this.showExpandButton = false;
       }
     }
+
+    this.$store.commit('updateRootComponent', this)
 
     this.userName = `${this.user.first_name} ${this.user.last_name}`;
     this.fetchMessages();
@@ -310,6 +233,33 @@ export default {
       }
     });
   },
+  computed: {
+    ...mapState({
+      chatService: state => state.chatService,
+      messageList: state => state.messageList,
+      referrerUrl: state => state.referrerUrl,
+      user: state => state.user,
+      uuid: state => state.uuid,
+      useHumanName: state => state.settings.general.useHumanName,
+      useHumanAvatar: state => state.settings.general.useHumanAvatar,
+      useBotName: state => state.settings.general.useBotName,
+      useBotAvatar: state => state.settings.general.useBotAvatar,
+      parentUrl: state => state.settings.parentUrl || '',
+      newMessageIcon: state => state.settings.newMessageIcon,
+      messageDelay: state => state.settings.general.messageDelay || 1000,
+      chatbotAvatar: state => state.settings.general.chatbotAvatarPath || '',
+      chatbotName: state => state.settings.general.chatbotName,
+      callbackMap: state => state.settings.general.callbackMap || [],
+      restartButtonCallback: state => state.settings.general.restartButtonCallback || '',
+      hideDatetimeMessage: state => state.settings.general.hideDatetimeMessage,
+      hideTypingIndicatorOnInternalMessages: state => state.settings.general.hideTypingIndicatorOnInternalMessages,
+      messageAnimation: state => state.settings.general.messageAnimation,
+      openIntent: state => state.settings.openIntent || ''
+    })
+  },
+  mounted() {
+    console.log(this.openIntent)
+  },
   methods: {
     dateTimezoneFormat(message) {
       if (this.userTimezone !== "utc") {
@@ -328,72 +278,7 @@ export default {
       }
     },
     sendMessage(msg) {
-      const newMsg = msg;
-
-      newMsg.mode = this.modeData.mode;
-      newMsg.modeInstance = this.modeData.modeInstance;
-
-      newMsg.data.date = moment()
-        .tz("UTC")
-        .format("ddd D MMM");
-      newMsg.data.time = moment()
-        .tz("UTC")
-        .format("hh:mm:ss A");
-
-      newMsg.user_id = this.user.email ? this.user.email : this.$store.state.uuid;
-      newMsg.user = this.user;
-
-      if (
-        !newMsg.user.name &&
-        newMsg.user.first_name &&
-        newMsg.user.last_name
-      ) {
-        newMsg.user.name = `${newMsg.user.first_name} ${newMsg.user.last_name}`;
-      }
-
-      // Give the message an id.
-      newMsg.id = this.$uuid.v4();
-
-      if (newMsg.type === "chat_open") {
-        if (this.userInfo) {
-          Object.keys(this.userInfo).forEach(key => {
-            newMsg.user[key] = this.userInfo[key];
-          });
-        }
-      }
-
-      if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
-        if (this.useHumanName || this.useHumanAvatar) {
-          const authorMsg = this.newAuthorMessage(newMsg);
-
-          this.messageList.push(authorMsg);
-        }
-
-        this.buttonText = "Submit";
-        this.headerText = "";
-        this.maxInputCharacters = 0;
-        this.showLongTextInput = false;
-        this.messageList.push(newMsg);
-      }
-
-      if (newMsg.type === "text" && newMsg.data.text.length > 0) {
-        let event = chatService.getDataLayerEventName();
-        window.parent.postMessage(
-          { dataLayerEvent: event },
-          this.referrerUrl
-        );
-      }
-      if (newMsg.type === "button_response") {
-        const events = ['user_clicked_button_in_chatbot', 'message_sent_to_chatbot']
-        events.forEach((eventName) => {
-          window.parent.postMessage(
-            { dataLayerEvent: { event: eventName, label: newMsg.data.text} },
-            this.referrerUrl
-          );
-        })
-      }
-
-      this.$store.dispatch('sendMessage', {sentMsg: newMsg, webChat: this})
+      this.$store.dispatch('sendMessage', msg)
     },
     userInputFocus() {
       if (!this.isExpand && !this.isMobile) {
@@ -424,104 +309,20 @@ export default {
         ].data.callback_id;
       }
 
-      this.sendMessage(msgToSend);
-      this.placeholder = "Write a reply";
+      this.$store.dispatch('sendMessage', msgToSend)
+      this.$store.commit('updatePlaceholder', 'Write a reply')
     },
     openChat() {},
-    onFullPageFormInputSubmit(data) {
-      const msg = this.messageList[this.messageList.length - 1];
-      this.onFormButtonClick(data, msg);
-    },
     onFullPageFormInputCancel() {
       const msg = this.messageList[this.messageList.length - 1];
       this.onFormCancelClick(msg);
-    },
-    onFullPageRichInputSubmit(button) {
-      const msg = this.messageList[this.messageList.length - 1];
-      this.onButtonClick(button, msg);
-    },
-    async onButtonClick(button, msg) {
-      if (!button) {
-        if (msg.link) {
-          window.open(msg.link, "_blank");
-        } else {
-          this.sendMessage({
-            type: "button_response",
-            author: "me",
-            callback_id: msg.callback,
-            data: {
-              text: msg.callback_text ? msg.callback_text : msg.callback_value,
-              value: msg.callback_value
-            }
-          });
-        }
-        return;
-      }
-
-      if (msg.data.external) {
-        await new Promise(resolve => setTimeout(resolve, 300));
-      }
-
-      if (button.phone_number) {
-        const telephone = `tel:${button.phone_number}`;
-
-        this.onLinkClick(telephone, button.phone_number);
-        window.open(telephone);
-        return;
-      }
-
-      if (button.tab_switch) {
-        this.$emit("switchToCommentsTab");
-        return;
-      }
-
-      if (button.link) {
-        this.onLinkClick(button.link, button.text);
-
-        if (button.link_new_tab) {
-          window.open(button.link, "_blank");
-        } else {
-          window.open(button.link, "_parent");
-        }
-        return;
-      }
-
-      if (button.download) {
-        this.download();
-        return;
-      }
-
-      if (!this.isExpand) {
-        this.expandChat();
-      }
-
-      if (msg.type === "fp-rich") {
-        const index = this.messageList.indexOf(msg);
-        this.messageList.splice(index, 1);
-
-        if (this.messageList[index - 1].type === "author") {
-          this.messageList.splice(index - 1, 1);
-        }
-      } else if (msg.data.clear_after_interaction) {
-        this.messageList[this.messageList.indexOf(msg)].data.buttons = [];
-      }
-
-      this.sendMessage({
-        type: "button_response",
-        author: "me",
-        callback_id: button.callback_id,
-        data: {
-          text: button.text,
-          value: button.value
-        }
-      });
     },
     download() {
       window.parent.postMessage(
         { dataLayerEvent: { event: 'download_chat_transcript'} },
         this.referrerUrl
       );
-      const userId = this.user && this.user.email ? this.user.email : this.$store.state.uuid;
+      const userId = this.user && this.user.email ? this.user.email : this.uuid;
       axios({
         method: 'get',
         url: `/user/${userId}/history/file`,
@@ -552,74 +353,28 @@ export default {
         window.URL.revokeObjectURL(url);
       }, 1000);
     },
-    onListButtonClick(button, msg) {
-      this.onButtonClick(button, msg);
-    },
-    onLinkClick(url, text) {
-      window.parent.postMessage(
-          { dataLayerEvent: { event: 'url_clicked', url: url, text: text } },
-          this.referrerUrl
-      );
-      this.sendMessage({
-        type: "url_click",
-        author: this.$store.state.uuid,
-        data: {
-          url
-        }
-      });
-    },
-    onFormButtonClick(data, msg) {
-      window.parent.postMessage(
-          { dataLayerEvent: { event: 'form_submitted', form_id: msg.data.callback_id, form_text: msg.data.text }},
-          this.referrerUrl
-      );
-      this.messageList[this.messageList.indexOf(msg)].type = "text";
-
-      const responseData = {};
-      const newMessageText = [];
-
-      msg.data.elements.forEach(element => {
-        responseData[element.name] = data[element.name].value;
-
-        if (element.display) {
-          newMessageText.push(
-            `${element.display}: ${data[element.name].value}`
-          );
-        } else {
-          newMessageText.push(data[element.name].value);
-        }
-      });
-
-      responseData.text = newMessageText.join("\n");
-
-      this.sendMessage({
-        type: "form_response",
-        author: "me",
-        callback_id: msg.data.callback_id,
-        data: responseData
-      });
-    },
     onFormCancelClick(msg) {
       window.parent.postMessage(
         { dataLayerEvent: { event: 'form_cancelled', 'callback_id': msg.data.cancel_callback }},
         this.referrerUrl
       );
       this.messageList[this.messageList.indexOf(msg)].type = "text";
-      this.sendMessage({
+
+      this.$store.dispatch('sendMessage', {
         type: "form_response",
         author: "me",
         callback_id: msg.data.cancel_callback,
         data:{text: msg.data.cancel_text}
-      });
+      })
     },
     onRestartButtonClick() {
       if (this.canRestart) {
         this.canRestart = false;
-        this.sendMessage({
+        this.$store.dispatch('sendMessage', {
           type: 'trigger',
           author: 'me',
           callback_id: this.restartButtonCallback,
-          data: {},
+          data: {}
         }).then(() => {
           setTimeout(() => {
             this.canRestart = true;
@@ -715,13 +470,13 @@ export default {
           }
         };
 
-        this.sendMessage(message);
+        this.$store.dispatch('sendMessage', message)
       }
     },
     getChatHistory() {
       this.loading = true;
 
-      const userId = this.user && this.user.email ? this.user.email : this.$store.state.uuid;
+      const userId = this.user && this.user.email ? this.user.email : this.uuid;
 
       const ignoreTypes = "chat_open,trigger,cta,text_external";
 
@@ -911,10 +666,10 @@ export default {
       this.$emit("setChatMode", data);
     },
     userTyping(text) {
-      chatService
+      this.chatService
         .sendTypingRequest(text, this)
-        .then(response => chatService.sendTypingResponseSuccess(response, this))
-        .catch(() => chatService.sendTypingResponseError(null, this));
+        .then(response => this.chatService.sendTypingResponseSuccess(response, this))
+        .catch(() => this.chatService.sendTypingResponseError(null, this));
     },
     updateMessageMetaData(message) {
       this.$store.commit('setMessageMetaData', message.data.elements);

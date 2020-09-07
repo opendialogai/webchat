@@ -19,22 +19,18 @@
       :data="message.data"
       :author="message.author"
       :type="message.type"
-      :onLinkClick="onLinkClick"
     />
 
     <ListMessage
       v-else-if="message.type === 'list' && message.data.view_type === 'list'"
       :message="message"
       :data="message.data"
-      :onButtonClick="onListButtonClick"
     />
 
     <CarouselListMessage
       v-else-if="message.type === 'list'"
       :message="message"
       :data="message.data"
-      :onButtonClick="onButtonClick"
-      :onLinkClick="onLinkClick"
       :author="message.author"
     />
 
@@ -53,7 +49,6 @@
       v-else-if="message.type === 'button'"
       :message="message"
       :data="message.data"
-      :onButtonClick="onButtonClick"
       :author="message.author"
     />
 
@@ -68,7 +63,6 @@
       :message="message"
       :data="message.data"
       :author="message.author"
-      :onFormButtonClick="onFormButtonClick"
     />
 
     <FormResponseMessage
@@ -87,7 +81,6 @@
       v-else-if="message.type === 'rich'"
       :message="message"
       :data="message.data"
-      :onButtonClick="onButtonClick"
     />
 
     <FpRichMessage
@@ -128,6 +121,7 @@
 </template>
 
 <script>
+  import {mapState} from 'vuex'
   import DatetimeFakeMessage from "./messages/DatetimeFakeMessage.vue";
   import CarouselListMessage from "./messages/CarouselListMessage.vue";
   import ListMessage from "./messages/ListMessage.vue";
@@ -181,26 +175,6 @@
       type: String,
       default: chatIcon
     },
-    onButtonClick: {
-      type: Function,
-      required: true
-    },
-    onFormButtonClick: {
-      type: Function,
-      required: true
-    },
-    onListButtonClick: {
-      type: Function,
-      required: true
-    },
-    onLinkClick: {
-      type: Function,
-      required: true
-    },
-    hideMessageTime: {
-      type: Boolean,
-      default: false
-    },
     read: {
       type: Boolean
     },
@@ -223,6 +197,11 @@
     ) {
       this.authorName = this.message.user.name;
     }
+  },
+  computed: {
+    ...mapState({
+      hideMessageTime: state => state.settings.general.hideMessageTime
+    })
   },
   methods: {
     setChatMode(mode) {
