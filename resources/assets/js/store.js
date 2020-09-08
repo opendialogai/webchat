@@ -341,7 +341,7 @@ const store = new Vuex.Store({
         { dataLayerEvent: { event: 'form_submitted', form_id: msg.data.callback_id, form_text: msg.data.text }},
         state.referrerUrl
       );
-      state.rootComponent.messageList[state.rootComponent.messageList.indexOf(msg)].type = "text";
+      state.messageList[state.messageList.indexOf(msg)].type = "text";
 
       const responseData = {};
       const newMessageText = [];
@@ -382,7 +382,7 @@ const store = new Vuex.Store({
         { dataLayerEvent: { event: 'form_cancelled', 'callback_id': payload.data.cancel_callback }},
         state.referrerUrl
       );
-      state.rootComponent.messageList[state.rootComponent.messageList.indexOf(payload)].type = "text";
+      state.messageList[state.messageList.indexOf(payload)].type = "text";
 
       dispatch('sendMessage', {
         type: "form_response",

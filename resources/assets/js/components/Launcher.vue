@@ -2,7 +2,6 @@
   <div class="od-chat-window-container">
     <ChatWindow
       :onUserInputSubmit="onMessageWasSent"
-      :onFullPageFormInputCancel="onFullPageFormInputCancel"
       :agentProfile="agentProfile"
       :isOpen="isOpen"
       :isExpand="isExpand"
@@ -69,10 +68,6 @@ export default {
     onMessageWasSent: {
       type: Function,
       required: true
-    },
-    onFullPageFormInputCancel: {
-        type: Function,
-        required: true
     },
     ctaText: {
       type: Array,

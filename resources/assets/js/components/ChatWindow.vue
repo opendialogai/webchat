@@ -38,7 +38,6 @@
     <template v-else-if="showFullPageFormInput">
       <FullPageFormInput
         :message="fpFormInputMessage"
-        :onCancel="onFullPageFormInputCancel"
         :isOpen="isOpen" />
     </template>
     <template v-else-if="showFullPageRichInput">
@@ -118,10 +117,6 @@ export default {
     onUserInputSubmit: {
       type: Function,
       required: true
-    },
-    onFullPageFormInputCancel: {
-        type: Function,
-        required: true
     },
     onClose: {
       type: Function,

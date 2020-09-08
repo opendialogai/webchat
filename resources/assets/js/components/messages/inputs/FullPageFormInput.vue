@@ -171,10 +171,6 @@
     vSelect
   },
   props: {
-    onCancel: {
-      type: Function,
-      required: true
-    },
     message: {
       type: Object,
       required: true
@@ -185,6 +181,9 @@
     }
   },
   computed: {
+    ...mapState({
+      currentMessage: state => state.currentMessage
+    }),
     requiredErrorMessage() {
       return this.errors.find(x => x.errorType === 'required') ? 'Missing required fields.' : '';
     },
@@ -261,7 +260,7 @@
     },
     _handleCancel() {
       if (!this.showLoader) {
-        this.onCancel(this.form.data);
+        this.$store.dispatch('formCancel', this.currentMessage)
         this.showLoader = true;
       }
     },

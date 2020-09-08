@@ -28,7 +28,6 @@
         :is-open="isOpen"
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
-        :on-full-page-form-input-cancel="onFullPageFormInputCancel"
         :on-restart-button-click="onRestartButtonClick"
         :on-download="download"
         :content-editable="contentEditable"
@@ -318,10 +317,6 @@ export default {
       this.$store.commit('updatePlaceholder', 'Write a reply')
     },
     openChat() {},
-    onFullPageFormInputCancel() {
-      const msg = this.messageList[this.messageList.length - 1];
-      this.onFormCancelClick(msg);
-    },
     download() {
       window.parent.postMessage(
         { dataLayerEvent: { event: 'download_chat_transcript'} },
@@ -357,20 +352,6 @@ export default {
         link.remove();
         window.URL.revokeObjectURL(url);
       }, 1000);
-    },
-    onFormCancelClick(msg) {
-      window.parent.postMessage(
-        { dataLayerEvent: { event: 'form_cancelled', 'callback_id': msg.data.cancel_callback }},
-        this.referrerUrl
-      );
-      this.messageList[this.messageList.indexOf(msg)].type = "text";
-
-      this.$store.dispatch('sendMessage', {
-        type: "form_response",
-        author: "me",
-        callback_id: msg.data.cancel_callback,
-        data:{text: msg.data.cancel_text}
-      })
     },
     onRestartButtonClick() {
       if (this.canRestart) {
