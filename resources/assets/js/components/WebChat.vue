@@ -583,9 +583,9 @@ export default {
 
         responseData[element.name] = data[element.name].value;
 
-        if (element.element_type === 'select') {
+        if (element.element_type === 'select' && data[element.name].value !== '') {
           val = element.options[data[element.name].value]
-        } else if (element.element_type === 'auto-select') {
+        } else if (element.element_type === 'auto-select' && data[element.name].value !== '') {
           val = element.options.find(obj => obj.key === data[element.name].value).value
         } else {
           val = data[element.name].value
