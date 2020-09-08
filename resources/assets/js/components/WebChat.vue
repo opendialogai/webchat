@@ -579,14 +579,24 @@ export default {
       const newMessageText = [];
 
       msg.data.elements.forEach(element => {
+        let val
+
         responseData[element.name] = data[element.name].value;
+
+        if (element.element_type === 'select') {
+          val = element.options[data[element.name].value]
+        } else if (element.element_type === 'auto-select') {
+          val = element.options.find(obj => obj.key === data[element.name].value).value
+        } else {
+          val = data[element.name].value
+        }
 
         if (element.display) {
           newMessageText.push(
-            `${element.display}: ${data[element.name].value}`
+            `${element.display}: ${val}`
           );
         } else {
-          newMessageText.push(data[element.name].value);
+          newMessageText.push(val);
         }
       });
 
