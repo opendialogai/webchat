@@ -1,10 +1,11 @@
 const moment = require('moment-timezone');
 
-let CustomMode = function() {
+let CustomMode = function(store) {
   this.name = "custom";
   this.typingIndicatorMessages = null;
   this.modeInstance = 0;
   this.dataLayerEventName = 'message_sent_to_live_agent';
+  this.$store = store;
 };
 
 CustomMode.prototype.sendRequest = async function(message, webChatComponent) {
@@ -103,7 +104,7 @@ CustomMode.prototype.addAuthorMessage = function(message, webChatComponent) {
       date: moment().tz("UTC").format("ddd D MMM"),
     }
   });
-  webChatComponent.messageList.push(authorMessage)
+  this.$store.commit('updateMessageList', authorMsg)
   return authorMessage;
 };
 
@@ -138,7 +139,7 @@ CustomMode.prototype.addMessageToMessageList = function(textMessage, webChatComp
     }
   };
 
-  webChatComponent.messageList.push(message);
+  this.$store.commit('updateMessageList', message)
   let event = "message_received_from_agent";
 
   window.parent.postMessage(
@@ -168,7 +169,7 @@ CustomMode.prototype.addTypingMessageToMessageList = function(webChatComponent) 
       animate: true,
     }
   };
-  webChatComponent.messageList.push(newTypingIndicatorMessage);
+  this.$store.commit('updateMessageList', newTypingIndicatorMessage)
 
   this.typingIndicatorMessages = {
     author: authorMessage,
@@ -186,10 +187,9 @@ CustomMode.prototype.clearTypingIndicator = function(webChatComponent) {
   let typingIndicatorIndices = this.typingIndicatorMessages;
   let typingIndicatorMessage = typingIndicatorIndices.typing;
   if (typingIndicatorMessage.type === "typing") {
-    webChatComponent.messageList.splice(webChatComponent.messageList.indexOf(typingIndicatorIndices.typing), 1);
-
+    this.$store.commit('spliceMessageList', {start: webChatComponent.messageList.indexOf(typingIndicatorIndices.typing), count: 1})
     if (typingIndicatorIndices.author !== null) {
-      webChatComponent.messageList.splice(webChatComponent.messageList.indexOf(typingIndicatorIndices.author), 1);
+      this.$store.commit('spliceMessageList', {start: webChatComponent.messageList.indexOf(typingIndicatorIndices.author), count: 1})
     }
 
     this.typingIndicatorMessages = null;

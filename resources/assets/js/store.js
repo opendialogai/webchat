@@ -73,6 +73,14 @@ const store = new Vuex.Store({
       log && console.log('updateMessageList', payload)
       state.messageList.push(payload)
     },
+    spliceMessageList(state, payload) {
+      log && console.log('spliceMessageList', payload)
+      if (payload.item) {
+        state.messageList.splice(payload.start, payload.count, payload.item)
+      } else {
+        state.messageList.splice(payload.start, payload.count)
+      }
+    },
     updateInputType(state, payload) {
       log && console.log('updateInputType', payload)
       if (state.availableInputs.includes(payload)) {

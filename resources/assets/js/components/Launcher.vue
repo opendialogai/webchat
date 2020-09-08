@@ -1,7 +1,6 @@
 <template>
   <div class="od-chat-window-container">
     <ChatWindow
-      :messageList="messageList"
       :onUserInputSubmit="onMessageWasSent"
       :onFullPageFormInputCancel="onFullPageFormInputCancel"
       :agentProfile="agentProfile"
@@ -76,10 +75,6 @@ export default {
         required: true
     },
     ctaText: {
-      type: Array,
-      default: () => []
-    },
-    messageList: {
       type: Array,
       default: () => []
     },

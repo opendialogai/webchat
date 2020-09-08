@@ -29,7 +29,6 @@
         :is-expand="isExpand"
         :on-message-was-sent="onMessageWasSent"
         :on-full-page-form-input-cancel="onFullPageFormInputCancel"
-        :message-list="messageList"
         :on-restart-button-click="onRestartButtonClick"
         :on-download="download"
         :content-editable="contentEditable"
@@ -135,7 +134,7 @@ export default {
     messageList() {
       let spliceIndex = 1;
       let previousMessage = this.messageList[this.messageList.length - 2];
-      const lastMessage = this.messageList[this.messageList.length - 1];
+      const lastMessage = !this.currentMessage.data ? this.messageList[this.messageList.length - 1] : this.currentMessage;
 
       if (previousMessage && previousMessage.type === "author") {
         spliceIndex = 2;
@@ -148,10 +147,15 @@ export default {
             !previousMessage ||
             previousMessage.data.date !== lastMessage.data.date
           ) {
-            this.messageList.splice(this.messageList.length - spliceIndex, 0, {
-              type: "datetime",
-              datetime: lastMessage.data.date
-            });
+            const payload = {
+              start: this.messageList.length - spliceIndex,
+              count: 0,
+              item: {
+                type: "datetime",
+                datetime: lastMessage.data.date
+              }
+            }
+            this.$store.commit('spliceMessageList', payload)
           }
         }
       }
@@ -237,6 +241,7 @@ export default {
     ...mapState({
       chatService: state => state.chatService,
       messageList: state => state.messageList,
+      currentMessage: state => state.currentMessage,
       referrerUrl: state => state.referrerUrl,
       user: state => state.user,
       uuid: state => state.uuid,
@@ -536,10 +541,10 @@ export default {
                 this.messageList[this.messageList.length - 1].data.date !==
                   currentMessage.data.date
               ) {
-                this.messageList.push({
+                this.$store.commit('updateMessageList', {
                   type: "datetime",
                   datetime: currentMessage.data.date
-                });
+                })
               }
             }
 
@@ -566,7 +571,7 @@ export default {
             ) {
               const authorMsg = this.newAuthorMessage(currentMessage);
 
-              this.messageList.push(authorMsg);
+              this.$store.commit('updateMessageList', authorMsg)
             }
 
             if (i === messages.length - 1) {
@@ -582,7 +587,7 @@ export default {
             }
 
             currentMessage.mode = this.modeData.mode;
-            this.messageList.push(currentMessage);
+            this.$store.commit('updateMessageList', currentMessage)
           });
 
           this.loading = false;

@@ -19,7 +19,6 @@
     </transition>
     <MessageList
       v-if="showMessages"
-      :messages="messages"
       :imageUrl="agentProfile.imageUrl"
       :chatImageUrl="agentProfile.imageUrl"
       :showTypingIndicator="showTypingIndicator"
@@ -64,13 +63,14 @@
 </template>
 
 <script>
-  import Header from './layout/Header.vue'
-  import MessageList from './MessageList.vue'
-  import UserInput from './layout/UserInput.vue'
-  import FullPageFormInput from './messages/inputs/FullPageFormInput.vue'
-  import FullPageRichInput from './messages/inputs/FullPageRichInput.vue'
-  import LongTextUserInput from './messages/inputs/LongTextUserInput.vue'
-  import ProgressBar from './layout/ProgressBar';
+import {mapState} from 'vuex'
+import Header from './layout/Header.vue'
+import MessageList from './MessageList.vue'
+import UserInput from './layout/UserInput.vue'
+import FullPageFormInput from './messages/inputs/FullPageFormInput.vue'
+import FullPageRichInput from './messages/inputs/FullPageRichInput.vue'
+import LongTextUserInput from './messages/inputs/LongTextUserInput.vue'
+import ProgressBar from './layout/ProgressBar';
 
 export default {
   components: {
@@ -140,10 +140,6 @@ export default {
       required: true
     },
     ctaText: {
-      type: Array,
-      default: () => []
-    },
-    messageList: {
       type: Array,
       default: () => []
     },
@@ -225,11 +221,9 @@ export default {
     },
   },
   computed: {
-    messages() {
-      let messages = this.messageList
-
-      return messages
-    },
+    ...mapState({
+      messages: state => state.messageList
+    }),
     animateExternalButtons() {
       if (this.messages.length > 0) {
         const lastMessage = this.messages[this.messages.length - 1]

@@ -5,7 +5,7 @@ import CustomMode from "./ChatServices/CustomMode";
 let ChatService = function() {
   this.modes = {
     webchat: null,
-    custom: new CustomMode(),
+    custom: new CustomMode(store),
   };
 
   this.modeData = {

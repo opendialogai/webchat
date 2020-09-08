@@ -19,7 +19,6 @@
         :header-text="headerText"
         :is-expand="true"
         :is-open="isOpen"
-        :message-list="messageList"
         :on-message-was-sent="onMessageWasSent"
         :open="openComments"
         :show-expand-button="false"
@@ -79,7 +78,6 @@ export default {
       headerText: '',
       initialText: null,
       maxInputCharacters: 0,
-      messageList: [],
       messageListReady: false,
       sectionMapping: '',
       sectionType: '',
@@ -126,6 +124,7 @@ export default {
   },
   computed: {
     ...mapState({
+      messageList: state => state.messageList,
       useHumanAvatar: state => state.settings.general.useHumanAvatar,
       useBotAvatar: state => state.settings.general.useBotAvatar,
       userExternalId: state => state.user.external_id
@@ -197,7 +196,7 @@ export default {
             authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
           }
 
-          this.messageList.push(authorMsg);
+          this.$store.commit('updateMessageList', authorMsg)
         }
 
         // Add the message to the list.
@@ -210,7 +209,7 @@ export default {
           },
         };
         this.dateTimezoneFormat(message);
-        this.messageList.push(message);
+        this.$store.commit('updateMessageList', message)
       });
     },
     openComments() {},
@@ -253,9 +252,9 @@ export default {
             authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
           }
 
-          this.messageList.push(authorMsg);
+          this.$store.commit('updateMessageList', authorMsg)
         }
-        this.messageList.push(message);
+        this.$store.commit('updateMessageList', message)
       });
 
       this.messageListReady = true;

@@ -20,6 +20,7 @@
   </div>
 </template>
 <script>
+import {mapState} from 'vuex'
 import Message from "./Message.vue";
 import chatIcon from "./assets/chat-icon.svg";
 
@@ -28,10 +29,6 @@ export default {
     Message
   },
   props: {
-    messages: {
-      type: Array,
-      required: true
-    },
     chatImageUrl: {
       type: String,
       default: chatIcon
@@ -52,6 +49,11 @@ export default {
         type: Boolean,
         default: () => false
     },
+  },
+  computed: {
+    ...mapState({
+      messages: state => state.messageList
+    })
   },
   methods: {
     _scrollDown(animate = true) {
