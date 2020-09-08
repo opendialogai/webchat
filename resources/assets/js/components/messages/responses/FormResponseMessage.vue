@@ -26,6 +26,8 @@ export default {
 
 <style lang="scss">
 .od-form-response {
+  white-space: pre-line;
+
   &.emit {
     background-color: var(--od-sent-message-background);
     color: var(--od-sent-message-text);
