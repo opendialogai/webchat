@@ -1,16 +1,17 @@
 const moment = require('moment-timezone');
 
-let CustomMode = function(store) {
+let CustomMode = function(store, chatService) {
   this.name = "custom";
   this.typingIndicatorMessages = null;
   this.modeInstance = 0;
   this.dataLayerEventName = 'message_sent_to_live_agent';
   this.$store = store;
+  this.chatService = chatService
 };
 
-CustomMode.prototype.sendRequest = async function(message, webChatComponent) {
+CustomMode.prototype.sendRequest = async function(message) {
   return await new Promise((resolve) => {
-    this.addTypingMessageToMessageList(webChatComponent);
+    this.addTypingMessageToMessageList();
 
     // Faked custom request response
     setTimeout(() => {
@@ -27,55 +28,56 @@ CustomMode.prototype.sendRequest = async function(message, webChatComponent) {
 };
 
 CustomMode.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
-  this.setTeamName('Custom mode [Instance ' + this.modeInstance + ']', webChatComponent);
+  this.setTeamName('Custom mode [Instance ' + this.modeInstance + ']');
 
   if (this.typingIndicatorMessages !== null && response.length > 0) {
     let firstMessage = response[0];
-    this.convertTypingIndicatorToFirstMessage(firstMessage, webChatComponent);
+    this.convertTypingIndicatorToFirstMessage(firstMessage);
     firstMessage.skip = true;
   }
 
   if (response) {
     response.forEach((message) => {
-      this.addMessageToMessageList(message, webChatComponent);
+      this.addMessageToMessageList(message);
     });
   }
 
-  return Promise.resolve(webChatComponent.messageList);
+  return Promise.resolve(this.$store.state.messageList);
 };
 
-CustomMode.prototype.sendResponseError = function(error, sentMessage, webChatComponent) {
+CustomMode.prototype.sendResponseError = function(error, sentMessage) {
     return Promise.resolve();
 };
 
-CustomMode.prototype.sendTypingRequest = function(response, webChatComponent) {
+CustomMode.prototype.sendTypingRequest = function(response) {
     return Promise.resolve();
 };
 
-CustomMode.prototype.sendTypingResponseSuccess = function(response, webChatComponent) {
+CustomMode.prototype.sendTypingResponseSuccess = function(response) {
     return Promise.resolve();
 };
 
-CustomMode.prototype.sendTypingResponseError = function(error, webChatComponent) {
+CustomMode.prototype.sendTypingResponseError = function(error) {
     return Promise.resolve();
 };
 
 CustomMode.prototype.initialiseChat = async function(webChatComponent) {
   webChatComponent.contentEditable = true;
-  this.setTeamName('Waiting for agent...', webChatComponent);
+  this.setTeamName('Waiting for agent...');
   return Promise.resolve();
 };
 
-CustomMode.prototype.destroyChat = async function(webChatComponent) {
-  let modeDataInSession = webChatComponent.getModeDataInSession();
+CustomMode.prototype.destroyChat = async function(t) {
+  let modeDataInSession = this.chatService.session.getModeDataInSession();
   modeDataInSession.modeInstance++;
-  webChatComponent.setChatMode(modeDataInSession);
+
+  this.$store.dispatch('setChatMode', modeDataInSession)
   return Promise.resolve();
 };
 
-CustomMode.prototype.postDestroyChat = function(oldModeData, webChatComponent) {
+CustomMode.prototype.postDestroyChat = function(oldModeData) {
   // Convert the original hand-to-Human message to a text message
-  let filteredMessageList = webChatComponent.messageList.filter(
+  let filteredMessageList = this.$store.state.messageList.filter(
     message =>
       message.mode === "webchat" && message.type === "hand-to-system"
   );
@@ -86,29 +88,31 @@ CustomMode.prototype.postDestroyChat = function(oldModeData, webChatComponent) {
     handToSystemMessage.data.text = handToSystemMessage.data.elements.text;
   }
 
-  webChatComponent.sendMessage({
+  this.$store.dispatch('sendMessage', {
     type: "trigger",
     author: "me",
     callback_id: oldModeData.options.callback_id,
     data: {}
-  });
+  })
 
   return Promise.resolve();
 };
 
-CustomMode.prototype.addAuthorMessage = function(message, webChatComponent) {
-  let authorMessage = webChatComponent.newAuthorMessage({
+CustomMode.prototype.addAuthorMessage = function(message) {
+  let msg = {
     author: "them",
     data: {
       time: moment().tz("UTC").format("hh:mm:ss A"),
       date: moment().tz("UTC").format("ddd D MMM"),
     }
-  });
+  }
+
+  this.chatService.newAuthorMessage(msg, this.$store.state.modeData, this.$store.state.settings.general, this.$store.state.userName);
   this.$store.commit('updateMessageList', authorMsg)
   return authorMessage;
 };
 
-CustomMode.prototype.convertTypingIndicatorToFirstMessage = function(firstMessage, webChatComponent) {
+CustomMode.prototype.convertTypingIndicatorToFirstMessage = function(firstMessage) {
   let typingIndicatorIndices = this.typingIndicatorMessages;
   this.typingIndicatorMessages = null;
 
@@ -121,7 +125,7 @@ CustomMode.prototype.convertTypingIndicatorToFirstMessage = function(firstMessag
   };
 };
 
-CustomMode.prototype.addMessageToMessageList = function(textMessage, webChatComponent) {
+CustomMode.prototype.addMessageToMessageList = function(textMessage) {
   if (textMessage.skip) {
     return;
   }
@@ -131,7 +135,7 @@ CustomMode.prototype.addMessageToMessageList = function(textMessage, webChatComp
     mode: "custom",
     modeInstance: this.modeInstance,
     type: "text",
-    user_id: webChatComponent.$store.state.uuid,
+    user_id: this.$store.state.uuid,
     data: {
       text: textMessage.content,
       time: moment().tz("UTC").format("hh:mm:ss A"),
@@ -148,16 +152,16 @@ CustomMode.prototype.addMessageToMessageList = function(textMessage, webChatComp
   );
 };
 
-CustomMode.prototype.addTypingMessageToMessageList = function(webChatComponent) {
+CustomMode.prototype.addTypingMessageToMessageList = function() {
   if (this.typingIndicatorMessages !== null) {
     return;
   }
 
-  let previousMessage = webChatComponent.messageList[webChatComponent.messageList.length-1];
+  let previousMessage = this.$store.state.messageList[this.$store.state.messageList.length-1];
 
   let authorMessage = null;
   if (previousMessage.mode !== "custom" || previousMessage.author !== "them") {
-    authorMessage = this.addAuthorMessage({}, webChatComponent) - 1;
+    authorMessage = this.addAuthorMessage({}) - 1;
   }
 
   let newTypingIndicatorMessage = {
@@ -177,19 +181,20 @@ CustomMode.prototype.addTypingMessageToMessageList = function(webChatComponent) 
   };
 };
 
-CustomMode.prototype.setTeamName = function(teamName, webChatComponent) {
-  let updatedModeData = webChatComponent.modeData;
+CustomMode.prototype.setTeamName = function(teamName) {
+  let updatedModeData = this.$store.state.modeData;
   updatedModeData.options.teamName = teamName;
-  webChatComponent.setChatMode(updatedModeData);
+
+  this.$store.dispatch('setChatMode', updatedModeData)
 };
 
-CustomMode.prototype.clearTypingIndicator = function(webChatComponent) {
+CustomMode.prototype.clearTypingIndicator = function() {
   let typingIndicatorIndices = this.typingIndicatorMessages;
   let typingIndicatorMessage = typingIndicatorIndices.typing;
   if (typingIndicatorMessage.type === "typing") {
-    this.$store.commit('spliceMessageList', {start: webChatComponent.messageList.indexOf(typingIndicatorIndices.typing), count: 1})
+    this.$store.commit('spliceMessageList', {start: this.$store.messageList.indexOf(typingIndicatorIndices.typing), count: 1})
     if (typingIndicatorIndices.author !== null) {
-      this.$store.commit('spliceMessageList', {start: webChatComponent.messageList.indexOf(typingIndicatorIndices.author), count: 1})
+      this.$store.commit('spliceMessageList', {start: this.$store.messageList.indexOf(typingIndicatorIndices.author), count: 1})
     }
 
     this.typingIndicatorMessages = null;

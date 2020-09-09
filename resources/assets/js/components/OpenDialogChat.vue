@@ -71,12 +71,10 @@
         :number-of-messages="numberOfMessages"
         :show-expand-button="false"
         :user-timezone="userTimezone"
-        :mode-data="modeData"
         @expandChat="expandChat"
         @toggleChatOpen="toggleChatOpen"
         @newMessage="newWebChatMessage"
         @switchToCommentsTab="switchToCommentsTab"
-        @setChatMode="setChatMode"
       />
     </div>
   </div>
@@ -90,7 +88,7 @@ import cssVars from 'css-vars-ponyfill';
 
 import Comments from '@/components/Comments';
 import WebChat from '@/components/WebChat';
-import SessionStorageMixin from '../mixins/SessionStorageMixin';
+import session from '../mixins/SessionStorageMixin';
 
 const { detect } = require('detect-browser');
 const jstz = require('jstz');
@@ -101,7 +99,6 @@ export default {
     Comments,
     WebChat,
   },
-  mixins: [SessionStorageMixin],
   data() {
     return {
       activeTab: 'webchat',
@@ -134,12 +131,7 @@ export default {
       showTabs: false,
       timezoneInitialised: false,
       userTimezone: '',
-      userLastName: '',
-      modeData: {
-        mode: 'webchat',
-        modeInstance: 0,
-        options: {}
-      }
+      userLastName: ''
     };
   },
   computed: {
@@ -611,12 +603,6 @@ export default {
       this.isMinimized = false;
       this.isOpen = true;
       window.parent.postMessage({ height: "auto" }, this.referrerUrl);
-    },
-    setChatMode(data) {
-      let currentModeData = this.getModeDataInSession();
-      data.modeInstance = data.modeInstance || (currentModeData && currentModeData.modeInstance) || 0;
-      this.modeData = data;
-      this.setModeDataInSession(data);
     }
   }
 };

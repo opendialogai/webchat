@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import chatService from "../../services/ChatService";
+import {mapState} from 'vuex'
 
   export default {
     name: "HandToSystemMessage",
@@ -21,10 +21,6 @@
       data: {
         type: Object,
         required: true
-      },
-      modeData: {
-        type: Object,
-        required: true
       }
     },
     data() {
@@ -32,9 +28,14 @@
         errorMessage: ''
       };
     },
+    computed: {
+      ...mapState({
+        chatService: state => state.chatService
+      })
+    },
     mounted() {
-      if (chatService.hasMode(this.data.system)) {
-        this.$emit('setChatMode', {
+      if (this.chatService.hasMode(this.data.system)) {
+        this.$store.dispatch('setChatMode', {
           mode: this.data.system,
           options: {
             callback_id: this.data.elements.callback_id,
@@ -44,7 +45,7 @@
               ...this.data.elements
             }
           }
-        });
+        })
       } else {
         this.errorMessage = "The requested chat mode does not exist.";
       }

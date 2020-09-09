@@ -3,10 +3,11 @@ import isSkip from "../../mixins/isSkip";
 
 const moment = require("moment-timezone");
 
-let WebChatMode = function(store) {
+let WebChatMode = function(store, chatService) {
   this.name = "webchat";
   this.dataLayerEventName = 'message_sent_to_chatbot';
   this.$store = store
+  this.chatService = chatService
 };
 
 WebChatMode.prototype.sendRequest = function(message, webChatComponent) {
@@ -89,7 +90,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               (webChatComponent.useBotName || webChatComponent.useBotAvatar) &&
               !message.data.hideavatar
             ) {
-              const authorMsg = webChatComponent.newAuthorMessage(message);
+              const authorMsg = this.chatService.newAuthorMessage(message, this.$store.state.modeData, this.$store.state.settings.general, this.$store.state.userName);
               this.$store.commit('updateMessageList', authorMsg)
             }
 
@@ -201,7 +202,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             (webChatComponent.useBotName || webChatComponent.useBotAvatar) &&
             !message.data.hideavatar
           ) {
-            const authorMsg = webChatComponent.newAuthorMessage(message);
+            const authorMsg = this.chatService.newAuthorMessage(message, this.$store.state.modeData, this.$store.state.settings.general, this.$store.state.userName);
             this.$store.commit('updateMessageList', authorMsg)
           }
 
@@ -247,7 +248,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             (webChatComponent.useBotName || webChatComponent.useBotAvatar) &&
             !message.data.hideavatar
           ) {
-            const authorMsg = webChatComponent.newAuthorMessage(message);
+            const authorMsg = this.chatService.newAuthorMessage(message, this.$store.state.modeData, this.$store.state.settings.general, this.$store.state.userName);
             this.$store.commit('updateMessageList', authorMsg)
           }
 
@@ -353,7 +354,7 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
   };
 
   if (webChatComponent.useBotName || webChatComponent.useBotAvatar) {
-    const authorMsg = webChatComponent.newAuthorMessage(message);
+    const authorMsg = this.chatService.newAuthorMessage(message, this.$store.state.modeData, this.$store.state.settings.general, this.$store.state.userName);
     this.$store.commit('updateMessageList', authorMsg)
   }
 
@@ -390,7 +391,6 @@ WebChatMode.prototype.sendTypingResponseError = function(error, webChatComponent
 
 WebChatMode.prototype.initialiseChat = function(webChatComponent) {
   webChatComponent.contentEditable = true;
-  webChatComponent.chatbotAvatar = webChatComponent.chatbotAvatarPath;
   return Promise.resolve();
 };
 

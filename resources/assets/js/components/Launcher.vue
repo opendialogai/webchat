@@ -22,14 +22,12 @@
       :fpFormInputMessage="fpFormInputMessage"
       :fpRichInputMessage="fpRichInputMessage"
       :ctaText="ctaText"
-      :mode-data="modeData"
-      @setChatMode="setChatMode"
     />
   </div>
 </template>
 <script>
 import ChatWindow from './ChatWindow.vue'
-import SessionStorageMixin from "../mixins/SessionStorageMixin";
+import session from "../mixins/SessionStorageMixin";
 
 export default {
   props: {
@@ -116,10 +114,6 @@ export default {
     alwaysScrollToBottom: {
       type: Boolean,
       default: () => false
-    },
-    modeData: {
-      type: Object,
-      required: true
     }
   },
   data () {
@@ -130,17 +124,12 @@ export default {
   components: {
     ChatWindow
   },
-  mixins: [SessionStorageMixin],
   created() {
-    if (this.isCustomModeInSession()) {
-      this.setChatMode(this.getModeDataInSession());
+    if (session.isCustomModeInSession()) {
+      this.$store.dispatch('setChatMode', session.getModeDataInSession())
     }
   },
-  methods: {
-    setChatMode(mode) {
-      this.$emit('setChatMode', mode);
-    }
-  }
+  methods: {}
 }
 </script>
 

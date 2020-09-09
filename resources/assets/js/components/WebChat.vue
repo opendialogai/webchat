@@ -39,14 +39,12 @@
         :always-scroll-to-bottom="true"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
-        :mode-data="modeData"
         :fp-form-input-message="fpFormInputMessage"
         :fp-rich-input-message="fpRichInputMessage"
         :cta-text="ctaText"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
         @vbc-user-typing="userTyping"
-        @setChatMode="setChatMode"
       />
       <div v-if="showCloseChatButton" class="close-chat">
         <div
@@ -66,7 +64,8 @@
 
 <script>
 import axios from "axios";
-import SessionStorageMixin from "../mixins/SessionStorageMixin";
+import session from "../mixins/SessionStorageMixin";
+import newAuthorMessage from '../mixins/authorMessage';
 import {mapState} from 'vuex'
 
   const moment = require("moment-timezone");
@@ -91,13 +90,8 @@ export default {
     userTimezone: {
       type: String,
       required: true
-    },
-    modeData: {
-      type: Object,
-      required: true
     }
   },
-  mixins: [SessionStorageMixin],
   data() {
     return {
       closeChatButtonReverseAnimate: false,
@@ -117,7 +111,6 @@ export default {
       showMessages: true,
       showTypingIndicator: false,
       users: [],
-      userName: "",
       chatMode: "webchat",
       canRestart: true,
     };
@@ -200,7 +193,7 @@ export default {
 
     this.$store.commit('updateRootComponent', this)
 
-    this.userName = `${this.user.first_name} ${this.user.last_name}`;
+    this.$store.commit('setUserName', `${this.user.first_name} ${this.user.last_name}`)
     this.fetchMessages();
 
     window.addEventListener("message", event => {
@@ -242,8 +235,10 @@ export default {
       messageList: state => state.messageList,
       currentMessage: state => state.currentMessage,
       referrerUrl: state => state.referrerUrl,
+      modeData: state => state.modeData,
       user: state => state.user,
       uuid: state => state.uuid,
+      userName: state => state.userName,
       useHumanName: state => state.settings.general.useHumanName,
       useHumanAvatar: state => state.settings.general.useHumanAvatar,
       useBotName: state => state.settings.general.useBotName,
@@ -251,7 +246,7 @@ export default {
       parentUrl: state => state.settings.parentUrl || '',
       newMessageIcon: state => state.settings.newMessageIcon,
       messageDelay: state => state.settings.general.messageDelay || 1000,
-      chatbotAvatar: state => state.settings.general.chatbotAvatarPath || '',
+      chatbotAvatarPath: state => state.settings.general.chatbotAvatarPath || '',
       chatbotName: state => state.settings.general.chatbotName,
       callbackMap: state => state.settings.general.callbackMap || [],
       restartButtonCallback: state => state.settings.general.restartButtonCallback || '',
@@ -440,7 +435,7 @@ export default {
 
       const isOpen = this.isOpen;
 
-      if (!this.isCustomModeInSession()) {
+      if (!session.isCustomModeInSession()) {
         this.sendChatOpenMessage();
       }
     },
@@ -550,7 +545,7 @@ export default {
                 !currentMessage.data.internal &&
                 (this.useBotName || this.useBotAvatar))
             ) {
-              const authorMsg = this.newAuthorMessage(currentMessage);
+              const authorMsg = newAuthorMessage(currentMessage, this.modeData, this.$store.state.settings.general, this.userName);
 
               this.$store.commit('updateMessageList', authorMsg)
             }
@@ -574,54 +569,6 @@ export default {
           this.loading = false;
           this.checkHideChat();
         });
-    },
-    newAuthorMessage(message) {
-      if (message.author === "them") {
-        const authorMsg = {
-          type: "author",
-          author: "them",
-          mode: this.modeData.mode,
-          modeInstance: this.modeData.modeInstance,
-          data: {
-            author: "them",
-            animate: this.messageAnimation,
-            text: this.useBotName ? this.chatbotName : "",
-            date: message.data.date,
-            time: message.data.time
-          }
-        };
-
-        if (this.useBotAvatar) {
-          authorMsg.data.avatar = `<img class="avatar" src="${this.chatbotAvatar}" />`;
-        }
-
-        return authorMsg;
-      }
-
-      const authorMsg = {
-        type: "author",
-        author: "me",
-        mode: this.modeData.mode,
-        modeInstance: this.modeData.modeInstance,
-        data: {
-          animate: this.messageAnimation,
-          author: "me",
-          text: this.useHumanName ? this.userName : "",
-          date: message.data.date,
-          time: message.data.time
-        }
-      };
-
-      if (this.useHumanAvatar) {
-        const avatarName = this.userName
-          .split(" ")
-          .map(n => n[0])
-          .join("")
-          .toUpperCase();
-        authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
-      }
-
-      return authorMsg;
     },
     checkHideChat() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -647,9 +594,6 @@ export default {
       this.showMessages = false;
       this.showFullPageFormInput = false;
       this.showFullPageRichInput = true;
-    },
-    setChatMode(data) {
-      this.$emit("setChatMode", data);
     },
     userTyping(text) {
       this.chatService

@@ -23,9 +23,7 @@
       :chatImageUrl="agentProfile.imageUrl"
       :showTypingIndicator="showTypingIndicator"
       :alwaysScrollToBottom="alwaysScrollToBottom"
-      :mode-data="modeData"
       :isOpen="isOpen"
-      @setChatMode="setChatMode"
     />
 
     <template v-if="$store.state.showLongTextInput">
@@ -54,9 +52,7 @@
         :animateExternalButtons="animateExternalButtons"
         :lastMessage="lastMessage"
         :showFile="showFile"
-        :placeholder="placeholder"
-        :mode-data="modeData"
-        @setChatMode="setChatMode" />
+        :placeholder="placeholder" />
     </template>
   </div>
 </template>
@@ -178,10 +174,6 @@ export default {
       type: String,
       default: null
     },
-    modeData: {
-      type: Object,
-      required: true
-    }
   },
   data() {
     return {
@@ -217,7 +209,8 @@ export default {
   },
   computed: {
     ...mapState({
-      messages: state => state.messageList
+      messages: state => state.messageList,
+      modeData: state => state.modeData
     }),
     animateExternalButtons() {
       if (this.messages.length > 0) {
@@ -247,11 +240,7 @@ export default {
       return this.$store.state.messageMetaData.teamName;
     },
   },
-  methods: {
-    setChatMode(mode) {
-      this.$emit('setChatMode', mode);
-    },
-  },
+  methods: {},
 };
 </script>
 

@@ -113,10 +113,6 @@ export default {
       type: Object,
       required: true
     },
-    modeData: {
-      type: Object,
-      required: true
-    }
   },
   data() {
     return {
@@ -142,6 +138,7 @@ export default {
       }
     },
     ...mapState({
+      modeData: state => state.modeData,
       textLimit: state => state.messageMetaData.textLimit,
       currentMessage: state => state.currentMessage,
       userInputType: state => state.userInputType,
@@ -256,12 +253,12 @@ export default {
           }
         })
       } else {
-        this.$emit('setChatMode', {
+        this.$store.dispatch('setChatMode', {
           mode: 'webchat',
           options: {
             'callback_id': this.modeData.options.callback_id
           }
-        });
+        })
       }
     }
   }

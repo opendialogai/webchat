@@ -1,5 +1,4 @@
 export default {
-  methods: {
     getModeDataInSession() {
       return JSON.parse(window.sessionStorage.getItem('opendialog-webchat'));
     },
@@ -10,5 +9,4 @@ export default {
       let sessionStorageSettings = this.getModeDataInSession();
       return sessionStorageSettings && sessionStorageSettings.mode !== 'webchat';
     }
-  }
 }

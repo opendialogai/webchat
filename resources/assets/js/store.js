@@ -7,7 +7,9 @@ import hexToRgb from './mixins/hexToRgb';
 import isSkip from './mixins/isSkip';
 import ChatService from "./services/ChatService";
 import {uuid} from 'vue-uuid';
-import moment from 'moment'
+import moment from 'moment';
+import session from './mixins/SessionStorageMixin';
+import newAuthorMessage from './mixins/authorMessage';
 
 Vue.use(Vuex);
 
@@ -42,11 +44,16 @@ const store = new Vuex.Store({
     fetching: false,
     rootComponent: null,
     placeholder: 'Enter your message',
-    chatService: null
+    chatService: null,
+    modeData: {
+      mode: 'webchat',
+      modeInstance: 0,
+      options: {}
+    }
   },
   mutations: {
     initChatservice(state) {
-      console.log('initChatService')
+      log && console.log('initChatService')
       const c = new ChatService
       c.init()
       state.chatService = c
@@ -62,6 +69,14 @@ const store = new Vuex.Store({
     setSettings(state, settings) {
       log && console.log('setSettings', settings)
       state.settings = settings;
+    },
+    setModeData(state, payload) {
+      log && console.log('setModeData', payload)
+      state.modeData = payload
+    },
+    setUserName(state, payload) {
+      log && console.log('setUserName', payload)
+      state.userName = payload
     },
     setMessageMetaData(state, payload) {
       log && console.log('setMessageMetaData', payload)
@@ -146,6 +161,14 @@ const store = new Vuex.Store({
       }
       
     },
+    setChatMode({commit}, payload) {
+      log && console.log('setChatMode', payload)
+      let currentModeData = session.getModeDataInSession();
+      payload.modeInstance = payload.modeInstance || (currentModeData && currentModeData.modeInstance) || 0;
+      
+      commit('setModeData', payload)
+      session.setModeDataInSession(payload);
+    },
     sendMessage({dispatch, commit, state}, payload) {
       log && console.log('sendMessage', payload)
       
@@ -153,8 +176,8 @@ const store = new Vuex.Store({
 
       let newMsg = Object.assign({}, payload);
 
-      newMsg.mode = state.rootComponent.modeData.mode;
-      newMsg.modeInstance = state.rootComponent.modeData.modeInstance;
+      newMsg.mode = state.modeData.mode;
+      newMsg.modeInstance = state.modeData.modeInstance;
 
       newMsg.data.date = moment()
         .tz("UTC")
@@ -187,16 +210,15 @@ const store = new Vuex.Store({
 
       if (newMsg.data && newMsg.data.text && newMsg.data.text.length > 0) {
         if (state.settings.general.useHumanName || state.settings.general.useHumanAvatar) {
-          const authorMsg = state.rootComponent.newAuthorMessage(newMsg);
-
-          state.rootComponent.messageList.push(authorMsg);
+          const authorMsg = newAuthorMessage(newMsg, state.modeData, state.settings.general, state.userName);
+          commit('updateMessageList', authorMsg)
         }
 
         if (state.showLongTextInput) {
           commit('toggleLongTextInput', false)
         }
         
-        state.rootComponent.messageList.push(newMsg);
+        commit('updateMessageList', newMsg)
       }
 
       if (newMsg.type === "text" && newMsg.data.text.length > 0) {
@@ -255,8 +277,8 @@ const store = new Vuex.Store({
         }
       })
     },
-    async buttonClick({dispatch, state}, payload) {
-      console.log('buttonClick', payload.button, payload.data)
+    async buttonClick({dispatch, commit, state}, payload) {
+      log && console.log('buttonClick', payload.button, payload.data)
       const button = payload.button;
       const msg = payload.data;
 
@@ -306,20 +328,22 @@ const store = new Vuex.Store({
       }
 
       if (button.download) {
+        // download function
         state.rootComponent.download();
         return;
       }
 
       if (!state.rootComponent.isExpand) {
+        // expand chat function
         state.rootComponent.expandChat();
       }
 
       if (msg.type === "fp-rich") {
         const index = state.rootComponent.messageList.indexOf(msg);
-        state.rootComponent.messageList.splice(index, 1);
+        commit('spliceMessageList', {start: index, count: 1})
 
         if (state.rootComponent.messageList[index - 1].type === "author") {
-          state.rootComponent.messageList.splice(index - 1, 1);
+          commit('spliceMessageList', {start: index -1, count: 1})
         }
       } else if (msg.data.clear_after_interaction) {
         state.rootComponent.messageList[state.rootComponent.messageList.indexOf(msg)].data.buttons = [];

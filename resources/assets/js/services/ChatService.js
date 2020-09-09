@@ -1,11 +1,12 @@
 import store from '../store'
 import WebChatMode from "./ChatServices/WebChatMode";
 import CustomMode from "./ChatServices/CustomMode";
+import authorMessage from '../mixins/authorMessage'
 
 let ChatService = function() {
   this.modes = {
     webchat: null,
-    custom: new CustomMode(store),
+    custom: null,
   };
 
   this.modeData = {
@@ -13,6 +14,7 @@ let ChatService = function() {
     options: {}
   };
   this.previousMode = "webchat";
+  this.newAuthorMessage = authorMessage
 };
 
 ChatService.prototype.hasMode = function(mode) {
@@ -108,7 +110,8 @@ ChatService.prototype.modeDataUpdated = async function (newValue, oldValue, webC
 };
 
 ChatService.prototype.init = function() {
-  this.modes.webchat = new WebChatMode(store)
+  this.modes.webchat = new WebChatMode(store, this)
+  this.modes.custom = new CustomMode(store, this)
 }
 
 export default ChatService;

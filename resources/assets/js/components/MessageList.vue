@@ -7,9 +7,7 @@
       :read="message.read"
       :chatImageUrl="chatImageUrl"
       :key="message.id"
-      :mode-data="modeData"
       :isOpen="isOpen"
-      @setChatMode="setChatMode"
     />
     <Message
       v-if="showTypingIndicator"
@@ -41,10 +39,6 @@ export default {
       type: Boolean,
       required: true
     },
-    modeData: {
-      type: Object,
-      required: true
-    },
     isOpen: {
         type: Boolean,
         default: () => false
@@ -52,7 +46,8 @@ export default {
   },
   computed: {
     ...mapState({
-      messages: state => state.messageList
+      messages: state => state.messageList,
+      modeData: state => state.modeData
     })
   },
   methods: {
@@ -89,9 +84,6 @@ export default {
         this.$refs.scrollList.scrollTop >
           this.$refs.scrollList.scrollHeight - 300
       );
-    },
-    setChatMode(mode) {
-      this.$emit('setChatMode', mode);
     },
     shouldShowMessage(message) {
       let isModeSame = message.mode === this.modeData.mode;

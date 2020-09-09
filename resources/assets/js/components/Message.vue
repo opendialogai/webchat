@@ -91,12 +91,10 @@
     />
 
     <HandToSystemMessage
-      v-else-if="message.type === 'hand-to-system'"
+      v-else-if="message.type === 'hand-to-system' || message.type === 'hand-to-human'"
       :data="message.data"
       :author="message.author"
       :type="message.type"
-      :mode-data="modeData"
-      @setChatMode="setChatMode"
     />
 
     <MetaMessage
@@ -178,10 +176,6 @@
     read: {
       type: Boolean
     },
-    modeData: {
-      type: Object,
-      required: true
-    },
     isOpen: {
       type: Boolean,
       default: () => false
@@ -203,11 +197,7 @@
       hideMessageTime: state => state.settings.general.hideMessageTime
     })
   },
-  methods: {
-    setChatMode(mode) {
-      this.$emit("setChatMode", mode);
-    }
-  }
+  methods: {}
 };
 </script>
 <style lang="scss">
