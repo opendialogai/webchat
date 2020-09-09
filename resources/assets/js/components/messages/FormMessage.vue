@@ -59,7 +59,6 @@
         </select>
       </template>
       <template v-if="element.element_type == 'checkbox'">
-        <span>data: {{ form.data }}</span>
         <template v-for="(option_text, option_value) in element.options">
           <br/>
           <input type="checkbox" :id="option_value" :value="option_text" v-model="form.data[element.name][option_value]">
