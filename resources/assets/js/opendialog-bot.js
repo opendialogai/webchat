@@ -202,7 +202,6 @@ const defaultBootstrapFunctions = {
   },
 
   setupWebchat: async function(url, userId, preloadedSettings = null) {
-    console.log("default.setupWebchat")
     const urlParams = new URLSearchParams(window.location.search);
 
     let callbackId = null;
