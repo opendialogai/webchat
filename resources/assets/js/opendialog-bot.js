@@ -4,7 +4,7 @@ import 'url-search-params-polyfill';
 import 'core-js/es/object';
 import {uuid} from 'vue-uuid';
 import defaultWebchatSettings from './default-webchat-settings';
-import { merge, addCssToPage, locationOrSpoof, getSettings } from './mixins/bootstrapFunctions';
+import {addCssToPage, getSettings, locationOrSpoof, merge} from './mixins/bootstrapFunctions';
 
 let query = '';
 
@@ -64,6 +64,9 @@ function openChatWindow(url, div = null) {
   ifrm.style.height = '120px';
   ifrm.style.width = '130px';
   ifrm.frameBorder = '0';
+
+  ifrm.contentWindow.openDialogWebchat = window.openDialogWebchat;
+
   window.document.body.appendChild(ifrm);
 
   listeners.load = () => {
