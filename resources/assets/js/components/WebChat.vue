@@ -30,7 +30,6 @@
         :on-message-was-sent="onMessageWasSent"
         :on-restart-button-click="onRestartButtonClick"
         :on-download="download"
-        :content-editable="contentEditable"
         :show-expand-button="false"
         :show-typing-indicator="showTypingIndicator"
         :show-full-page-form-input="showFullPageFormInput"
@@ -92,7 +91,6 @@ export default {
   data() {
     return {
       closeChatButtonReverseAnimate: false,
-      contentEditable: false,
       ctaText: [],
       fpFormInputMessage: {},
       fpRichInputMessage: {},
@@ -540,7 +538,7 @@ export default {
             }
 
             if (i === messages.length - 1) {
-              this.contentEditable = !currentMessage.data.disable_text;
+              this.$store.commit('toggleContentEditable', !currentMessage.data.disable_text)
 
               if (currentMessage.type === "fp-form") {
                 this.showFullPageFormInputMessage(currentMessage);
@@ -572,7 +570,7 @@ export default {
     },
     showFullPageFormInputMessage(message) {
       this.fpFormInputMessage = message;
-      
+
       this.$store.commit('toggleShowMessages', false)
       this.showFullPageRichInput = false;
       this.showFullPageFormInput = true;

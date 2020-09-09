@@ -62,7 +62,7 @@ CustomMode.prototype.sendTypingResponseError = function(error) {
 };
 
 CustomMode.prototype.initialiseChat = async function(webChatComponent) {
-  webChatComponent.contentEditable = true;
+  this.$store.commit('toggleContentEditable', true)
   this.setTeamName('Waiting for agent...');
   return Promise.resolve();
 };

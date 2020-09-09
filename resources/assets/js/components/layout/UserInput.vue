@@ -93,10 +93,6 @@ export default {
     Datepicker
   },
   props: {
-    contentEditable: {
-      type: Boolean,
-      default: true
-    },
     externalButtons: {
       type: Array,
       default: () => []
@@ -144,7 +140,8 @@ export default {
       userInputType: state => state.userInputType,
       messageList: state => state.messageList,
       fetching: state => state.fetching,
-      placeholder: state => state.placeholder
+      placeholder: state => state.placeholder,
+      contentEditable: state => state.contentEditable
     }),
     skipButton() {
       const last = this.messageList[this.messageList.length -1]

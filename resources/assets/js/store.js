@@ -55,7 +55,8 @@ const store = new Vuex.Store({
     buttonText: 'Submit',
     initialText: null,
     confirmationMessage: null,
-    showMessages: true
+    showMessages: true,
+    contentEditable: false
   },
   mutations: {
     initChatservice(state) {
@@ -157,6 +158,10 @@ const store = new Vuex.Store({
     toggleShowMessages(state, payload) {
       log && console.log('toggleShowMessages', payload)
       state.showMessages = payload
+    },
+    toggleContentEditable(state, payload) {
+      log && console.log('toggleContentEditable', payload)
+      state.contentEditable = payload
     }
   },
   actions: {

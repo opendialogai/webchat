@@ -42,7 +42,6 @@
     </template>
     <template v-else>
       <UserInput
-        :contentEditable="contentEditable"
         :showEmoji="showEmoji"
         :onSubmit="onUserInputSubmit"
         :externalButtons="externalButtons"
@@ -75,10 +74,6 @@ export default {
     ProgressBar
   },
   props: {
-    contentEditable: {
-      type: Boolean,
-      default: true
-    },
     fullScreen: {
       type: Boolean,
       default: false

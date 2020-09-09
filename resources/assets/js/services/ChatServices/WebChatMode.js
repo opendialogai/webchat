@@ -83,7 +83,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
 
           totalMessages -= 1;
         } else if (!message) {
-          webChatComponent.contentEditable = true;
+          this.$store.commit('toggleContentEditable', true)
         } else {
           if (messageIndex === 0) {
             if (
@@ -145,7 +145,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             }
 
             if (message.data) {
-              webChatComponent.contentEditable = !message.data.disable_text;
+              this.$store.commit('toggleContentEditable', !message.data.disable_text)
             }
 
             if (message.type === "fp-form") {
@@ -232,13 +232,14 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               webChatComponent.showFullPageRichInputMessage(message);
             }
 
-            webChatComponent.contentEditable = !message.data.disable_text;
+            this.$store.commit('toggleContentEditable', !message.data.disable_text)
+            
 
             resolve()
           }, this.$store.state.settings.general.messageDelay);
         } else {
           // If we don't get data about whether to disable the editor, turn it on
-          webChatComponent.contentEditable = true;
+          this.$store.commit('toggleContentEditable', true)
         }
       } else {
         let typingMessage;
@@ -280,7 +281,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           }
 
           if (message.data) {
-            webChatComponent.contentEditable = !message.data.disable_text;
+            this.$store.commit('toggleContentEditable', !message.data.disable_text)
           }
 
           if (message.type === "fp-form") {
@@ -375,7 +376,7 @@ WebChatMode.prototype.sendTypingResponseError = function(error, webChatComponent
 };
 
 WebChatMode.prototype.initialiseChat = function(webChatComponent) {
-  webChatComponent.contentEditable = true;
+  this.$store.commit('toggleContentEditable', true)
   return Promise.resolve();
 };
 

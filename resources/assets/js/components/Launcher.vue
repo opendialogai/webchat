@@ -9,7 +9,6 @@
       :onExpand="expand"
       :onRestartButtonClick="onRestartButtonClick"
       :onDownload="onDownload"
-      :contentEditable="contentEditable"
       :showExpandButton="showExpandButton"
       :showTypingIndicator="showTypingIndicator"
       :alwaysScrollToBottom="alwaysScrollToBottom"
@@ -28,10 +27,6 @@ import session from "../mixins/SessionStorageMixin";
 
 export default {
   props: {
-    contentEditable: {
-      type: Boolean,
-      default: true
-    },
     fullScreen: {
       type: Boolean,
       default: false
