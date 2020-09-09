@@ -58,6 +58,14 @@
           >{{ option_text }}</option>
         </select>
       </template>
+      <template v-if="element.element_type == 'checkbox'">
+        <span>data: {{ form.data }}</span>
+        <template v-for="(option_text, option_value) in element.options">
+          <br/>
+          <input type="checkbox" :id="option_value" :value="option_text" v-model="form.data[element.name][option_value]">
+          <label>{{option_text}}</label>
+        </template>
+      </template>
       <template v-if="element.element_type == 'auto-select'">
         <v-select
           @input="onSelectChange"
@@ -132,6 +140,7 @@ export default {
       this.data.elements.forEach(element => {
         if (
           element.required &&
+          element.element_type !== 'checkbox' &&
           this.isEmpty(this.form.data[element.name].value)
         ) {
           this.errors.push(

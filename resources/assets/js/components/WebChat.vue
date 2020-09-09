@@ -625,7 +625,18 @@ export default {
       const newMessageText = [];
 
       msg.data.elements.forEach(element => {
-        responseData[element.name] = data[element.name].value;
+        if (element.element_type === 'checkbox') {
+          let answer = [];
+          Object.keys(element.options).forEach(option => {
+            if (data[element.name][option] === true) {
+              answer.push(option)
+            }
+          });
+
+          responseData[element.name] = answer.join(",");
+        } else {
+          responseData[element.name] = data[element.name].value;
+        }
 
         if (element.display) {
           newMessageText.push(
