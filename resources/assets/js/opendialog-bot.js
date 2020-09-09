@@ -65,9 +65,9 @@ function openChatWindow(url, div = null) {
   ifrm.style.width = '130px';
   ifrm.frameBorder = '0';
 
-  ifrm.contentWindow.openDialogWebchat = window.openDialogWebchat;
-
   window.document.body.appendChild(ifrm);
+
+  ifrm.contentWindow.openDialogWebchat = window.openDialogWebchat;
 
   listeners.load = () => {
     // Send settings and initial path to the chat widget.
