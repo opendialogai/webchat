@@ -35,7 +35,6 @@
         :show-typing-indicator="showTypingIndicator"
         :show-full-page-form-input="showFullPageFormInput"
         :show-full-page-rich-input="showFullPageRichInput"
-        :show-messages="showMessages"
         :always-scroll-to-bottom="true"
         :fp-form-input-message="fpFormInputMessage"
         :fp-rich-input-message="fpRichInputMessage"
@@ -104,7 +103,6 @@ export default {
       showCloseChatButton: false,
       showFullPageFormInput: false,
       showFullPageRichInput: false,
-      showMessages: true,
       showTypingIndicator: false,
       users: [],
       chatMode: "webchat",
@@ -574,15 +572,15 @@ export default {
     },
     showFullPageFormInputMessage(message) {
       this.fpFormInputMessage = message;
-
-      this.showMessages = false;
+      
+      this.$store.commit('toggleShowMessages', false)
       this.showFullPageRichInput = false;
       this.showFullPageFormInput = true;
     },
     showFullPageRichInputMessage(message) {
       this.fpRichInputMessage = message;
 
-      this.showMessages = false;
+      this.$store.commit('toggleShowMessages', false)
       this.showFullPageFormInput = false;
       this.showFullPageRichInput = true;
     },

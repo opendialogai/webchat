@@ -159,7 +159,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             if (message.type !== "fp-form" && message.type !== "fp-rich") {
               webChatComponent.showFullPageFormInput = false;
               webChatComponent.showFullPageRichInput = false;
-              webChatComponent.showMessages = true;
+              this.$store.commit('toggleShowMessages', true)
             }
 
             if (!webChatComponent.hideTypingIndicatorOnInternalMessages) {
@@ -294,7 +294,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           if (message.type !== "fp-form" && message.type !== "fp-rich") {
             webChatComponent.showFullPageFormInput = false;
             webChatComponent.showFullPageRichInput = false;
-            webChatComponent.showMessages = true;
+            this.$store.commit('toggleShowMessages', true)
           }
 
           if (message.type === "longtext") {
@@ -311,7 +311,8 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               confirmationMessage: message.data.confirmation_text,
               visible: true
             })
-            webChatComponent.showMessages = false;
+
+            this.$store.commit('toggleShowMessages', false)
           }
 
           resolve()

@@ -155,10 +155,6 @@ export default {
       type: Boolean,
       default: () => false
     },
-    showMessages: {
-      type: Boolean,
-      default: () => true
-    },
     alwaysScrollToBottom: {
       type: Boolean,
       required: true
@@ -199,7 +195,8 @@ export default {
   computed: {
     ...mapState({
       messages: state => state.messageList,
-      modeData: state => state.modeData
+      modeData: state => state.modeData,
+      showMessages: state => state.showMessages
     }),
     animateExternalButtons() {
       if (this.messages.length > 0) {

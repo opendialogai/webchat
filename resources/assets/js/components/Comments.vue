@@ -21,7 +21,6 @@
         :on-message-was-sent="onMessageWasSent"
         :open="openComments"
         :show-expand-button="false"
-        :show-messages="showMessages"
         :show-typing-indicator="false"
       />
     </template>
@@ -77,7 +76,6 @@ export default {
       sectionMapping: '',
       sectionType: '',
       showLongTextInput: false,
-      showMessages: true,
       showTypingIndicator: false,
       users: [],
     };

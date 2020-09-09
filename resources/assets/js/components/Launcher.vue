@@ -15,7 +15,6 @@
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :showFullPageFormInput="showFullPageFormInput"
       :showFullPageRichInput="showFullPageRichInput"
-      :showMessages="showMessages"
       :fullScreen="fullScreen"
       :fpFormInputMessage="fpFormInputMessage"
       :fpRichInputMessage="fpRichInputMessage"
@@ -80,10 +79,6 @@ export default {
     showFullPageRichInput: {
       type: Boolean,
       default: () => false
-    },
-    showMessages: {
-      type: Boolean,
-      default: () => true
     },
     fpFormInputMessage: {
       type: Object,

@@ -26,7 +26,7 @@ const store = new Vuex.Store({
     },
     userInfo: {},
     referrerUrl: '',
-    showLongTextInput: true,
+    showLongTextInput: false,
     messageMetaData: {
       teamName: null,
       progressPercent: null,
@@ -54,7 +54,8 @@ const store = new Vuex.Store({
     maxInputCharacters: 0,
     buttonText: 'Submit',
     initialText: null,
-    confirmationMessage: null
+    confirmationMessage: null,
+    showMessages: true
   },
   mutations: {
     initChatservice(state) {
@@ -152,6 +153,10 @@ const store = new Vuex.Store({
       state.initialText = payload.initialText || null,
       state.confirmationMessage = payload.confirmationMessage || null,
       state.showLongTextInput = payload.visible
+    },
+    toggleShowMessages(state, payload) {
+      log && console.log('toggleShowMessages', payload)
+      state.showMessages = payload
     }
   },
   actions: {
