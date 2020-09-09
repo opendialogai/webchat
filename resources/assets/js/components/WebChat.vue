@@ -582,24 +582,27 @@ export default {
         let val
 
         if (element.element_type === 'checkbox') {
-          let answer = [];
+          let attribute = [];
+          let text = [];
           Object.keys(element.options).forEach(option => {
             if (data[element.name][option] === true) {
-              answer.push(option)
+              attribute.push(option)
+              text.push(element.options[option])
             }
           });
 
-          responseData[element.name] = answer.join(",");
+          responseData[element.name] = attribute.join(",");
+          val = text.join(", ");
         } else {
           responseData[element.name] = data[element.name].value;
-        }
 
-        if (element.element_type === 'select' && data[element.name].value !== '') {
-          val = element.options[data[element.name].value]
-        } else if (element.element_type === 'auto-select' && data[element.name].value !== '') {
-          val = element.options.find(obj => obj.key === data[element.name].value).value
-        } else {
-          val = data[element.name].value
+          if (element.element_type === 'select' && data[element.name].value !== '') {
+            val = element.options[data[element.name].value]
+          } else if (element.element_type === 'auto-select' && data[element.name].value !== '') {
+            val = element.options.find(obj => obj.key === data[element.name].value).value
+          } else {
+            val = data[element.name].value
+          }
         }
 
         if (element.display) {
