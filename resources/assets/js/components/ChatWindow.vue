@@ -28,10 +28,7 @@
 
     <template v-if="$store.state.showLongTextInput">
       <LongTextUserInput
-        :confirmationMessage="confirmationMessage"
-        :onSubmit="onUserInputSubmit"
-        :placeholder="placeholder"
-        :initialText="initialText" />
+        :onSubmit="onUserInputSubmit" />
     </template>
     <template v-else-if="showFullPageFormInput">
       <FullPageFormInput
@@ -162,18 +159,10 @@ export default {
       type: Boolean,
       default: () => true
     },
-    confirmationMessage: {
-      type: String,
-      default: 'Are you sure you want to submit?'
-    },
     alwaysScrollToBottom: {
       type: Boolean,
       required: true
-    },
-    initialText: {
-      type: String,
-      default: null
-    },
+    }
   },
   data() {
     return {

@@ -298,35 +298,19 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           }
 
           if (message.type === "longtext") {
-            if (message.data.character_limit) {
-              webChatComponent.maxInputCharacters = message.data.character_limit;
-            }
-
-            if (message.data.submit_text) {
-              webChatComponent.buttonText = message.data.submit_text;
-            }
 
             if (message.data.placeholder) {
               this.$store.commit('updatePlaceholder', response.placeholder)
             }
 
-            if (message.data.text) {
-              webChatComponent.headerText = message.data.text;
-            }
-
-            if (message.data.initial_text) {
-              webChatComponent.initialText = message.data.initial_text;
-            } else {
-              webChatComponent.initialText = null;
-            }
-
-            if (message.data.confirmation_text) {
-              webChatComponent.confirmationMessage = message.data.confirmation_text;
-            } else {
-              webChatComponent.confirmationMessage = null;
-            }
-
-            webChatComponent.showLongTextInput = true;
+            this.$store.commit('toggleLongTextInput', {
+              buttonText: message.data.submit_text,
+              headerText: message.data.text,
+              maxChars: message.data.character_limit,
+              iniitalText: message.data.initial_text,
+              confirmationMessage: message.data.confirmation_text,
+              visible: true
+            })
             webChatComponent.showMessages = false;
           }
 

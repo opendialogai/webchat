@@ -37,8 +37,6 @@
         :show-full-page-rich-input="showFullPageRichInput"
         :show-messages="showMessages"
         :always-scroll-to-bottom="true"
-        :confirmation-message="confirmationMessage"
-        :initial-text="initialText"
         :fp-form-input-message="fpFormInputMessage"
         :fp-rich-input-message="fpRichInputMessage"
         :cta-text="ctaText"
@@ -95,14 +93,12 @@ export default {
   data() {
     return {
       closeChatButtonReverseAnimate: false,
-      confirmationMessage: null,
       contentEditable: false,
       ctaText: [],
       fpFormInputMessage: {},
       fpRichInputMessage: {},
       headerHeight: 0,
       id: "",
-      initialText: null,
       isOpen: this.chatIsOpen,
       loading: true,
       showCloseChatButton: false,

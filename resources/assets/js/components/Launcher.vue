@@ -16,8 +16,6 @@
       :showFullPageFormInput="showFullPageFormInput"
       :showFullPageRichInput="showFullPageRichInput"
       :showMessages="showMessages"
-      :confirmationMessage="confirmationMessage"
-      :initialText="initialText"
       :fullScreen="fullScreen"
       :fpFormInputMessage="fpFormInputMessage"
       :fpRichInputMessage="fpRichInputMessage"
@@ -95,10 +93,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    confirmationMessage: {
-      type: String,
-      default: 'Are you sure you want to submit?'
-    },
     onRestartButtonClick: {
       type: Function,
       required: true
@@ -106,10 +100,6 @@ export default {
     onDownload: {
       type: Function,
       required: true
-    },
-    initialText: {
-       type: String,
-       default: null
     },
     alwaysScrollToBottom: {
       type: Boolean,

@@ -26,7 +26,7 @@ const store = new Vuex.Store({
     },
     userInfo: {},
     referrerUrl: '',
-    showLongTextInput: false,
+    showLongTextInput: true,
     messageMetaData: {
       teamName: null,
       progressPercent: null,
@@ -49,7 +49,12 @@ const store = new Vuex.Store({
       mode: 'webchat',
       modeInstance: 0,
       options: {}
-    }
+    },
+    headerText: '',
+    maxInputCharacters: 0,
+    buttonText: 'Submit',
+    initialText: null,
+    confirmationMessage: null
   },
   mutations: {
     initChatservice(state) {
@@ -140,7 +145,13 @@ const store = new Vuex.Store({
     },
     toggleLongTextInput(state, payload) {
       log && console.log('toggleLongTextInput', payload)
-      state.showLongTextInput = payload
+      
+      state.buttonText = payload.buttonText || 'Submit'
+      state.headerText = payload.headerText || ''
+      state.maxInputCharacters = payload.maxChars || 0,
+      state.initialText = payload.initialText || null,
+      state.confirmationMessage = payload.confirmationMessage || null,
+      state.showLongTextInput = payload.visible
     }
   },
   actions: {
@@ -215,7 +226,12 @@ const store = new Vuex.Store({
         }
 
         if (state.showLongTextInput) {
-          commit('toggleLongTextInput', false)
+          commit('toggleLongTextInput', {
+            visible: false,
+            buttonText: 'Submit',
+            maxChars: 0,
+            headerText: ''
+          })
         }
         
         commit('updateMessageList', newMsg)

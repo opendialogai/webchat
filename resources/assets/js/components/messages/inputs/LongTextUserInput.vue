@@ -46,6 +46,8 @@
 
 
 <script>
+import {mapState} from 'vuex';
+
 export default {
   components: {
   },
@@ -53,26 +55,6 @@ export default {
     onSubmit: {
       type: Function,
       required: true
-    },
-    headerText: {
-      type: String,
-      default: ''
-    },
-    buttonText: {
-      type: String,
-      default: 'Submit'
-    },
-    maxInputCharacters: {
-      type: Number,
-      default: 0
-    },
-    confirmationMessage: {
-      type: String,
-      default: 'Are you sure you want to submit?'
-    },
-    initialText: {
-      type: String,
-      default: null
     }
   },
   data () {
@@ -82,6 +64,16 @@ export default {
       showConfirmationMessage: false,
       contentEditable: true
     }
+  },
+  computed: {
+    ...mapState({
+      maxInputCharacters: state => state.maxInputCharacters,
+      headerText: state => state.headerText,
+      buttonText: state => state.buttonText,
+      initialText: state => state.initialText,
+      confirmationMessage: state => state.confirmationMessage,
+      placeholder: state => state.placeholder
+    })
   },
   methods: {
     onKeyPress(event) {

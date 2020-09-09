@@ -12,7 +12,6 @@
         v-if="messageListReady"
         :agent-profile="agentProfile"
         :always-scroll-to-bottom="true"
-        :button-text="buttonText"
         :content-editable="messageListReady"
         :close="closeComments"
         :expand="expandChat"
@@ -70,14 +69,10 @@ export default {
       authorMapping: '',
       authorNameMapping: '',
       authorType: '',
-      buttonText: 'Add Comment',
       commentDateMapping: '',
       comments: [],
       commentTextMapping: '',
-      confirmationMessage: null,
       headerText: '',
-      initialText: null,
-      maxInputCharacters: 0,
       messageListReady: false,
       sectionMapping: '',
       sectionType: '',
