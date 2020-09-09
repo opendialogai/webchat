@@ -13,9 +13,11 @@
         @input="searchTerm = $event.target.value"
         autocomplete="off"
         ref="input">
-      <span class="od-autocomplete__search-term">
-        {{searchTerm}}<span @click="_handleClick(results[0].name)">{{searchTermRemainder}}</span>
-      </span>
+      <div class="od-autocomplete__search-term-wrapper" ref="searchTermWrapper">
+        <span class="od-autocomplete__search-term">
+          {{searchTerm}}<span @click="_handleClick(results[0].name)">{{searchTermRemainder}}</span>
+        </span>
+      </div>
       <button v-show="searchTerm.length || results.length" class="od-autocomplete__submit" @click.prevent="_handleClick()">{{data.submit_text}}</button>
       <span v-if="textLimit" class="od-autocomplete__max-chars">{{searchTerm.length}}/{{textLimit}}</span>
     </div>
@@ -72,7 +74,9 @@ export default {
         return false
       }
 
-      this.message.data.callback_value = term ? `${this.message.data.attribute_name}.${term}` : `${this.message.data.attribute_name}.${str}`
+      const attr = str.replace(/\.+$/, "")
+
+      this.message.data.callback_value = term ? `${this.message.data.attribute_name}.${term}` : `${this.message.data.attribute_name}.${attr}`
       this.message.data.callback_text = term ? term : str
 
       this.onButtonClick(false, this.message.data)
@@ -84,6 +88,7 @@ export default {
       this.searchTerm = this.results[0].name
     },
     async search() {
+      this.$refs.searchTermWrapper.scrollLeft = this.$refs.searchTermWrapper.scrollWidth
       this.results = await this.$store.dispatch('fetchAutocomplete', this.endpoint);
     }
   },

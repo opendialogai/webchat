@@ -97,8 +97,8 @@
       :isOpen="isOpen"
     />
 
-    <HandToHumanMessage
-      v-else-if="message.type === 'hand-to-human'"
+    <HandToSystemMessage
+      v-else-if="message.type === 'hand-to-system'"
       :data="message.data"
       :author="message.author"
       :type="message.type"
@@ -143,11 +143,11 @@
   import TypingMessage from "./messages/TypingMessage.vue";
   import AuthorMessage from "./messages/AuthorMessage.vue";
   import chatIcon from "./assets/chat-icon.svg";
-  import HandToHumanMessage from "./messages/HandToHumanMessage";
+  import HandToSystemMessage from "./messages/HandToSystemMessage";
   import MetaMessage from "./messages/MetaMessage";
   import Autocomplete from './messages/Autocomplete';
 
-export default {
+  export default {
   data() {
     return {
       authorName: null,
@@ -168,7 +168,7 @@ export default {
     LongTextMessage,
     TypingMessage,
     AuthorMessage,
-    HandToHumanMessage,
+    HandToSystemMessage,
     MetaMessage,
     Autocomplete
   },
@@ -256,6 +256,7 @@ export default {
 
 // special wrapper for author message (avatar) only
 .mt-wrapper-author {
+  pointer-events: none;
   z-index: 10;
 }
 
@@ -274,6 +275,7 @@ export default {
   padding: 15px 20px;
   line-height: 1.6;
   font-size: 14px;
+  word-break: break-word;
   @media (min-width: $media-sml) {
     font-size: 16px;
   }
