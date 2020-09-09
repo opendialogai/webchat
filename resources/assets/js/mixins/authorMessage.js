@@ -1,4 +1,5 @@
 export default function (message, modeData, settings, userName) {
+  const avatarPath = settings.chatbotAvatarPath ? settings.chatbotAvatarPath : ''
   if (message.author === "them") {
     const authorMsg = {
       type: "author",
@@ -15,7 +16,7 @@ export default function (message, modeData, settings, userName) {
     };
 
     if (settings.useBotAvatar) {
-      authorMsg.data.avatar = `<img class="avatar" src="${settings.chatbotAvatarPath}" />`;
+      authorMsg.data.avatar = `<img class="avatar" src="${avatarPath}" />`;
     }
 
     return authorMsg;

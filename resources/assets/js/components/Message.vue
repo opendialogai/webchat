@@ -91,7 +91,7 @@
     />
 
     <HandToSystemMessage
-      v-else-if="message.type === 'hand-to-system' || message.type === 'hand-to-human'"
+      v-else-if="message.type === 'hand-to-system'"
       :data="message.data"
       :author="message.author"
       :type="message.type"

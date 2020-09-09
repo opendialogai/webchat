@@ -1,7 +1,8 @@
 import store from '../store'
 import WebChatMode from "./ChatServices/WebChatMode";
 import CustomMode from "./ChatServices/CustomMode";
-import authorMessage from '../mixins/authorMessage'
+import authorMessage from '../mixins/authorMessage';
+import session from '../mixins/SessionStorageMixin';
 
 let ChatService = function() {
   this.modes = {
@@ -14,7 +15,8 @@ let ChatService = function() {
     options: {}
   };
   this.previousMode = "webchat";
-  this.newAuthorMessage = authorMessage
+  this.newAuthorMessage = authorMessage;
+  this.session = session;
 };
 
 ChatService.prototype.hasMode = function(mode) {

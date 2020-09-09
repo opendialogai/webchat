@@ -79,7 +79,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
 
           totalMessages -= 1;
         } else if (message.type === 'meta') {
-          webChatComponent.updateMessageMetaData(message);
+          this.$store.commit('setMessageMetaData', message.data.elements);
 
           totalMessages -= 1;
         } else if (!message) {
@@ -87,7 +87,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
         } else {
           if (messageIndex === 0) {
             if (
-              (webChatComponent.useBotName || webChatComponent.useBotAvatar) &&
+              (this.$store.state.settings.general.useBotName || this.$store.state.settings.general.useBotAvatar) &&
               !message.data.hideavatar
             ) {
               const authorMsg = this.chatService.newAuthorMessage(message, this.$store.state.modeData, this.$store.state.settings.general, this.$store.state.userName);
@@ -97,9 +97,9 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             typingMessage = {
               author: "them",
               type: "typing",
-              mode: webChatComponent.modeData.mode,
+              mode: this.$store.state.modeData.mode,
               data: {
-                animate: webChatComponent.messageAnimation
+                animate: this.$store.state.settings.general.messageAnimation
               }
             };
             this.$store.commit('updateMessageList', typingMessage)
@@ -109,11 +109,11 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             webChatComponent.$emit("newMessage", message);
 
             /* eslint-disable no-param-reassign */
-            message.data.animate = webChatComponent.messageAnimation;
+            message.data.animate = this.$store.state.settings.general.messageAnimation;
 
             if (
               messageIndex === 0 ||
-              !webChatComponent.hideTypingIndicatorOnInternalMessages
+              !this.$store.state.settings.general.hideTypingIndicatorOnInternalMessages
             ) {
               typingMessage.type = message.type;
               typingMessage.data = message.data;
@@ -140,7 +140,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
                 message.data.lastInternal = true;
               }
 
-              message.mode = webChatComponent.modeData.mode;
+              message.mode = this.$store.state.modeData.mode;
               this.$store.commit('updateMessageList', message)
             }
 
@@ -169,9 +169,9 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
                     typingMessage = {
                       author: "them",
                       type: "typing",
-                      mode: webChatComponent.modeData.mode,
+                      mode: this.$store.state.modeData.mode,
                       data: {
-                        animate: webChatComponent.messageAnimation
+                        animate: this.$store.state.settings.general.messageAnimation
                       }
                     };
                     this.$store.commit('updateMessageList', typingMessage)
@@ -183,7 +183,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             if (messageIndex >= totalMessages -1) {
               resolve()
             }
-          }, (messageIndex + 1) * webChatComponent.messageDelay);
+          }, (messageIndex + 1) * this.$store.state.settings.general.messageDelay);
 
           sendMessageReceivedEvent(message, webChatComponent);
 
@@ -199,7 +199,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           let typingMessage;
 
           if (
-            (webChatComponent.useBotName || webChatComponent.useBotAvatar) &&
+            (this.$store.state.settings.general.useBotName || this.$store.state.settings.general.useBotAvatar) &&
             !message.data.hideavatar
           ) {
             const authorMsg = this.chatService.newAuthorMessage(message, this.$store.state.modeData, this.$store.state.settings.general, this.$store.state.userName);
@@ -209,9 +209,9 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           typingMessage = {
             author: "them",
             type: "typing",
-            mode: webChatComponent.modeData.mode,
+            mode: this.$store.state.modeData.mode,
             data: {
-              animate: webChatComponent.messageAnimation
+              animate: this.$store.state.settings.general.messageAnimation
             }
           };
           this.$store.commit('updateMessageList', typingMessage)
@@ -219,7 +219,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           setTimeout(() => {
             webChatComponent.$emit("newMessage", message);
 
-            message.data.animate = webChatComponent.messageAnimation;
+            message.data.animate = this.$store.state.settings.general.messageAnimation;
 
             typingMessage.type = message.type;
             typingMessage.data = message.data;
@@ -235,7 +235,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             webChatComponent.contentEditable = !message.data.disable_text;
 
             resolve()
-          }, webChatComponent.messageDelay);
+          }, this.$store.state.settings.general.messageDelay);
         } else {
           // If we don't get data about whether to disable the editor, turn it on
           webChatComponent.contentEditable = true;
@@ -245,7 +245,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
 
         if (message.data) {
           if (
-            (webChatComponent.useBotName || webChatComponent.useBotAvatar) &&
+            (this.$store.state.settings.general.useBotName || this.$store.state.settings.general.useBotAvatar) &&
             !message.data.hideavatar
           ) {
             const authorMsg = this.chatService.newAuthorMessage(message, this.$store.state.modeData, this.$store.state.settings.general, this.$store.state.userName);
@@ -255,9 +255,9 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           typingMessage = {
             author: "them",
             type: "typing",
-            mode: webChatComponent.modeData.mode,
+            mode: this.$store.state.modeData.mode,
             data: {
-              animate: webChatComponent.messageAnimation
+              animate: this.$store.state.settings.general.messageAnimation
             }
           };
           this.$store.commit('updateMessageList', typingMessage)
@@ -268,7 +268,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           if (typeof message === "object" && message !== null) {
             webChatComponent.$emit("newMessage", message);
 
-            message.data.animate = webChatComponent.messageAnimation;
+            message.data.animate = this.$store.state.settings.general.messageAnimation;
 
             typingMessage.type = message.type;
             typingMessage.data = message.data;
@@ -331,7 +331,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           }
 
           resolve()
-        }, webChatComponent.messageDelay);
+        }, this.$store.state.settings.general.messageDelay);
         sendMessageReceivedEvent(message, webChatComponent);
       }
     }
@@ -353,7 +353,7 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
     }
   };
 
-  if (webChatComponent.useBotName || webChatComponent.useBotAvatar) {
+  if (this.$store.state.settings.general.useBotName || this.$store.state.settings.general.useBotAvatar) {
     const authorMsg = this.chatService.newAuthorMessage(message, this.$store.state.modeData, this.$store.state.settings.general, this.$store.state.userName);
     this.$store.commit('updateMessageList', authorMsg)
   }
@@ -361,9 +361,9 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
   let typingMessage = {
     author: "them",
     type: "typing",
-    mode: webChatComponent.modeData.mode,
+    mode: this.$store.state.modeData.mode,
     data: {
-      animate: webChatComponent.messageAnimation
+      animate: this.$store.state.settings.general.messageAnimation
     }
   };
 
@@ -374,7 +374,7 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
     typingMessage.data = message.data;
 
     webChatComponent.$root.$emit("scroll-down-message-list");
-  }, webChatComponent.messageDelay);
+  }, this.$store.state.settings.general.messageDelay);
 };
 
 WebChatMode.prototype.sendTypingRequest = function(message, webChatComponent) {

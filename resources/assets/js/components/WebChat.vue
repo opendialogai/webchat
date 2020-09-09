@@ -245,14 +245,9 @@ export default {
       useBotAvatar: state => state.settings.general.useBotAvatar,
       parentUrl: state => state.settings.parentUrl || '',
       newMessageIcon: state => state.settings.newMessageIcon,
-      messageDelay: state => state.settings.general.messageDelay || 1000,
-      chatbotAvatarPath: state => state.settings.general.chatbotAvatarPath || '',
-      chatbotName: state => state.settings.general.chatbotName,
       callbackMap: state => state.settings.general.callbackMap || [],
       restartButtonCallback: state => state.settings.general.restartButtonCallback || '',
       hideDatetimeMessage: state => state.settings.general.hideDatetimeMessage,
-      hideTypingIndicatorOnInternalMessages: state => state.settings.general.hideTypingIndicatorOnInternalMessages,
-      messageAnimation: state => state.settings.general.messageAnimation,
       openIntent: state => state.settings.openIntent || ''
     })
   },
@@ -600,10 +595,7 @@ export default {
         .sendTypingRequest(text, this)
         .then(response => this.chatService.sendTypingResponseSuccess(response, this))
         .catch(() => this.chatService.sendTypingResponseError(null, this));
-    },
-    updateMessageMetaData(message) {
-      this.$store.commit('setMessageMetaData', message.data.elements);
-    },
+    }
   }
 };
 </script>
