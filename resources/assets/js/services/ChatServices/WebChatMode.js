@@ -363,28 +363,28 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
   }, this.$store.state.settings.general.messageDelay);
 };
 
-WebChatMode.prototype.sendTypingRequest = function(message, webChatComponent) {
+WebChatMode.prototype.sendTypingRequest = function(message) {
   return Promise.resolve();
 };
 
-WebChatMode.prototype.sendTypingResponseSuccess = function(response, webChatComponent) {
+WebChatMode.prototype.sendTypingResponseSuccess = function(response) {
   return Promise.resolve();
 };
 
-WebChatMode.prototype.sendTypingResponseError = function(error, webChatComponent) {
+WebChatMode.prototype.sendTypingResponseError = function(error) {
   return Promise.resolve();
 };
 
-WebChatMode.prototype.initialiseChat = function(webChatComponent) {
+WebChatMode.prototype.initialiseChat = function() {
   this.$store.commit('toggleContentEditable', true)
   return Promise.resolve();
 };
 
-WebChatMode.prototype.destroyChat = function(webChatComponent) {
+WebChatMode.prototype.destroyChat = function() {
   return Promise.resolve();
 };
 
-WebChatMode.prototype.postDestroyChat = function(oldModeData, webChatComponent) {
+WebChatMode.prototype.postDestroyChat = function(oldModeData) {
   return Promise.resolve();
 };
 
