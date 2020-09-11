@@ -75,7 +75,7 @@ export default {
         return false
       }
 
-      const attr = str.replace(/\.+$/, "")
+      const attr = str.replace(/\./g, "\\.")
 
       this.message.data.callback_value = term ? `${this.message.data.attribute_name}.${term}` : `${this.message.data.attribute_name}.${attr}`
       this.message.data.callback_text = term ? term : str
