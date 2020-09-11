@@ -148,10 +148,21 @@ export default {
         if (
           element.required &&
           element.element_type !== 'checkbox' &&
+          element.element_type !== 'number' &&
           this.isEmpty(this.form.data[element.name].value)
         ) {
           this.errors.push(
             "<em>" + element.display + "</em> field is required"
+          );
+        }
+
+        if (
+                element.required &&
+                element.element_type === 'number' &&
+                this.isEmpty(this.form.data[element.name].value)
+        ) {
+          this.errors.push(
+                  "<em>" + element.display + "</em> field is required and must be a valid number"
           );
         }
 
@@ -168,16 +179,15 @@ export default {
 
         if (element.element_type === 'number' && element.max && this.form.data[element.name].value > parseInt(element.max)) {
           this.errors.push(
-                  "<em>" + element.display + "</em> field is too large"
+                  "<em>" + element.display + "</em> field must be less than " + element.max
           );
         }
 
-        if (element.element_type === 'number' && element.min && this.form.data[element.name].value < parseInt(element.min)) {
+        if (element.element_type === 'number' && parseInt(this.form.data[element.name].value) < parseInt(element.min)) {
           this.errors.push(
-                  "<em>" + element.display + "</em> field is too small"
+                  "<em>" + element.display + "</em> field must be larger than " + element.min
           );
         }
-
 
       });
     },
