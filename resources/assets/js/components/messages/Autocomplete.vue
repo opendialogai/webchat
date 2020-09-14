@@ -11,6 +11,7 @@
         @keydown.tab="results.length ? selectFirst() : false" 
         @keyup="search()"
         @input="searchTerm = $event.target.value"
+        @scroll="_scroll"
         autocomplete="off"
         ref="input">
       <div class="od-autocomplete__search-term-wrapper" ref="searchTermWrapper">
@@ -83,8 +84,10 @@ export default {
     selectFirst() {
       this.searchTerm = this.results[0].name
     },
+    _scroll() {
+      this.$refs.searchTermWrapper.scrollLeft = this.$refs.input.scrollLeft
+    },
     async search() {
-      this.$refs.searchTermWrapper.scrollLeft = this.$refs.searchTermWrapper.scrollWidth
       this.results = await this.$store.dispatch('fetchAutocomplete', this.endpoint);
     }
   },

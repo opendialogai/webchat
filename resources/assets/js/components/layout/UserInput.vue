@@ -70,8 +70,8 @@
         />
       </div>
     </form>
-    <div class="od-user-input__skip-wrapper">
-      <button v-if="skipButton" :key="timestamp" @click.once="_handleClick(skipButton, currentMessage);" class="od-user-input__skip">{{skipButton.text}}<span>&rsaquo;</span></button>
+    <div v-if="skipButtons && skipButtons.length" class="od-user-input__skip-wrapper">
+      <button v-for="(btn, i) in skipButtons" :key="timestamp+i" @click.once="onButtonClick(btn, currentMessage);" class="od-user-input__skip">{{btn.text}}<span>&rsaquo;</span></button>
     </div>
   </div>
 </template>
@@ -143,11 +143,11 @@ export default {
       placeholder: state => state.placeholder,
       contentEditable: state => state.contentEditable
     }),
-    skipButton() {
+    skipButtons() {
       const last = this.messageList[this.messageList.length -1]
 
       if (last && last.type === 'button' && last.data.external) {
-        return last.data.buttons.find(btn => btn.type === 'skip')
+        return last.data.buttons.filter(btn => btn.type === 'skip')
       }
     },
     timestamp() {
@@ -263,6 +263,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../../sass/0-globals/_vars.scss';
+
 .od-user-input {
   background-color: var(--od-message-list-background);
   position: relative;
@@ -395,8 +397,16 @@ export default {
     color: var(--od-button-background);
     font-size: 14px;
     line-height: 19px;
-    margin: 16px auto;
+    margin: 16px 12px 0 0;
     padding: 5px 16px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    @media (min-width: $media-med) {
+      margin-right: 20px;
+    }
 
     span {
       font-size: 18px;
