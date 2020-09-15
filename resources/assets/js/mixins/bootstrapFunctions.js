@@ -66,6 +66,7 @@ export function getTags() {
 export function setVh() {
   let vh = window.innerHeight * 0.01
   document.documentElement.style.setProperty('--vh', `${vh}px`)
+  return vh
 }
 
 export function getSettings(url, userId = '', customSettings = null, callbackId = null, width = null) {
