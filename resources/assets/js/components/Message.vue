@@ -295,6 +295,22 @@
 .reap {
   align-self: flex-start;
   border-bottom-left-radius: 0;
+  
+  &.first-message {
+    border-bottom-left-radius: 0;
+    margin-bottom: 8px;
+  }
+
+  &.middle-message {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    margin-bottom: 8px;
+  }
+
+  &.last-message {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 30px;
+  }
 }
 
 .mt-meta {
