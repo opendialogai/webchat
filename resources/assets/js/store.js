@@ -94,7 +94,9 @@ const store = new Vuex.Store({
     sendMessage({dispatch, commit}, payload) {
       log && console.log('sendMessage', payload.sentMsg)
       
-      commit('updateFetching', true)
+      if (payload.sentMsg.type !== 'url_click') {
+        commit('updateFetching', true)
+      }
 
       chatService.sendRequest(payload.sentMsg, payload.webChat).then(response => {
         dispatch('constructMessageList', {response: response, ...payload})
