@@ -951,7 +951,7 @@ export default {
 @import '../../sass/0-globals/_animations.scss';
 
 .web-chat {
-  height: 100vh;
+  height: calc(var(--initial-vh, 1) * 100);
 
   .close-chat {
     display: flex;

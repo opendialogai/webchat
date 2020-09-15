@@ -25,6 +25,7 @@ function reloadChatBot() {
 
 function openChatWindow() {
     document.body.classList.add('chatbot-no-scroll');
+    document.documentElement.style.setProperty('--initial-vh', `${setVh()}px`)
     setVh()
 
     // Send settings to the chat widget.
