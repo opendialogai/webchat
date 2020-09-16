@@ -1034,7 +1034,6 @@ export default {
     height: 11px;
     border-radius: 100%;
     margin-right: 4px;
-    //animation: bob 2s infinite;
     animation: bouncedelay 1.4s infinite ease-in-out both;
 
     &:nth-child(1) {
