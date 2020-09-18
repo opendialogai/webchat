@@ -7,13 +7,13 @@
     ]"
     :style="cssProps"
   >
-    <div v-if="commentsEnabled && !isMinimized" class="minimize-button" @click="minimizeChat" />
+    <!-- <div v-if="commentsEnabled && !isMinimized" class="minimize-button" @click="minimizeChat" />
 
     <div v-show="commentsEnabled && isMinimized" class="minimized-header" @click="maximizeChat">
       {{ comments.commentsName ? comments.commentsName : 'Comments' }}
       /
       {{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}
-    </div>
+    </div> -->
 
     <b-nav
       v-show="ready && commentsEnabled && !isMinimized"
@@ -152,7 +152,7 @@ export default {
       hideTypingIndOnInternalMessages: false,
       ipAddressInitialised: false,
       isExpand: false,
-      isMinimized: false,
+      isMinimized: true,
       isMobile: false,
       isOpen: false,
       showHistory: false,
