@@ -82,6 +82,7 @@
   import axios from "axios";
   import chatService from "../services/ChatService";
   import SessionStorageMixin from "../mixins/SessionStorageMixin";
+  import {mapState} from 'vuex'
 
   const moment = require("moment-timezone");
 
@@ -105,7 +106,6 @@ export default {
       type: String,
       default: ""
     },
-    chatIsOpen: Boolean,
     closedIntent: {
       type: String,
       default: ""
@@ -182,7 +182,6 @@ export default {
       headerText: "",
       id: "",
       initialText: null,
-      isOpen: this.chatIsOpen,
       loading: true,
       maxInputCharacters: 0,
       messageList: [],
@@ -309,6 +308,11 @@ export default {
         }
       }
     });
+  },
+  computed: {
+    ...mapState({
+      isOpen: state => state.isOpen
+    })
   },
   methods: {
     dateTimezoneFormat(message) {
@@ -672,11 +676,9 @@ export default {
           );
         setTimeout(() => {
           this.closeChatButtonReverseAnimate = false;
-          this.isOpen = !this.isOpen;
           this.$emit("toggleChatOpen", this.headerHeight);
         }, 300);
       } else {
-        this.isOpen = !this.isOpen;
         this.$emit("toggleChatOpen", this.headerHeight);
           window.parent.postMessage(
             { dataLayerEvent: "chatbot_maximized" },

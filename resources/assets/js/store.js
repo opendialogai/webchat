@@ -31,7 +31,8 @@ const store = new Vuex.Store({
     ],
     userInputType: 'default',
     currentMessage: {},
-    fetching: false
+    fetching: false,
+    isOpen: false
   },
   mutations: {
     setApiReady(state, val) {
@@ -71,6 +72,10 @@ const store = new Vuex.Store({
     updateFetching(state, payload) {
       log && console.log('updateFetching', payload)
       state.fetching = payload
+    },
+    toggleOpen(state, payload) {
+      log && console.log('toggleOpen', payload)
+      state.isOpen = payload
     }
   },
   actions: {
