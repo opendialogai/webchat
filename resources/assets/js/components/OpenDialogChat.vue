@@ -277,6 +277,7 @@ export default {
     },
     activateTab(tabName) {
       this.activeTab = tabName;
+      this.$store.commit('setActiveTab', tabName)
 
       // Timeout is necessary to make the select element available
       // for the height calculation.
@@ -748,6 +749,7 @@ export default {
       window.parent.postMessage({ height: "auto" }, this.referrerUrl);
     },
     setChatMode(data) {
+      console.log(data)
       let currentModeData = this.getModeDataInSession();
       data.modeInstance =
         data.modeInstance ||

@@ -6,7 +6,7 @@
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
-        reap: this.author === 'them',
+        reap: this.author !== 'me' && this.author !== 'system',
         system: this.type === 'system',
         'first-message': this.data && this.data.first,
         'middle-message': this.data && this.data.middle,
@@ -15,7 +15,6 @@
     v-linkified:options="{ format: function (value, type) { return '<span>' + value + '</span>'; } }"
   >
     <span class="fade-enter-active" v-html="data.text"></span>
-    <!-- <p v-if="data.meta" class="sc-message--meta">{{data.meta}}</p> -->
       <p v-if="data.meta" class="sc-message--meta" >{{data.meta}}</p>
   </div>
 </template>

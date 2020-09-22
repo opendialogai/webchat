@@ -117,7 +117,7 @@
 
     <span
       v-if="!hideMessageTime && message.type !== 'datetime' && message.type !== 'typing' && message.type !== 'author'"
-      class="sc-message--time-read"
+      class="od-message--time-read"
     >
       <template
         v-if="message.data && message.data.time && !message.data.hidetime"
@@ -305,12 +305,12 @@
   text-align: center;
 }
 
-.sc-message--time-read {
+.od-message--time-read {
   font-size: x-small;
   margin-top: -20px;
   color: white;
 }
-.mt.emit + .sc-message--time-read {
+.mt.emit + .od-message--time-read {
   text-align: right;
 }
 

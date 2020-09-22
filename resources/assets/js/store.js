@@ -32,7 +32,8 @@ const store = new Vuex.Store({
     userInputType: 'default',
     currentMessage: {},
     fetching: false,
-    isOpen: false
+    isOpen: false,
+    activeTab: 'webchat'
   },
   mutations: {
     setApiReady(state, val) {
@@ -76,6 +77,10 @@ const store = new Vuex.Store({
     toggleOpen(state, payload) {
       log && console.log('toggleOpen', payload)
       state.isOpen = payload
+    },
+    setActiveTab(state, payload) {
+      log && console.log('setActiveTab', payload)
+      state.activeTab = payload
     }
   },
   actions: {

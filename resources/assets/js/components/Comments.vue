@@ -10,7 +10,6 @@
   >
     <template v-if="sectionId != '' || commentsApiConfig.commentsSectionIdFieldName == ''">
       <beautiful-chat
-        v-if="messageListReady"
         :agent-profile="agentProfile"
         :always-scroll-to-bottom="true"
         :button-text="buttonText"
