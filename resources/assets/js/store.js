@@ -34,6 +34,7 @@ const store = new Vuex.Store({
       textLimit: null
     },
     messageList: [],
+    commentList: [],
     availableInputs: [
       'autocomplete',
       'date-picker',
@@ -96,6 +97,14 @@ const store = new Vuex.Store({
     updateMessageList(state, payload) {
       log && console.log('updateMessageList', payload)
       state.messageList.push(payload)
+    },
+    updateCommentList(state, payload) {
+      log && console.log('updateCommentList', payload)
+      state.commentList.push(payload)
+    },
+    clearCommentList(state) {
+      log && console.log('clearCommentList')
+      state.commentList = []
     },
     spliceMessageList(state, payload) {
       log && console.log('spliceMessageList', payload)
@@ -201,9 +210,9 @@ const store = new Vuex.Store({
       session.setModeDataInSession(payload);
     },
     sendMessage({dispatch, commit, state}, payload) {
-      log && console.log('sendMessage', payload)
+      log && console.log('sendMessage', payload, payload.id)
       
-      if (payload.sentMsg.type !== 'url_click') {
+      if (payload.type !== 'url_click') {
         commit('updateFetching', true)
       }
 
@@ -519,6 +528,7 @@ store.subscribe((mutation, state) => {
       // Tell vue we're ready.
       store.commit('setApiReady', true);
     }
+    console.log(store.state.comments)
   }
 });
 

@@ -6,7 +6,7 @@
       :message="message"
       :read="message.read"
       :chatImageUrl="chatImageUrl"
-      :key="message.id"
+      :key="timestamp(idx)"
       :isOpen="isOpen"
     />
     <Message
@@ -21,6 +21,7 @@
 import {mapState} from 'vuex'
 import Message from "./Message.vue";
 import chatIcon from "./assets/chat-icon.svg";
+import moment from 'moment'
 
 export default {
   components: {
@@ -46,12 +47,19 @@ export default {
   },
   computed: {
     ...mapState({
-      messages: state => state.messageList,
+      messageList: state => state.messageList,
+      commentList: state => state.commentList,
       modeData: state => state.modeData,
       activeTab: state => state.activeTab
-    })
+    }),
+    messages() {
+      return this.activeTab === 'comments' ? this.commentList : this.messageList
+    }
   },
   methods: {
+    timestamp(idx) {
+      return moment().valueOf() + idx
+    },
     _scrollDown(animate = true) {
       if (this.$refs.scrollList) {
         if (

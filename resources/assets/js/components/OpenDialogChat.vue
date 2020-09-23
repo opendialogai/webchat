@@ -197,6 +197,7 @@ export default {
     sectionId(newId, oldId) {
       if (oldId !== '' && newId !== oldId) {
         this.commentsKey += 1
+        this.$store.commit('clearCommentList')
       }
     },
   },

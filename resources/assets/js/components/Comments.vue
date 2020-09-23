@@ -147,7 +147,7 @@ export default {
   },
   computed: {
     ...mapState({
-      messageList: state => state.messageList,
+      messageList: state => state.commentList,
       useHumanAvatar: state => state.settings.general.useHumanAvatar,
       useBotAvatar: state => state.settings.general.useBotAvatar,
       userExternalId: state => state.user.external_id,
@@ -257,7 +257,7 @@ export default {
             authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`
           }
 
-          this.$store.commit('updateMessageList', authorMsg)
+          this.$store.commit('updateCommentList', authorMsg)
         }
 
         // Add the message to the list.
@@ -270,7 +270,7 @@ export default {
           },
         }
         this.dateTimezoneFormat(message)
-        this.$store.commit('updateMessageList', message)
+        this.$store.commit('updateCommentList', message)
       })
     },
     openComments() {},
@@ -327,9 +327,9 @@ export default {
             authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`
           }
 
-          this.$store.commit('updateMessageList', authorMsg)
+          this.$store.commit('updateCommentList', authorMsg)
         }
-        this.$store.commit('updateMessageList', message)
+        this.$store.commit('updateCommentList', message)
       })
 
       this.messageListReady = true
