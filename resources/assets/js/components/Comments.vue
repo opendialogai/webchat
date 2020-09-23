@@ -9,7 +9,7 @@
     ]"
   >
     <template v-if="sectionId != '' || commentsApiConfig.commentsSectionIdFieldName == ''">
-      <beautiful-chat
+      <beautiful-chat 
         :agent-profile="agentProfile"
         :always-scroll-to-bottom="true"
         :button-text="buttonText"
@@ -267,7 +267,6 @@ export default {
       this.$store.dispatch("comments/create", commentData).then(() => {
         const newComment = this.$store.getters["comments/lastCreated"];
         const lastMessage = this.messageList[this.messageList.length - 1];
-        console.log(newComment.relationships, lastMessage);
 
         // Add a new author message if necessary.
         if (!lastMessage || (lastMessage && lastMessage.author !== "me")) {
