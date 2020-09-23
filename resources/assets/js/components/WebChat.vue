@@ -74,7 +74,6 @@ export default {
       required: true
     },
     canCloseChat: Boolean,
-    chatIsOpen: Boolean,
     isExpand: Boolean,
     isMobile: Boolean,
     showHistory: Boolean,
@@ -96,7 +95,6 @@ export default {
       fpRichInputMessage: {},
       headerHeight: 0,
       id: "",
-      isOpen: this.chatIsOpen,
       loading: true,
       showCloseChatButton: false,
       showFullPageFormInput: false,
@@ -223,6 +221,7 @@ export default {
   },
   computed: {
     ...mapState({
+      isOpen: state => state.isOpen,
       chatService: state => state.chatService,
       messageList: state => state.messageList,
       currentMessage: state => state.currentMessage,
@@ -371,11 +370,9 @@ export default {
           );
         setTimeout(() => {
           this.closeChatButtonReverseAnimate = false;
-          this.isOpen = !this.isOpen;
           this.$emit("toggleChatOpen", this.headerHeight);
         }, 300);
       } else {
-        this.isOpen = !this.isOpen;
         this.$emit("toggleChatOpen", this.headerHeight);
           window.parent.postMessage(
             { dataLayerEvent: "chatbot_maximized" },

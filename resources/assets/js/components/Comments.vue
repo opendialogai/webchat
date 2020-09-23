@@ -1,19 +1,23 @@
 <template>
   <div
+    class="od-comments"
     :class="[
       isMobile ? 'mobile' : '',
       canCloseChat ? '' : 'no-close',
       useBotAvatar ? 'show-bot-avatar' : '',
-      useHumanAvatar ? 'show-human-avatar' : ''
+      useHumanAvatar ? 'show-human-avatar' : '',
     ]"
   >
-    <template v-if="sectionId != '' || commentsApiConfig.commentsSectionIdFieldName == ''">
+    <template
+      v-if="
+        sectionId != '' || commentsApiConfig.commentsSectionIdFieldName == ''
+      "
+    >
       <beautiful-chat
-        v-if="messageListReady"
         :agent-profile="agentProfile"
         :always-scroll-to-bottom="true"
         :content-editable="messageListReady"
-        :close="closeComments"
+        :close="onClose"
         :expand="expandChat"
         :header-text="headerText"
         :is-expand="true"
@@ -22,15 +26,32 @@
         :open="openComments"
         :show-expand-button="false"
         :show-typing-indicator="false"
+        :on-full-page-form-input-submit="() => {}"
+        :on-full-page-form-input-cancel="() => {}"
+        :on-full-page-rich-input-submit="() => {}"
+        :on-restart-button-click="() => {}"
+        :on-download="() => {}"
       />
+      <div v-if="showCloseChatButton" class="close-chat">
+        <div
+          class="close-chat__button"
+          :class="{
+            closeChatButtonAnimate: isOpen,
+            closeChatButtonReverseAnimate: closeChatButtonReverseAnimate,
+          }"
+          @click="toggleChatOpen"
+        >
+          <img src="/images/close-btn.svg" class="close-chat__img" />
+        </div>
+      </div>
     </template>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex'
 
-const moment = require('moment-timezone');
+const moment = require('moment-timezone')
 
 export default {
   name: 'Comments',
@@ -46,7 +67,6 @@ export default {
     },
     isExpand: Boolean,
     isMobile: Boolean,
-    isOpen: Boolean,
     loadHistory: Boolean,
     sectionId: {
       type: String,
@@ -78,50 +98,61 @@ export default {
       showLongTextInput: false,
       showTypingIndicator: false,
       users: [],
-    };
+      showCloseChatButton: false,
+      closeChatButtonReverseAnimate: false,
+      referrerUrl: '',
+    }
   },
   created() {
     // Some convenience mappings.
-    this.authorMapping = this.commentsApiConfig.commentsAuthorRelationshipName;
-    this.authorNameMapping = this.commentsApiConfig.commentsAuthorNameFieldName;
-    this.authorType = this.commentsApiConfig.commentsAuthorEntityName;
-    this.commentDateMapping = this.commentsApiConfig.commentsCreatedFieldName;
-    this.commentTextMapping = this.commentsApiConfig.commentsTextFieldName;
-    this.sectionMapping = this.commentsApiConfig.commentsSectionRelationshipName;
-    this.sectionType = this.commentsApiConfig.commentsSectionEntityName;
+    this.authorMapping = this.commentsApiConfig.commentsAuthorRelationshipName
+    this.authorNameMapping = this.commentsApiConfig.commentsAuthorNameFieldName
+    this.authorType = this.commentsApiConfig.commentsAuthorEntityName
+    this.commentDateMapping = this.commentsApiConfig.commentsCreatedFieldName
+    this.commentTextMapping = this.commentsApiConfig.commentsTextFieldName
+    this.sectionMapping = this.commentsApiConfig.commentsSectionRelationshipName
+    this.sectionType = this.commentsApiConfig.commentsSectionEntityName
+
+    if (window.self !== window.top) {
+      this.showCloseChatButton = true
+      this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0]
+    } else {
+      this.referrerUrl = document.location.origin
+    }
   },
   mounted() {
-    let action = '';
-    let getter = '';
-    let filter = {};
+    let action = ''
+    let getter = ''
+    let filter = {}
 
     filter = {
       [this.sectionMapping]: this.sectionId,
       _: Math.random(),
-    };
-    action = 'comments/loadWhere';
-    getter = 'comments/where';
+    }
+    action = 'comments/loadWhere'
+    getter = 'comments/where'
 
     this.$store.commit('updatePlaceholder', 'Type a message')
 
     this.$store.dispatch(action, { filter }).then(() => {
-      let comments = [];
+      let comments = []
       if (window._.isEmpty(filter)) {
-        comments = this.$store.getters[getter];
+        comments = this.$store.getters[getter]
       } else {
-        comments = this.$store.getters[getter]({ filter });
+        comments = this.$store.getters[getter]({ filter })
       }
-      this.comments = comments;
-      this.processComments();
-    });
+      this.comments = comments
+      this.processComments()
+    })
   },
   computed: {
     ...mapState({
       messageList: state => state.messageList,
       useHumanAvatar: state => state.settings.general.useHumanAvatar,
       useBotAvatar: state => state.settings.general.useBotAvatar,
-      userExternalId: state => state.user.external_id
-    })
+      userExternalId: state => state.user.external_id,
+      isOpen: state => state.isOpen
+    }),
   },
   methods: {
     ...mapActions({
@@ -129,21 +160,53 @@ export default {
     }),
     closeComments() {},
     dateTimezoneFormat(message) {
-      const date = moment(message.data.date).tz(this.userTimezone);
+      const date = moment(message.data.date).tz(this.userTimezone)
 
       /* eslint-disable no-param-reassign */
-      message.data.date = date.format('ddd D MMM');
-      message.data.time = date.format('hh:mm A');
+      message.data.date = date.format('ddd D MMM')
+      message.data.time = date.format('hh:mm A')
       /* eslint-enable no-param-reassign */
     },
     expandChat() {
-      this.$emit('expandChat');
+      this.$emit('expandChat')
+    },
+    onClose() {
+      if (this.showCloseChatButton) {
+        if (!this.closeChatButtonReverseAnimate) {
+          this.toggleChatOpen()
+        }
+      }
+    },
+    toggleChatOpen() {
+      this.ctaText = []
+
+      if (this.isOpen) {
+        this.closeChatButtonReverseAnimate = true
+        window.parent.postMessage(
+          { dataLayerEvent: 'chatbot_minimized' },
+          this.referrerUrl
+        )
+        setTimeout(() => {
+          this.closeChatButtonReverseAnimate = false
+          //this.isOpen = !this.isOpen;
+          this.$emit('toggleChatOpen', 0)
+        }, 300)
+      } else {
+        //this.isOpen = !this.isOpen;
+        this.$emit('toggleChatOpen', 0)
+        window.parent.postMessage(
+          { dataLayerEvent: 'chatbot_maximized' },
+          this.referrerUrl
+        )
+      }
     },
     onMessageWasSent(msg) {
       // Format the new comment for JSON:API.
       const commentData = {
         attributes: {
-          [this.commentDateMapping]: moment().utc().format(),
+          [this.commentDateMapping]: moment()
+            .utc()
+            .format(),
           [this.commentTextMapping]: msg.data.text,
         },
         relationships: {
@@ -154,7 +217,7 @@ export default {
             },
           },
         },
-      };
+      }
 
       if (this.sectionId) {
         commentData.relationships[this.sectionMapping] = {
@@ -162,13 +225,13 @@ export default {
             id: this.sectionId,
             type: this.sectionType,
           },
-        };
+        }
       }
 
       // Send the comment to the backend.
       this.$store.dispatch('comments/create', commentData).then(() => {
-        const newComment = this.$store.getters['comments/lastCreated'];
-        const lastMessage = this.messageList[this.messageList.length - 1];
+        const newComment = this.$store.getters['comments/lastCreated']
+        const lastMessage = this.messageList[this.messageList.length - 1]
 
         // Add a new author message if necessary.
         if (!lastMessage || (lastMessage && lastMessage.author !== 'me')) {
@@ -180,13 +243,18 @@ export default {
               authorId: this.userExternalId,
               text: newComment.relationships[this.authorMapping].meta.name,
             },
-          };
+          }
 
           if (this.useHumanAvatar) {
-            const avatarName = newComment.relationships[this.authorMapping].meta.name
-              .split(' ').map(n => n[0]).join('').toUpperCase();
+            const avatarName = newComment.relationships[
+              this.authorMapping
+            ].meta.name
+              .split(' ')
+              .map(n => n[0])
+              .join('')
+              .toUpperCase()
 
-            authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+            authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`
           }
 
           this.$store.commit('updateMessageList', authorMsg)
@@ -200,15 +268,15 @@ export default {
             date: newComment.attributes[this.commentDateMapping],
             text: newComment.attributes[this.commentTextMapping],
           },
-        };
-        this.dateTimezoneFormat(message);
+        }
+        this.dateTimezoneFormat(message)
         this.$store.commit('updateMessageList', message)
-      });
+      })
     },
     openComments() {},
     processComments() {
-      this.comments.forEach((comment) => {
-        const authorId = comment.relationships[this.authorMapping].data.id;
+      this.comments.forEach(comment => {
+        const authorId = comment.relationships[this.authorMapping].data.id
         const message = {
           type: 'text',
           author: authorId,
@@ -216,103 +284,143 @@ export default {
             date: comment.attributes[this.commentDateMapping],
             text: comment.attributes[this.commentTextMapping],
           },
-        };
-        this.dateTimezoneFormat(message);
+        }
+        this.dateTimezoneFormat(message)
 
-        if (comment.relationships[this.authorMapping].data.id === this.userExternalId) {
-          message.author = 'me';
+        if (
+          comment.relationships[this.authorMapping].data.id ===
+          this.userExternalId
+        ) {
+          message.author = 'me'
         }
 
-        const lastMessage = this.messageList[this.messageList.length - 1];
+        const lastMessage = this.messageList[this.messageList.length - 1]
 
         // Add a new author message if necessary.
-        if (!lastMessage || (lastMessage && lastMessage.author !== message.author)) {
+        if (
+          !lastMessage ||
+          (lastMessage && lastMessage.author !== message.author)
+        ) {
           const authorMsg = {
             type: 'author',
             data: {
               authorId,
               text: comment.relationships[this.authorMapping].meta.name,
             },
-          };
-          if (comment.relationships[this.authorMapping].data.id === this.userExternalId) {
-            authorMsg.author = 'me';
-            authorMsg.data.author = 'me';
+          }
+          if (
+            comment.relationships[this.authorMapping].data.id ===
+            this.userExternalId
+          ) {
+            authorMsg.author = 'me'
+            authorMsg.data.author = 'me'
           }
 
           if (this.useBotAvatar) {
-            const avatarName = comment.relationships[this.authorMapping].meta.name
-              .split(' ').map(n => n[0]).join('').toUpperCase();
-            authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`;
+            const avatarName = comment.relationships[
+              this.authorMapping
+            ].meta.name
+              .split(' ')
+              .map(n => n[0])
+              .join('')
+              .toUpperCase()
+            authorMsg.data.avatar = `<span class="avatar">${avatarName}</span>`
           }
 
           this.$store.commit('updateMessageList', authorMsg)
         }
         this.$store.commit('updateMessageList', message)
-      });
+      })
 
-      this.messageListReady = true;
+      this.messageListReady = true
     },
   },
-};
-
+}
 </script>
 
-<style scoped>
-    .loading {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-    }
+<style lang="scss">
+.od-comments {
+  height: calc(var(--initial-vh, 1vh) * 100);
 
-    .loading-message {
-        font-size: 18px;
-        color: #B6B5BA;
-        margin-bottom: 17px;
-    }
+  .close-chat {
+    display: flex;
+    justify-content: center;
+    margin-top: -30px;
+    margin-bottom: 10px;
+  }
 
-    .mobile .loading-message {
-        margin-bottom: 5px;
-    }
+  .close-chat__button {
+    position: relative;
+    z-index: 1;
+    width: 70px;
+    height: 70px;
+    background-color: #313133;
+    border-radius: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 
-    .loading-indicator span {
-        display: inline-block;
-        background-color: #B6B5BA;
-        width: 11px;
-        height: 11px;
-        border-radius: 100%;
-        margin-right: 4px;
-        animation: bob 2s infinite;
+    &:hover {
+      background-color: #000000;
     }
+  }
 
-    /* SAFARI GLITCH */
-    .loading-indicator span:nth-child(1) {
-        animation-delay: -1s;
-    }
+  .close-chat__img {
+    width: 31px;
+    height: 30px;
+    object-fit: contain;
+    transition: transform 0.5s;
+  }
 
-    .loading-indicator span:nth-child(2) {
-        animation-delay: -0.85s;
-    }
+  .confirmCloseChat {
+    opacity: 0;
+    text-align: right;
+  }
 
-    .loading-indicator span:nth-child(3) {
-        animation-delay: -0.7s;
-    }
+  .confirmCloseChatButtons {
+    display: inline-block;
+  }
 
-    @keyframes bob {
-        10% {
-            transform: translateY(-10px);
-            background-color: #9E9DA2;
-        }
-        50% {
-            transform: translateY(0);
-            background-color: #B6B5BA;
-        }
-    }
-</style>
+  .confirmCloseChatAnimate {
+    animation: confirmCloseChatAnim 0.6s forwards;
+  }
 
-<style>
-    .comments-container .sc-header {
-        display: none !important;
-    }
+  .closeChatButtonAnimate {
+    animation: close-chat-spin 0.5s forwards;
+  }
+
+  .closeChatButtonReverseAnimate {
+    animation: reverse-close-chat-spin 0.5s forwards;
+  }
+
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* var inherited from OpenDialogChat component. */
+    //   height: calc(100vh - var(--header-height));
+  }
+
+  .loading-message {
+    font-size: 18px;
+    color: #b6b5ba;
+    margin-bottom: 17px;
+  }
+
+  .mobile .loading-message {
+    margin-bottom: 5px;
+  }
+
+  .loading-indicator span {
+    display: inline-block;
+    background-color: #b6b5ba;
+    width: 11px;
+    height: 11px;
+    border-radius: 100%;
+    margin-right: 4px;
+    animation: bob 2s infinite;
+  }
+}
 </style>

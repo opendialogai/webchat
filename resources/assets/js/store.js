@@ -56,7 +56,9 @@ const store = new Vuex.Store({
     initialText: null,
     confirmationMessage: null,
     showMessages: true,
-    contentEditable: false
+    contentEditable: false,
+    isOpen: false,
+    activeTab: 'webchat'
   },
   mutations: {
     initChatservice(state) {
@@ -162,6 +164,14 @@ const store = new Vuex.Store({
     toggleContentEditable(state, payload) {
       log && console.log('toggleContentEditable', payload)
       state.contentEditable = payload
+    },
+    toggleOpen(state, payload) {
+      log && console.log('toggleOpen', payload)
+      state.isOpen = payload
+    },
+    setActiveTab(state, payload) {
+      log && console.log('setActiveTab', payload)
+      state.activeTab = payload
     }
   },
   actions: {

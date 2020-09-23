@@ -47,7 +47,8 @@ export default {
   computed: {
     ...mapState({
       messages: state => state.messageList,
-      modeData: state => state.modeData
+      modeData: state => state.modeData,
+      activeTab: state => state.activeTab
     })
   },
   methods: {
@@ -86,10 +87,14 @@ export default {
       );
     },
     shouldShowMessage(message) {
+      if (this.activeTab === 'comments') {
+        return true
+      }
       let isModeSame = message.mode === this.modeData.mode;
       let isWebchatMode = message.mode === 'webchat';
       let isCustomMode = !isWebchatMode;
       let isFromSameInstance = message.modeInstance === this.modeData.modeInstance;
+      //console.log('same mode: ', isModeSame, 'webchat: ', isWebchatMode, 'same instance: ', isFromSameInstance)
       return (isModeSame && isWebchatMode) || (isModeSame && isCustomMode && isFromSameInstance);
     },
   },
