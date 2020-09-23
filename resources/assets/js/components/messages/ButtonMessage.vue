@@ -5,6 +5,7 @@
     :class="[{
         animate: this.data.animate,
         emit : this.author === 'me',
+        inline : this.hasOnlyInline
     }]"
   >
     <div v-if="data.text" class="mt reap od-message-button__text">
@@ -17,9 +18,9 @@
               :key="idx"
               @[shouldClear]="_handleClick(button)"
               class="od-message-button__inline-button"
-              :class="button.type">
+              :class="[button.type, {'download': button.download}]">
               <span v-html="button.text"></span>
-              <span v-if="button.download" class="od-message-button__button-icon">
+              <span class="od-message-button__button-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
                   <g fill="var(--od-button-text)">
                     <path d="M2.604 0.375L0 2.771 2.604 2.771z"/>
@@ -78,7 +79,11 @@ export default {
   computed: {
     shouldClear() {
       return this.data.clear_after_interaction ? '~click' : 'click'
-    }
+    },
+    hasOnlyInline() {
+      console.log(this.data.buttons.find(btn => btn.type === 'inline'))
+      return this.data.buttons.length && this.data.buttons.find(btn => btn.type === 'inline') && this.data.buttons.filter(btn => btn.type !== 'inline').length <= 0
+    } 
   },
   mounted() {
     if (this.data.animate) {
@@ -134,6 +139,10 @@ export default {
     opacity: 0;
   }
 
+  &.inline {
+    margin-bottom: 20px;
+  }
+
   &.emit {
     .od-message-button__text {
       background-color: var(--od-sent-message-background);
@@ -173,7 +182,14 @@ export default {
     position: relative;
     transition: 0.4s;
 
+    &.download {
+      .od-message-button__button-icon {
+        display: inline-block;
+      }
+    }
+
     .od-message-button__button-icon {
+      display: none;
       margin-left: 16px;
       position: relative;
       top: -2px;

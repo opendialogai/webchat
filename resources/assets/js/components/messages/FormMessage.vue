@@ -153,16 +153,6 @@ export default {
         }
 
         if (
-                element.required &&
-                element.element_type === 'number' &&
-                this.isEmpty(this.form.data[element.name].value)
-        ) {
-          this.errors.push(
-                  "<em>" + element.display + "</em> field is required and must be a valid number"
-          );
-        }
-
-        if (
           element.element_type === 'email' &&
           !this.isEmpty(this.form.data[element.name].value)
         ) {
@@ -173,18 +163,27 @@ export default {
           }
         }
 
-        if (element.element_type === 'number' && element.max && this.form.data[element.name].value > parseInt(element.max)) {
-          this.errors.push(
-                  "<em>" + element.display + "</em> field must be less than " + element.max
-          );
-        }
+        if (element.element_type === 'number') {
+          if (element.required && !(new RegExp('^\\d+$').test(this.form.data[element.name].value))) {
+            this.errors.push(
+                    "<em>" + element.display + "</em> field must be a valid number"
+            );
+          } else if (element.max && this.form.data[element.name].value > parseInt(element.max)) {
+            this.errors.push(
+                    "<em>" + element.display + "</em> field must be less than " + element.max
+            );
+          } else if (element.max && this.form.data[element.name].value.length > ('' + element.max).length) {
+            this.errors.push(
+                    "<em>" + element.display + "</em> field must be less than " + ('' + element.max).length + " characters"
+            );
+          }
 
-        if (element.element_type === 'number' && parseInt(this.form.data[element.name].value) < parseInt(element.min)) {
-          this.errors.push(
-                  "<em>" + element.display + "</em> field must be larger than " + element.min
-          );
+          if (parseInt(this.form.data[element.name].value) < parseInt(element.min)) {
+            this.errors.push(
+                    "<em>" + element.display + "</em> field must be larger than " + element.min
+            );
+          }
         }
-
       });
     },
     isEmpty(value) {

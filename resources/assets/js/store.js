@@ -193,7 +193,9 @@ const store = new Vuex.Store({
     sendMessage({dispatch, commit, state}, payload) {
       log && console.log('sendMessage', payload)
       
-      commit('updateFetching', true)
+      if (payload.sentMsg.type !== 'url_click') {
+        commit('updateFetching', true)
+      }
 
       let newMsg = Object.assign({}, payload);
 
