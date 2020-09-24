@@ -88,6 +88,9 @@ eval ${pre} php artisan vendor:publish --tag=public --force
 
 eval ${pre} php artisan vendor:publish --tag=vue-components --force
 
+echo "Running ${pre} npm run"
+eval ${pre} npm run ${environment}
+
 echo "Updating JS and CSS version string"
 
 rand=$(date +%s)
