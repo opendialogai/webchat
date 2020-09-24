@@ -172,10 +172,6 @@
     vSelect
   },
   props: {
-    message: {
-      type: Object,
-      required: true
-    },
     isOpen: {
       type: Boolean,
       default: () => false
@@ -183,7 +179,8 @@
   },
   computed: {
     ...mapState({
-      currentMessage: state => state.currentMessage
+      currentMessage: state => state.currentMessage,
+      message: state => state.fpFormMessage
     }),
     requiredErrorMessage() {
       return this.errors.find(x => x.errorType === 'required') ? 'Missing required fields.' : '';

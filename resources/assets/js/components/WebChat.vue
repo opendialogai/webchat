@@ -32,11 +32,7 @@
         :on-download="download"
         :show-expand-button="false"
         :show-typing-indicator="showTypingIndicator"
-        :show-full-page-form-input="showFullPageFormInput"
-        :show-full-page-rich-input="showFullPageRichInput"
         :always-scroll-to-bottom="true"
-        :fp-form-input-message="fpFormInputMessage"
-        :fp-rich-input-message="fpRichInputMessage"
         :cta-text="ctaText"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
@@ -91,14 +87,10 @@ export default {
     return {
       closeChatButtonReverseAnimate: false,
       ctaText: [],
-      fpFormInputMessage: {},
-      fpRichInputMessage: {},
       headerHeight: 0,
       id: "",
       loading: true,
       showCloseChatButton: false,
-      showFullPageFormInput: false,
-      showFullPageRichInput: false,
       showTypingIndicator: false,
       users: [],
       chatMode: "webchat",
@@ -538,11 +530,11 @@ export default {
               this.$store.commit('toggleContentEditable', !currentMessage.data.disable_text)
 
               if (currentMessage.type === "fp-form") {
-                this.showFullPageFormInputMessage(currentMessage);
+                this.$store.dispatch('fpFormMessage', currentMessage)
               }
 
               if (currentMessage.type === "fp-rich") {
-                this.showFullPageRichInputMessage(currentMessage);
+                this.$store.dispatch('fpRichMessage', currentMessage)
               }
             }
 
@@ -564,20 +556,6 @@ export default {
           });
         }
       }
-    },
-    showFullPageFormInputMessage(message) {
-      this.fpFormInputMessage = message;
-
-      this.$store.commit('toggleShowMessages', false)
-      this.showFullPageRichInput = false;
-      this.showFullPageFormInput = true;
-    },
-    showFullPageRichInputMessage(message) {
-      this.fpRichInputMessage = message;
-
-      this.$store.commit('toggleShowMessages', false)
-      this.showFullPageFormInput = false;
-      this.showFullPageRichInput = true;
     },
     userTyping(text) {
       this.chatService

@@ -78,12 +78,10 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 export default {
   props: {
-    message: {
-      type: Object,
-      required: true
-    },
     isOpen: {
       type: Boolean,
       default: () => false
@@ -98,6 +96,11 @@ export default {
     message() {
       this.showLoader = false;
     }
+  },
+  computed: {
+    ...mapState({
+      message: state => state.fpRichMessage
+    })
   },
   methods: {
     _handleClick(button) {

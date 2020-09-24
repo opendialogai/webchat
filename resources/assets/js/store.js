@@ -27,6 +27,10 @@ const store = new Vuex.Store({
     userInfo: {},
     referrerUrl: '',
     showLongTextInput: false,
+    showFullPageFormInput: false,
+    showFullPageRichInput: false,
+    fpFormMessage: {},
+    fpRichMessage: {},
     messageMetaData: {
       teamName: null,
       progressPercent: null,
@@ -165,6 +169,22 @@ const store = new Vuex.Store({
       state.initialText = payload.initialText || null,
       state.confirmationMessage = payload.confirmationMessage || null,
       state.showLongTextInput = payload.visible
+    },
+    updateFPFormMessage(state, payload) {
+      log && console.log('updateFPFormMessage', payload)
+      state.fpFormMessage = payload
+    },
+    updateFPRichMessage(state, payload) {
+      log && console.log('updateFPRichMessage', payload)
+      state.fpRichMessage = payload
+    },
+    toggleFPForm(state, payload) {
+      log && console.log('toggleFPForm', payload)
+      state.showFullPageFormInput = payload
+    },
+    toggleFPRich(state, payload) {
+      log && console.log('toggleFPRich', payload)
+      state.showFullPageRichInput = payload
     },
     toggleShowMessages(state, payload) {
       log && console.log('toggleShowMessages', payload)
@@ -477,6 +497,18 @@ const store = new Vuex.Store({
         callback_id: payload.data.cancel_callback,
         data:{text: payload.data.cancel_text}
       })
+    },
+    fpFormMessage({commit}, payload) {
+      commit('updateFPFormMessage', payload)
+      commit('toggleShowMessages', false)
+      commit('toggleFPRich', false)
+      commit('toggleFPForm', true)
+    },
+    fpRichMessage({commit}, payload) {
+      commit('updateFPRichMessage', payload)
+      commit('toggleShowMessages', false)
+      commit('toggleFPForm', false)
+      commit('toggleFPRich', true)
     }
   },
   getters: {}

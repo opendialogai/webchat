@@ -10,7 +10,7 @@ let WebChatMode = function(store, chatService) {
   this.chatService = chatService
 };
 
-WebChatMode.prototype.sendRequest = function(message, webChatComponent) {
+WebChatMode.prototype.sendRequest = function(message) {
     if (
       message.type === "chat_open" ||
       message.type === "url_click" ||
@@ -40,7 +40,7 @@ WebChatMode.prototype.sendRequest = function(message, webChatComponent) {
     }
 };
 
-function sendMessageReceivedEvent (message, webChatComponent) {
+function sendMessageReceivedEvent (message) {
   let referrerUrl = '';
   if (window.self !== window.top) {
     referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
@@ -149,16 +149,16 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             }
 
             if (message.type === "fp-form") {
-              webChatComponent.showFullPageFormInputMessage(message);
+              this.$store.dispatch('fpFormMessage', message)
             }
 
             if (message.type === "fp-rich") {
-              webChatComponent.showFullPageRichInputMessage(message);
+              this.$store.dispatch('fpRichMessage', message)
             }
 
             if (message.type !== "fp-form" && message.type !== "fp-rich") {
-              webChatComponent.showFullPageFormInput = false;
-              webChatComponent.showFullPageRichInput = false;
+              this.$store.commit('toggleFPForm', false)
+              this.$store.commit('toggleFPRich', false)
               this.$store.commit('toggleShowMessages', true)
             }
 
@@ -185,7 +185,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             }
           }, (messageIndex + 1) * this.$store.state.settings.general.messageDelay);
 
-          sendMessageReceivedEvent(message, webChatComponent);
+          sendMessageReceivedEvent(message);
 
           index += 1;
         }
@@ -225,11 +225,11 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             typingMessage.data = message.data;
 
             if (message.type === "fp-form") {
-              webChatComponent.showFullPageFormInputMessage(message);
+              this.$store.dispatch('fpFormMessage', message)
             }
 
             if (message.type === "fp-rich") {
-              webChatComponent.showFullPageRichInputMessage(message);
+              this.$store.dispatch('fpRichMessage', message)
             }
 
             this.$store.commit('toggleContentEditable', !message.data.disable_text)
@@ -285,16 +285,16 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           }
 
           if (message.type === "fp-form") {
-            webChatComponent.showFullPageFormInputMessage(message);
+            this.$store.dispatch('fpFormMessage', message)
           }
 
           if (message.type === "fp-rich") {
-            webChatComponent.showFullPageRichInputMessage(message);
+            this.$store.dispatch('fpRichMessage', message)
           }
 
           if (message.type !== "fp-form" && message.type !== "fp-rich") {
-            webChatComponent.showFullPageFormInput = false;
-            webChatComponent.showFullPageRichInput = false;
+            this.$store.commit('toggleFPForm', false)
+            this.$store.commit('toggleFPRich', false)
             this.$store.commit('toggleShowMessages', true)
           }
 
@@ -318,7 +318,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
 
           resolve()
         }, this.$store.state.settings.general.messageDelay);
-        sendMessageReceivedEvent(message, webChatComponent);
+        sendMessageReceivedEvent(message);
       }
     }
   })

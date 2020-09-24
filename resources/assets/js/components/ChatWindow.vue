@@ -11,8 +11,6 @@
       :onDownload="onDownload"
       :isOpen="isOpen"
       :ctaText="ctaText"
-      :showFullPageFormInput="showFullPageFormInput"
-      :showFullPageRichInput="showFullPageRichInput"
     />
     <transition name="fade">
       <ProgressBar v-show="$store.state.messageMetaData.progressPercent !== null" />
@@ -32,12 +30,10 @@
     </template>
     <template v-else-if="showFullPageFormInput">
       <FullPageFormInput
-        :message="fpFormInputMessage"
         :isOpen="isOpen" />
     </template>
     <template v-else-if="showFullPageRichInput">
       <FullPageRichInput
-        :message="fpRichInputMessage"
         :isOpen="isOpen" />
     </template>
     <template v-else>
@@ -77,14 +73,6 @@ export default {
     fullScreen: {
       type: Boolean,
       default: false
-    },
-    fpFormInputMessage: {
-      type: Object,
-      default: () => {}
-    },
-    fpRichInputMessage: {
-      type: Object,
-      default: () => {}
     },
     showEmoji: {
       type: Boolean,
@@ -142,14 +130,6 @@ export default {
       type: Boolean,
       default: () => false
     },
-    showFullPageFormInput: {
-      type: Boolean,
-      default: () => false
-    },
-    showFullPageRichInput: {
-      type: Boolean,
-      default: () => false
-    },
     alwaysScrollToBottom: {
       type: Boolean,
       required: true
@@ -191,7 +171,9 @@ export default {
     ...mapState({
       messages: state => state.messageList,
       modeData: state => state.modeData,
-      showMessages: state => state.showMessages
+      showMessages: state => state.showMessages,
+      showFullPageFormInput: state => state.showFullPageFormInput,
+      showFullPageRichInput: state => state.showFullPageRichInput
     }),
     animateExternalButtons() {
       if (this.messages.length > 0) {

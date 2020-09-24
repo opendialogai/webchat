@@ -112,15 +112,7 @@ export default {
     isOpen: {
       type: Boolean,
       default: () => false
-    },
-    showFullPageFormInput: {
-      type: Boolean,
-      default: true
-    },
-    showFullPageRichInput: {
-      type: Boolean,
-      default: true
-    },
+    }
   },
   created() {
     if (window.self !== window.top) {
@@ -131,7 +123,9 @@ export default {
   },
   computed: {
     ...mapState({
-      showRestartButton: state => state.settings.general.showRestartButton
+      showRestartButton: state => state.settings.general.showRestartButton,
+      showFullPageFormInput: state => state.showFullPageFormInput,
+      showFullPageRichInput: state => state.showFullPageRichInput
     })
   }
 };

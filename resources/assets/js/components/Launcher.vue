@@ -12,11 +12,7 @@
       :showExpandButton="showExpandButton"
       :showTypingIndicator="showTypingIndicator"
       :alwaysScrollToBottom="alwaysScrollToBottom"
-      :showFullPageFormInput="showFullPageFormInput"
-      :showFullPageRichInput="showFullPageRichInput"
       :fullScreen="fullScreen"
-      :fpFormInputMessage="fpFormInputMessage"
-      :fpRichInputMessage="fpRichInputMessage"
       :ctaText="ctaText"
     />
   </div>
@@ -66,22 +62,6 @@ export default {
     showTypingIndicator: {
       type: Boolean,
       default: () => true
-    },
-    showFullPageFormInput: {
-      type: Boolean,
-      default: () => false
-    },
-    showFullPageRichInput: {
-      type: Boolean,
-      default: () => false
-    },
-    fpFormInputMessage: {
-      type: Object,
-      default: () => {}
-    },
-    fpRichInputMessage: {
-      type: Object,
-      default: () => {}
     },
     onRestartButtonClick: {
       type: Function,
