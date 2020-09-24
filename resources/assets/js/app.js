@@ -53,3 +53,5 @@ const { app } = new window.Vue({
   store,
   el: '#app',
 });
+
+export const bus = new window.Vue()

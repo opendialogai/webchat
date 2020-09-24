@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import {bus} from '../../app'
 export default {
   props: {
     data: {
@@ -29,7 +30,7 @@ export default {
   },
   methods: {
     loaded() {
-      this.$root.$emit("scroll-down-message-list");
+      bus.$emit("scroll-down-message-list");
     }
   }
 };

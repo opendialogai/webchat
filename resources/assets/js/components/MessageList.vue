@@ -22,6 +22,7 @@ import {mapState} from 'vuex'
 import Message from "./Message.vue";
 import chatIcon from "./assets/chat-icon.svg";
 import moment from 'moment'
+import {bus} from '../app'
 
 export default {
   components: {
@@ -108,7 +109,7 @@ export default {
   },
   mounted() {
     this._scrollDown(false);
-    this.$root.$on("scroll-down-message-list", (animate = true) => {
+    bus.$on("scroll-down-message-list", (animate = true) => {
       this._scrollDown(animate);
     });
   },

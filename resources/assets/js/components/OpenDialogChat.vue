@@ -102,6 +102,7 @@ import cssVars from 'css-vars-ponyfill'
 import Comments from '@/components/Comments'
 import WebChat from '@/components/WebChat'
 import session from '../mixins/SessionStorageMixin'
+import {bus} from '../app'
 
 const { detect } = require('detect-browser')
 const jstz = require('jstz')
@@ -114,7 +115,6 @@ export default {
   },
   data() {
     return {
-      activeTab: 'webchat',
       agentProfile: {
         teamName: 'Opendialog Webchat',
         imageUrl: null,
@@ -147,7 +147,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['apiReady', 'userInfo', 'user', 'referrerUrl', 'isOpen']),
+    ...mapState(['apiReady', 'userInfo', 'user', 'referrerUrl', 'isOpen', 'activeTab']),
     ready() {
       return (
         this.settingsInitialised &&
@@ -233,7 +233,6 @@ export default {
       }
     },
     activateTab(tabName) {
-      this.activeTab = tabName
       this.$store.commit('setActiveTab', tabName)
 
       // Timeout is necessary to make the select element available
@@ -266,10 +265,10 @@ export default {
             { removeClass: 'expanded' },
             this.referrerUrl
           )
-          this.$root.$emit('scroll-down-message-list')
+          bus.$emit('scroll-down-message-list')
         } else {
           window.parent.postMessage({ addClass: 'expanded' }, this.referrerUrl)
-          this.$root.$emit('scroll-down-message-list')
+          bus.$emit('scroll-down-message-list')
         }
       }
     },
@@ -473,7 +472,7 @@ export default {
         const matches = e.match(this.comments.commentsSectionPathPattern)
         if (matches && matches.length > 1) {
           this.updateSectionSelection(matches[1])
-          this.activeTab = 'comments'
+          this.$store.commit('setActiveTab', 'comments')
 
           setTimeout(() => {
             this.cssProps = this.getCssProps()
@@ -482,7 +481,7 @@ export default {
       }
 
       if (this.commentsEnabled === false) {
-        this.activeTab = 'webchat'
+        this.$store.commit('setActiveTab', 'webchat')
       }
 
       this.pathInitialised = true
@@ -594,7 +593,7 @@ export default {
 
         if (this.isOpen) {
           setTimeout(() => {
-            this.$root.$emit('scroll-down-message-list', false)
+            bus.$emit('scroll-down-message-list', false)
           }, 10)
         }
 

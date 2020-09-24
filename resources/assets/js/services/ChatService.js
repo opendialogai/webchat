@@ -3,6 +3,7 @@ import WebChatMode from "./ChatServices/WebChatMode";
 import CustomMode from "./ChatServices/CustomMode";
 import authorMessage from '../mixins/authorMessage';
 import session from '../mixins/SessionStorageMixin';
+import {bus} from '../app'
 
 let ChatService = function() {
   this.modes = {
@@ -112,7 +113,7 @@ ChatService.prototype.modeDataUpdated = async function (newValue, oldValue, webC
 };
 
 ChatService.prototype.init = function() {
-  this.modes.webchat = new WebChatMode(store, this)
+  this.modes.webchat = new WebChatMode(store, this, bus)
   this.modes.custom = new CustomMode(store, this)
 }
 

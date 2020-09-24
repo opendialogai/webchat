@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import {bus} from '../../app'
+
 export default {
   props: {
     author: {
@@ -75,10 +77,10 @@ export default {
       }
 
       setTimeout(() => {
-        this.$root.$emit("scroll-down-message-list");
+        bus.$emit("scroll-down-message-list");
       }, 450);
       setTimeout(() => {
-        this.$root.$emit("scroll-down-message-list");
+        bus.$emit("scroll-down-message-list");
       }, 900);
 
       window.addEventListener("resize", () => {

@@ -3,11 +3,12 @@ import isSkip from "../../mixins/isSkip";
 
 const moment = require("moment-timezone");
 
-let WebChatMode = function(store, chatService) {
+let WebChatMode = function(store, chatService, bus) {
   this.name = "webchat";
   this.dataLayerEventName = 'message_sent_to_chatbot';
   this.$store = store
-  this.chatService = chatService
+  this.chatService = chatService,
+  this.bus = bus
 };
 
 WebChatMode.prototype.sendRequest = function(message) {
@@ -130,9 +131,9 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
                 typingMessage.data.last = true;
               }
 
-              webChatComponent.$root.$emit("scroll-down-message-list");
+             this.bus.$emit("scroll-down-message-list");
               setTimeout(() => {
-                webChatComponent.$root.$emit("scroll-down-message-list");
+               this.bus.$emit("scroll-down-message-list");
               }, 50);
             } else {
               if (messageIndex > 0 && messageIndex === totalMessages - 1) {
@@ -274,9 +275,9 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             typingMessage.type = message.type;
             typingMessage.data = message.data;
 
-            webChatComponent.$root.$emit("scroll-down-message-list");
+            this.bus.$emit("scroll-down-message-list");
             setTimeout(() => {
-              webChatComponent.$root.$emit("scroll-down-message-list");
+              this.bus.$emit("scroll-down-message-list");
             }, 50);
           }
 
@@ -324,7 +325,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
   })
 };
 
-WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatComponent) {
+WebChatMode.prototype.sendResponseError = function(error, sentMessage) {
   const message = {
     type: "text",
     author: "them",
@@ -359,7 +360,7 @@ WebChatMode.prototype.sendResponseError = function(error, sentMessage, webChatCo
     typingMessage.type = message.type;
     typingMessage.data = message.data;
 
-    webChatComponent.$root.$emit("scroll-down-message-list");
+    this.bus.$emit("scroll-down-message-list");
   }, this.$store.state.settings.general.messageDelay);
 };
 

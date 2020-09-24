@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import {bus} from '../../app'
+
 export default {
   props: {
     data: {
@@ -115,7 +117,7 @@ export default {
       }
 
       setTimeout(() => {
-        this.$root.$emit("scroll-down-message-list");
+        bus.$emit("scroll-down-message-list");
       }, 450);
 
       window.addEventListener("resize", () => {
@@ -125,7 +127,7 @@ export default {
     }
 
     setTimeout(() => {
-      this.$root.$emit("scroll-down-message-list");
+      bus.$emit("scroll-down-message-list");
     }, 900);
   }
 };
