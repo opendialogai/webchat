@@ -150,7 +150,7 @@ export default {
       messageList: state => state.commentList,
       useHumanAvatar: state => state.settings.general.useHumanAvatar,
       useBotAvatar: state => state.settings.general.useBotAvatar,
-      userExternalId: state => state.user.external_id,
+      userExternalId: state => state.user.external_id ? state.user.external_id : '',
       isOpen: state => state.isOpen
     }),
   },
