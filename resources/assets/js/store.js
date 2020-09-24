@@ -39,6 +39,7 @@ const store = new Vuex.Store({
     },
     messageList: [],
     commentList: [],
+    ctaText: [],
     availableInputs: [
       'autocomplete',
       'date-picker',
@@ -97,6 +98,18 @@ const store = new Vuex.Store({
       Object.keys(payload).forEach(key => {
         state.messageMetaData[key] = payload[key]
       })
+    },
+    updateCtaText(state, payload) {
+      log && console.log('updateCtaText', payload)
+      state.ctaText.push(payload)
+    },
+    clearCtaText(state) {
+      log && console.log('clearCtaText')
+      state.ctaText = []
+    },
+    spliceCtaText(state, payload) {
+      log && console.log('spliceCtaText', payload)
+      state.ctaText.splice(payload.start, payload.count)
     },
     updateMessageList(state, payload) {
       log && console.log('updateMessageList', payload)
@@ -560,7 +573,6 @@ store.subscribe((mutation, state) => {
       // Tell vue we're ready.
       store.commit('setApiReady', true);
     }
-    console.log(store.state.comments)
   }
 });
 

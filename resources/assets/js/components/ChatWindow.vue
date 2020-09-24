@@ -10,7 +10,6 @@
       :onRestartButtonClick="onRestartButtonClick"
       :onDownload="onDownload"
       :isOpen="isOpen"
-      :ctaText="ctaText"
     />
     <transition name="fade">
       <ProgressBar v-show="$store.state.messageMetaData.progressPercent !== null" />
@@ -109,10 +108,6 @@ export default {
     onDownload: {
       type: Function,
       required: true
-    },
-    ctaText: {
-      type: Array,
-      default: () => []
     },
     isOpen: {
       type: Boolean,

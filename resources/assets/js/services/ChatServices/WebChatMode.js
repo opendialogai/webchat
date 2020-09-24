@@ -69,13 +69,13 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
 
         if (message && message.type === "cta") {
           if (clearCtaText) {
-            webChatComponent.ctaText = [];
+            this.$store.commit('clearCtaText')
             clearCtaText = false;
           }
-          if (webChatComponent.ctaText.length === 2) {
-            webChatComponent.ctaText.splice(0, 1);
+          if (this.$store.state.ctaText.length === 2) {
+            this.$store.commit('spliceCtaText', {start: 0, count: 1})
           }
-          webChatComponent.ctaText.push(message.data.text);
+          this.$store.commit('updateCtaText', message.data.text)
 
           totalMessages -= 1;
         } else if (message.type === 'meta') {

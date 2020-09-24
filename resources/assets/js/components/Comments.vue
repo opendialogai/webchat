@@ -178,7 +178,7 @@ export default {
       }
     },
     toggleChatOpen() {
-      this.ctaText = []
+      this.$store.commit('clearCtaText')
 
       if (this.isOpen) {
         this.closeChatButtonReverseAnimate = true

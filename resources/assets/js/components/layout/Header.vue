@@ -79,10 +79,6 @@ export default {
     },
   },
   props: {
-    ctaText: {
-      type: Array,
-      default: () => []
-    },
     imageUrl: {
       type: String
     },
@@ -125,7 +121,8 @@ export default {
     ...mapState({
       showRestartButton: state => state.settings.general.showRestartButton,
       showFullPageFormInput: state => state.showFullPageFormInput,
-      showFullPageRichInput: state => state.showFullPageRichInput
+      showFullPageRichInput: state => state.showFullPageRichInput,
+      ctaText: state => state.ctaText
     })
   }
 };

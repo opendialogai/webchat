@@ -33,7 +33,6 @@
         :show-expand-button="false"
         :show-typing-indicator="showTypingIndicator"
         :always-scroll-to-bottom="true"
-        :cta-text="ctaText"
         @vbc-user-input-focus="userInputFocus"
         @vbc-user-input-blur="userInputBlur"
         @vbc-user-typing="userTyping"
@@ -86,7 +85,6 @@ export default {
   data() {
     return {
       closeChatButtonReverseAnimate: false,
-      ctaText: [],
       headerHeight: 0,
       id: "",
       loading: true,
@@ -101,7 +99,7 @@ export default {
     ctaText() {
       if (this.ctaText.length) {
         setTimeout(() => {
-          this.ctaText = [];
+          this.$store.commit('clearCtaText')
         }, 5500);
       }
     },
@@ -231,7 +229,8 @@ export default {
       callbackMap: state => state.settings.general.callbackMap || [],
       restartButtonCallback: state => state.settings.general.restartButtonCallback || '',
       hideDatetimeMessage: state => state.settings.general.hideDatetimeMessage,
-      openIntent: state => state.settings.openIntent || ''
+      openIntent: state => state.settings.openIntent || '',
+      ctaText: state => state.ctaText
     })
   },
   mounted() {
@@ -352,7 +351,7 @@ export default {
       }
     },
     toggleChatOpen() {
-      this.ctaText = [];
+      this.$store.commit('clearCtaText')
 
       if (this.isOpen) {
         this.closeChatButtonReverseAnimate = true;

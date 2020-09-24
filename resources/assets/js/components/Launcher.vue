@@ -13,7 +13,6 @@
       :showTypingIndicator="showTypingIndicator"
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :fullScreen="fullScreen"
-      :ctaText="ctaText"
     />
   </div>
 </template>
@@ -54,10 +53,6 @@ export default {
     onMessageWasSent: {
       type: Function,
       required: true
-    },
-    ctaText: {
-      type: Array,
-      default: () => []
     },
     showTypingIndicator: {
       type: Boolean,
