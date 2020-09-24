@@ -1,17 +1,29 @@
 import WebChatMode from "./ChatServices/WebChatMode";
-import CustomMode from "./ChatServices/CustomMode";
 
 let ChatService = function() {
   this.modes = {
     webchat: new WebChatMode(),
-    custom: new CustomMode(),
   };
+
+  this.registerCustomModes();
 
   this.modeData = {
     mode: "webchat",
     options: {}
   };
   this.previousMode = "webchat";
+};
+
+ChatService.prototype.registerCustomModes = function() {
+  let customModes = {};
+
+  try {
+    customModes = window.openDialogWebchat.chatService.getCustomModes();
+  } catch {
+    // No custom modes defined
+  }
+
+  this.modes = Object.assign(this.modes, customModes);
 };
 
 ChatService.prototype.hasMode = function(mode) {
