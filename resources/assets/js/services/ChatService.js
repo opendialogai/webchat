@@ -1,14 +1,12 @@
 import store from '../store'
 import WebChatMode from "./ChatServices/WebChatMode";
-import CustomMode from "./ChatServices/CustomMode";
 import authorMessage from '../mixins/authorMessage';
 import session from '../mixins/SessionStorageMixin';
 import {bus} from '../app'
 
 let ChatService = function() {
   this.modes = {
-    webchat: null,
-    custom: null,
+    webchat: null
   };
 
   this.modeData = {
@@ -18,6 +16,18 @@ let ChatService = function() {
   this.previousMode = "webchat";
   this.newAuthorMessage = authorMessage;
   this.session = session;
+};
+
+ChatService.prototype.registerCustomModes = function() {
+  let customModes = {};
+
+  try {
+    customModes = window.openDialogWebchat.chatService.getCustomModes();
+  } catch {
+    // No custom modes defined
+  }
+
+  this.modes = Object.assign(this.modes, customModes);
 };
 
 ChatService.prototype.hasMode = function(mode) {
@@ -114,7 +124,7 @@ ChatService.prototype.modeDataUpdated = async function (newValue, oldValue, webC
 
 ChatService.prototype.init = function() {
   this.modes.webchat = new WebChatMode(store, this, bus)
-  this.modes.custom = new CustomMode(store, this)
+  this.registerCustomModes();
 }
 
 export default ChatService;
