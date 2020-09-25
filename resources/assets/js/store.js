@@ -10,6 +10,7 @@ import {uuid} from 'vue-uuid';
 import moment from 'moment';
 import session from './mixins/SessionStorageMixin';
 import newAuthorMessage from './mixins/authorMessage';
+import {bus} from './app';
 
 Vue.use(Vuex);
 
@@ -318,15 +319,15 @@ const store = new Vuex.Store({
         })
       }
 
-      state.chatService.sendRequest(newMsg, state.rootComponent).then(response => {
-        dispatch('constructMessageList', {response: response, sentMsg: newMsg, webChat: state.rootComponent})
+      state.chatService.sendRequest(newMsg).then(response => {
+        dispatch('constructMessageList', {response: response, sentMsg: newMsg})
       }).catch(err => {
         console.log(err)
-        state.chatService.sendResponseError(null, newMsg, state.rootComponent)
+        state.chatService.sendResponseError(null, newMsg)
       })
     },
     constructMessageList({commit, state}, payload) {
-      state.chatService.sendResponseSuccess(payload.response, payload.sentMsg, payload.webChat).then(response => {
+      state.chatService.sendResponseSuccess(payload.response, payload.sentMsg).then(response => {
         const msg = state.messageList.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author' && isSkip(msg) !== 'skip').pop()
 
         commit('updateCurrentMessage', msg)
@@ -392,7 +393,7 @@ const store = new Vuex.Store({
       }
 
       if (button.tab_switch) {
-        state.rootComponent.$emit("switchToCommentsTab");
+        bus.$emit("switchToCommentsTab");
         return;
       }
 
@@ -419,14 +420,14 @@ const store = new Vuex.Store({
       }
 
       if (msg.type === "fp-rich") {
-        const index = state.rootComponent.messageList.indexOf(msg);
+        const index = state.messageList.indexOf(msg);
         commit('spliceMessageList', {start: index, count: 1})
 
-        if (state.rootComponent.messageList[index - 1].type === "author") {
+        if (state.messageList[index - 1].type === "author") {
           commit('spliceMessageList', {start: index -1, count: 1})
         }
       } else if (msg.data.clear_after_interaction) {
-        state.rootComponent.messageList[state.rootComponent.messageList.indexOf(msg)].data.buttons = [];
+        state.messageList[state.messageList.indexOf(msg)].data.buttons = [];
       }
 
       dispatch('sendMessage', {

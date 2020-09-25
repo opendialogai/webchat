@@ -223,6 +223,17 @@ export default {
 
     this.initSettings()
   },
+  mounted() {
+    this.$nextTick(() => {
+      bus.$on('newMessage', () => {
+        this.activateTab('webchat')
+      })
+
+      bus.$on('switchToCommentsTab', () => {
+        this.activateTab('comments')
+      })
+    })
+  },
   methods: {
     newWebChatMessage() {
       this.activateTab('webchat')

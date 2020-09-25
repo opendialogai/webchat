@@ -55,7 +55,7 @@ function sendMessageReceivedEvent (message) {
   )
 }
 
-WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webChatComponent) {
+WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage) {
 
 
   return new Promise((resolve, reject) => {
@@ -107,7 +107,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           }
 
           setTimeout(() => {
-            webChatComponent.$emit("newMessage", message);
+           this.bus.$emit("newMessage", message);
 
             /* eslint-disable no-param-reassign */
             message.data.animate = this.$store.state.settings.general.messageAnimation;
@@ -163,21 +163,19 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
               this.$store.commit('toggleShowMessages', true)
             }
 
-            if (!webChatComponent.hideTypingIndicatorOnInternalMessages) {
+            if (!this.$store.state.settings.general.hideTypingIndicatorOnInternalMessages) {
               if (messageIndex < totalMessages - 1 && isSkip(message) !== 'skip') {
-                webChatComponent.$nextTick(() => {
-                  webChatComponent.$nextTick(() => {
-                    typingMessage = {
-                      author: "them",
-                      type: "typing",
-                      mode: this.$store.state.modeData.mode,
-                      data: {
-                        animate: this.$store.state.settings.general.messageAnimation
-                      }
-                    };
-                    this.$store.commit('updateMessageList', typingMessage)
-                  });
-                });
+                setTimeout(() => {
+                  typingMessage = {
+                    author: "them",
+                    type: "typing",
+                    mode: this.$store.state.modeData.mode,
+                    data: {
+                      animate: this.$store.state.settings.general.messageAnimation
+                    }
+                  };
+                  this.$store.commit('updateMessageList', typingMessage)
+                }, 50);
               }
             }
 
@@ -218,7 +216,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           this.$store.commit('updateMessageList', typingMessage)
 
           setTimeout(() => {
-            webChatComponent.$emit("newMessage", message);
+            this.bus.$emit("newMessage", message);
 
             message.data.animate = this.$store.state.settings.general.messageAnimation;
 
@@ -268,7 +266,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
         setTimeout(() => {
           // Only add a message to the list if it is a message object
           if (typeof message === "object" && message !== null) {
-            webChatComponent.$emit("newMessage", message);
+            this.bus.$emit("newMessage", message);
 
             message.data.animate = this.$store.state.settings.general.messageAnimation;
 
