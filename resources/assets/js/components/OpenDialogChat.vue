@@ -121,6 +121,7 @@ import cssVars from "css-vars-ponyfill";
 import Comments from "@/components/Comments";
 import WebChat from "@/components/WebChat";
 import SessionStorageMixin from "../mixins/SessionStorageMixin";
+import {addCssToPage} from "../mixins/bootstrapFunctions";
 
 const { detect } = require("detect-browser");
 const jstz = require("jstz");
@@ -177,6 +178,7 @@ export default {
       showRestartButton: false,
       showTabs: false,
       timezoneInitialised: false,
+      chatBotCssPath: null,
       useBotAvatar: false,
       useHumanAvatar: false,
       useBotName: false,
@@ -245,6 +247,9 @@ export default {
       if (oldId !== "" && newId !== oldId) {
         this.commentsKey += 1;
       }
+    },
+    chatBotCssPath(newPath) {
+      addCssToPage(newPath);
     },
   },
   created() {
@@ -565,6 +570,10 @@ export default {
           this.useBotAvatar = general.useBotAvatar;
         }
 
+        if (general.chatbotCssPath) {
+          this.chatBotCssPath = general.chatbotCssPath;
+        }
+
         if (general.useHumanAvatar) {
           this.useHumanAvatar = general.useHumanAvatar;
         }
@@ -749,7 +758,6 @@ export default {
       window.parent.postMessage({ height: "auto" }, this.referrerUrl);
     },
     setChatMode(data) {
-      console.log(data)
       let currentModeData = this.getModeDataInSession();
       data.modeInstance =
         data.modeInstance ||
