@@ -34,7 +34,8 @@
         "laravel": {
             "providers": [
                 "OpenDialogAi\\Webchat\\PackageServiceProvider",
-                "OpenDialogAi\\Webchat\\WebchatSettingsConfiguration\\WebchatSettingsConfigurationServiceProvider"
+                "OpenDialogAi\\Webchat\\WebchatSettingsConfiguration\\WebchatSettingsConfigurationServiceProvider",
+                "OpenDialogAi\\Webchat\\WebchatSetting\\WebchatSettingServiceProvider"
             ]
         }
     }

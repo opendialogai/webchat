@@ -3,6 +3,7 @@
 namespace OpenDialogAi\Webchat\Tests;
 
 use OpenDialogAi\Webchat\PackageServiceProvider;
+use OpenDialogAi\Webchat\WebchatSetting\WebchatSettingServiceProvider;
 use OpenDialogAi\Webchat\WebchatSettingsConfiguration\WebchatSettingsConfigurationServiceProvider;
 
 /**
@@ -24,6 +25,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
         return [
             PackageServiceProvider::class,
             WebchatSettingsConfigurationServiceProvider::class,
+            WebchatSettingServiceProvider::class,
         ];
     }
 
