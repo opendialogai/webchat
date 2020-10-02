@@ -17,6 +17,7 @@ return [
             WebchatSetting::NEW_USER_OPEN_CALLBACK,
             WebchatSetting::RETURNING_USER_OPEN_CALLBACK,
             WebchatSetting::ONGOING_USER_OPEN_CALLBACK,
+            WebchatSetting::TYPING_INDICATOR_STYLE,
         ],
         WebchatSetting::BOOLEAN => [
             WebchatSetting::OPEN,
@@ -98,5 +99,5 @@ return [
         WebchatSetting::NUMBER => [
             WebchatSetting::NUMBER_OF_MESSAGES,
         ],
-    ]
+    ],
 ];

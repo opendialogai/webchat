@@ -51,6 +51,9 @@ class WebchatSetting extends Model
     public const ONGOING_USER_OPEN_CALLBACK     = 'ongoingUserOpenCallback';
     public const HIDE_TYPING_INDICATOR_ON_INTERNAL_MESSAGES = 'hideTypingIndicatorOnInternalMessages';
 
+    public const TYPING_INDICATOR_STYLE = 'typingIndicatorStyle';
+    public const TYPING_INDICATOR_TYPEWRITER_STYLE = 'typewriter';
+
     // Colours
     public const COLOURS                          = 'colours';
     public const HEADER_BACKGROUND                = 'headerBackground';
