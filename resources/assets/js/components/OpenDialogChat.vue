@@ -36,7 +36,11 @@
     </b-nav>
 
     <div v-show="commentsEnabled && activeTab == 'comments'" class="od-comments-container">
-      <div ref="opendialogWidgetSectionSelector" class="comment-section-selector-wrapper">
+      <div
+        ref="opendialogWidgetSectionSelector"
+        class="comment-section-selector-wrapper"
+        :style="{visibility: isOpen ? 'visible' : 'hidden'}"
+      >
         <b-form-select
           v-if="sectionOptions.length"
           v-model="sectionId"
@@ -408,13 +412,12 @@ export default {
     },
     initialiseSettings() {
       // Get default settings from the config endpoint.
-      this.getWebchatConfig().then((config) => {
-        this.setConfig(config);
+      const config = this.getWebchatConfig();
+      this.setConfig(config);
 
-        if (!this.settingsInitialised) {
-          this.settingsInitialised = true;
-        }
-      });
+      if (!this.settingsInitialised) {
+        this.settingsInitialised = true;
+      }
     },
     getUserIp() {
       axios
@@ -488,8 +491,8 @@ export default {
         this.cssProps = this.getCssProps();
       });
     },
-    async getWebchatConfig() {
-      return Promise.resolve(this.$store.state.settings);
+    getWebchatConfig() {
+      return this.$store.state.settings;
     },
     handleHistoryChange(e) {
       if (this.comments.commentsEnabledPathPattern) {
