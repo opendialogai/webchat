@@ -76,13 +76,13 @@
 </template>
 
 <script>
-  import Header from './layout/Header.vue'
-  import MessageList from './MessageList.vue'
-  import UserInput from './layout/UserInput.vue'
-  import FullPageFormInput from './messages/inputs/FullPageFormInput.vue'
-  import FullPageRichInput from './messages/inputs/FullPageRichInput.vue'
-  import LongTextUserInput from './messages/inputs/LongTextUserInput.vue'
-  import ProgressBar from './layout/ProgressBar';
+import Header from './layout/Header.vue'
+import MessageList from './MessageList.vue'
+import UserInput from './layout/UserInput.vue'
+import FullPageFormInput from './messages/inputs/FullPageFormInput.vue'
+import FullPageRichInput from './messages/inputs/FullPageRichInput.vue'
+import LongTextUserInput from './messages/inputs/LongTextUserInput.vue'
+import ProgressBar from './layout/ProgressBar';
 
 export default {
   components: {
@@ -267,7 +267,7 @@ export default {
   },
   watch: {
     "modeData.mode": function(newValue, oldValue) {
-      if (newValue !== 'custom') {
+      if (newValue === 'webchat') {
         this.agentProfile.teamName = this.originalTeamName;
       }
     },
