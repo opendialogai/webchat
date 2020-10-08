@@ -498,7 +498,10 @@ export default {
       if (this.comments.commentsEnabledPathPattern) {
         const matches = e.match(this.comments.commentsEnabledPathPattern);
         if (matches && matches.length > 0) {
-          this.commentsEnabled = true;
+          if (!this.commentsEnabled) {
+            this.sectionId = "";
+            this.commentsEnabled = true;
+          }
         } else {
           this.commentsEnabled = false;
         }
