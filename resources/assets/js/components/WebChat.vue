@@ -287,6 +287,10 @@ export default {
             data.value = event.data.triggerConversation.value;
           }
 
+          if (!this.isOpen) {
+            this.toggleChatOpen();
+          }
+
           this.sendMessage({
             type: "trigger",
             author: "me",
