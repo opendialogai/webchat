@@ -522,7 +522,7 @@ export default {
         const matches = e.match(this.comments.commentsSectionPathPattern);
         if (matches && matches.length > 1) {
           this.updateSectionSelection(matches[1]);
-          this.activeTab = "comments";
+          this.activateTab("comments");
 
           setTimeout(() => {
             this.cssProps = this.getCssProps();
@@ -531,7 +531,7 @@ export default {
       }
 
       if (this.commentsEnabled === false) {
-        this.activeTab = "webchat";
+        this.activateTab("webchat");
       }
 
       this.pathInitialised = true;
