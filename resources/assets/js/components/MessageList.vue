@@ -29,6 +29,7 @@
   </div>
 </template>
 <script>
+import {mapState} from 'vuex';
 import Message from "./Message.vue";
 import chatIcon from "./assets/chat-icon.svg";
 
@@ -82,6 +83,11 @@ export default {
         default: () => false
     },
   },
+  computed: {
+    ...mapState({
+      activeTab: state => state.activeTab
+    })
+  },
   methods: {
     _scrollDown(animate = true) {
       if (this.$refs.scrollList) {
@@ -121,10 +127,14 @@ export default {
       this.$emit('setChatMode', mode);
     },
     shouldShowMessage(message) {
+      if (this.activeTab === 'comments') {
+        return true
+      }
       let isModeSame = message.mode === this.modeData.mode;
       let isWebchatMode = message.mode === 'webchat';
       let isCustomMode = !isWebchatMode;
       let isFromSameInstance = message.modeInstance === this.modeData.modeInstance;
+      //console.log('same mode: ', isModeSame, 'webchat: ', isWebchatMode, 'same instance: ', isFromSameInstance)
       return (isModeSame && isWebchatMode) || (isModeSame && isCustomMode && isFromSameInstance);
     },
   },
