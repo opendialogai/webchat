@@ -797,14 +797,6 @@ export default {
               currentMessage.type = "text";
             }
 
-            if (
-              i === 0 &&
-              currentMessage.data &&
-              currentMessage.data.internal
-            ) {
-              delete currentMessage.data.internal;
-            }
-
             if (!this.hideDatetimeMessage) {
               if (
                 (i === 0 && currentMessage.data) ||
@@ -836,7 +828,7 @@ export default {
                 (this.useHumanName || this.useHumanAvatar)) ||
               (currentMessage.author === "them" &&
                 !currentMessage.data.hideavatar &&
-                !currentMessage.data.internal &&
+                (i === 0 || !messages[i - 1].data.internal) &&
                 (this.useBotName || this.useBotAvatar))
             ) {
               const authorMsg = this.newAuthorMessage(currentMessage);
