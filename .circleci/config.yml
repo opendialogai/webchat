@@ -63,7 +63,7 @@ jobs:
           keys:
             - v1-node-dependencies-{{ checksum "package-lock.json" }}
             - v1-node-dependencies-
-            -
+
       - run: npm install
 
       - save_cache:
@@ -73,13 +73,37 @@ jobs:
 
       - run: npm run prod
 
+  push_assets:
+    docker:
+      - image: circleci/node:14
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-node-dependencies-{{ checksum "package-lock.json" }}
+            - v1-node-dependencies-
+
+      - run: npm install
+
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: v1-node-dependencies-{{ checksum "package-lock.json" }}
+
+      - run: npm run prod
+
+      - run: git config user.email "hello@greenshootlabs.com"
+      - run: git config user.name "CI commit"
+      - run: git add -f public/* images/*
+      - run: git commit -m "Pushing bjuilt assets"
+      - run: git push
+
 workflows:
   version: 2
   build:
     jobs:
-      - php_codesniff
-      - php_tests
-      - npm_build:
-          requires:
-            - php_codesniff
-            - php_tests
+      - push_assets
