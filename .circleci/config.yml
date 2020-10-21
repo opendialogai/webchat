@@ -96,11 +96,11 @@ jobs:
 
       - run: npm run prod
 
-      - run: git config user.email "hello@greenshootlabs.com"
-      - run: git config user.name "CI commit"
+      - run: git config --global user.email "hello@greenshootlabs.com"
+      - run: git config --global user.name "CI commit [skip ci]"
       - run: git add -f public/* images/*
-      - run: git commit -m "Pushing bjuilt assets"
-      - run: git push
+      - run: git commit -m "Pushing built assets" --no-verify
+      - run: git push --set-upstream origin
 
 workflows:
   version: 2
