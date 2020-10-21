@@ -71,7 +71,7 @@
           }"
           @click="toggleChatOpen"
         >
-          <img src="/images/close-btn.svg" class="close-chat__img" />
+          <img src="/vendor/webchat/images/close-btn.svg" class="close-chat__img" />
         </div>
       </div>
     </template>
