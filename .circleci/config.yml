@@ -97,13 +97,20 @@ jobs:
       - run: npm run prod
 
       - run: git config --global user.email "hello@greenshootlabs.com"
-      - run: git config --global user.name "CI commit [skip ci]"
+      - run: git config --global user.name "CI commit"
       - run: git add -f public/* images/*
-      - run: git commit -m "Pushing built assets" --no-verify
+      - run: git commit -m "Pushing built assets [ci skip]" --no-verify
       - run: git push --set-upstream origin ${CIRCLE_BRANCH}
 
 workflows:
   version: 2
   build:
     jobs:
-      - push_assets
+      - php_codesniff
+      - php_tests
+      - npm_build
+      - push_assets:
+          requires:
+            - php_codesniff
+            - php_tests
+            - npm_build
