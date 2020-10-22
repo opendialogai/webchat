@@ -1008,11 +1008,14 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    /* var inherited from OpenDialogChat component. */
-  //   height: calc(100vh - var(--header-height));
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 
   .loading-message {
+    display: none;
     font-size: 18px;
     color: #b6b5ba;
     margin-bottom: 17px;
@@ -1029,7 +1032,15 @@ export default {
     height: 11px;
     border-radius: 100%;
     margin-right: 4px;
-    animation: bob 2s infinite;
+    animation: bouncedelay 1.4s infinite ease-in-out both;
+
+    &:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: -0.16s;
+    }
   }
 }
 </style>
