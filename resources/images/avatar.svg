@@ -3,7 +3,7 @@
     <!-- Generator: Sketch 61 (89581) - https://sketch.com -->
     <title>Group 3 Copy 3</title>
     <desc>Created with Sketch.</desc>
-    <defs>s
+    <defs>
         <circle id="path-1" cx="30" cy="30" r="30"></circle>
         <filter x="-25.8%" y="-24.2%" width="151.7%" height="151.7%" filterUnits="objectBoundingBox" id="filter-2">
             <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>

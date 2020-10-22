@@ -33,7 +33,7 @@
           @click.stop="onRestartButtonClick"
           class="od-header-nav__restart-button"
         >
-          <img src="../assets/restart.svg" />
+          <img src="/vendor/webchat/images/restart.svg" />
           <span>Restart</span>
         </div>
 
