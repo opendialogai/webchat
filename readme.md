@@ -4,20 +4,9 @@ This is the OpenDialog webchat package that contains the vue based webchat bot a
 
 # Setting up for Local Development
 
-A `lando.yml` file is included for setting up a local development environment. This includes a php service and a node service.
+This application is intended to be worked on using the [OpenDialog Development Environment](https://github.com/opendialogai/opendialog-dev-environment.)
+Please follow instructions there for setting up the containers. Tests should be run from within the `workspace` container.
 
-To start the containers, run 
-
-    lando start
-    
-To run the php test suite, run 
-
-    lando test
-    
-To perform npm commands, run
-
-    lando npm {command} 
-    
 ## Running Code Sniffer
 
 To run code sniffer, run the following command
@@ -45,11 +34,22 @@ To install using [Composer](https://getcomposer.org/) run the following command:
 
 `composer require opendialogai/webchat`
 
-## Front end set up
+## Building Front End Assets
 
-The package assets can be installed by running 
+### CI build of assets
 
-```php artisan webchat:install```
+This project has been set up so that `css`, `js` and `image` assets are not pushed from the developers machine (they are
+part of `.gitignore` to make sure). Instead, they are built and pushed by the
+[CI process](https://app.circleci.com/pipelines/github/opendialogai/webchat) on each commit.
+
+### Manual build of assets
+
+To build assets whist developing follow this process:
+
++ Change to the `vendor/opendialog/webchat-frontend` directory and run `npm install; npm run dev` (for development)
+
++ Run `php artisan vendor:publish --tag=public --force` to move the newly built assets into the parent application to be
+served
 
 # Configuration 
 
