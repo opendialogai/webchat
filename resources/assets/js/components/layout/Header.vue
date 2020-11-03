@@ -33,7 +33,7 @@
           @click.stop="onRestartButtonClick"
           class="od-header-nav__restart-button"
         >
-          <img src="../assets/restart.svg" />
+          <img src="/vendor/webchat/images/restart.svg" />
           <span>Restart</span>
         </div>
 
@@ -145,7 +145,7 @@ export default {
     position: relative;
     display: flex;
     justify-content: flex-start;
-    height: 82px;
+    height: 100px;
 
     @media (min-width: $media-sml) {
       border-radius: 0;
@@ -212,15 +212,17 @@ export default {
     .od-header-nav__download-button {
       background-color: var(--od-button-background);
       color: var(--od-button-text);
-      position: absolute;
-      right: 18px;
-      top: 13px;
       width: 40px;
       height: 28px;
       display: flex;
       justify-content: center;
       align-items: center;
       border-radius: 14px;
+      order: 3;
+
+      @media (min-width: $media-med) {
+        order: unset;
+      }
 
       svg > * {
         fill: var(--od-button-text);
@@ -249,31 +251,31 @@ export default {
       bottom: -25px;
       height: 25px;
       width: 100%;
-      z-index: 999;
+      z-index: 99;
     }
 
     .od-header-nav {
       max-width: 1000px;
       width: 100%;
       display: flex;
-      flex-direction: column-reverse;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       cursor: pointer;
+      padding: 0 25px;
 
       @media (min-width: $media-med) {
         flex-direction: row;
         width: calc(100% - 50px);
         justify-content: space-between;
         margin: 10px auto;
+        padding: 0;
       }
     }
 
     .od-header-nav__team-name {
       width: 100%;
       align-items: center;
-      justify-content: center;
-      display: flex;
+      display: none;
       font-size: 14px;
 
       @media (min-width: $media-med) {
@@ -285,10 +287,14 @@ export default {
     .od-header-nav__logo {
       width: 40%;
       min-height: 22px;
-      margin-bottom: 10px;
+      order: 2;
 
       @media (min-width: $media-sml) {
         width: 28%;
+      }
+
+      @media (min-width: $media-med) {
+        order: unset;
       }
 
       img {
@@ -297,18 +303,29 @@ export default {
     }
 
     .od-header-nav__restart-button {
-      width: 28%;
       margin: 0 !important;
       display: flex;
       justify-content: flex-end;
       align-items: center;
+      order: 1;
+
+      @media (min-width: $media-med) {
+        order: unset;
+        width: 28%;
+      }
 
       img {
+        margin-right: 10px;
         vertical-align: middle;
       }
 
       span {
+        display: none;
         vertical-align: middle;
+
+        @media (min-width: $media-med) {
+          display: inline-block;
+        }
       }
     }
 

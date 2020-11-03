@@ -1,46 +1,14 @@
-# PHP CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-php/ for more details
-#
 version: 2
 jobs:
-  build:
+  php_codesniff:
     docker:
-      # specify the version you desire here
-      - image: circleci/php:7.3-fpm
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mysql:9.4
+      - image: circleci/php:7.4-fpm
 
     working_directory: ~/repo
 
     steps:
       - checkout
-      - run: sudo apt-get update
-      - run: sudo apt install -y libsqlite3-dev
-      - run: sudo composer self-update
 
-      - run: sudo apt-get install nodejs -y
-
-      - run: curl https://www.npmjs.com/install.sh | sudo sh
-
-      - restore_cache:
-          keys:
-            - v1-node-dependencies-{{ checksum "package-lock.json" }}
-            - v1-node-dependencies-
-            -
-      - run: npm install
-
-      - save_cache:
-          paths:
-            - ./node_modules
-          key: v1-node-dependencies-{{ checksum "package-lock.json" }}
-
-      - run: npm run dev
-
-      # Download and cache dependencies
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "composer.lock" }}
@@ -54,9 +22,95 @@ jobs:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.lock" }}
 
-      # Build
+      - run: ./vendor/bin/phpcs --standard=psr12 src/
 
-      # run tests!
+  php_tests:
+    docker:
+      - image: circleci/php:7.4-fpm
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run: sudo apt-get update
+      - run: sudo apt install -y libsqlite3-dev
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "composer.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: composer install -n --prefer-dist --no-scripts
+
+      - save_cache:
+          paths:
+            - ./vendor
+          key: v1-dependencies-{{ checksum "composer.lock" }}
+
       - run: ./vendor/bin/phpunit
 
-      - run: ./vendor/bin/phpcs --standard=psr12 src/
+  npm_build:
+    docker:
+      - image: circleci/node:14
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-node-dependencies-{{ checksum "package-lock.json" }}
+            - v1-node-dependencies-
+
+      - run: npm install
+
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: v1-node-dependencies-{{ checksum "package-lock.json" }}
+
+      - run: npm run prod
+
+  push_assets:
+    docker:
+      - image: circleci/node:14
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-node-dependencies-{{ checksum "package-lock.json" }}
+            - v1-node-dependencies-
+
+      - run: npm install
+
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: v1-node-dependencies-{{ checksum "package-lock.json" }}
+
+      - run: npm run prod
+
+      - run: git config --global user.email "hello@greenshootlabs.com"
+      - run: git config --global user.name "CI commit"
+      - run: git add -f public/* images/*
+      - run: git commit -m "Pushing built assets [ci skip]" --no-verify
+      - run: git push --set-upstream origin ${CIRCLE_BRANCH}
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - php_codesniff
+      - php_tests
+      - npm_build
+      - push_assets:
+          requires:
+            - php_codesniff
+            - php_tests
+            - npm_build
