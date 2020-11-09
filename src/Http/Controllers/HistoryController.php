@@ -5,6 +5,7 @@ namespace OpenDialogAi\Webchat\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use OpenDialogAi\ConversationLog\ChatbotUser;
+use OpenDialogAi\Webchat\WebchatSetting;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Http\Request;

@@ -19,6 +19,7 @@ class WebchatSettings
      */
     public function __invoke(Request $request)
     {
+
         if ($error = $this->validateRequest($request)) {
             return response($error, 400);
         }

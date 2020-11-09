@@ -3,6 +3,8 @@
 namespace OpenDialogAi\Webchat;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @property int $id
@@ -33,6 +35,7 @@ class WebchatSetting extends Model
     public const CHATBOT_NAME              = 'chatbotName';
     public const CHATBOT_AVATAR_PATH       = 'chatbotAvatarPath';
     public const USE_BOT_AVATAR            = 'useBotAvatar';
+    public const WEBCHAT_FULL_PAGE_PUBLIC  = 'webChatFullPagePublic';
     public const USE_HUMAN_AVATAR          = 'useHumanAvatar';
     public const USE_BOT_NAME              = 'useBotName';
     public const USE_HUMAN_NAME            = 'useHumanName';
@@ -134,6 +137,20 @@ class WebchatSetting extends Model
         return $this->hasMany('OpenDialogAi\Webchat\WebchatSetting', 'parent_id');
     }
 
+    /**
+     * get flag for webchat setting permission
+     * in order to allow view of web-chat url or not
+     *
+     */
+    public static function getWebChatPermission(){
+       $val =  DB::table('webchat_settings')
+            ->select('value')
+            ->where('name', 'webChatFullPagePublic')
+            ->first();
+
+        return $val->value;
+    }
+
     public static function getSettings()
     {
         $settings = [
@@ -160,6 +177,7 @@ class WebchatSetting extends Model
                     WebchatSetting::START_MINIMIZED,
                     WebchatSetting::USE_BOT_AVATAR,
                     WebchatSetting::USE_HUMAN_AVATAR,
+                    WebchatSetting::WEBCHAT_FULL_PAGE_PUBLIC,
                     WebchatSetting::USE_BOT_NAME,
                     WebchatSetting::USE_HUMAN_NAME,
                     WebchatSetting::COLLECT_USER_IP,

@@ -81,6 +81,12 @@ class SettingsEndpointTest extends TestCase
         $setting9->type = 'object';
         $setting9->save();
 
+        $setting2 = new WebchatSetting();
+        $setting2->name = 'webChatFullPagePublic';
+        $setting2->value = TRUE;
+        $setting2->type = 'boolean';
+        $setting2->save();
+
         $response = $this->json('GET', '/webchat-config');
         $response
             ->assertStatus(200)
@@ -196,5 +202,14 @@ class SettingsEndpointTest extends TestCase
                 'showMinimized' => false,
                 'openIntent' => 'returning_user_open_callback',
             ], TRUE);
+    }
+
+    public function testSettingsWebChatPermission() {
+        $setting = new WebchatSetting();
+        $setting->name = 'webChatFullPagePublic';
+        $setting->value = FALSE;
+        $setting->type = 'boolean';
+        $setting->save();
+        $this->assertEquals('0', $setting::getWebChatPermission());
     }
 }
