@@ -2,8 +2,12 @@
 
 namespace OpenDialogAi\Webchat\Tests\Feature;
 
+//use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Mockery;
 use OpenDialogAi\ContextEngine\Contexts\User\UserService;
+use OpenDialogAi\Webchat\Http\Middleware\WebChatMiddleware;
 use OpenDialogAi\Webchat\Tests\TestCase;
 use OpenDialogAi\Webchat\WebchatSetting;
 
@@ -212,4 +216,38 @@ class SettingsEndpointTest extends TestCase
         $setting->save();
         $this->assertEquals('0', $setting::getWebChatPermission());
     }
+
+   /* public function testSettingsWebChatPermissionUserLoggedIn() {
+        $user = factory(User::class)->create();
+
+        Auth::shouldReceive('check')->once()->andReturn(true);
+        Auth::shouldReceive('user')->once()->andReturn($user);
+
+        $this->actingAs($user);
+
+        $request = Request::create('/web-chat', 'GET');
+
+        $middleware = new WebChatMiddleware();
+
+        $response = $middleware->handle($request, function () {});
+
+        $this->assertEquals($response->getStatusCode(), null);
+    }
+
+    public function testSettingsWebChatPermissionUserNotLoggedIn() {
+        $user = factory(User::class)->create();
+
+        Auth::shouldReceive('check')->once()->andReturn(false);
+        Auth::shouldReceive('user')->once()->andReturn($user);
+
+        $this->actingAs($user);
+
+        $request = Request::create('/web-chat', 'GET');
+
+        $middleware = new WebChatMiddleware();
+
+        $response = $middleware->handle($request, function () {});
+
+        $this->assertEquals($response->getStatusCode(), 302);
+    }*/
 }

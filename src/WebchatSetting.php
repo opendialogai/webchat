@@ -3,7 +3,6 @@
 namespace OpenDialogAi\Webchat;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -143,9 +142,8 @@ class WebchatSetting extends Model
      *
      */
     public static function getWebChatPermission(){
-       $val =  DB::table('webchat_settings')
-            ->select('value')
-            ->where('name', 'webChatFullPagePublic')
+       $val =  WebchatSetting::select('value')
+            ->where('name', WebchatSetting::WEBCHAT_FULL_PAGE_PUBLIC)
             ->first();
 
         return $val->value;
