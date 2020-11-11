@@ -84,8 +84,6 @@
   import chatService from "../services/ChatService";
   import SessionStorageMixin from "../mixins/SessionStorageMixin";
   import {mapState} from 'vuex';
-  import VueSimpleAlert from "vue-simple-alert";
-  Vue.use(VueSimpleAlert);
 
   const moment = require("moment-timezone");
 
