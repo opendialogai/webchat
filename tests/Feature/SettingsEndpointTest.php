@@ -210,7 +210,7 @@ class SettingsEndpointTest extends TestCase
 
     public function testSettingsWebChatPermission() {
         $setting = new WebchatSetting();
-        $setting->name = 'webChatFullPagePublic';
+        $setting->name = $setting::WEBCHAT_FULL_PAGE_PUBLIC;
         $setting->value = FALSE;
         $setting->type = 'boolean';
         $setting->save();
