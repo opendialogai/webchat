@@ -61,7 +61,6 @@
         @vbc-user-input-blur="userInputBlur"
         @vbc-user-typing="userTyping"
         @setChatMode="setChatMode"
-        @show-web-chat-pop-up-on-click="webChatPopUp"
       />
       <div v-if="showCloseChatButton" class="close-chat">
         <div
