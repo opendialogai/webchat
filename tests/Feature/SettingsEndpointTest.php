@@ -206,5 +206,6 @@ class SettingsEndpointTest extends TestCase
         $setting->save();
         $this->assertDatabaseHas('webchat_settings', [
             'value' => '0'
-        ]);    }
+        ]);
+    }
 }
