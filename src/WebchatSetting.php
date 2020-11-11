@@ -3,7 +3,6 @@
 namespace OpenDialogAi\Webchat;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @property int $id
