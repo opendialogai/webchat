@@ -75,9 +75,11 @@
         "vue-long-click": "0.0.4",
         "vue-plain-slider": "^1.1.1",
         "vue-select": "^3.10.8",
+        "vue-simple-alert": "^1.1.1",
         "vue-uuid": "^1.1.1",
         "vue2-animate": "^2.1.4",
         "vue2-perfect-scrollbar": "^1.5.0",
+        "vuetify-confirm": "^2.0.6",
         "vuex": "^3.5.1",
         "whatwg-fetch": "^3.4.0"
     }

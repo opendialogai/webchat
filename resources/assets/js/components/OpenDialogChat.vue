@@ -96,6 +96,7 @@
         :show-expand-button="false"
         :show-restart-button="showRestartButton"
         :use-bot-avatar="useBotAvatar"
+        :show-web-chat-alert-pop-up="webChatAlertMessage"
         :use-human-avatar="useHumanAvatar"
         :use-bot-name="useBotName"
         :use-human-name="useHumanName"
@@ -184,6 +185,7 @@ export default {
       timezoneInitialised: false,
       chatBotCssPath: null,
       useBotAvatar: false,
+      webChatAlertMessage: false,
       useHumanAvatar: false,
       useBotName: false,
       useHumanName: false,
@@ -574,6 +576,10 @@ export default {
 
         if (general.useBotAvatar) {
           this.useBotAvatar = general.useBotAvatar;
+        }
+
+        if (general.webChatAlertMessage) {
+          this.webChatAlertMessage = general.webChatAlertMessage;
         }
 
         if (general.chatbotCssPath) {

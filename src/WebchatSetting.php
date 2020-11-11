@@ -50,6 +50,7 @@ class WebchatSetting extends Model
     public const ONGOING_USER_START_MINIMIZED   = 'ongoingUserStartMinimized';
     public const ONGOING_USER_OPEN_CALLBACK     = 'ongoingUserOpenCallback';
     public const HIDE_TYPING_INDICATOR_ON_INTERNAL_MESSAGES = 'hideTypingIndicatorOnInternalMessages';
+    public const WEB_CHAT_ALERT_MESSAGE = 'webChatAlertMessage';
 
     // Colours
     public const COLOURS                          = 'colours';
@@ -169,6 +170,7 @@ class WebchatSetting extends Model
                     WebchatSetting::NEW_USER_START_MINIMIZED,
                     WebchatSetting::RETURNING_USER_START_MINIMIZED,
                     WebchatSetting::ONGOING_USER_START_MINIMIZED,
+                    WebchatSetting::WEB_CHAT_ALERT_MESSAGE
                 ],
                 WebchatSetting::NUMBER => [
                     WebchatSetting::MESSAGE_DELAY,

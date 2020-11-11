@@ -61,6 +61,7 @@
         @vbc-user-input-blur="userInputBlur"
         @vbc-user-typing="userTyping"
         @setChatMode="setChatMode"
+        @show-web-chat-pop-up-on-click="webChatPopUp"
       />
       <div v-if="showCloseChatButton" class="close-chat">
         <div
@@ -82,7 +83,9 @@
   import axios from "axios";
   import chatService from "../services/ChatService";
   import SessionStorageMixin from "../mixins/SessionStorageMixin";
-  import {mapState} from 'vuex'
+  import {mapState} from 'vuex';
+  import VueSimpleAlert from "vue-simple-alert";
+  Vue.use(VueSimpleAlert);
 
   const moment = require("moment-timezone");
 
@@ -147,6 +150,7 @@ export default {
     useHumanAvatar: Boolean,
     useBotName: Boolean,
     useHumanName: Boolean,
+    webChatAlertMessage: Boolean,
     user: {
       type: Object,
       required: true
@@ -198,6 +202,7 @@ export default {
       chatbotAvatar: this.chatbotAvatarPath,
       chatMode: "webchat",
       canRestart: true,
+      chatPopStateDetected: false,
     };
   },
   watch: {
@@ -255,6 +260,7 @@ export default {
     }
   },
   created() {
+    this.webChatPopUp();
     if (window.self !== window.top) {
       this.showCloseChatButton = true;
       this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
@@ -312,6 +318,8 @@ export default {
         }
       }
     });
+  },
+  mounted () {
   },
   computed: {
     ...mapState({
@@ -447,6 +455,14 @@ export default {
     onFullPageRichInputSubmit(button) {
       const msg = this.messageList[this.messageList.length - 1];
       this.onButtonClick(button, msg);
+    },
+    webChatPopUp(){
+      if(this.webChatAlertMessage){
+        window.addEventListener('beforeunload', function (e) {
+          e.preventDefault();
+          e.returnValue = '';
+        });
+      }
     },
     async onButtonClick(button, msg) {
       if (!button) {
