@@ -33,6 +33,7 @@ return [
             WebchatSetting::SHOW_RESTART_BUTTON,
             WebchatSetting::MESSAGE_ANIMATION,
             WebchatSetting::HIDE_TYPING_INDICATOR_ON_INTERNAL_MESSAGES,
+            WebchatSetting::SHOW_TEXT_INPUT_WITH_EXTERNAL_BUTTONS,
             WebchatSetting::NEW_USER_START_MINIMIZED,
             WebchatSetting::RETURNING_USER_START_MINIMIZED,
             WebchatSetting::ONGOING_USER_START_MINIMIZED,
