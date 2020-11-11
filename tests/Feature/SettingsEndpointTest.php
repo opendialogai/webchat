@@ -197,4 +197,14 @@ class SettingsEndpointTest extends TestCase
                 'openIntent' => 'returning_user_open_callback',
             ], TRUE);
     }
+
+    public function testSettingsWebChatAlertPermission() {
+        $setting = new WebchatSetting();
+        $setting->name = $setting::WEB_CHAT_ALERT_MESSAGE;
+        $setting->value = FALSE;
+        $setting->type = 'boolean';
+        $setting->save();
+        $this->assertDatabaseHas('webchat_settings', [
+            'value' => '0'
+        ]);    }
 }
