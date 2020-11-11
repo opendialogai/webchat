@@ -33,7 +33,7 @@
     />
 
     <form
-      v-if="userInputType === 'default'"
+      v-if="userInputType === 'default' || (userInputType === 'external-button' && settings.general.showTextInputWithExternalButtons)"
       class="od-user-input__form"
       :class="{active: inputActive, disabled: currentMessage.data ? currentMessage.data.disable_text : !contentEditable}"
     >
@@ -163,7 +163,8 @@ export default {
       currentMessage: state => state.currentMessage,
       userInputType: state => state.userInputType,
       messageList: state => state.messageList,
-      fetching: state => state.fetching
+      fetching: state => state.fetching,
+      settings: state => state.settings
     }),
     skipButtons() {
       const last = this.messageList[this.messageList.length -1]
