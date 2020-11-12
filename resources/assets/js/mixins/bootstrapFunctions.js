@@ -88,10 +88,14 @@ export function getSettings(url, userId = '', customSettings = null, callbackId 
   }
 
   const configUrl = `${url}/webchat-config?${configUrlObj.toString()}`;
+  var token = "SYLA2LADGSgHOibmubnYzwB3pzmutgTBbN6j16qS";
 
   return fetch(configUrl, {
     url: configUrl,
     method: 'POST',
+    headers: {
+      'X-CSRF-TOKEN': token
+    },
     body: JSON.stringify({
       custom_settings: customSettings,
       tags: getTags(),

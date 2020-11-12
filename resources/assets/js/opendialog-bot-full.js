@@ -14,7 +14,7 @@ if (!dev) {
 }
 
 function showReloadWarning(e) {
-    e.preventDefault(); 
+    e.preventDefault();
     e.returnValue = '';
 }
 
