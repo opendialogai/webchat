@@ -4,9 +4,9 @@ namespace OpenDialogAi\Webchat\Tests\Feature;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
-use OpenDialogAi\Core\Tests\TestCase;
+use OpenDialogAi\Webchat\Tests\TestCase;
 use OpenDialogAi\Webchat\Http\Middleware\WebChatMiddleware;
-use \OpenDialogAi\Webchat\User;
+use OpenDialogAi\Webchat\Tests\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use OpenDialogAi\Webchat\WebchatSetting;
 
@@ -16,26 +16,26 @@ class AllowAccessToWebChatUrlTest extends TestCase
 
     public function testSettingsWebChatPermissionUserLoggedIn() {
         $this->webChatSetting(FALSE);
-        $this->userCreate();
-        $this->runMiddleWare(null);
+        $this->userCreateAuth();
+        $this->runMiddleWareNull(null);
      }
 
      public function testSettingsWebChatPermissionUserNotLoggedIn() {
          $this->webChatSetting(FALSE);
-         $this->userCreate();
-         $this->runMiddleWare(302);
+         $this->userCreateNotAuth();
+         $this->runMiddleWareNotNull(302);
      }
 
     public function testSettingsWebChatPermissionUserIsTrueAndNotLoggedIn() {
         $this->webChatSetting(TRUE);
-        $this->userCreate();
-        $this->runMiddleWare(null);
+        $this->userCreateNotAuth();
+        $this->runMiddleWareNull(null);
     }
 
     public function testSettingsWebChatPermissionUserIsTrueAndLoggenIn() {
         $this->webChatSetting(TRUE);
-        $this->userCreate();
-        $this->runMiddleWare(null);
+        $this->userCreateAuth();
+        $this->runMiddleWareNull(null);
 
     }
 
@@ -47,20 +47,35 @@ class AllowAccessToWebChatUrlTest extends TestCase
         $setting->save();
     }
 
-    public function userCreate(){
+    public function userCreateAuth(){
         $user = new User();
         $user->name = 'billy';
         $user->email = 'billy@example.com';
         $user->password  = bcrypt('secret');
-        $user->save();
-
-        Auth::shouldReceive('check')->once()->andReturn(true);
-        Auth::shouldReceive('user')->once()->andReturn($user);
 
         $this->actingAs($user);
     }
 
-    public function runMiddleWare($result){
+    public function userCreateNotAuth(){
+        $user = new User();
+        $user->name = 'billy';
+        $user->email = 'billy@example.com';
+        $user->password  = bcrypt('secret');
+    }
+
+    public function runMiddleWareNull($result){
+
+        $request = Request::create('/web-chat', 'GET');
+
+        $middleware = new WebChatMiddleware();
+
+        $response = $middleware->handle($request, function () {});
+
+        $this->assertEquals($response, $result);
+    }
+
+    public function runMiddleWareNotNull($result){
+
         $request = Request::create('/web-chat', 'GET');
 
         $middleware = new WebChatMiddleware();
