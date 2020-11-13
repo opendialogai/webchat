@@ -98,6 +98,7 @@ jobs:
 
       - run: git config --global user.email "hello@greenshootlabs.com"
       - run: git config --global user.name "CI commit"
+      - run: git rev-parse HEAD > public/commit_id
       - run: git add -f public/* images/*
       - run: git commit -m "Pushing built assets [ci skip]" --no-verify
       - run: git push --set-upstream origin ${CIRCLE_BRANCH}
