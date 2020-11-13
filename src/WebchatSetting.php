@@ -140,7 +140,8 @@ class WebchatSetting extends Model
      * in order to allow view of web-chat url or not
      *
      */
-    public static function getWebChatPermission(){
+    public static function getWebChatPermission()
+    {
        $val =  WebchatSetting::select('value')
             ->where('name', WebchatSetting::WEBCHAT_FULL_PAGE_PUBLIC)
             ->first();
