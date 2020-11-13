@@ -142,7 +142,7 @@ class WebchatSetting extends Model
      */
     public static function getWebChatPermission()
     {
-       $val =  WebchatSetting::select('value')
+        $val =  WebchatSetting::select('value')
             ->where('name', WebchatSetting::WEBCHAT_FULL_PAGE_PUBLIC)
             ->first();
 
