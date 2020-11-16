@@ -1,0 +1,30 @@
+
+
+Code Coverage Report:      
+  2020-11-16 16:18:00      
+                           
+ Summary:                  
+  Classes: 33.33% (4/12)   
+  Methods: 48.78% (20/41)  
+  Lines:   49.82% (141/283)
+
+\OpenDialogAi\Webchat::OpenDialogAi\Webchat\PackageServiceProvider
+  Methods:  50.00% ( 1/ 2)   Lines:  62.07% ( 18/ 29)
+\OpenDialogAi\Webchat::OpenDialogAi\Webchat\WebchatSetting
+  Methods:  60.00% ( 3/ 5)   Lines:  66.67% (  6/  9)
+\OpenDialogAi\Webchat\Console\Commands::OpenDialogAi\Webchat\Console\Commands\WebchatSettings
+  Methods:  33.33% ( 1/ 3)   Lines:   3.23% (  2/ 62)
+\OpenDialogAi\Webchat\Http\Controllers::OpenDialogAi\Webchat\Http\Controllers\WebchatSettings
+  Methods:  33.33% ( 1/ 3)   Lines:  93.15% ( 68/ 73)
+\OpenDialogAi\Webchat\Http\Middleware::OpenDialogAi\Webchat\Http\Middleware\WebChatMiddleware
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  4/  4)
+\OpenDialogAi\Webchat\WebchatSettingsConfiguration::OpenDialogAi\Webchat\WebchatSettingsConfiguration\WebchatSettingsConfigurationServiceProvider
+  Methods:  50.00% ( 1/ 2)   Lines:  90.91% ( 10/ 11)
+\OpenDialogAi\Webchat\WebchatSettingsConfiguration\Configurators::OpenDialogAi\Webchat\WebchatSettingsConfiguration\Configurators\ExampleConfigurator
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  2/  2)
+\OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service::OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service\WebchatSettingsConfigurationPageInformation
+  Methods:  50.00% ( 6/12)   Lines:  66.67% ( 12/ 18)
+\OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service::OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service\WebchatSettingsConfigurationService
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% (  9/  9)
+\OpenDialogAi\Webchat\WebchatSettingsConfiguration\Tests::OpenDialogAi\Webchat\WebchatSettingsConfiguration\Tests\WebchatSettingsConfigurationTest
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 10/ 10)
