@@ -156,8 +156,7 @@ class WebchatSetting extends Model
     {
         $val = WebchatSetting::getWebChatSetting(WebchatSetting::WEBCHAT_FULL_PAGE_PUBLIC);
 
-        if ($val != null)
-        {
+        if ($val != null) {
             return (bool)$val->value;
         }
     }
