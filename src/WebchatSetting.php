@@ -155,6 +155,7 @@ class WebchatSetting extends Model
     public static function isFullPageWebChatPubliclyAccessible()
     {
         $val = WebchatSetting::getWebChatSetting(WebchatSetting::WEBCHAT_FULL_PAGE_PUBLIC);
+
         if($val != null) {
             return (bool)$val->value;
         }
