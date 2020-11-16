@@ -89,9 +89,6 @@ export function getSettings(url, userId = '', customSettings = null, callbackId 
 
   const configUrl = `${url}/webchat-config?${configUrlObj.toString()}`;
 
-  var token = document.head.querySelector('meta[name="csrf-token"]');
-  console.log(token);
-
   return fetch(configUrl, {
     url: configUrl,
     method: 'POST',
