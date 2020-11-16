@@ -577,8 +577,8 @@ export default {
 
       const responseData = {};
 
-      if (this.$store.settings.general.formResponseText) {
-        responseData.text = this.$store.settings.general.formResponseText;
+      if (this.$store.state.settings.general.formResponseText) {
+        responseData.text = this.$store.state.settings.general.formResponseText;
       } else {
         const newMessageText = [];
 
