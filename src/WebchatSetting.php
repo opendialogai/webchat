@@ -136,17 +136,25 @@ class WebchatSetting extends Model
     }
 
     /**
+     * get webchat setting id
+     * by passing value of webchat setting constant
+     * @param string $webChatSettingName
+     */
+    public static function getWebChatSetting($webChatSettingName){
+        $val =  WebchatSetting::where('name', $webChatSettingName)
+            ->first();
+        return $val;
+    }
+
+    /**
      * get flag for webchat setting permission
      * in order to allow view of web-chat url or not
      *
      */
-    public static function getWebChatPermission()
+    public static function isFullPageWebChatPubliclyAccessible()
     {
-        $val =  WebchatSetting::select('value')
-            ->where('name', WebchatSetting::WEBCHAT_FULL_PAGE_PUBLIC)
-            ->first();
-
-        return $val->value;
+        $val = WebchatSetting::getWebChatSetting(WebchatSetting::WEBCHAT_FULL_PAGE_PUBLIC);
+        return (bool) $val->value;
     }
 
     public static function getSettings()

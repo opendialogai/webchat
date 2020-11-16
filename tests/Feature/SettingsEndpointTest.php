@@ -210,6 +210,6 @@ class SettingsEndpointTest extends TestCase
         $setting->value = FALSE;
         $setting->type = 'boolean';
         $setting->save();
-        $this->assertEquals('0', $setting::getWebChatPermission());
+        $this->assertEquals(false, $setting::isFullPageWebChatPubliclyAccessible());
     }
 }

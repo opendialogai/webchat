@@ -19,7 +19,7 @@ class WebChatMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (WebchatSetting::getWebChatPermission() == '0' && !Auth::check()) {
+        if (!WebchatSetting::isFullPageWebChatPubliclyAccessible() && !Auth::check()) {
             Log::info('you have no permission to access this page');
             return redirect('/');
         }
