@@ -140,7 +140,8 @@ class WebchatSetting extends Model
      * by passing value of webchat setting constant
      * @param string $webChatSettingName
      */
-    public static function getWebChatSetting($webChatSettingName){
+    public static function getWebChatSetting($webChatSettingName)
+    {
         $val =  WebchatSetting::where('name', $webChatSettingName)
             ->first();
         return $val;
