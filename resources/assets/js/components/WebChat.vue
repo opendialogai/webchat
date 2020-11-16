@@ -576,45 +576,51 @@ export default {
       this.messageList[this.messageList.indexOf(msg)].type = "text";
 
       const responseData = {};
-      const newMessageText = [];
 
-      msg.data.elements.forEach(element => {
-        let val
+      if (this.$store.settings.general.formResponseText) {
+        responseData.text = this.$store.settings.general.formResponseText;
+      } else {
+        const newMessageText = [];
 
-        if (element.element_type === 'checkbox') {
-          let attribute = [];
-          let text = [];
-          Object.keys(element.options).forEach(option => {
-            if (data[element.name][option] === true) {
-              attribute.push(option)
-              text.push(element.options[option])
-            }
-          });
+        msg.data.elements.forEach(element => {
+          let val
 
-          responseData[element.name] = attribute.join(",");
-          val = text.join(", ");
-        } else {
-          responseData[element.name] = data[element.name].value;
+          if (element.element_type === 'checkbox') {
+            let attribute = [];
+            let text = [];
+            Object.keys(element.options)
+                .forEach(option => {
+                  if (data[element.name][option] === true) {
+                    attribute.push(option)
+                    text.push(element.options[option])
+                  }
+                });
 
-          if (element.element_type === 'select' && data[element.name].value !== '') {
-            val = element.options[data[element.name].value]
-          } else if (element.element_type === 'auto-select' && data[element.name].value !== '') {
-            val = element.options.find(obj => obj.key === data[element.name].value).value
+            responseData[element.name] = attribute.join(",");
+            val = text.join(", ");
           } else {
-            val = data[element.name].value
+            responseData[element.name] = data[element.name].value;
+
+            if (element.element_type === 'select' && data[element.name].value !== '') {
+              val = element.options[data[element.name].value]
+            } else if (element.element_type === 'auto-select' && data[element.name].value !== '') {
+              val = element.options.find(obj => obj.key === data[element.name].value).value
+            } else {
+              val = data[element.name].value
+            }
           }
-        }
 
-        if (element.display) {
-          newMessageText.push(
-            `${element.display}: ${val}`
-          );
-        } else {
-          newMessageText.push(val);
-        }
-      });
+          if (element.display) {
+            newMessageText.push(
+                `${element.display}: ${val}`
+            );
+          } else {
+            newMessageText.push(val);
+          }
+        });
 
-      responseData.text = newMessageText.join("\n");
+        responseData.text = newMessageText.join("\n");
+      }
 
       this.sendMessage({
         type: "form_response",

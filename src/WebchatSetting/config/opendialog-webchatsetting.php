@@ -18,6 +18,7 @@ return [
             WebchatSetting::RETURNING_USER_OPEN_CALLBACK,
             WebchatSetting::ONGOING_USER_OPEN_CALLBACK,
             WebchatSetting::TYPING_INDICATOR_STYLE,
+            WebchatSetting::FORM_RESPONSE_TEXT,
         ],
         WebchatSetting::BOOLEAN => [
             WebchatSetting::OPEN,
