@@ -42,6 +42,10 @@ This project has been set up so that `css`, `js` and `image` assets are not push
 part of `.gitignore` to make sure). Instead, they are built and pushed by the
 [CI process](https://app.circleci.com/pipelines/github/opendialogai/webchat) on each commit.
 
+To ignore local changes to built assets, please run:
+
+    git update-index --assume-unchanged public/css/app.css public/css/app-fullpage.css public/css/app-iframe.css public/css/main.css public/js/app.js public/js/opendialog-bot.js public/js/opendialog-bot-full.js
+    
 ### Manual build of assets
 
 To build assets whist developing follow this process:
