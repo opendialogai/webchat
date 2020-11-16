@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'web'], function() {
+    Route::get('/csrf_token', function() {
+        return csrf_token();
+    });
+
     Route::get('/web-chat', function () {
         return view('webchat::webchat', ['settings' => config('webchat')]);
     });

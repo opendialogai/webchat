@@ -1,5 +1,6 @@
 import deepMerge from 'lodash/merge';
 import Timer from './timer';
+import Csrf from './Csrf';
 
 export function isObject(item) {
   return (item && typeof item === 'object' && !Array.isArray(item));
@@ -88,7 +89,7 @@ export function getSettings(url, userId = '', customSettings = null, callbackId 
   }
 
   const configUrl = `${url}/webchat-config?${configUrlObj.toString()}`;
-  var token = "SYLA2LADGSgHOibmubnYzwB3pzmutgTBbN6j16qS";
+  var token = Csrf.getCSRFToken();
 
   return fetch(configUrl, {
     url: configUrl,
