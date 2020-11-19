@@ -7,13 +7,13 @@
     ]"
     :style="cssProps"
   >
-    <div v-if="commentsEnabled && !isMinimized" class="minimize-button" @click="minimizeChat" />
+    <!-- <div v-if="commentsEnabled && !isMinimized" class="minimize-button" @click="minimizeChat" />
 
     <div v-show="commentsEnabled && isMinimized" class="minimized-header" @click="maximizeChat">
       {{ comments.commentsName ? comments.commentsName : 'Comments' }}
       /
       {{ agentProfile.teamName ? agentProfile.teamName : 'WebChat' }}
-    </div>
+    </div>-->
 
     <b-nav
       v-show="ready && commentsEnabled && !isMinimized"
@@ -36,7 +36,11 @@
     </b-nav>
 
     <div v-show="commentsEnabled && activeTab == 'comments'" class="od-comments-container">
-      <div ref="opendialogWidgetSectionSelector" class="comment-section-selector-wrapper">
+      <div
+        ref="opendialogWidgetSectionSelector"
+        class="comment-section-selector-wrapper"
+        :style="{visibility: isOpen ? 'visible' : 'hidden'}"
+      >
         <b-form-select
           v-if="sectionOptions.length"
           v-model="sectionId"
@@ -64,6 +68,9 @@
         :user="user"
         :user-timezone="userTimezone"
         :user-external-id="userExternalId"
+        :mode-data="modeData"
+        :chat-is-open="isOpen"
+        @toggleChatOpen="toggleChatOpen"
       />
     </div>
     <div v-show="activeTab == 'webchat'" class="od-webchat-container">
@@ -79,7 +86,6 @@
         :hide-typing-indicator-on-internal-messages="hideTypingIndOnInternalMessages"
         :is-expand="isExpand"
         :is-mobile="isMobile"
-        :chat-is-open="isOpen"
         :show-history="showHistory"
         :number-of-messages="numberOfMessages"
         :message-animation="messageAnimation"
@@ -111,20 +117,21 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { mapState } from 'vuex';
+import axios from "axios";
+import { mapState } from "vuex";
 
-import cssVars from 'css-vars-ponyfill';
+import cssVars from "css-vars-ponyfill";
 
-import Comments from '@/components/Comments';
-import WebChat from '@/components/WebChat';
-import SessionStorageMixin from '../mixins/SessionStorageMixin';
+import Comments from "@/components/Comments";
+import WebChat from "@/components/WebChat";
+import SessionStorageMixin from "../mixins/SessionStorageMixin";
+import {addCssToPage} from "../mixins/bootstrapFunctions";
 
-const { detect } = require('detect-browser');
-const jstz = require('jstz');
+const { detect } = require("detect-browser");
+const jstz = require("jstz");
 
 export default {
-  name: 'OpenDialogChat',
+  name: "OpenDialogChat",
   components: {
     Comments,
     WebChat,
@@ -132,15 +139,15 @@ export default {
   mixins: [SessionStorageMixin],
   data() {
     return {
-      activeTab: 'webchat',
+      activeTab: "webchat",
       agentProfile: {
-        teamName: 'Opendialog Webchat',
+        teamName: "Opendialog Webchat",
         imageUrl: null,
       },
       callbackMap: [],
       canCloseChat: true,
-      chatbotAvatarPath: '',
-      chatbotName: 'OD Bot',
+      chatbotAvatarPath: "",
+      chatbotName: "OD Bot",
       closedIntent: "",
       collectUserIp: true,
       comments: {},
@@ -152,55 +159,55 @@ export default {
       hideTypingIndOnInternalMessages: false,
       ipAddressInitialised: false,
       isExpand: false,
-      isMinimized: false,
+      isMinimized: true,
       isMobile: false,
-      isOpen: false,
       showHistory: false,
       numberOfMessages: 10,
       messageAnimation: false,
       messageDelay: 1000,
-      newMessageIcon: '',
-      openIntent: '',
-      parentUrl: '',
+      newMessageIcon: "",
+      openIntent: "",
+      parentUrl: "",
       pathInitialised: false,
-      referrerUrl: '',
-      restartButtonCallback: '',
+      referrerUrl: "",
+      restartButtonCallback: "",
       sectionCustomFilters: {},
-      sectionFilterPathPattern: '',
-      sectionFilterQuery: '',
-      sectionId: '',
+      sectionFilterPathPattern: "",
+      sectionFilterQuery: "",
+      sectionId: "",
       sectionOptions: [],
-      sectionQueryString: '',
+      sectionQueryString: "",
       settingsInitialised: false,
       showExpandButton: true,
       showRestartButton: false,
       showTabs: false,
       timezoneInitialised: false,
+      chatBotCssPath: null,
       useBotAvatar: false,
       useHumanAvatar: false,
       useBotName: false,
       useHumanName: false,
       user: {},
-      userTimezone: '',
-      userFirstName: '',
-      userLastName: '',
-      userExternalId: '',
+      userTimezone: "",
+      userFirstName: "",
+      userLastName: "",
+      userExternalId: "",
       modeData: {
-        mode: 'webchat',
+        mode: "webchat",
         modeInstance: 0,
-        options: {}
-      }
+        options: {},
+      },
     };
   },
   computed: {
-    ...mapState(['apiReady']),
+    ...mapState(["apiReady", 'isOpen']),
     ready() {
       return (
         this.settingsInitialised &&
         this.timezoneInitialised &&
         this.ipAddressInitialised
       );
-    }
+    },
   },
   watch: {
     settingsInitialised(settingsAreInitialised) {
@@ -241,23 +248,26 @@ export default {
     },
     // Refresh comments when the section is changed.
     sectionId(newId, oldId) {
-      if (oldId !== '' && newId !== oldId) {
+      if (oldId !== "" && newId !== oldId) {
         this.commentsKey += 1;
       }
+    },
+    chatBotCssPath(newPath) {
+      addCssToPage(newPath);
     },
   },
   created() {
     if (window.self !== window.top) {
       this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
     } else {
-      this.isOpen = true;
+      this.$store.commit('toggleOpen', true)
       this.referrerUrl = document.location.origin;
     }
 
     const urlParams = new URLSearchParams(window.location.search);
 
-    if (urlParams.has('mobile')) {
-      if (urlParams.get('mobile')) {
+    if (urlParams.has("mobile")) {
+      if (urlParams.get("mobile")) {
         this.isMobile = true;
         this.showExpandButton = false;
       }
@@ -267,15 +277,16 @@ export default {
   },
   methods: {
     newWebChatMessage() {
-      this.activateTab('webchat');
+      this.activateTab("webchat");
     },
     switchToCommentsTab() {
       if (this.commentsEnabled) {
-        this.activateTab('comments');
+        this.activateTab("comments");
       }
     },
     activateTab(tabName) {
       this.activeTab = tabName;
+      this.$store.commit('setActiveTab', tabName)
 
       // Timeout is necessary to make the select element available
       // for the height calculation.
@@ -291,9 +302,9 @@ export default {
       this.isExpand = !this.isExpand;
 
       if (this.isExpand) {
-        window.parent.postMessage({ dataLayerEvent: 'chatbot_maximized' }, '*');
+        window.parent.postMessage({ dataLayerEvent: "chatbot_maximized" }, "*");
       } else {
-        window.parent.postMessage({ dataLayerEvent: 'chatbot_minimized' }, '*');
+        window.parent.postMessage({ dataLayerEvent: "chatbot_minimized" }, "*");
       }
 
       if (!this.isOpen) {
@@ -309,10 +320,7 @@ export default {
           );
           this.$root.$emit("scroll-down-message-list");
         } else {
-          window.parent.postMessage(
-            { addClass: "expanded" },
-            this.referrerUrl
-          );
+          window.parent.postMessage({ addClass: "expanded" }, this.referrerUrl);
           this.$root.$emit("scroll-down-message-list");
         }
       }
@@ -331,7 +339,7 @@ export default {
       if (this.isMinimized) {
         headerHeight = 50;
       }
-      cssVariables['--header-height'] = `${headerHeight}px`;
+      cssVariables["--header-height"] = `${headerHeight}px`;
 
       cssVars({
         onlyLegacy: true,
@@ -346,8 +354,8 @@ export default {
     initSettings() {
       this.userTimezone = jstz.determine().name();
       const browserInfo = detect();
-      const ipAddress = 'n/a';
-      const country = 'n/a';
+      const ipAddress = "n/a";
+      const country = "n/a";
       const browserLanguage = navigator.language || navigator.userLanguage;
       const { os } = browserInfo;
       const browser = `${browserInfo.name} ${browserInfo.version}`;
@@ -365,17 +373,19 @@ export default {
       this.timezoneInitialised = true;
 
       // Add event listener for custom open dialog settings.
-      window.addEventListener('message', (event) => {
+      window.addEventListener("message", (event) => {
         if (event.data) {
           if (event.data.loadSettings) {
-            sessionStorage.openDialogSettings = JSON.stringify(event.data.loadSettings);
-            this.$store.dispatch('updateSettings', event.data.loadSettings);
+            sessionStorage.openDialogSettings = JSON.stringify(
+              event.data.loadSettings
+            );
+            this.$store.dispatch("updateSettings", event.data.loadSettings);
             this.initialiseSettings();
           }
 
           if (event.data.loadUuid) {
             sessionStorage.uuid = event.data.loadUuid;
-            this.$store.commit('setUuid', event.data.loadUuid);
+            this.$store.commit("setUuid", event.data.loadUuid);
           }
 
           // Handle path changes.
@@ -384,7 +394,7 @@ export default {
           }
 
           if (event.data.customUserSettings) {
-            Object.keys(event.data.customUserSettings).forEach(key => {
+            Object.keys(event.data.customUserSettings).forEach((key) => {
               if (this.user.custom === undefined) this.user.custom = {};
               this.user.custom[key] = event.data.customUserSettings[key];
             });
@@ -402,18 +412,17 @@ export default {
     },
     initialiseSettings() {
       // Get default settings from the config endpoint.
-      this.getWebchatConfig().then((config) => {
-        this.setConfig(config);
+      const config = this.getWebchatConfig();
+      this.setConfig(config);
 
-        if (!this.settingsInitialised) {
-          this.settingsInitialised = true;
-        }
-      });
+      if (!this.settingsInitialised) {
+        this.settingsInitialised = true;
+      }
     },
     getUserIp() {
       axios
         .get("https://ipinfo.io/")
-        .then(response => {
+        .then((response) => {
           this.userInfo.ipAddress = response.data.ip;
           this.userInfo.country = response.data.country;
           this.ipAddressInitialised = true;
@@ -423,22 +432,22 @@ export default {
         });
     },
     getCommentSections() {
-      let action = '';
-      let getter = '';
+      let action = "";
+      let getter = "";
       let filter = {};
       if (this.sectionQueryString) {
         filter = {
           [this.sectionFilterQuery]: this.sectionQueryString,
-          enabled: '1',
+          enabled: "1",
         };
-        Object.keys(this.sectionCustomFilters).forEach(key => {
+        Object.keys(this.sectionCustomFilters).forEach((key) => {
           filter[key] = this.sectionCustomFilters[key];
         });
-        action = 'sections/loadWhere';
-        getter = 'sections/where';
+        action = "sections/loadWhere";
+        getter = "sections/where";
       } else {
-        action = 'sections/loadAll';
-        getter = 'sections/all';
+        action = "sections/loadAll";
+        getter = "sections/all";
       }
 
       this.$store.dispatch(action, { filter }).then(() => {
@@ -460,17 +469,18 @@ export default {
             if (numberA < numberB) return -1;
             return 0;
           })
-          .forEach(section => {
+          .forEach((section) => {
             this.sectionOptions.push({
               value: section[this.comments.commentsSectionIdFieldName],
               text:
-                section.attributes[this.comments.commentsSectionNameFieldName]
+                section.attributes[this.comments.commentsSectionNameFieldName],
             });
           });
 
         // Default to the first section if one is not detected.
-        if (this.sectionId === '') {
-          this.sectionId = (this.sectionOptions.length > 0) ? this.sectionOptions[0].value : '';
+        if (this.sectionId === "") {
+          this.sectionId =
+            this.sectionOptions.length > 0 ? this.sectionOptions[0].value : "";
         }
 
         // Force comments reload.
@@ -481,14 +491,17 @@ export default {
         this.cssProps = this.getCssProps();
       });
     },
-    async getWebchatConfig() {
-      return Promise.resolve(this.$store.state.settings);
+    getWebchatConfig() {
+      return this.$store.state.settings;
     },
     handleHistoryChange(e) {
       if (this.comments.commentsEnabledPathPattern) {
         const matches = e.match(this.comments.commentsEnabledPathPattern);
         if (matches && matches.length > 0) {
-          this.commentsEnabled = true;
+          if (!this.commentsEnabled) {
+            this.sectionId = "";
+            this.commentsEnabled = true;
+          }
         } else {
           this.commentsEnabled = false;
         }
@@ -500,7 +513,7 @@ export default {
           // eslint-disable-next-line prefer-destructuring
           this.sectionQueryString = matches[1];
         } else {
-          this.sectionQueryString = '';
+          this.sectionQueryString = "";
         }
       }
 
@@ -509,7 +522,7 @@ export default {
         const matches = e.match(this.comments.commentsSectionPathPattern);
         if (matches && matches.length > 1) {
           this.updateSectionSelection(matches[1]);
-          this.activeTab = 'comments';
+          this.activateTab("comments");
 
           setTimeout(() => {
             this.cssProps = this.getCssProps();
@@ -518,7 +531,7 @@ export default {
       }
 
       if (this.commentsEnabled === false) {
-        this.activeTab = 'webchat';
+        this.activateTab("webchat");
       }
 
       this.pathInitialised = true;
@@ -563,6 +576,10 @@ export default {
           this.useBotAvatar = general.useBotAvatar;
         }
 
+        if (general.chatbotCssPath) {
+          this.chatBotCssPath = general.chatbotCssPath;
+        }
+
         if (general.useHumanAvatar) {
           this.useHumanAvatar = general.useHumanAvatar;
         }
@@ -575,7 +592,7 @@ export default {
           this.useHumanName = general.useHumanName;
         }
 
-        if (Object.prototype.hasOwnProperty.call(general, 'collectUserIp')) {
+        if (Object.prototype.hasOwnProperty.call(general, "collectUserIp")) {
           this.collectUserIp = general.collectUserIp;
         }
 
@@ -612,7 +629,8 @@ export default {
         }
 
         if (general.hideTypingIndicatorOnInternalMessages) {
-          this.hideTypingIndOnInternalMessages = general.hideTypingIndicatorOnInternalMessages;
+          this.hideTypingIndOnInternalMessages =
+            general.hideTypingIndicatorOnInternalMessages;
         }
 
         if (general.messageAnimation) {
@@ -651,23 +669,26 @@ export default {
           this.commentsEnabled = false;
         }
 
-        Object.keys(config.comments).forEach(commentConfigKey => {
+        Object.keys(config.comments).forEach((commentConfigKey) => {
           this.comments[commentConfigKey] = config.comments[commentConfigKey];
         });
 
         if (this.comments.commentsSectionEntityName) {
           // Set up convenience mappings.
           this.sectionFilterQuery = this.comments.commentsSectionFilterQuery
-            ? this.comments.commentsSectionFilterQuery : '';
-          this.sectionFilterPathPattern = this.comments.commentsSectionFilterPathPattern
-            ? this.comments.commentsSectionFilterPathPattern : '';
+            ? this.comments.commentsSectionFilterQuery
+            : "";
+          this.sectionFilterPathPattern = this.comments
+            .commentsSectionFilterPathPattern
+            ? this.comments.commentsSectionFilterPathPattern
+            : "";
         }
       }
 
       if (config.triggerConversation) {
         // FIXME pass this to child component.
         this.sendMessage({
-          type: 'trigger',
+          type: "trigger",
           author: this.$store.state.uuid,
           callback_id: config.triggerConversation.callback_id,
           data: {},
@@ -705,7 +726,7 @@ export default {
     },
     toggleChatOpen(headerHeight = 0) {
       if (this.canCloseChat) {
-        this.isOpen = !this.isOpen;
+        this.$store.commit('toggleOpen', !this.isOpen)
         this.isMinimized = !this.isOpen;
 
         if (this.isOpen) {
@@ -734,21 +755,24 @@ export default {
     },
     minimizeChat() {
       this.isMinimized = true;
-      this.isOpen = false;
+      this.$store.commit('toggleOpen', false)
       window.parent.postMessage({ height: "50px" }, this.referrerUrl);
     },
     maximizeChat() {
       this.isMinimized = false;
-      this.isOpen = true;
+      this.$store.commit('toggleOpen', true)
       window.parent.postMessage({ height: "auto" }, this.referrerUrl);
     },
     setChatMode(data) {
       let currentModeData = this.getModeDataInSession();
-      data.modeInstance = data.modeInstance || (currentModeData && currentModeData.modeInstance) || 0;
+      data.modeInstance =
+        data.modeInstance ||
+        (currentModeData && currentModeData.modeInstance) ||
+        0;
       this.modeData = data;
       this.setModeDataInSession(data);
-    }
-  }
+    },
+  },
 };
 </script>
 

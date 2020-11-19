@@ -32,6 +32,8 @@ export default {
   background-color: var(--od-message-list-background);
   min-height: 40px;
   padding: 16px;
+  position: relative;
+  z-index: 100;
 
   @media (min-width: $media-med) {
     min-height: 50px;
@@ -82,7 +84,7 @@ export default {
   }
 
   .od-progress-bar__label {
-    color: var(--od-received-message-text);
+    color: var(--od-sent-message-text);
     font-size: 13px;
     max-width: 40%;
   }
