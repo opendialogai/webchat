@@ -23,7 +23,8 @@ class WebchatSettingServiceProvider extends ServiceProvider
     {
         if (! $this->app->configurationIsCached()) {
             $this->app['config']->set($key, $this->recursiveMergeConfigFrom(
-                require $path, $this->app['config']->get($key, [])
+                require $path,
+                $this->app['config']->get($key, [])
             ));
         }
     }
