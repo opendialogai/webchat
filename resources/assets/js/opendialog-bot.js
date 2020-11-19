@@ -78,10 +78,6 @@ const defaultBootstrapFunctions = {
         loadSettings: window.openDialogSettings,
         newPathname: window.location.pathname,
       }, '*');
-
-      if (window.openDialogSettings.general.chatbotCssPath) {
-        addCssToPage(window.openDialogSettings.general.chatbotCssPath, ifrm.contentWindow.document)
-      }
     };
 
     listeners.message = async (event) => {

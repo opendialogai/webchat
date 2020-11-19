@@ -71,7 +71,7 @@
           }"
           @click="toggleChatOpen"
         >
-          <img src="/images/close-btn.svg" class="close-chat__img" />
+          <img src="/vendor/webchat/images/close-btn.svg" class="close-chat__img" />
         </div>
       </div>
     </template>
@@ -82,6 +82,7 @@
   import axios from "axios";
   import chatService from "../services/ChatService";
   import SessionStorageMixin from "../mixins/SessionStorageMixin";
+  import {mapState} from 'vuex'
 
   const moment = require("moment-timezone");
 
@@ -105,7 +106,6 @@ export default {
       type: String,
       default: ""
     },
-    chatIsOpen: Boolean,
     closedIntent: {
       type: String,
       default: ""
@@ -182,7 +182,6 @@ export default {
       headerText: "",
       id: "",
       initialText: null,
-      isOpen: this.chatIsOpen,
       loading: true,
       maxInputCharacters: 0,
       messageList: [],
@@ -288,6 +287,10 @@ export default {
             data.value = event.data.triggerConversation.value;
           }
 
+          if (!this.isOpen) {
+            this.toggleChatOpen();
+          }
+
           this.sendMessage({
             type: "trigger",
             author: "me",
@@ -309,6 +312,11 @@ export default {
         }
       }
     });
+  },
+  computed: {
+    ...mapState({
+      isOpen: state => state.isOpen
+    })
   },
   methods: {
     dateTimezoneFormat(message) {
@@ -678,11 +686,9 @@ export default {
           );
         setTimeout(() => {
           this.closeChatButtonReverseAnimate = false;
-          this.isOpen = !this.isOpen;
           this.$emit("toggleChatOpen", this.headerHeight);
         }, 300);
       } else {
-        this.isOpen = !this.isOpen;
         this.$emit("toggleChatOpen", this.headerHeight);
           window.parent.postMessage(
             { dataLayerEvent: "chatbot_maximized" },
@@ -797,14 +803,6 @@ export default {
               currentMessage.type = "text";
             }
 
-            if (
-              i === 0 &&
-              currentMessage.data &&
-              currentMessage.data.internal
-            ) {
-              delete currentMessage.data.internal;
-            }
-
             if (!this.hideDatetimeMessage) {
               if (
                 (i === 0 && currentMessage.data) ||
@@ -836,7 +834,7 @@ export default {
                 (this.useHumanName || this.useHumanAvatar)) ||
               (currentMessage.author === "them" &&
                 !currentMessage.data.hideavatar &&
-                !currentMessage.data.internal &&
+                (i === 0 || !messages[i - 1].data.internal) &&
                 (this.useBotName || this.useBotAvatar))
             ) {
               const authorMsg = this.newAuthorMessage(currentMessage);
@@ -1016,11 +1014,14 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    /* var inherited from OpenDialogChat component. */
-  //   height: calc(100vh - var(--header-height));
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 
   .loading-message {
+    display: none;
     font-size: 18px;
     color: #b6b5ba;
     margin-bottom: 17px;
@@ -1037,7 +1038,15 @@ export default {
     height: 11px;
     border-radius: 100%;
     margin-right: 4px;
-    animation: bob 2s infinite;
+    animation: bouncedelay 1.4s infinite ease-in-out both;
+
+    &:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: -0.16s;
+    }
   }
 }
 </style>

@@ -88,4 +88,29 @@
          url('roboto-v20-latin-700.woff') format('woff');
   }
 
+/* roboto-regular - latin */
+@font-face {
+    font-family: 'Proxima Nova';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Proxima Nova'), local('Proxima-Nova-Regular'),
+         url('proximanovaaltregular.woff') format('woff');
+  }
+  /* roboto-500 - latin */
+  @font-face {
+    font-family: 'Proxima Nova';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Proxima Nova Medium'), local('Proxima-Nova-Medium'),
+         url('proximanovasemibold.woff2') format('woff2');
+  }
+  /* roboto-700 - latin */
+  @font-face {
+    font-family: 'Proxima Nova';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Proxima Nova Bold'), local('Proxima-Nova-Bold'),
+         url('proximanovaaltbold.woff2') format('woff2');
+  }
+
 

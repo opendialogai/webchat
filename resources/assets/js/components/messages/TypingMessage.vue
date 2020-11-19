@@ -47,7 +47,7 @@ export default {
 
 .od-message-typing.mt {
   animation-duration: 0s;
-  background-color: transparent;
+  background-color: var(--od-received-message-background);
   color: #efefeb;
   font-size: 14px;
   padding: 25px 20px 10px 5px;

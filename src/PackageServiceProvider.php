@@ -11,10 +11,6 @@ class PackageServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../resources/assets' => resource_path('assets/opendialog/webchat')
-        ], 'vue-components');
-
-        $this->publishes([
             __DIR__ . '/../public' => public_path('vendor/webchat'),
             __DIR__ . '/../resources/images' => public_path('vendor/webchat/images'),
             __DIR__ . '/../resources/fonts' => public_path('vendor/webchat/fonts'),

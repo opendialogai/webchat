@@ -7,7 +7,7 @@
         ref="leftArrow"
         v-longclick="scrollLeft">
         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="17" viewBox="0 0 10 17">
-          <path fill="var(--od-button-text)" d="M9.203 7.796L2.21.778C1.803.395 1.18.395.796.778s-.383 1.03 0 1.413l6.3 6.3-6.3 6.299c-.383.407-.383 1.03 0 1.413s1.007.383 1.413 0L9.203 9.21c.383-.406.383-1.03 0-1.413z"/>
+          <path fill="var(--od-button-background)" d="M9.203 7.796L2.21.778C1.803.395 1.18.395.796.778s-.383 1.03 0 1.413l6.3 6.3-6.3 6.299c-.383.407-.383 1.03 0 1.413s1.007.383 1.413 0L9.203 9.21c.383-.406.383-1.03 0-1.413z"/>
         </svg>
       </div>
       <div
@@ -16,7 +16,7 @@
         ref="rightArrow"
         v-longclick="scrollRight">
         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="17" viewBox="0 0 10 17">
-          <path fill="var(--od-button-text)" d="M9.203 7.796L2.21.778C1.803.395 1.18.395.796.778s-.383 1.03 0 1.413l6.3 6.3-6.3 6.299c-.383.407-.383 1.03 0 1.413s1.007.383 1.413 0L9.203 9.21c.383-.406.383-1.03 0-1.413z"/>
+          <path fill="var(--od-button-background)" d="M9.203 7.796L2.21.778C1.803.395 1.18.395.796.778s-.383 1.03 0 1.413l6.3 6.3-6.3 6.299c-.383.407-.383 1.03 0 1.413s1.007.383 1.413 0L9.203 9.21c.383-.406.383-1.03 0-1.413z"/>
         </svg>
       </div>
     </div>
@@ -84,6 +84,11 @@ export default {
         }, 100)
       }
     }
+  },
+  mounted () {
+    window.addEventListener('resize', () => {
+      this.onScroll()
+    })
   },
   computed: {
     submitAction() {
@@ -153,12 +158,7 @@ export default {
     _handleClick(externalButton, idx) {
       this.buttonClicked = idx;
       this.$emit("sendExternalButton", externalButton);
-    },
-    mounted () {
-    window.addEventListener('resize', () => {
-      this.onScroll()
-    })
-  }
+    }
   }
 };
 </script>
@@ -177,11 +177,11 @@ export default {
       background-color: var(--od-external-button-background);
       color: var(--od-external-button-text);
       border: 2px solid var(--od-external-button-hover-background);
-      margin: 10px 3px;
-      padding: 10px;
-      border-radius: 30px;
-      font-size: 15px;
-      line-height: 14px;
+      margin: 15px 10px;
+      padding: 20px 30px;
+      border-radius: 33px;
+      font-size: 16px;
+      line-height: 26px;
       cursor: pointer;
       outline: none;
       position: relative;
@@ -204,6 +204,7 @@ export default {
   } 
 
   .od-external-buttons__row {
+    height: 120px;
     -ms-overflow-style: none;
     text-align: center;
     padding: 10px;
@@ -224,25 +225,25 @@ export default {
   .od-external-buttons__left-arrow,
   .od-external-buttons__right-arrow {
     align-items: center;
-    background: var(--od-button-background);
+    background: var(--od-received-message-background);
     border-radius: 50%;
     display: flex;
-    height: 78px;
-    padding: 16px;
+    height: 120px;
+    padding: 27px;
     position: absolute;
     top: 0;
     cursor: pointer;
-    width: 78px;
+    width: 120px;
     z-index: 2;
   }
 
   .od-external-buttons__left-arrow {
-    left: -39px;
+    left: -60px;
     transform: rotate(180deg);
   }
 
   .od-external-buttons__right-arrow {
-    right: -39px;
+    right: -60px;
   }
 }
 </style>
