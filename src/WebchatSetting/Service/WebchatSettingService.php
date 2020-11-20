@@ -3,16 +3,19 @@
 namespace OpenDialogAi\Webchat\WebchatSetting\Service;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class WebchatSettingService implements WebchatSettingServiceInterface
 {
     public function mergeConfigFrom($path, $key): void
     {
         if (! app()->configurationIsCached()) {
-            app()['config']->set($key, $this->recursiveMergeConfigFrom(
-                require $path,
-                app()['config']->get($key, [])
-            ));
+            config([
+                $key => $this->recursiveMergeConfigFrom(
+                    require $path,
+                    config($key, [])
+                )
+            ]);
         }
     }
 
