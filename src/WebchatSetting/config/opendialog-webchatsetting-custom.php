@@ -6,6 +6,7 @@
  *    - second level: The type of the setting: string, boolean, etc
  *      - third level: The actual setting name
  */
+
 return [
 //    \OpenDialogAi\Webchat\WebchatSetting::GENERAL => [
 //        \OpenDialogAi\Webchat\WebchatSetting::STRING => [

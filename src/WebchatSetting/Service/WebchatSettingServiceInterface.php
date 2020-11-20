@@ -1,8 +1,6 @@
 <?php
 
-
 namespace OpenDialogAi\Webchat\WebchatSetting\Service;
-
 
 interface WebchatSettingServiceInterface
 {
