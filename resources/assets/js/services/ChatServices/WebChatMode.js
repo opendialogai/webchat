@@ -38,6 +38,12 @@ WebChatMode.prototype.sendRequest = function(message, webChatComponent) {
     }
 };
 
+function onWebchatMessageReceived (message, referrerUrl, webChatComponent) {
+  if (window.openDialogWebchat && window.openDialogWebchat.hooks && window.openDialogWebchat.hooks.onWebchatMessageReceived) {
+    window.openDialogWebchat.hooks.onWebchatMessageReceived(message, referrerUrl, webChatComponent);
+  }
+}
+
 function sendMessageReceivedEvent (message, webChatComponent) {
   let referrerUrl = '';
   if (window.self !== window.top) {
@@ -45,6 +51,8 @@ function sendMessageReceivedEvent (message, webChatComponent) {
   } else {
     referrerUrl = document.location.origin;
   }
+
+  onWebchatMessageReceived(message, referrerUrl, webChatComponent);
 
   window.parent.postMessage(
     { dataLayerEvent: { event: 'message_received_from_chatbot', message: message.intent } },
