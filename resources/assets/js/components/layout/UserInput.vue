@@ -140,6 +140,8 @@ export default {
     fetching(newVal) {
       if (newVal) {
         this.msgText = ''
+      } else if (this.currentMessage.data && !this.currentMessage.data.disable_text) {
+        this.$refs.userInput.focus()
       }
     }
   },
