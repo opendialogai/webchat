@@ -4,7 +4,6 @@
 namespace OpenDialogAi\Webchat\Tests\Unit;
 
 
-use Illuminate\Support\Facades\Log;
 use OpenDialogAi\Webchat\Tests\TestCase;
 use OpenDialogAi\Webchat\WebchatSetting;
 use OpenDialogAi\Webchat\WebchatSetting\Service\WebchatSettingServiceInterface;

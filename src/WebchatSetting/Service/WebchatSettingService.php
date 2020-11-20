@@ -3,7 +3,6 @@
 namespace OpenDialogAi\Webchat\WebchatSetting\Service;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 
 class WebchatSettingService implements WebchatSettingServiceInterface
 {
