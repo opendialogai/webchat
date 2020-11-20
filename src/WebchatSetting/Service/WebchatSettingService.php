@@ -2,6 +2,8 @@
 
 namespace OpenDialogAi\Webchat\WebchatSetting\Service;
 
+use Illuminate\Support\Arr;
+
 class WebchatSettingService implements WebchatSettingServiceInterface
 {
     public function mergeConfigFrom($path, $key): void
