@@ -23,6 +23,8 @@ export default {
         "hideTypingIndicatorOnInternalMessages": false,
         "messageDelay": 500,
         "logo": "/images/logo.svg",
+        "showTextInputWithExternalButtons": false,
+        "formResponseText": null
     },
     "comments": {
         "commentsEnabled": false,

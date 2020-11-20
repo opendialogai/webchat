@@ -7,7 +7,12 @@
         emit : this.author === 'me',
         reap: this.author === 'them',
     }]">
-      <div class="all-blobs">
+      <div v-if="$store.state.settings.general.typingIndicatorStyle === 'typewriter'">
+        <div ref="typewriter" class="typewriter">
+          <p>typing...</p>
+        </div>
+      </div>
+      <div v-else class="all-blobs">
         <div class="blob">
           <div class="blob-content"></div>
         </div>
@@ -77,11 +82,11 @@ export default {
 
   .blob {
     height: 20px;
-    
+
     @media (min-width: $media-med) {
       height: 30px;
     }
-    
+
     width: 6px;
     margin: 0 5px 0 0;
     display: flex;

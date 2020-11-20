@@ -584,6 +584,7 @@ export default {
       this.messageList[this.messageList.indexOf(msg)].type = "text";
 
       const responseData = {};
+
       const newMessageText = [];
 
       msg.data.elements.forEach(element => {
@@ -592,12 +593,13 @@ export default {
         if (element.element_type === 'checkbox') {
           let attribute = [];
           let text = [];
-          Object.keys(element.options).forEach(option => {
-            if (data[element.name][option] === true) {
-              attribute.push(option)
-              text.push(element.options[option])
-            }
-          });
+          Object.keys(element.options)
+              .forEach(option => {
+                if (data[element.name][option] === true) {
+                  attribute.push(option)
+                  text.push(element.options[option])
+                }
+              });
 
           responseData[element.name] = attribute.join(",");
           val = text.join(", ");
@@ -615,14 +617,18 @@ export default {
 
         if (element.display) {
           newMessageText.push(
-            `${element.display}: ${val}`
+              `${element.display}: ${val}`
           );
         } else {
           newMessageText.push(val);
         }
       });
 
-      responseData.text = newMessageText.join("\n");
+      if (this.$store.state.settings.general.formResponseText) {
+        responseData.text = this.$store.state.settings.general.formResponseText;
+      } else {
+        responseData.text = newMessageText.join("\n");
+      }
 
       this.sendMessage({
         type: "form_response",

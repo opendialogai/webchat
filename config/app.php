@@ -154,6 +154,7 @@ return [
          */
         OpenDialogAi\Webchat\PackageServiceProvider::class,
         \OpenDialogAi\Webchat\WebchatSettingsConfiguration\WebchatSettingsConfigurationServiceProvider::class,
+        \OpenDialogAi\Webchat\WebchatSetting\WebchatSettingServiceProvider::class,
     ],
 
     /*
