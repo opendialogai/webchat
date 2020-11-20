@@ -6,7 +6,7 @@ namespace OpenDialogAi\Webchat\Tests\Unit;
 
 use OpenDialogAi\Webchat\Tests\TestCase;
 use OpenDialogAi\Webchat\WebchatSetting;
-use OpenDialogAi\Webchat\WebchatSetting\WebchatSettingServiceProvider;
+use OpenDialogAi\Webchat\WebchatSetting\Service\WebchatSettingServiceInterface;
 
 class WebchatSettingServiceTest extends TestCase
 {
@@ -17,7 +17,7 @@ class WebchatSettingServiceTest extends TestCase
 
     public function testSettingOverlay()
     {
-        resolve(WebchatSettingServiceProvider::class)->mergeConfigFrom(
+        resolve(WebchatSettingServiceInterface::class)->mergeConfigFrom(
             __DIR__ . '/tests/Unit/Example/opendialog-webchatsetting.php',
             'opendialog.webchat_setting'
         );
