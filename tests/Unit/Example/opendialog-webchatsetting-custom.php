@@ -7,9 +7,13 @@
  *      - third level: The actual setting name
  */
 return [
-//    \OpenDialogAi\Webchat\WebchatSetting::GENERAL => [
-//        \OpenDialogAi\Webchat\WebchatSetting::STRING => [
-//            \App\CustomWebchatSetting::CUSTOM_SETTING_NAME
-//        ]
-//    ]
+    \OpenDialogAi\Webchat\WebchatSetting::GENERAL => [
+        \OpenDialogAi\Webchat\WebchatSetting::STRING => [
+            'myCustomSetting1',
+            'myCustomSetting2',
+        ],
+        \OpenDialogAi\Webchat\WebchatSetting::BOOLEAN => [
+            'myCustomSetting3',
+        ]
+    ]
 ];
