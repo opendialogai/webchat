@@ -21,6 +21,7 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt install -y libsqlite3-dev
       - run: sudo composer self-update
+      - run: sudo composer self-update --rollback
 
       - run: sudo apt-get install nodejs -y
 
