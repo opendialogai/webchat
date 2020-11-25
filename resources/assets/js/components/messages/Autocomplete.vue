@@ -1,14 +1,14 @@
 <template>
   <div class="od-autocomplete" :class="{'od-autocomplete--expanded': results.length}">
     <div class="od-autocomplete__search-container">
-      <input 
-        :value="searchTerm" 
-        type="text" 
-        :placeholder="data.placeholder" 
+      <input
+        :value="searchTerm"
+        type="text"
+        :placeholder="data.placeholder"
         class="od-autocomplete__search"
         :maxlength="textLimit ? textLimit : ''"
         @keyup.enter.prevent="_handleClick()"
-        @keydown.tab="results.length ? selectFirst() : false" 
+        @keydown.tab="results.length ? selectFirst() : false"
         @keyup="search()"
         @input="searchTerm = $event.target.value"
         @scroll="_scroll"
@@ -27,12 +27,12 @@
       <p>{{data.title}}</p>
       <perfect-scrollbar class="od-autocomplete__scrollable">
         <ul class="od-autocomplete__results-list">
-          <li 
-            tabindex="0" 
-            @keyup.tab="searchTerm = result.name" 
-            @keyup.enter="_handleClick(result.name)" 
-            @click="_handleClick(result.name)" 
-            v-for="(result, i) in results" 
+          <li
+            tabindex="0"
+            @keyup.tab="searchTerm = result.name"
+            @keyup.enter="_handleClick(result.name)"
+            @click="_handleClick(result.name)"
+            v-for="(result, i) in results"
             :key="i">
               {{result.name}}
             </li>
@@ -70,15 +70,15 @@ export default {
   methods: {
     _handleClick(term) {
       let str = term ? term.trim() : this.searchTerm.trim()
-      
+
       if (!str.length) {
         return false
       }
 
       const attr = str.replace(/\./g, "\\.")
 
-      this.message.data.callback_value = term ? `${this.message.data.attribute_name}.${term}` : `${this.message.data.attribute_name}.${attr}`
-      this.message.data.callback_text = term ? term : str
+      this.message.data.callback_value = `${this.message.data.attribute_name}.${attr}`
+      this.message.data.callback_text = str
 
       this.onButtonClick(false, this.message.data)
       this.searchTerm = ''
@@ -106,7 +106,7 @@ export default {
 
       const l = this.searchTerm.length
       const firstResult = this.results.length ? this.results[0].name.toLowerCase() : null
-      
+
       return firstResult && firstResult.startsWith(this.searchTerm.toLowerCase()) ? this.results[0].name.slice(l) : ''
     },
     endpoint() {
@@ -117,7 +117,7 @@ export default {
       });
 
       str += `${this.data.query_param_name}=${this.searchTerm}`
-      
+
       return str
     },
     ...mapState({
