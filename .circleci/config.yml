@@ -20,8 +20,7 @@ jobs:
       - checkout
       - run: sudo apt-get update
       - run: sudo apt install -y libsqlite3-dev
-      - run: sudo composer self-update
-      - run: sudo composer self-update --rollback
+      - run: sudo composer self-update 1.10.16
 
       - run: sudo apt-get install nodejs -y
 
