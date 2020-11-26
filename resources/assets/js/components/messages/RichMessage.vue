@@ -28,7 +28,7 @@
       <div class="od-message-rich--buttons">
         <button
           v-for="(button, idx) in data.buttons"
-          :key="idx" @click="_handleClick(button)">
+          :key="idx" @click.stop="_handleClick(button)">
           {{button.text}}
         </button>
       </div>
@@ -115,7 +115,7 @@ export default {
       background-color: var(--od-button-hover-background);
       border: 2px solid var(--od-button-hover-background);
     }
-    
+
     @media (min-width: 450px) {
       padding: 0 10px;
     }
