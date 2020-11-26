@@ -29,17 +29,17 @@ jobs:
 
 
 
+      # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-node-dependencies-{{ checksum "package-lock.json" }}
-            - v1-node-dependencies-
-            -
+            - v1-dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.lock" }}
+
       - run: npm install
 
       - save_cache:
           paths:
             - ./node_modules
-          key: v1-node-dependencies-{{ checksum "package-lock.json" }}
+          key: v1-dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.lock" }}
 
       - run: npm run dev
 
