@@ -2,7 +2,6 @@
 
 namespace OpenDialogAi\Webchat;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use OpenDialogAi\Webchat\Console\Commands\WebchatSettings;
 
@@ -19,6 +18,10 @@ class PackageServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../resources/scripts' => app_path('../')
         ], 'scripts');
+
+        $this->publishes([
+            __DIR__ . '/../resources/assets/js/customisation-assets' => resource_path('js/webchat')
+        ], 'webchat-customisation');
 
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
 

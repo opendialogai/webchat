@@ -122,3 +122,19 @@ window.openDialogSettings = {
     },
 };
 ```
+
+## App-level customisation
+
+It is possible to customise Webchat behaviour by defining custom functionality within the OpenDialog application, which can then be consumed and handled by Webchat. This currently includes the ability to add custom chat modes, add custom settings, overwrite/add bootstrap functions and to define hook functions that the Webchat application calls at specific points.
+
+To define custom webchat settings, you'll need to get the custom configuration file in your application. You can get this by running `php artisan vendor:publish --tag=opendialog-config`, which may publish many files to your application. The specific file for defining custom Webchat settings is called `webchat_setting.php`. In this file you can define the type of the setting and which group it belongs to. After doing this you'll be able to add the new setting as usual by updating the `SetWebchatSettings.php` command.
+
+To define custom front-end functionality, you'll need the various registration and bootstrap files in your application. You can get these by running `php artisan vendor:publish --tag=webchat-customisation`, which will publish files to `resources/js/webchat` in your application project. These files define a way of populating the `window.openDialogWebchat` object which consumed by the Webchat application. These files alone will not suffice. You will also need to add to your project's `webpack.mix.js` file to ensure that the custom Javascript files are compiled and available, as follows:
+
+```js
+mix
+    .js('resources/js/webchat/opendialog-iframe.js', 'public/js')
+    .js('resources/js/webchat/opendialog-fullpage.js', 'public/js')
+```
+
+This will provide publicly accessible Javascript files which can be included on the admin demo page (`resources/views/admin.blade.php`) and any external snippets.
