@@ -14,7 +14,9 @@
     }]"
     v-linkified:options="{ format: function (value, type) { return '<span>' + value + '</span>'; } }"
   >
-    <span class="fade-enter-active" v-html="data.text"></span>
+    <span class="fade-enter-active" v-if="this.author === 'me'">{{ data.text }}</span>
+    <span class="fade-enter-active" v-html="data.text" v-else></span>
+
       <p v-if="data.meta" class="sc-message--meta" >{{data.meta}}</p>
   </div>
 </template>
