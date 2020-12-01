@@ -82,6 +82,7 @@
   import axios from "axios";
   import chatService from "../services/ChatService";
   import SessionStorageMixin from "../mixins/SessionStorageMixin";
+  import LinkDecoding from "../mixins/linkDecoding";
 
   const moment = require("moment-timezone");
 
@@ -168,7 +169,7 @@ export default {
       required: true
     }
   },
-  mixins: [SessionStorageMixin],
+  mixins: [SessionStorageMixin, LinkDecoding],
   data() {
     return {
       buttonText: "Submit",
@@ -476,12 +477,14 @@ export default {
       }
 
       if (button.link) {
-        this.onLinkClick(button.link, button.text);
+        let link = this.decodeEntities(button.link);
+
+        this.onLinkClick(link, button.text);
 
         if (button.link_new_tab) {
-          window.open(button.link, "_blank");
+          window.open(link, "_blank");
         } else {
-          window.open(button.link, "_parent");
+          window.open(link, "_parent");
         }
         return;
       }
