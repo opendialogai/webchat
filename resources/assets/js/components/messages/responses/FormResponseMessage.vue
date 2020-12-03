@@ -5,7 +5,8 @@
         emit : this.author === 'me',
         reap: this.author === 'them',
     }]">
-    <div class="form-response" v-html="data.text"></div>
+    <div class="form-response" v-if="author==='me'">{{ data.text }}</div>
+    <div class="form-response" v-else v-html="data.text"></div>
   </div>
 </template>
 
