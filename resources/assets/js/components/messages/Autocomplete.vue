@@ -116,7 +116,9 @@ export default {
         str += `${obj.name}=${obj.value}&`
       });
 
-      str += `${this.data.query_param_name}=${this.searchTerm}`
+      let searchTerm = encodeURIComponent(this.searchTerm)
+
+      str += `${this.data.query_param_name}=${searchTerm}`
 
       return str
     },
