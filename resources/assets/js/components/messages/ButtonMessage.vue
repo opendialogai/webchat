@@ -84,7 +84,6 @@ export default {
       return this.data.clear_after_interaction ? '~click' : 'click'
     },
     hasOnlyInline() {
-      console.log(this.data.buttons.find(btn => btn.type === 'inline'))
       return this.data.buttons.length && this.data.buttons.find(btn => btn.type === 'inline') && this.data.buttons.filter(btn => btn.type !== 'inline').length <= 0
     } 
   },
