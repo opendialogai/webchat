@@ -7,8 +7,7 @@
         reap: this.author === 'them',
     }]"
   >
-    <div class="button" v-if="author==='me'">{{ data.text }}</div>
-    <div class="button" v-html="data.text" v-else></div>
+    <div class="button" v-html="data.text"></div>
   </div>
 </template>
 
