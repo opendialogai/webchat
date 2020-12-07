@@ -71,7 +71,7 @@
           }"
           @click="toggleChatOpen"
         >
-          <img src="/vendor/webchat/images/close-btn.svg" class="close-chat__img" />
+          <div class="close-chat__img"></div>
         </div>
       </div>
     </template>
@@ -986,6 +986,10 @@ export default {
     height: 30px;
     object-fit: contain;
     transition: transform 0.5s;
+    background: url(/vendor/webchat/images/close-btn.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
   }
 
   .confirmCloseChat {

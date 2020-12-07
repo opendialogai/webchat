@@ -57,10 +57,7 @@
             class="od-header-nav__close-button"
             @click.stop="onClose"
           >
-            <img
-              src="/vendor/webchat/images/close-btn.svg"
-              class="od-header-nav__close-button__img"
-            />
+            <div class="od-header-nav__close-button__img"></div>
           </div>
         </div>
       </div>
@@ -268,6 +265,10 @@ export default {
       &__img {
         width: 15px;
         height: 15px;
+        background: url(/vendor/webchat/images/close-btn.svg);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
       }
     }
 
