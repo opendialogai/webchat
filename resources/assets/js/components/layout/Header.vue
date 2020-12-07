@@ -4,13 +4,13 @@
       ref="header"
       class="od-header"
       @click="onClose"
-      
+
       :class="{'od-header--open': isOpen, 'od-header--closed': !isOpen}"
     >
       <div
         ref="headerCta"
         class="od-header-cta"
-        
+
       >
         <div class="od-header-cta__icon"></div>
 
@@ -40,12 +40,22 @@
         <div v-else class="od-header-nav__restart-button"></div>
 
         <div
-          v-if="!showFullPageFormInput && !showFullPageRichInput"
+          v-if="showHeaderButtonsOnFullPageMessages || (!showFullPageFormInput && !showFullPageRichInput)"
           class="od-header-nav__download-button" @click.stop="onDownload"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="19" viewBox="0 0 12 19">
             <path fill="#FFF" fill-rule="evenodd" d="M6 14.481l-4.95-4.95 1.414-1.414 2.537 2.537L5 .34h2v10.314l2.536-2.536 1.414 1.414L6 14.481zm6 3.858H0v-2h12v2z"/>
           </svg>
+        </div>
+
+        <div
+          v-if="(showHeaderButtonsOnFullPageMessages || (!showFullPageFormInput && !showFullPageRichInput)) && showCloseChatButton && showHeaderCloseButton"
+        >
+          <div
+            @click.stop="onClose"
+          >
+            <img src="/vendor/webchat/images/close-btn.svg" class="close-chat__img" />
+          </div>
         </div>
       </div>
 
@@ -55,6 +65,8 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
   data() {
     return {
@@ -123,6 +135,13 @@ export default {
       type: Boolean,
       default: true
     },
+  },
+  computed: {
+    ...mapState({
+      showCloseChatButton: state => state.showCloseChatButton,
+      showHeaderCloseButton: state => state.settings.general.showHeaderCloseButton,
+      showHeaderButtonsOnFullPageMessages: state => state.settings.general.showHeaderButtonsOnFullPageMessages
+    }),
   },
   created() {
     if (window.self !== window.top) {

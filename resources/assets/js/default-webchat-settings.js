@@ -19,6 +19,8 @@ export default {
         "useHumanName": false,
         "collectUserIp": false,
         "showRestartButton": false,
+        "showHeaderCloseButton": false,
+        "showHeaderButtonsOnFullPageMessages": false,
         "messageAnimation": false,
         "hideTypingIndicatorOnInternalMessages": false,
         "messageDelay": 500,
