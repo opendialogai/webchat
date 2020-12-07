@@ -333,7 +333,6 @@ export default {
     caret-color: currentColor;
     color: var(--od-user-input-text);
     display: inline-block;
-    height: 100%;
     resize: none;
     border: none;
     outline: none;
