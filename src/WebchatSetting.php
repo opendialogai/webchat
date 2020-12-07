@@ -38,6 +38,8 @@ class WebchatSetting extends Model
     public const USE_HUMAN_NAME            = 'useHumanName';
     public const COLLECT_USER_IP           = 'collectUserIp';
     public const SHOW_RESTART_BUTTON       = 'showRestartButton';
+    public const SHOW_HEADER_CLOSE_BUTTON  = 'showHeaderCloseButton';
+    public const SHOW_HEADER_BUTTONS_ON_FULL_PAGE_MESSAGES = 'showHeaderButtonsOnFullPageMessages';
     public const RESTART_BUTTON_CALLBACK   = 'restartButtonCallback';
     public const MESSAGE_ANIMATION         = 'messageAnimation';
     public const USER_TYPE                 = 'userType';

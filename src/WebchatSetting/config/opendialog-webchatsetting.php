@@ -32,6 +32,8 @@ return [
             WebchatSetting::USE_HUMAN_NAME,
             WebchatSetting::COLLECT_USER_IP,
             WebchatSetting::SHOW_RESTART_BUTTON,
+            WebchatSetting::SHOW_HEADER_CLOSE_BUTTON,
+            WebchatSetting::SHOW_HEADER_BUTTONS_ON_FULL_PAGE_MESSAGES,
             WebchatSetting::MESSAGE_ANIMATION,
             WebchatSetting::HIDE_TYPING_INDICATOR_ON_INTERNAL_MESSAGES,
             WebchatSetting::SHOW_TEXT_INPUT_WITH_EXTERNAL_BUTTONS,
