@@ -29,32 +29,38 @@
         </div>
 
         <div
-          v-if="showRestartButton"
-          @click.stop="onRestartButtonClick"
-          class="od-header-nav__restart-button"
-        >
-          <img src="/vendor/webchat/images/restart.svg" />
-          <span>Restart</span>
-        </div>
-
-        <div v-else class="od-header-nav__restart-button"></div>
-
-        <div
+          class="od-header-nav__buttons"
           v-if="showHeaderButtonsOnFullPageMessages || (!showFullPageFormInput && !showFullPageRichInput)"
-          class="od-header-nav__download-button" @click.stop="onDownload"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="19" viewBox="0 0 12 19">
-            <path fill="#FFF" fill-rule="evenodd" d="M6 14.481l-4.95-4.95 1.414-1.414 2.537 2.537L5 .34h2v10.314l2.536-2.536 1.414 1.414L6 14.481zm6 3.858H0v-2h12v2z"/>
-          </svg>
-        </div>
-
-        <div
-          v-if="(showHeaderButtonsOnFullPageMessages || (!showFullPageFormInput && !showFullPageRichInput)) && showCloseChatButton && showHeaderCloseButton"
         >
           <div
+            v-if="showRestartButton"
+            @click.stop="onRestartButtonClick"
+            class="od-header-nav__restart-button"
+          >
+            <img src="/vendor/webchat/images/restart.svg" />
+            <span>Restart</span>
+          </div>
+
+          <div v-else class="od-header-nav__restart-button"></div>
+
+          <div
+            class="od-header-nav__download-button"
+            @click.stop="onDownload"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="19" viewBox="0 0 12 19">
+              <path fill="#FFF" fill-rule="evenodd" d="M6 14.481l-4.95-4.95 1.414-1.414 2.537 2.537L5 .34h2v10.314l2.536-2.536 1.414 1.414L6 14.481zm6 3.858H0v-2h12v2z"/>
+            </svg>
+          </div>
+
+          <div
+            v-if="showCloseChatButton && showHeaderCloseButton"
+            class="od-header-nav__close-button"
             @click.stop="onClose"
           >
-            <img src="/vendor/webchat/images/close-btn.svg" class="close-chat__img" />
+            <img
+              src="/vendor/webchat/images/close-btn.svg"
+              class="od-header-nav__close-button__img"
+            />
           </div>
         </div>
       </div>
@@ -256,7 +262,16 @@ export default {
       }
     }
 
-    .mobile & {
+    .od-header-nav__close-button {
+      order: 5;
+
+      &__img {
+        width: 15px;
+        height: 15px;
+      }
+    }
+
+      .mobile & {
       .od-header-nav__download-button {
         right: 11px;
         top: 11px;
@@ -318,6 +333,18 @@ export default {
 
       img {
         object-fit: contain;
+      }
+    }
+
+    .od-header-nav__buttons {
+      display: flex;
+      flex: 1;
+      order: 3;
+      justify-content: flex-end;
+      align-items: center;
+
+      & > div {
+        margin-left: 15px;
       }
     }
 
