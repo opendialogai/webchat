@@ -33,7 +33,8 @@ const store = new Vuex.Store({
     currentMessage: {},
     fetching: false,
     isOpen: false,
-    activeTab: 'webchat'
+    activeTab: 'webchat',
+    showCloseChatButton: false
   },
   mutations: {
     setApiReady(state, val) {
@@ -81,12 +82,16 @@ const store = new Vuex.Store({
     setActiveTab(state, payload) {
       log && console.log('setActiveTab', payload)
       state.activeTab = payload
+    },
+    setShowCloseChatButton(state, payload) {
+      log && console.log('setShowCloseChatButton', payload)
+      state.showCloseChatButton = payload
     }
   },
   actions: {
     updateSettings({commit}, payload) {
       commit('setSettings', payload);
-      
+
       const root = document.querySelector(':root')
       let c = payload.colours ? payload.colours : {}
       const headerRGB = hexToRgb(c.headerBackground)
@@ -99,11 +104,11 @@ const store = new Vuex.Store({
           root.style.setProperty(kebab, val);
         }
       }
-      
+
     },
     sendMessage({dispatch, commit}, payload) {
       log && console.log('sendMessage', payload.sentMsg)
-      
+
       if (payload.sentMsg.type !== 'url_click') {
         commit('updateFetching', true)
       }

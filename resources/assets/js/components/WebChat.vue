@@ -79,12 +79,12 @@
 </template>
 
 <script>
-  import axios from "axios";
-  import chatService from "../services/ChatService";
-  import SessionStorageMixin from "../mixins/SessionStorageMixin";
-  import {mapState} from 'vuex'
+import axios from "axios";
+import chatService from "../services/ChatService";
+import SessionStorageMixin from "../mixins/SessionStorageMixin";
+import {mapState} from 'vuex'
 
-  const moment = require("moment-timezone");
+const moment = require("moment-timezone");
 
 export default {
   name: "WebChat",
@@ -187,7 +187,6 @@ export default {
       messageList: [],
       placeholder: "Enter your message",
       referrerUrl: '',
-      showCloseChatButton: false,
       showLongTextInput: false,
       showFullPageFormInput: false,
       showFullPageRichInput: false,
@@ -256,7 +255,7 @@ export default {
   },
   created() {
     if (window.self !== window.top) {
-      this.showCloseChatButton = true;
+      this.$store.commit('setShowCloseChatButton', true);
       this.referrerUrl = document.referrer.match(/^.+:\/\/[^\/]+/)[0];
     } else {
       this.referrerUrl = document.location.origin;
@@ -315,8 +314,9 @@ export default {
   },
   computed: {
     ...mapState({
-      isOpen: state => state.isOpen
-    })
+      isOpen: state => state.isOpen,
+      showCloseChatButton: state => state.showCloseChatButton
+    }),
   },
   methods: {
     dateTimezoneFormat(message) {
