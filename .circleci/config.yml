@@ -48,7 +48,7 @@ jobs:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.lock" }}
 
-      - run: ./vendor/bin/phpunit
+      - run: phpdbg -qrr ./vendor/bin/phpunit --coverage-html build/coverage-report -d memory_limit=8192M
 
   npm_build:
     docker:
