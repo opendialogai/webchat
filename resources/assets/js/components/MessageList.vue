@@ -96,11 +96,13 @@ export default {
           this.$refs.scrollList.offsetHeight
         ) {
           if (animate) {
+            const numOfSteps = 15;
+            const newHeightToScrollDown = this.$refs.scrollList.scrollHeight -
+              this.$refs.scrollList.offsetHeight -
+              this.$refs.scrollList.scrollTop;
             const scrollStep =
-              (this.$refs.scrollList.scrollHeight -
-                this.$refs.scrollList.offsetHeight -
-                this.$refs.scrollList.scrollTop) /
-              15;
+              newHeightToScrollDown /
+              numOfSteps;
 
             let i = 0;
             const scrollInterval = setInterval(() => {
@@ -108,7 +110,7 @@ export default {
                 this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollTop + scrollStep;
               }
               i = i + 1;
-              if (i == 15) clearInterval(scrollInterval);
+              if (i >= numOfSteps) clearInterval(scrollInterval);
             }, 30);
           } else {
             this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
