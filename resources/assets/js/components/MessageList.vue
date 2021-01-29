@@ -134,7 +134,6 @@ export default {
       let isWebchatMode = message.mode === 'webchat';
       let isCustomMode = !isWebchatMode;
       let isFromSameInstance = message.modeInstance === this.modeData.modeInstance;
-      //console.log('same mode: ', isModeSame, 'webchat: ', isWebchatMode, 'same instance: ', isFromSameInstance)
       return (isModeSame && isWebchatMode) || (isModeSame && isCustomMode && isFromSameInstance);
     },
   },
