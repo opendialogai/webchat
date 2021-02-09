@@ -177,8 +177,10 @@ export default {
     if (this.shouldScrollToBottom()) {
       if (!this.$store.state.settings.general.scrollToFirstNewMessage || this.messages.slice(-1)[0].author === 'me') {
         this.$nextTick(this._scrollDown)
+      } else if (this.$refs.scrollList.scrollTop === 0) {
+        this._scrollDown(false)
       }
-    };
+    }
   }
 };
 </script>
