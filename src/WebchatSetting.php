@@ -54,6 +54,7 @@ class WebchatSetting extends Model
     public const HIDE_TYPING_INDICATOR_ON_INTERNAL_MESSAGES = 'hideTypingIndicatorOnInternalMessages';
     public const SHOW_TEXT_INPUT_WITH_EXTERNAL_BUTTONS = 'showTextInputWithExternalButtons';
     public const FORM_RESPONSE_TEXT = 'formResponseText';
+    public const SCROLL_TO_FIRST_NEW_MESSAGE = 'scrollToFirstNewMessage';
 
     public const TYPING_INDICATOR_STYLE = 'typingIndicatorStyle';
     public const TYPING_INDICATOR_TYPEWRITER_STYLE = 'typewriter';

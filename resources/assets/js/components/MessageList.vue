@@ -85,10 +85,32 @@ export default {
   },
   computed: {
     ...mapState({
-      activeTab: state => state.activeTab
+      activeTab: state => state.activeTab,
+      firstNewMessage: state => state.firstNewMessage
     })
   },
+  watch: {
+    firstNewMessage() {
+      if (this.$store.state.settings.general.scrollToFirstNewMessage) {
+        this.scrollToFirstNewMessage()
+      }
+    }
+  },
   methods: {
+    animateScroll(newHeightToScrollDown, numOfSteps) {
+      const scrollStep =
+        newHeightToScrollDown /
+        numOfSteps;
+
+      let i = 0;
+      const scrollInterval = setInterval(() => {
+        if (this.$refs.scrollList) {
+          this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollTop + scrollStep;
+        }
+        i = i + 1;
+        if (i >= numOfSteps) clearInterval(scrollInterval);
+      }, 30);
+    },
     _scrollDown(animate = true) {
       if (this.$refs.scrollList) {
         if (
@@ -100,21 +122,22 @@ export default {
             const newHeightToScrollDown = this.$refs.scrollList.scrollHeight -
               this.$refs.scrollList.offsetHeight -
               this.$refs.scrollList.scrollTop;
-            const scrollStep =
-              newHeightToScrollDown /
-              numOfSteps;
 
-            let i = 0;
-            const scrollInterval = setInterval(() => {
-              if (this.$refs.scrollList) {
-                this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollTop + scrollStep;
-              }
-              i = i + 1;
-              if (i >= numOfSteps) clearInterval(scrollInterval);
-            }, 30);
+            this.animateScroll(newHeightToScrollDown, numOfSteps);
           } else {
             this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
           }
+        }
+      }
+    },
+    scrollToFirstNewMessage() {
+      if (this.$refs.scrollList) {
+        if (
+          this.$refs.scrollList.scrollHeight >
+          this.$refs.scrollList.offsetHeight
+        ) {
+          this.animateScroll((this.$refs.scrollList.scrollHeight - this.previousScrollHeight), 15)
+          this.previousScrollHeight = this.$refs.scrollList.scrollHeight
         }
       }
     },
@@ -142,11 +165,20 @@ export default {
   mounted() {
     this._scrollDown(false);
     this.$root.$on("scroll-down-message-list", (animate = true) => {
-      this._scrollDown(animate);
+      if (!this.$store.state.settings.general.scrollToFirstNewMessage) {
+        this._scrollDown(animate);
+      }
     });
   },
+  beforeUpdate() {
+    this.previousScrollHeight = this.$refs.scrollList.scrollHeight
+  },
   updated() {
-    if (this.shouldScrollToBottom()) this.$nextTick(this._scrollDown());
+    if (this.shouldScrollToBottom()) {
+      if (!this.$store.state.settings.general.scrollToFirstNewMessage || this.messages.slice(-1)[0].author === 'me') {
+        this.$nextTick(this._scrollDown)
+      }
+    };
   }
 };
 </script>

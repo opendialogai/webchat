@@ -30,6 +30,7 @@ const store = new Vuex.Store({
       'external-button'
     ],
     userInputType: 'default',
+    firstNewMessage: {},
     currentMessage: {},
     fetching: false,
     isOpen: false,
@@ -66,6 +67,10 @@ const store = new Vuex.Store({
       } else {
         state.userInputType = 'default'
       }
+    },
+    updateFirstNewMessage(state, payload) {
+      log && console.log('updateFirstNewMessage', payload)
+      state.firstNewMessage = payload
     },
     updateCurrentMessage(state, payload) {
       log && console.log('updateCurrentMessage', payload)
@@ -120,13 +125,17 @@ const store = new Vuex.Store({
         chatService.sendResponseError(null, payload.sentMsg, payload.webChat)
       })
     },
-    constructMessageList({commit}, payload) {
+    constructMessageList({commit, state}, payload) {
+      const previousMessages = state.messageList.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author' && isSkip(msg) !== 'skip')
       chatService.sendResponseSuccess(payload.response, payload.sentMsg, payload.webChat).then(response => {
-        const msg = response.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author' && isSkip(msg) !== 'skip').pop()
+        const actualMessages = response.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author' && isSkip(msg) !== 'skip')
+        const firstNewMessage = actualMessages.slice(previousMessages.length)[0]
+        const currentMessage = actualMessages.slice(-1)[0]
 
         commit('updateMessageList', [...response])
-        commit('updateCurrentMessage', msg)
-        commit('updateInputType', msg.type === 'button' && msg.data.external ? 'external-button' : msg.type)
+        commit('updateFirstNewMessage', firstNewMessage)
+        commit('updateCurrentMessage', currentMessage)
+        commit('updateInputType', currentMessage.type === 'button' && currentMessage.data.external ? 'external-button' : currentMessage.type)
         commit('updateFetching', false)
       })
     },
