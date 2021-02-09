@@ -12,6 +12,7 @@ export default {
         "restartButtonCallback": "WELCOME",
         "open": true,
         "hideDatetimeMessage": true,
+        "hideMessageTime": true,
         "disableCloseChat": false,
         "useBotAvatar": true,
         "useHumanAvatar": false,
