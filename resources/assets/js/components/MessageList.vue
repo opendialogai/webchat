@@ -54,10 +54,6 @@ export default {
       type: Boolean,
       default: () => false
     },
-    alwaysScrollToBottom: {
-      type: Boolean,
-      required: true
-    },
     onButtonClick: {
       type: Function,
       required: true
