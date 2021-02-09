@@ -129,7 +129,7 @@ const store = new Vuex.Store({
       const previousMessages = state.messageList.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author' && isSkip(msg) !== 'skip')
       chatService.sendResponseSuccess(payload.response, payload.sentMsg, payload.webChat).then(response => {
         const actualMessages = response.filter(msg => msg.type && msg.type !== 'typing' && msg.type !== 'author' && isSkip(msg) !== 'skip')
-        const firstNewMessage = actualMessages.slice(previousMessages.length)[0]
+        const firstNewMessage = actualMessages.slice(previousMessages.length)[1]
         const currentMessage = actualMessages.slice(-1)[0]
 
         commit('updateMessageList', [...response])
