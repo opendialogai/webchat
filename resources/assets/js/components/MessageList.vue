@@ -15,6 +15,7 @@
       :isOpen="isOpen"
       @setChatMode="setChatMode"
       :hideMessageTime="hideMessageTime"
+      :ref="'message-' + idx"
     />
     <Message
       v-if="showTypingIndicator"
@@ -86,14 +87,14 @@ export default {
     })
   },
   watch: {
-    firstNewMessage() {
+    firstNewMessage(newIndex) {
       if (this.$store.state.settings.general.scrollToFirstNewMessage) {
-        this.scrollToFirstNewMessage()
+        this.scrollToFirstNewMessage(newIndex)
       }
     }
   },
   methods: {
-    animateScroll(newHeightToScrollDown, numOfSteps) {
+    animateScroll(newHeightToScrollDown, numOfSteps = 15) {
       const scrollStep =
         newHeightToScrollDown /
         numOfSteps;
@@ -114,35 +115,27 @@ export default {
           this.$refs.scrollList.offsetHeight
         ) {
           if (animate) {
-            const numOfSteps = 15;
             const newHeightToScrollDown = this.$refs.scrollList.scrollHeight -
               this.$refs.scrollList.offsetHeight -
               this.$refs.scrollList.scrollTop;
 
-            this.animateScroll(newHeightToScrollDown, numOfSteps);
+            this.animateScroll(newHeightToScrollDown);
           } else {
             this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
           }
         }
       }
     },
-    scrollToFirstNewMessage() {
+    scrollToFirstNewMessage(messageIndex) {
       if (this.$refs.scrollList) {
         if (
           this.$refs.scrollList.scrollHeight >
           this.$refs.scrollList.offsetHeight
         ) {
-          this.animateScroll((this.$refs.scrollList.scrollHeight - this.previousScrollHeight), 15)
-          this.previousScrollHeight = this.$refs.scrollList.scrollHeight
+          const newHeightToScrollDown = this.$refs['message-' + messageIndex][0].$el.offsetTop - this.$refs.scrollList.scrollTop;
+          this.animateScroll(newHeightToScrollDown);
         }
       }
-    },
-    shouldScrollToBottom() {
-      return (
-        this.alwaysScrollToBottom ||
-        this.$refs.scrollList.scrollTop >
-          this.$refs.scrollList.scrollHeight - 300
-      );
     },
     setChatMode(mode) {
       this.$emit('setChatMode', mode);
@@ -166,16 +159,11 @@ export default {
       }
     });
   },
-  beforeUpdate() {
-    this.previousScrollHeight = this.$refs.scrollList.scrollHeight
-  },
   updated() {
-    if (this.shouldScrollToBottom()) {
-      if (!this.$store.state.settings.general.scrollToFirstNewMessage || this.messages.slice(-1)[0].author === 'me') {
-        this.$nextTick(this._scrollDown)
-      } else if (this.$refs.scrollList.scrollTop === 0) {
-        this._scrollDown(false)
-      }
+    if (!this.$store.state.settings.general.scrollToFirstNewMessage || this.messages.slice(-1)[0].author === 'me') {
+      this.$nextTick(this._scrollDown)
+    } else if (this.$refs.scrollList.scrollTop === 0) {
+      this._scrollDown(false)
     }
   }
 };
@@ -185,6 +173,7 @@ export default {
 @import '../../sass/0-globals/_vars.scss';
 
 .od-messagelist {
+  position: relative;
   background-color: var(--od-message-list-background);
   -ms-overflow-style: none;
   flex: 1;

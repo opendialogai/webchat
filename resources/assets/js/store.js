@@ -30,7 +30,7 @@ const store = new Vuex.Store({
       'external-button'
     ],
     userInputType: 'default',
-    firstNewMessage: {},
+    firstNewMessage: null,
     currentMessage: {},
     fetching: false,
     isOpen: false,
@@ -133,7 +133,7 @@ const store = new Vuex.Store({
         const currentMessage = actualMessages.slice(-1)[0]
 
         commit('updateMessageList', [...response])
-        commit('updateFirstNewMessage', firstNewMessage)
+        commit('updateFirstNewMessage', response.indexOf(firstNewMessage))
         commit('updateCurrentMessage', currentMessage)
         commit('updateInputType', currentMessage.type === 'button' && currentMessage.data.external ? 'external-button' : currentMessage.type)
         commit('updateFetching', false)
