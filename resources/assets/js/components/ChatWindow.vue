@@ -22,7 +22,6 @@
       :imageUrl="agentProfile.imageUrl"
       :chatImageUrl="agentProfile.imageUrl"
       :showTypingIndicator="showTypingIndicator"
-      :alwaysScrollToBottom="alwaysScrollToBottom"
       :onButtonClick="onButtonClick"
       :onFormButtonClick="onFormButtonClick"
       :onListButtonClick="onListButtonClick"
@@ -236,10 +235,6 @@ export default {
     confirmationMessage: {
       type: String,
       default: 'Are you sure you want to submit?'
-    },
-    alwaysScrollToBottom: {
-      type: Boolean,
-      required: true
     },
     initialText: {
       type: String,

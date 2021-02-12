@@ -48,7 +48,6 @@
         :show-messages="showMessages"
         :max-input-characters="maxInputCharacters"
         :button-text="buttonText"
-        :always-scroll-to-bottom="true"
         :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
