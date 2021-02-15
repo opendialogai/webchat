@@ -403,9 +403,6 @@ export default {
       this.$store.dispatch('sendMessage', {sentMsg: newMsg, webChat: this})
     },
     userInputFocus() {
-      if (!this.isExpand && !this.isMobile) {
-        this.$emit("expandChat");
-      }
     },
     userInputBlur() {},
     sendReadReceipt(newMessage) {
