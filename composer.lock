@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7a2057962c03a72d99d581a08f89a926",
+    "content-hash": "a36a1dd50a2f91ca1e064787ee3ca844",
     "packages": [
         {
             "name": "brick/math",
@@ -5135,16 +5135,16 @@
         },
         {
             "name": "opendialogai/core",
-            "version": "dev-fix/laravel8-compatability-with-app",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opendialogai/core.git",
-                "reference": "4d9031472289066564997df742af9f23b07a2474"
+                "reference": "80251dee76c9773d26e8bd709c8851715fcac2cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opendialogai/core/zipball/4d9031472289066564997df742af9f23b07a2474",
-                "reference": "4d9031472289066564997df742af9f23b07a2474",
+                "url": "https://api.github.com/repos/opendialogai/core/zipball/80251dee76c9773d26e8bd709c8851715fcac2cf",
+                "reference": "80251dee76c9773d26e8bd709c8851715fcac2cf",
                 "shasum": ""
             },
             "require": {
@@ -5217,9 +5217,9 @@
             "description": "The OpenDialog Core package",
             "support": {
                 "issues": "https://github.com/opendialogai/core/issues",
-                "source": "https://github.com/opendialogai/core/tree/fix/laravel8-compatability-with-app"
+                "source": "https://github.com/opendialogai/core/tree/1.x"
             },
-            "time": "2021-02-17T13:20:42+00:00"
+            "time": "2021-02-17T15:50:15+00:00"
         },
         {
             "name": "orchestra/testbench",

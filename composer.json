@@ -17,7 +17,7 @@
         "phpunit/phpunit": "^9.0",
         "squizlabs/php_codesniffer": "^3.4",
         "orchestra/testbench": "^6.0",
-        "opendialogai/core": "dev-fix/laravel8-compatability-with-app"
+        "opendialogai/core": "1.x-dev"
     },
     "autoload": {
         "psr-4": {
