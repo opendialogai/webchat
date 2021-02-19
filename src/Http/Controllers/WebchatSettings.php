@@ -11,6 +11,10 @@ use OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service\WebchatSettingsCon
 
 class WebchatSettings
 {
+    public const NEW_USER = 'new';
+    public const ONGOING_USER = 'ongoing';
+    public const RETURNING_USER = 'returning';
+
     /**
      * Handle the incoming request.
      *
@@ -54,19 +58,20 @@ class WebchatSettings
             }
         }
 
-        $config[WebchatSetting::USER_TYPE] = ChatbotUser::NEW_USER;
+        $config[WebchatSetting::USER_TYPE] = self::NEW_USER;
         $config[WebchatSetting::SHOW_MINIMIZED] = false;
         $config[WebchatSetting::OPEN_INTENT] = 'WELCOME';
 
-        $userId = $request->get('user_id') ?? null;
-        try {
-            $userService = resolve(UserService::class);
-            $userType = $userService->getUserType($userId);
-        } catch (\Exception $e) {
-            $userType = ChatbotUser::NEW_USER;
-        }
-
-        $config[WebchatSetting::USER_TYPE] = $userType;
+        // TODO: Get the user type once core 1.x is more complete
+//        $userId = $request->get('user_id') ?? null;
+//        try {
+//            $userService = resolve(UserService::class);
+//            $userType = $userService->getUserType($userId);
+//        } catch (\Exception $e) {
+//            $userType = self::NEW_USER;
+//        }
+//
+//        $config[WebchatSetting::USER_TYPE] = $userType;
 
         /** @var WebchatSettingsConfigurationServiceInterface $configurationService */
         $configurationService = resolve(WebchatSettingsConfigurationServiceInterface::class);
@@ -93,18 +98,18 @@ class WebchatSettings
         $general = $settings[WebchatSetting::GENERAL];
 
         // phpcs:disable
-        switch ($userType) {
-            case ChatbotUser::NEW_USER:
+        switch ($config[WebchatSetting::USER_TYPE]) {
+            case self::NEW_USER:
                 $settings[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::NEW_USER_START_MINIMIZED] ?? false;
                 $settings[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::NEW_USER_OPEN_CALLBACK] ?? null;
                 break;
 
-            case ChatbotUser::RETURNING_USER:
+            case self::RETURNING_USER:
                 $settings[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::RETURNING_USER_START_MINIMIZED] ?? false;
                 $settings[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::RETURNING_USER_OPEN_CALLBACK] ?? null;
                 break;
 
-            case ChatbotUser::ONGOING_USER:
+            case self::ONGOING_USER:
                 $settings[WebchatSetting::SHOW_MINIMIZED] = $general[WebchatSetting::ONGOING_USER_START_MINIMIZED] ?? false;
                 $settings[WebchatSetting::OPEN_INTENT] = $general[WebchatSetting::ONGOING_USER_OPEN_CALLBACK] ?? null;
                 break;
