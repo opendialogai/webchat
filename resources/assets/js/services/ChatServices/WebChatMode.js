@@ -90,6 +90,9 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           totalMessages -= 1;
         } else if (!message) {
           webChatComponent.contentEditable = true;
+          if (messageIndex >= totalMessages -1) {
+            resolve(webChatComponent.messageList)
+          }
         } else {
           if (messageIndex === 0) {
             if (
