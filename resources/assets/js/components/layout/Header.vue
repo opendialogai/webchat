@@ -79,12 +79,12 @@ export default {
   watch: {
     ctaText(newVal, oldVal) {
       if (this.ctaText.length) {
-        window.parent.postMessage({ width: "auto" }, this.referrerUrl);
         setTimeout(() => {
-          this.$refs.headerCta.classList.add("header-cta-expand");
+          window.parent.postMessage({ width: "auto" }, this.referrerUrl);
+          this.$refs.headerCta.classList.add("od-header-cta-expand");
         }, 1000);
       } else {
-        this.$refs.headerCta.classList.remove("header-cta-expand");
+        this.$refs.headerCta.classList.remove("od-header-cta-expand");
         if (newVal.length !== oldVal.length && !this.isOpen) {
           window.parent.postMessage({ width: "130px" }, this.referrerUrl);
         }
