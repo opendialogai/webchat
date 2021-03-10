@@ -118,7 +118,7 @@
 
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 import cssVars from "css-vars-ponyfill";
 
@@ -406,6 +406,10 @@ export default {
 
           if (event.data.reloadCommentSections) {
             this.getCommentSections();
+          }
+
+          if (event.data.openDialogWebchat) {
+            window.openDialogWebchat = event.data.openDialogWebchat;
           }
         }
       });

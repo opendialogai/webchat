@@ -69,14 +69,13 @@ const defaultBootstrapFunctions = {
 
     window.document.body.appendChild(ifrm);
 
-    ifrm.contentWindow.openDialogWebchat = window.openDialogWebchat;
-
     listeners.load = () => {
       // Send settings and initial path to the chat widget.
       ifrm.contentWindow.postMessage({
         loadUuid: sessionStorage.uuid,
         loadSettings: window.openDialogSettings,
         newPathname: window.location.pathname,
+        openDialogWebchat: window.openDialogWebchat,
       }, '*');
     };
 
