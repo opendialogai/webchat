@@ -20,11 +20,17 @@ class PackageServiceProvider extends ServiceProvider
             __DIR__ . '/../resources/scripts' => app_path('../')
         ], 'scripts');
 
+        $this->publishes([
+            __DIR__ . '/../database/migrations' => database_path(config('opendialog.webchat.migration_publish_dir'))
+        ], 'od-webchat-migrations');
+
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'webchat');
 
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        if ($this->app->runningUnitTests()) {
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        }
 
         $this->loadWebchatConfig();
 
@@ -33,6 +39,11 @@ class PackageServiceProvider extends ServiceProvider
                 WebchatSettings::class,
             ]);
         }
+    }
+
+    public function register()
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../config/opendialog.php', 'opendialog.webchat');
     }
 
     /**
