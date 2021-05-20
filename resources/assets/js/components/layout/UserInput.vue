@@ -140,7 +140,7 @@ export default {
     fetching(newVal) {
       if (newVal) {
         this.msgText = ''
-      } else if (this.currentMessage.data && !this.currentMessage.data.disable_text) {
+      } else if (this.currentMessage.data && !this.currentMessage.data.disable_text && this.isOpen) {
         this.$refs.userInput.focus()
       }
     }
@@ -166,7 +166,8 @@ export default {
       userInputType: state => state.userInputType,
       messageList: state => state.messageList,
       fetching: state => state.fetching,
-      settings: state => state.settings
+      settings: state => state.settings,
+      isOpen: state => state.isOpen
     }),
     skipButtons() {
       const last = this.messageList[this.messageList.length -1]

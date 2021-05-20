@@ -48,7 +48,6 @@
         :show-messages="showMessages"
         :max-input-characters="maxInputCharacters"
         :button-text="buttonText"
-        :always-scroll-to-bottom="true"
         :placeholder="placeholder"
         :confirmation-message="confirmationMessage"
         :initial-text="initialText"
@@ -404,9 +403,6 @@ export default {
       this.$store.dispatch('sendMessage', {sentMsg: newMsg, webChat: this})
     },
     userInputFocus() {
-      if (!this.isExpand && !this.isMobile) {
-        this.$emit("expandChat");
-      }
     },
     userInputBlur() {},
     sendReadReceipt(newMessage) {
