@@ -40,6 +40,7 @@ return [
             WebchatSetting::NEW_USER_START_MINIMIZED,
             WebchatSetting::RETURNING_USER_START_MINIMIZED,
             WebchatSetting::ONGOING_USER_START_MINIMIZED,
+            WebchatSetting::SCROLL_TO_FIRST_NEW_MESSAGE,
         ],
         WebchatSetting::NUMBER => [
             WebchatSetting::MESSAGE_DELAY,

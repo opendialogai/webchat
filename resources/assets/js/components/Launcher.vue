@@ -22,7 +22,6 @@
       :placeholder="placeholder"
       :showRestartButton="showRestartButton"
       :showTypingIndicator="showTypingIndicator"
-      :alwaysScrollToBottom="alwaysScrollToBottom"
       :showLongTextInput="showLongTextInput"
       :showFullPageFormInput="showFullPageFormInput"
       :showFullPageRichInput="showFullPageRichInput"
@@ -187,10 +186,6 @@ export default {
     initialText: {
        type: String,
        default: null
-    },
-    alwaysScrollToBottom: {
-      type: Boolean,
-      default: () => false
     },
     modeData: {
       type: Object,
