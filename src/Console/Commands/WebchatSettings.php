@@ -23,15 +23,8 @@ class WebchatSettings extends Command
      */
     protected $description = 'Update webchat settings table';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    /** @var string[] */
+    private $persistedSettings = [];
 
     /**
      * Execute the console command.
@@ -40,104 +33,128 @@ class WebchatSettings extends Command
      */
     public function handle()
     {
-        $settings = WebchatSetting::getSettings();
+        foreach (config('opendialog.webchat_setting') as $parent => $webchatSettings) {
+            foreach ($webchatSettings as $settingName => $details) {
+                if (is_array($details)) {
+                    $parentId = $this->getParentId($parent);
+                    $sibling = isset($details[WebchatSetting::SIBLING]) ? $this->getSiblingId($details[WebchatSetting::SIBLING]) : null;
 
-        $configNames = [];
-        foreach ($settings as $type => $values) {
-            foreach ($values as $subType => $value) {
-                if (is_array($value)) {
-                    $configItem = WebchatSetting::where('name', $type)
-                        ->first();
+                    $setting = WebchatSetting::updateOrCreate(
+                        [
+                            'name' => $settingName,
+                        ],
+                        [
+                            'display_name' => $details[WebchatSetting::DISPLAY_NAME] ?? $settingName,
+                            'description' => $details[WebchatSetting::DESCRIPTION] ?? null,
+                            'display' => $details[WebchatSetting::DISPLAY] ?? true,
+                            'section' => $details[WebchatSetting::SECTION] ?? null,
+                            'subsection' => $details[WebchatSetting::SUBSECTION] ?? null,
+                            'type' => $details[WebchatSetting::TYPE] ?? WebchatSetting::STRING,
+                            'parent_id' => $parentId,
+                            'sibling' => $sibling
+                        ]
+                    );
 
-                    if ($configItem == null) {
-                        $configItemId = DB::table('webchat_settings')->insertGetId([
-                            'type' => WebchatSetting::OBJECT,
-                            'name' => $type,
-                            'value' => null,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
-
-                        $this->log("Created webchat setting '$type' of type '" . WebchatSetting::OBJECT . "'");
-                    } else {
-                        $configItemId = $configItem->id;
+                    if ($setting->wasRecentlyCreated) {
+                        $this->log("Created new webchat setting '$settingName'");
+                    } else if ($setting->wasChanged()) {
+                        $this->log("Webchat Setting '$settingName' was updated");
                     }
 
-                    $configNames[] = $type;
+                    $this->persistedSettings[] = $settingName;
 
-                    foreach ($value as $subValue) {
-                        $item = WebchatSetting::where('name', $subValue)
-                            ->first();
-
-                        if ($item == null) {
-                            DB::table('webchat_settings')->insert([
-                                'type' => $subType,
-                                'name' => $subValue,
-                                'value' => null,
-                                'created_at' => now(),
-                                'updated_at' => now(),
-                                'parent_id' => $configItemId,
-                            ]);
-
-                            $this->log("Created webchat setting '$subValue' of type '$subType'");
-                        } elseif ($item->parent_id != $configItemId) {
-                            DB::table('webchat_settings')
-                                ->where('name', $subValue)
-                                ->update([
-                                    'parent_id' => $configItemId,
-                                ]);
-                            $this->log("Updated webchat setting '$subValue' of type '$subType'");
-                        }
-
-                        $configNames[] = $subValue;
-                    }
                 } else {
-                    $item = WebchatSetting::where('name', $value)
-                        ->first();
-
-                    if ($item == null) {
-                        DB::table('webchat_settings')->insert([
-                            'type' => $type,
-                            'name' => $value,
-                            'value' => null,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
-
-                        $this->log("Created webchat setting '$value' of type '$type'");
-                    } elseif ($item->type != $type) {
-                        DB::table('webchat_settings')
-                            ->where('name', $value)
-                            ->update([
-                                'type' => $type,
-                            ]);
-
-                        $this->log("Updated webchat setting '$value' from type '$item->type' to '$type'");
-                    }
-
-                    $configNames[] = $value;
+                    $this->log(
+                        sprintf('Setting %s not persisted as the config is in the wrong format', $settingName),
+                        'warn'
+                    );
                 }
             }
         }
 
         foreach (DB::table('webchat_settings')->get() as $item) {
-            if (!in_array($item->name, $configNames)) {
+            if (!in_array($item->name, $this->persistedSettings)) {
                 DB::table('webchat_settings')
                     ->where('id', $item->id)
                     ->delete();
                 $this->log("Removed webchat setting '$item->name' of type '$item->type'");
             }
         }
+
+        return 0;
     }
 
     /**
      * Logs to the log file and the console output
      *
      * @param $message
+     * @param string $level
      */
-    private function log($message)
+    private function log($message, $level = 'info')
     {
-        Log::info($message);
-        $this->info($message);
+        switch ($level) {
+            case 'error':
+                Log::error($message);
+                $this->error($message);
+                break;
+            case 'warn':
+                Log::warning($message);
+                $this->warn($message);
+                break;
+            default:
+                Log::info($message);
+                $this->info($message);
+                break;
+        }
+    }
+
+    /**
+     * Gets the top level parent ID, or creates and saves one if it doesn't exist
+     *
+     * @param $name
+     * @return int
+     */
+    private function getParentId($name): int
+    {
+        /** @var WebchatSetting $setting */
+        $setting = WebchatSetting::updateOrCreate(
+            [
+                'name' => $name
+            ],
+            [
+                'type' => WebchatSetting::OBJECT,
+                'name' => $name,
+                'value' => null,
+                'display' => false,
+            ]
+        );
+
+        if ($setting->wasRecentlyCreated) {
+            $this->log(sprintf("Created new parent setting %s", $setting->name));
+        }
+
+        $parentId = $setting->id;
+
+        if (!(in_array($name, $this->persistedSettings))) {
+            $this->persistedSettings[] = $name;
+        }
+
+        return $parentId;
+    }
+
+    /**
+     * Creates a sibling with just a name to get it's ID
+     * @param $siblingName
+     */
+    private function getSiblingId($siblingName): int
+    {
+        /** @var WebchatSetting $sibling */
+        $sibling = WebchatSetting::updateOrCreate(
+            [
+                'name' => $siblingName
+            ]
+        );
+
+        return $sibling->id;
     }
 }
