@@ -37,7 +37,10 @@ class WebchatSettings extends Command
             foreach ($webchatSettings as $settingName => $details) {
                 if (is_array($details)) {
                     $parentId = $this->getParentId($parent);
-                    $sibling = isset($details[WebchatSetting::SIBLING]) ? $this->getSiblingId($details[WebchatSetting::SIBLING]) : null;
+                    $sibling =
+                        isset($details[WebchatSetting::SIBLING]) ?
+                            $this->getSiblingId($details[WebchatSetting::SIBLING]) :
+                            null;
 
                     $setting = WebchatSetting::updateOrCreate(
                         [
@@ -62,7 +65,6 @@ class WebchatSettings extends Command
                     }
 
                     $this->persistedSettings[] = $settingName;
-
                 } else {
                     $this->log(
                         sprintf('Setting %s not persisted as the config is in the wrong format', $settingName),

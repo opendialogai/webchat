@@ -22,7 +22,7 @@ jobs:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.lock" }}
 
-      - run: ./vendor/bin/phpcs --standard=psr12 src/
+      - run: ./vendor/bin/phpcs --standard=od-cs-ruleset.xml src/ --ignore=*/migrations/*,*/tests/*
 
   php_tests:
     docker:

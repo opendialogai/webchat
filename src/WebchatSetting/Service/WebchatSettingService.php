@@ -19,8 +19,6 @@ class WebchatSettingService implements WebchatSettingServiceInterface
     }
 
     /**
-     * From: https://gist.github.com/koenhoeijmakers/0a8e326ee3b12a826d73be38693fb647
-     *
      * @param array $original
      * @param array $merging
      * @return array
@@ -29,20 +27,10 @@ class WebchatSettingService implements WebchatSettingServiceInterface
     {
         $array = array_merge($original, $merging);
 
-        foreach ($original as $key => $value) {
-            if (!is_array($value)) {
-                continue;
+        foreach ($merging as $key => $value) {
+            if (Arr::exists($original, $key)) {
+                $array[$key] = array_merge($original[$key], $merging[$key]);
             }
-
-            if (!Arr::exists($merging, $key)) {
-                continue;
-            }
-
-            if (is_numeric($key)) {
-                continue;
-            }
-
-            $array[$key] = $this->recursiveMergeConfigFrom($value, $merging[$key]);
         }
 
         return $array;

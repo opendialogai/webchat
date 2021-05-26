@@ -161,8 +161,10 @@ class WebchatSetting extends Model
      */
     public function parent()
     {
-        return $this->belongsTo('OpenDialogAi\Webchat\WebchatSetting',
-        'parent_id');
+        return $this->belongsTo(
+            'OpenDialogAi\Webchat\WebchatSetting',
+            'parent_id'
+        );
     }
 
     /**
