@@ -35,6 +35,11 @@ class PackageServiceProvider extends ServiceProvider
         }
     }
 
+    public function register()
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../config/webchat.php', 'opendialog.webchat');
+    }
+
     /**
      * Pulls in the webchat settings from the database and loads into Laravel config.
      * Will only load the settings if not running from the console

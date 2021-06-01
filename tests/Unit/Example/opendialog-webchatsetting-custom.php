@@ -8,12 +8,14 @@
  */
 return [
     \OpenDialogAi\Webchat\WebchatSetting::GENERAL => [
-        \OpenDialogAi\Webchat\WebchatSetting::STRING => [
-            'myCustomSetting1',
-            'myCustomSetting2',
+        'myCustomSetting1' => [
+            'type' => 'string'
         ],
-        \OpenDialogAi\Webchat\WebchatSetting::BOOLEAN => [
-            'myCustomSetting3',
-        ]
+        'myCustomSetting2' => [
+            'type' => 'string'
+        ],
+        'myCustomSetting3' => [
+            'type' => 'string'
+        ],
     ]
 ];
