@@ -3,7 +3,7 @@
 namespace OpenDialogAi\Webchat;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
+use OpenDialogAi\Webchat\Casts\WebchatSettingsValueCast;
 
 /**
  * @property int $id
@@ -153,6 +153,7 @@ class WebchatSetting extends Model
     ];
 
     protected $casts = [
+        'value' => WebchatSettingsValueCast::class,
         'display' => 'boolean'
     ];
 
