@@ -107,11 +107,4 @@ workflows:
   version: 2
   build:
     jobs:
-      - php_codesniff
-      - php_tests
-      - npm_build
-      - push_assets:
-          requires:
-            - php_codesniff
-            - php_tests
-            - npm_build
+      - push_assets
