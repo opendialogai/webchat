@@ -48,7 +48,6 @@ export default {
   margin: 0;
   border-radius: 0;
   background-color: rgba(0, 0, 0, 0);
-  font-family: proxima_nova_ltsemibold;
   font-size: 15px;
   font-weight: 600;
   animation-name: fadeInUp;
@@ -75,7 +74,7 @@ export default {
     text-align: center;
     line-height: 35px;
     color: #ffffff;
-    
+
     @media screen and (min-width: 900px) {
       width: 60px;
       height: 60px;
@@ -91,7 +90,7 @@ export default {
     vertical-align: top;
     color: white;
     padding-top: 12px;
-    
+
     @media (min-width: 900px) {
       padding-top: 25px;
     }
@@ -100,7 +99,7 @@ export default {
   &.emit {
     margin-bottom: -6px;
     margin-right: 5px;
-    
+
     @media (min-width: 900px) {
       margin-right: -85px;
       margin-bottom: -60px;
@@ -109,7 +108,7 @@ export default {
     .od-author--name {
       padding-top: 5px;
       margin-right: 10px;
-      
+
       @media (min-width: 900px) {
         margin-bottom: -10px;
         padding-top: 18px;
