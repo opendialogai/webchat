@@ -44,8 +44,11 @@ export default {
 
 <style lang="scss">
 .od-author.mt {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  margin: 0 0 -15px 0;
   padding: 0;
-  margin: 0;
   border-radius: 0;
   background-color: rgba(0, 0, 0, 0);
   font-size: 15px;
@@ -57,6 +60,7 @@ export default {
     padding: 0;
     height: 53px;
     width: 53px;
+    object-fit: contain;
 
     @media screen and (min-width: 900px) {
       border-radius: 0;
@@ -68,6 +72,7 @@ export default {
   span.avatar {
     width: 35px;
     height: 35px;
+    margin: 9px 0;
     border-radius: 50px;
     background: #2d2d2d;
     display: block;
@@ -90,6 +95,7 @@ export default {
     vertical-align: top;
     color: white;
     padding-top: 12px;
+    padding-bottom: 15px;
 
     @media (min-width: 900px) {
       padding-top: 25px;
@@ -97,7 +103,6 @@ export default {
   }
 
   &.emit {
-    margin-bottom: -6px;
     margin-right: 5px;
 
     @media (min-width: 900px) {
@@ -117,8 +122,6 @@ export default {
   }
 
   &.reap {
-    margin-bottom: -25px;
-
     @media (min-width: 900px) {
       margin-left: -100px;
       margin-bottom: -70px;
