@@ -141,7 +141,7 @@ export default {
     return {
       activeTab: "webchat",
       agentProfile: {
-        teamName: "Opendialog Webchat",
+        teamName: "",
         imageUrl: null,
       },
       callbackMap: [],
