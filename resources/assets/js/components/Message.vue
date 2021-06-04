@@ -116,7 +116,12 @@
     <DatetimeFakeMessage v-else-if="message.type === 'datetime'" :message="message" />
 
     <span
-      v-if="!hideMessageTime && message.type !== 'datetime' && message.type !== 'typing' && message.type !== 'author'"
+      v-if="!hideMessageTime
+        && message.type !== 'datetime'
+        && message.type !== 'typing'
+        && message.type !== 'author'
+        && !message.data.first
+        && !message.data.middle"
       class="od-message--time-read"
     >
       <template
@@ -271,7 +276,6 @@
   box-shadow: none;
   max-width: 90%;
   max-width: calc(90% - 45px);
-  margin-bottom: 20px;
   padding: 15px 20px;
   line-height: 1.6;
   font-size: 14px;
@@ -295,7 +299,7 @@
 .reap {
   align-self: flex-start;
   border-bottom-left-radius: 0;
-  
+
   &.first-message {
     border-bottom-left-radius: 0;
     margin-bottom: 8px;
@@ -322,8 +326,8 @@
 }
 
 .od-message--time-read {
+  margin-top: 5px;
   font-size: x-small;
-  margin-top: -20px;
   color: white;
 }
 .mt.emit + .od-message--time-read {
