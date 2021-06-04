@@ -328,7 +328,7 @@
 .od-message--time-read {
   margin-top: 5px;
   font-size: x-small;
-  color: white;
+  color: var(--od-received-message-background);
 }
 .mt.emit + .od-message--time-read {
   text-align: right;

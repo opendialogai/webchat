@@ -74,11 +74,11 @@ export default {
     height: 35px;
     margin: 9px 0;
     border-radius: 50px;
-    background: #2d2d2d;
+    background: var(--od-received-message-background);
     display: block;
     text-align: center;
     line-height: 35px;
-    color: #ffffff;
+    color: var(--od-received-message-text);
 
     @media screen and (min-width: 900px) {
       width: 60px;
@@ -93,7 +93,7 @@ export default {
 
   .od-author--name {
     vertical-align: top;
-    color: white;
+    color: var(--od-received-message-background);
     padding-top: 12px;
     padding-bottom: 15px;
 
