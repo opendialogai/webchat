@@ -43,7 +43,7 @@ class PackageServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/opendialog.php', 'opendialog.webchat');
+        $this->mergeConfigFrom(__DIR__ . '/../config/webchat.php', 'opendialog.webchat');
     }
 
     /**

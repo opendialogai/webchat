@@ -3,17 +3,32 @@
 namespace OpenDialogAi\Webchat;
 
 use Illuminate\Database\Eloquent\Model;
+use OpenDialogAi\Webchat\Casts\WebchatSettingsValueCast;
 
 /**
  * @property int $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property String $name
- * @property String $value
- * @property String $type
+ * @property string $name
+ * @property string $value
+ * @property string $type
+ * @property string description
+ * @property string section
+ * @property string subsection
+ * @property string display_name
+ * @property boolean display
  */
 class WebchatSetting extends Model
 {
+    public const NAME = 'name';
+    public const DESCRIPTION = 'description';
+    public const SECTION = 'section';
+    public const SUBSECTION = 'subsection';
+    public const DISPLAY_NAME = 'display_name';
+    public const DISPLAY = 'display';
+    public const TYPE = 'type';
+    public const SIBLING = 'sibling';
+
     // General
     public const GENERAL                   = 'general';
     public const URL                       = 'url';
@@ -124,14 +139,33 @@ class WebchatSetting extends Model
     public const END_CHAT_CONFIRMATION_POSITIVE = 'endChatConfirmationPositive';
     public const END_CHAT_CONFIRMATION_NEGATIVE = 'endChatConfirmationNegative';
 
-    protected $fillable = ['name', 'type', 'value'];
+    protected $fillable = [
+        'name',
+        'type',
+        'value',
+        'display_name',
+        'display',
+        'description',
+        'section',
+        'subsection',
+        'parent_id',
+        'sibling'
+    ];
+
+    protected $casts = [
+        'value' => WebchatSettingsValueCast::class,
+        'display' => 'boolean'
+    ];
 
     /**
      * Define parent relationship.
      */
     public function parent()
     {
-        return $this->belongsTo('OpenDialogAi\Webchat\WebchatSetting', 'parent_id');
+        return $this->belongsTo(
+            'OpenDialogAi\Webchat\WebchatSetting',
+            'parent_id'
+        );
     }
 
     /**
@@ -139,7 +173,13 @@ class WebchatSetting extends Model
      */
     public function children()
     {
-        return $this->hasMany('OpenDialogAi\Webchat\WebchatSetting', 'parent_id');
+        return $this->hasMany('OpenDialogAi\Webchat\WebchatSetting',
+        'parent_id');
+    }
+
+    public function scopeNonTopLevel($query)
+    {
+        return $query->whereNotNull('parent_id');
     }
 
     public static function getSettings()

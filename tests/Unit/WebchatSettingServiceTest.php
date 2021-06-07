@@ -19,11 +19,9 @@ class WebchatSettingServiceTest extends TestCase
     {
         $settings = config('opendialog.webchat_setting');
         $this->assertArrayHasKey(WebchatSetting::GENERAL, $settings);
-        $this->assertArrayHasKey(WebchatSetting::STRING, $settings[WebchatSetting::GENERAL]);
-        $this->assertNotContains('myCustomSetting1', $settings[WebchatSetting::GENERAL][WebchatSetting::STRING]);
-        $this->assertNotContains('myCustomSetting2', $settings[WebchatSetting::GENERAL][WebchatSetting::STRING]);
-        $this->assertArrayHasKey(WebchatSetting::BOOLEAN, $settings[WebchatSetting::GENERAL]);
-        $this->assertNotContains('myCustomSetting3', $settings[WebchatSetting::GENERAL][WebchatSetting::BOOLEAN]);
+        $this->assertNotContains('myCustomSetting1', array_keys($settings[WebchatSetting::GENERAL]));
+        $this->assertNotContains('myCustomSetting2', array_keys($settings[WebchatSetting::GENERAL]));
+        $this->assertNotContains('myCustomSetting3', array_keys($settings[WebchatSetting::GENERAL]));
 
         resolve(WebchatSettingServiceInterface::class)->mergeConfigFrom(
             __DIR__ . '/Example/opendialog-webchatsetting-custom.php',
@@ -33,10 +31,9 @@ class WebchatSettingServiceTest extends TestCase
         $settings = config('opendialog.webchat_setting');
 
         $this->assertArrayHasKey(WebchatSetting::GENERAL, $settings);
-        $this->assertArrayHasKey(WebchatSetting::STRING, $settings[WebchatSetting::GENERAL]);
-        $this->assertContains('myCustomSetting1', $settings[WebchatSetting::GENERAL][WebchatSetting::STRING]);
-        $this->assertContains('myCustomSetting2', $settings[WebchatSetting::GENERAL][WebchatSetting::STRING]);
-        $this->assertArrayHasKey(WebchatSetting::BOOLEAN, $settings[WebchatSetting::GENERAL]);
-        $this->assertContains('myCustomSetting3', $settings[WebchatSetting::GENERAL][WebchatSetting::BOOLEAN]);
+
+        $this->assertContains('myCustomSetting1', array_keys($settings[WebchatSetting::GENERAL]));
+        $this->assertContains('myCustomSetting2', array_keys($settings[WebchatSetting::GENERAL]));
+        $this->assertContains('myCustomSetting3', array_keys($settings[WebchatSetting::GENERAL]));
     }
 }
