@@ -56,6 +56,10 @@ export default {
   animation-name: fadeInUp;
   animation-duration: 0.5s;
 
+  @media screen and (min-width: 900px) {
+    align-items: flex-start;
+  }
+
   img.avatar {
     padding: 0;
     height: 53px;
@@ -98,7 +102,8 @@ export default {
     padding-bottom: 15px;
 
     @media (min-width: 900px) {
-      padding-top: 25px;
+      margin-top: -30px;
+      margin-left: 20px;
     }
   }
 
@@ -115,8 +120,8 @@ export default {
       margin-right: 10px;
 
       @media (min-width: 900px) {
-        margin-bottom: -10px;
-        padding-top: 18px;
+        margin-bottom: 0px;
+        padding-top: 0px;
       }
     }
   }
@@ -125,12 +130,7 @@ export default {
     @media (min-width: 900px) {
       margin-left: -100px;
       margin-bottom: -70px;
-    }
-
-    &.author--name {
-      @media (min-width: 900px) {
-        margin-bottom: -30px;
-      }
+      padding-top: 30px;
     }
   }
 }
