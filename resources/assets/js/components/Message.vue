@@ -120,12 +120,11 @@
         && message.type !== 'datetime'
         && message.type !== 'typing'
         && message.type !== 'author'
-        && !message.data.first
-        && !message.data.middle"
+        && !message.data.hidetime"
       class="od-message--time-read"
     >
       <template
-        v-if="message.data && message.data.time && !message.data.hidetime"
+        v-if="message.data && message.data.time"
       >{{ message.data.time }}</template>
       <template v-if="read">- Read</template>
     </span>

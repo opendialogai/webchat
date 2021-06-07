@@ -121,24 +121,26 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
             /* eslint-disable no-param-reassign */
             message.data.animate = webChatComponent.messageAnimation;
 
+            if (message.data) {
+              if (messageIndex === 0 && totalMessages > 1) {
+                message.data.first = true;
+              }
+
+              if (messageIndex > 0 && messageIndex < totalMessages - 1) {
+                message.data.middle = true;
+              }
+
+              if (messageIndex > 0 && messageIndex === totalMessages - 1) {
+                message.data.last = true;
+              }
+            }
+
             if (
               messageIndex === 0 ||
               !webChatComponent.hideTypingIndicatorOnInternalMessages
             ) {
               typingMessage.type = message.type;
               typingMessage.data = message.data;
-
-              if (messageIndex === 0 && totalMessages > 1) {
-                typingMessage.data.first = true;
-              }
-
-              if (messageIndex > 0 && messageIndex < totalMessages - 1) {
-                typingMessage.data.middle = true;
-              }
-
-              if (messageIndex > 0 && messageIndex === totalMessages - 1) {
-                typingMessage.data.last = true;
-              }
 
               webChatComponent.$root.$emit("scroll-down-message-list");
               setTimeout(() => {
