@@ -242,9 +242,11 @@
 // message type wrapper --- message type wrapper ---
 
 .mt-wrapper {
-  margin: 0 auto;
   max-width: 700px;
   width: calc(100% - 50px);
+  margin: 0 auto;
+  padding-bottom: 8px;
+
   @media screen and (min-width: 768px) {
     width: 100%;
   }
@@ -263,6 +265,7 @@
 .mt-wrapper-author {
   pointer-events: none;
   z-index: 10;
+  padding-bottom: 0;
 }
 
 .mt-wrapper.fadeUp-enter-active {
@@ -302,13 +305,11 @@
 
   &.first-message {
     border-bottom-left-radius: 0;
-    margin-bottom: 8px;
   }
 
   &.middle-message {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
-    margin-bottom: 8px;
   }
 
   &.last-message {
