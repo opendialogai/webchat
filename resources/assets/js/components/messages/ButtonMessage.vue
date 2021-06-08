@@ -34,7 +34,7 @@
       </template>
     </div>
 
-    <template v-if="data.buttons.length && !data.external">
+    <template v-if="data.buttons.length && !hasOnlyInline && !data.external">
       <div class="od-message-button__buttons-wrapper reap fade-enter-active">
         <template v-for="(button, idx) in data.buttons">
           <button
@@ -140,10 +140,6 @@ export default {
 
   &.animate {
     opacity: 0;
-  }
-
-  &.inline {
-    margin-bottom: 20px;
   }
 
   &.emit {
