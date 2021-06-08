@@ -400,7 +400,7 @@ export default {
         })
       }
 
-      this.$store.dispatch('sendMessage', {sentMsg: newMsg, webChat: this})
+      return this.$store.dispatch('sendMessage', {sentMsg: newMsg, webChat: this})
     },
     userInputFocus() {
     },

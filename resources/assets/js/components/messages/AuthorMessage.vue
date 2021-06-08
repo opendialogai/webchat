@@ -44,20 +44,27 @@ export default {
 
 <style lang="scss">
 .od-author.mt {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  margin: 0 0 -15px 0;
   padding: 0;
-  margin: 0;
   border-radius: 0;
   background-color: rgba(0, 0, 0, 0);
-  font-family: proxima_nova_ltsemibold;
   font-size: 15px;
   font-weight: 600;
   animation-name: fadeInUp;
   animation-duration: 0.5s;
 
+  @media screen and (min-width: 900px) {
+    align-items: flex-start;
+  }
+
   img.avatar {
     padding: 0;
     height: 53px;
     width: 53px;
+    object-fit: contain;
 
     @media screen and (min-width: 900px) {
       border-radius: 0;
@@ -69,13 +76,14 @@ export default {
   span.avatar {
     width: 35px;
     height: 35px;
+    margin: 9px 0;
     border-radius: 50px;
-    background: #2d2d2d;
+    background: var(--od-received-message-background);
     display: block;
     text-align: center;
     line-height: 35px;
-    color: #ffffff;
-    
+    color: var(--od-received-message-text);
+
     @media screen and (min-width: 900px) {
       width: 60px;
       height: 60px;
@@ -89,18 +97,19 @@ export default {
 
   .od-author--name {
     vertical-align: top;
-    color: white;
+    color: var(--od-received-message-background);
     padding-top: 12px;
-    
+    padding-bottom: 15px;
+
     @media (min-width: 900px) {
-      padding-top: 25px;
+      margin-top: -30px;
+      margin-left: 20px;
     }
   }
 
   &.emit {
-    margin-bottom: -6px;
     margin-right: 5px;
-    
+
     @media (min-width: 900px) {
       margin-right: -85px;
       margin-bottom: -60px;
@@ -109,26 +118,19 @@ export default {
     .od-author--name {
       padding-top: 5px;
       margin-right: 10px;
-      
+
       @media (min-width: 900px) {
-        margin-bottom: -10px;
-        padding-top: 18px;
+        margin-bottom: 0px;
+        padding-top: 0px;
       }
     }
   }
 
   &.reap {
-    margin-bottom: -25px;
-
     @media (min-width: 900px) {
       margin-left: -100px;
       margin-bottom: -70px;
-    }
-
-    &.author--name {
-      @media (min-width: 900px) {
-        margin-bottom: -30px;
-      }
+      padding-top: 30px;
     }
   }
 }

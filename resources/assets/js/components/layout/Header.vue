@@ -20,17 +20,22 @@
       </div>
 
       <div class="od-header-nav">
-        <div class="od-header-nav__team-name" v-if="!showFullPageFormInput && !showFullPageRichInput">
-          <span v-if="teamName" v-html="teamName"></span>
-        </div>
+        <div class="od-header-nav__branding">
+          <div class="od-header-nav__logo" v-if="imageUrl">
+            <img :src="imageUrl" alt />
+          </div>
 
-        <div class="od-header-nav__logo">
-          <img v-if="imageUrl" :src="imageUrl" alt />
+          <div
+            class="od-header-nav__team-name"
+            :class="{'invisible': showFullPageFormInput || showFullPageRichInput}"
+            v-if="teamName">
+            <span v-html="teamName"></span>
+          </div>
         </div>
 
         <div
           class="od-header-nav__buttons"
-          v-if="showHeaderButtonsOnFullPageMessages || (!showFullPageFormInput && !showFullPageRichInput)"
+          :class="{'invisible': !showHeaderButtonsOnFullPageMessages && (showFullPageFormInput || showFullPageRichInput)}"
         >
           <div
             v-if="showRestartButton"
@@ -296,7 +301,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
-      padding: 0 25px;
+      padding: 10px 25px;
 
       @media (min-width: $media-med) {
         flex-direction: row;
@@ -307,11 +312,26 @@ export default {
       }
     }
 
+    .od-header-nav__branding {
+      width: 100%;
+      order: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      * + * {
+        margin-top: 10px;
+      }
+    }
+
     .od-header-nav__team-name {
       width: 100%;
       align-items: center;
-      display: none;
-      font-size: 14px;
+      font-size: 12px;
+
+      @media (min-width: $media-sml) {
+        font-size: 14px;
+      }
 
       @media (min-width: $media-med) {
         display: flex;
@@ -320,16 +340,11 @@ export default {
     }
 
     .od-header-nav__logo {
-      width: 40%;
+      width: 60%;
       min-height: 22px;
-      order: 2;
 
       @media (min-width: $media-sml) {
         width: 28%;
-      }
-
-      @media (min-width: $media-med) {
-        order: unset;
       }
 
       img {

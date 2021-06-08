@@ -4,6 +4,9 @@
     :class="[
     {
        'mt-wrapper-author': message.type === 'author',
+       'first-message': message.data && message.data.first,
+       'middle-message': message.data && message.data.middle,
+       'last-message': message.data && message.data.last,
     }]"
   >
     <span v-if="message.author != 'me' && authorName" class="sc-message--name">{{ authorName }}</span>
@@ -116,11 +119,15 @@
     <DatetimeFakeMessage v-else-if="message.type === 'datetime'" :message="message" />
 
     <span
-      v-if="!hideMessageTime && message.type !== 'datetime' && message.type !== 'typing' && message.type !== 'author'"
+      v-if="!hideMessageTime
+        && message.type !== 'datetime'
+        && message.type !== 'typing'
+        && message.type !== 'author'
+        && !message.data.hidetime"
       class="od-message--time-read"
     >
       <template
-        v-if="message.data && message.data.time && !message.data.hidetime"
+        v-if="message.data && message.data.time"
       >{{ message.data.time }}</template>
       <template v-if="read">- Read</template>
     </span>
@@ -237,9 +244,11 @@
 // message type wrapper --- message type wrapper ---
 
 .mt-wrapper {
-  margin: 0 auto;
   max-width: 700px;
   width: calc(100% - 50px);
+  margin: 0 auto;
+  padding-bottom: 20px;
+
   @media screen and (min-width: 768px) {
     width: 100%;
   }
@@ -252,12 +261,31 @@
   flex-direction: column;
   position: relative;
   z-index: 0;
+
+  &.first-message .mt {
+    border-bottom-left-radius: 0;
+  }
+
+  &.middle-message .mt {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+  }
+
+  &.last-message .mt {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 30px;
+  }
+
+  &.first-message, &.middle-message {
+    padding-bottom: 8px;
+  }
 }
 
 // special wrapper for author message (avatar) only
 .mt-wrapper-author {
   pointer-events: none;
   z-index: 10;
+  padding-bottom: 0;
 }
 
 .mt-wrapper.fadeUp-enter-active {
@@ -271,7 +299,6 @@
   box-shadow: none;
   max-width: 90%;
   max-width: calc(90% - 45px);
-  margin-bottom: 20px;
   padding: 15px 20px;
   line-height: 1.6;
   font-size: 14px;
@@ -295,22 +322,6 @@
 .reap {
   align-self: flex-start;
   border-bottom-left-radius: 0;
-  
-  &.first-message {
-    border-bottom-left-radius: 0;
-    margin-bottom: 8px;
-  }
-
-  &.middle-message {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-    margin-bottom: 8px;
-  }
-
-  &.last-message {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 30px;
-  }
 }
 
 .mt-meta {
@@ -322,9 +333,9 @@
 }
 
 .od-message--time-read {
+  margin-top: 5px;
   font-size: x-small;
-  margin-top: -20px;
-  color: white;
+  color: var(--od-received-message-background);
 }
 .mt.emit + .od-message--time-read {
   text-align: right;
