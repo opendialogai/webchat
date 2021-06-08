@@ -86,7 +86,7 @@ export default {
     hasOnlyInline() {
       console.log(this.data.buttons.find(btn => btn.type === 'inline'))
       return this.data.buttons.length && this.data.buttons.find(btn => btn.type === 'inline') && this.data.buttons.filter(btn => btn.type !== 'inline').length <= 0
-    } 
+    }
   },
   mounted() {
     if (this.data.animate) {
@@ -137,7 +137,7 @@ export default {
 <style lang="scss">
 .od-message-button {
   transition: width 0.3s linear, height 0.3s linear 0.3s;
-  
+
   &.animate {
     opacity: 0;
   }
@@ -157,7 +157,7 @@ export default {
     animation-duration: 0.3s;
     animation-delay: 0.9s;
     margin-top: -18px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 
   .od-message-button__text {
@@ -198,7 +198,7 @@ export default {
       top: -2px;
     }
   }
-  
+
   .od-message-button__buttons-wrapper__button {
     background-color: var(--od-button-background);
     color: var(--od-button-text);
