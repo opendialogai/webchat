@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^7.3.0",
+        "php": "^7.4 || ^8.0",
         "genealabs/laravel-caffeine": "^8.0"
     },
     "require-dev": {
@@ -38,5 +38,11 @@
                 "OpenDialogAi\\Webchat\\WebchatSetting\\WebchatSettingServiceProvider"
             ]
         }
-    }
+    },
+    "repositories":  [
+        {
+            "type": "vcs",
+            "url": "https://github.com/opendialogai/google-cloud-php-dialogflow"
+        }
+    ]
 }

@@ -55,6 +55,14 @@ To build assets whist developing follow this process:
 + Run `php artisan vendor:publish --tag=public --force` to move the newly built assets into the parent application to be
 served
 
+## Publishing migration files
+Migration files need to be published before they can be applied to an OpenDialog app's database.
+To publish the migrations, run:
+    php artisan vendor:publish --tag="od-webchat-migrations"
+This relies on the `MULTI_TENANT` env having been set to true in the app's `.env` file if being run as a
+multi-tenant system to ensure the migrations end up in the right place
+
+
 # Configuration 
 
 The webchat configuration can be found in the `webchat_settings` table. Before running, the config table should be seeded
