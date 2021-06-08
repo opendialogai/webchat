@@ -8,9 +8,6 @@
         emit : this.author === 'me',
         reap: this.author !== 'me' && this.author !== 'system',
         system: this.type === 'system',
-        'first-message': this.data && this.data.first,
-        'middle-message': this.data && this.data.middle,
-        'last-message': this.data && this.data.last,
     }]"
     v-linkified:options="{ format: function (value, type) { return '<span>' + value + '</span>'; } }"
   >
