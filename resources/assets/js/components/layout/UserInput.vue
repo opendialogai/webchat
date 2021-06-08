@@ -333,6 +333,7 @@ export default {
   .od-user-input__form-text-input {
     caret-color: currentColor;
     color: var(--od-user-input-text);
+    background: inherit;
     display: inline-block;
     resize: none;
     border: none;
