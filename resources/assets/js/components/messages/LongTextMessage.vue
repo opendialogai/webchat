@@ -1,6 +1,6 @@
 <template>
   <div class="od-message-long-text" v-linkified>
-    <span v-html="data.text"></span>
+    <span>{{ data.text }}</span>
     <p v-if="data.meta" class='od-message--meta'>{{data.meta}}</p>
   </div>
 </template>

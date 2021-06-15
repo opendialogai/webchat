@@ -23,7 +23,7 @@
           class="od-full-page-rich__text animateStartingState animateDelay1"
           :class="{animateSlideUp: isOpen}"
         >
-          <span v-html="message.data.text"></span>
+          <span>{{ message.data.text }}</span>
         </p>
       </div>
       <template v-if="message.data.image">

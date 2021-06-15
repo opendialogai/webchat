@@ -7,8 +7,7 @@
       <div
         class="od-fp-form__title animateStartingState animateDelay1"
         :class="{animateSlideUp: isOpen}"
-        v-html="message.data.text"
-      ></div>
+      >{{ message.data.text }}</div>
 
       <div
         v-for="element in message.data.elements"
