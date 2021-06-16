@@ -7,7 +7,7 @@
         reap: this.author === 'them',
     }]"
   >
-    <div class="button" v-html="data.text"></div>
+    <div class="button">{{ data.text }}</div>
   </div>
 </template>
 

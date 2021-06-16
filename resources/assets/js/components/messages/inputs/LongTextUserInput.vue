@@ -2,10 +2,10 @@
   <div class="od-long-user-input od-long-user-input--container">
     <div class="od-long-user-input--message">
       <template v-if="showConfirmationMessage">
-        <span v-html="confirmationMessage"></span>
+        <span>{{ confirmationMessage }}</span>
       </template>
       <template v-else>
-        <span v-html="headerText"></span>
+        <span>{{ headerText }}</span>
       </template>
     </div>
     <form class="od-long-user-input__input" :class="{active: inputActive}">

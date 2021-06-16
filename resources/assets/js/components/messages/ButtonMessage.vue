@@ -9,7 +9,7 @@
     }]"
   >
     <div v-if="data.text" class="mt reap od-message-button__text">
-      <span v-html="data.text" v-linkified></span>
+      <span v-linkified>{{ data.text }}</span>
       <template v-if="data.buttons.length && !data.external">
         <div class="od-message-button__inline-buttons">
           <template v-for="(button, idx) in data.buttons">
@@ -19,7 +19,7 @@
               @[shouldClear]="_handleClick(button)"
               class="od-message-button__inline-button"
               :class="[button.type, {'download': button.download}]">
-              <span v-html="button.text"></span>
+              <span>{{ button.text }}</span>
               <span class="od-message-button__button-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
                   <g fill="var(--od-button-text)">
@@ -41,10 +41,11 @@
             v-if="button.display && button.text && button.type !== 'inline'"
             :key="idx"
             @[shouldClear]="_handleClick(button)"
-            v-html="button.text"
             class="od-message-button__buttons-wrapper__button fade-enter-active"
             :class="button.type"
-          ></button>
+          >
+            {{ button.text }}
+          </button>
         </template>
       </div>
     </template>

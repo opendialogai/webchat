@@ -10,7 +10,7 @@
     <div class="od-message-rich--title">{{ data.title }}</div>
     <div class="od-message-rich--subtitle">{{ data.subtitle }}</div>
     <p class="od-message-rich--text" v-linkified>
-      <span v-html="data.text"></span>
+      <span>{{ data.text }}</span>
     </p>
 
     <template v-if="data.image">

@@ -34,7 +34,7 @@
               @[submitAction]="_handleClick(externalButton, idx)"
               ref="externalButton"
               :key="idx">
-              <span v-html="externalButton.text"></span>
+              <span>{{ externalButton.text }}</span>
             </button>
           </template>
         </div>
