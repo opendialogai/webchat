@@ -1,6 +1,6 @@
 <template>
   <div class="od-message-form mt od-message-form reap">
-    <div class="od-message-form--text" v-html="data.text"></div>
+    <div class="od-message-form--text">{{ data.text }}</div>
     <div v-if="errors.length" class="od-message-form--errors">
       <div v-for="error in errors">
         <span v-html="error"></span>
