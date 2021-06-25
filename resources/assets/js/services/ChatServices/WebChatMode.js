@@ -253,6 +253,7 @@ WebChatMode.prototype.sendResponseSuccess = function(response, sentMessage, webC
           // If we don't get data about whether to disable the editor, turn it on
           webChatComponent.contentEditable = true;
         }
+        sendMessageReceivedEvent(message, webChatComponent);
       } else {
         let typingMessage;
 
