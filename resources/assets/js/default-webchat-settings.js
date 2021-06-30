@@ -20,6 +20,8 @@ export default {
         "useHumanName": false,
         "collectUserIp": false,
         "showRestartButton": false,
+        "showDownloadButton": false,
+        "showEndChatButton": false,
         "showHeaderCloseButton": false,
         "showHeaderButtonsOnFullPageMessages": false,
         "messageAnimation": false,

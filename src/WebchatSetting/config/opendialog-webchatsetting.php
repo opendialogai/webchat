@@ -134,6 +134,21 @@ return [
         ],
         WebchatSetting::SHOW_RESTART_BUTTON => [
             WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
+            WebchatSetting::SECTION => 'General Settings',
+            WebchatSetting::DISPLAY_NAME => 'Show restart button',
+            WebchatSetting::DESCRIPTION => 'Whether to show the restart button in the chatbot header',
+        ],
+        WebchatSetting::SHOW_END_CHAT_BUTON => [
+            WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
+            WebchatSetting::SECTION => 'General Settings',
+            WebchatSetting::DISPLAY_NAME => 'Show chat end button',
+            WebchatSetting::DESCRIPTION => 'Whether to show name the Chat End button in the chatbot footer',
+        ],
+        WebchatSetting::SHOW_DOWNLOAD_BUTON => [
+            WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
+            WebchatSetting::SECTION => 'General Settings',
+            WebchatSetting::DISPLAY_NAME => 'Show download button',
+            WebchatSetting::DESCRIPTION => 'Whether to show name the download button in the chatbot header',
         ],
         WebchatSetting::SHOW_HEADER_CLOSE_BUTTON => [
             WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
