@@ -177,7 +177,8 @@ return [
             WebchatSetting::SECTION => 'General Settings',
             WebchatSetting::SUBSECTION => 'Start Options',
             WebchatSetting::DISPLAY_NAME => 'Start Minimized For Returning Users',
-            WebchatSetting::DESCRIPTION => 'Whether the chatbot starts minimized for users we\'ve seen before but aren\'t in a conversation',
+            WebchatSetting::DESCRIPTION =>
+                'Whether the chatbot starts minimized for users we\'ve seen before but aren\'t in a conversation',
         ],
         WebchatSetting::ONGOING_USER_START_MINIMIZED => [
             WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
