@@ -168,7 +168,7 @@ class WebchatSettings
      */
     private function getUserType($userId): string
     {
-        /** @var USerContext $userContext */
+        /** @var UserContext $userContext */
         $userContext = ContextService::getContext(UserContext::USER_CONTEXT);
         $userContext->setUserId($userId);
 
