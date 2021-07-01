@@ -4,9 +4,11 @@ namespace OpenDialogAi\Webchat\Http\Controllers;
 
 use Illuminate\Http\Request;
 use OpenDialogAi\AttributeEngine\CoreAttributes\UserAttribute;
+use OpenDialogAi\AttributeEngine\CoreAttributes\UtteranceAttribute;
 use OpenDialogAi\AttributeEngine\Exceptions\AttributeDoesNotExistException;
 use OpenDialogAi\ContextEngine\Contexts\User\UserContext;
 use OpenDialogAi\ContextEngine\Facades\ContextService;
+use OpenDialogAi\Core\Conversation\Conversation;
 use OpenDialogAi\Webchat\WebchatSetting;
 use OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service\WebchatSettingsConfigurationPageInformation;
 use OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service\WebchatSettingsConfigurationServiceInterface;
@@ -174,9 +176,9 @@ class WebchatSettings
 
         try {
             /** @var UserAttribute $userAttribute */
-            $userAttribute = $userContext->getAttribute('utterance_user', true);
+            $userAttribute = $userContext->getAttribute(UtteranceAttribute::UTTERANCE_USER, true);
 
-            if ($userAttribute->getUserHistoryRecord()->getConversationId() === 'undefined') {
+            if ($userAttribute->getUserHistoryRecord()->getConversationId() === Conversation::UNDEFINED) {
                 return self::RETURNING_USER;
             }
 
