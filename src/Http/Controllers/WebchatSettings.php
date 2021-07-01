@@ -66,7 +66,9 @@ class WebchatSettings
         $config[WebchatSetting::SHOW_MINIMIZED] = false;
         $config[WebchatSetting::OPEN_INTENT] = 'WELCOME';
 
-        $config[WebchatSetting::USER_TYPE] = $this->getUserType($request->get('user_id'));
+        if ($request->get('user_id')) {
+            $config[WebchatSetting::USER_TYPE] = $this->getUserType($request->get('user_id'));
+        }
 
         /** @var WebchatSettingsConfigurationServiceInterface $configurationService */
         $configurationService = resolve(WebchatSettingsConfigurationServiceInterface::class);

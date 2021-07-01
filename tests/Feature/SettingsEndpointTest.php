@@ -15,8 +15,6 @@ class SettingsEndpointTest extends TestCase
 {
     public function testSettingsApi()
     {
-        $this->mockUserContext('test', null, false);
-
         $generalSetting = new WebchatSetting();
         $generalSetting->name = 'general';
         $generalSetting->value = 'general';
