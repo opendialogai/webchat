@@ -4,6 +4,7 @@ namespace OpenDialogAi\Webchat\Http\Controllers;
 
 use Illuminate\Http\Request;
 use OpenDialogAi\AttributeEngine\CoreAttributes\UserAttribute;
+use OpenDialogAi\AttributeEngine\Exceptions\AttributeDoesNotExistException;
 use OpenDialogAi\ContextEngine\Contexts\User\UserContext;
 use OpenDialogAi\ContextEngine\Facades\ContextService;
 use OpenDialogAi\Webchat\WebchatSetting;
@@ -168,19 +169,20 @@ class WebchatSettings
     private function getUserType($userId): string
     {
         /** @var USerContext $userContext */
-        $userContext = ContextService::getContext(UserContext::getComponentId());
+        $userContext = ContextService::getContext(UserContext::USER_CONTEXT);
         $userContext->setUserId($userId);
 
-        /** @var UserAttribute $userAttribute */
-        $userAttribute = $userContext->getAttribute('utterance_user', true);
-        if (is_null($userAttribute)) {
+        try {
+            /** @var UserAttribute $userAttribute */
+            $userAttribute = $userContext->getAttribute('utterance_user', true);
+
+            if ($userAttribute->getUserHistoryRecord()->getConversationId() === 'undefined') {
+                return self::RETURNING_USER;
+            }
+
+            return self::ONGOING_USER;
+        } catch (AttributeDoesNotExistException $e) {
             return self::NEW_USER;
         }
-
-        if ($userAttribute->getUserHistoryRecord()->getConversationId() === 'undefined') {
-            return self::RETURNING_USER;
-        }
-
-        return self::ONGOING_USER;
     }
 }

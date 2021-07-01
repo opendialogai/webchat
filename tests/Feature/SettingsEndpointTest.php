@@ -3,7 +3,11 @@
 namespace OpenDialogAi\Webchat\Tests\Feature;
 
 use Mockery;
-use OpenDialogAi\ContextEngine\Contexts\User\UserService;
+use OpenDialogAi\AttributeEngine\CoreAttributes\UserAttribute;
+use OpenDialogAi\AttributeEngine\CoreAttributes\UserHistoryRecord;
+use OpenDialogAi\AttributeEngine\Exceptions\AttributeDoesNotExistException;
+use OpenDialogAi\ContextEngine\Contexts\User\UserContext;
+use OpenDialogAi\ContextEngine\Facades\ContextService;
 use OpenDialogAi\Webchat\Tests\TestCase;
 use OpenDialogAi\Webchat\WebchatSetting;
 
@@ -11,6 +15,8 @@ class SettingsEndpointTest extends TestCase
 {
     public function testSettingsApi()
     {
+        $this->mockUserContext('test', null, false);
+
         $generalSetting = new WebchatSetting();
         $generalSetting->name = 'general';
         $generalSetting->value = 'general';
@@ -25,7 +31,7 @@ class SettingsEndpointTest extends TestCase
 
         $setting2 = new WebchatSetting();
         $setting2->name = 'open';
-        $setting2->value = TRUE;
+        $setting2->value = true;
         $setting2->type = 'boolean';
         $setting2->save();
 
@@ -64,7 +70,7 @@ class SettingsEndpointTest extends TestCase
 
         $setting8 = new WebchatSetting();
         $setting8->name = 'commentsEnabled';
-        $setting8->value = FALSE;
+        $setting8->value = false;
         $setting8->type = 'boolean';
         $setting8->parent_id = $setting6->id;
         $setting8->save();
@@ -100,13 +106,81 @@ class SettingsEndpointTest extends TestCase
                     'foo' => 'bar',
                     'bee' => 'baz',
                 ],
-            ], TRUE);
+            ], true);
     }
 
-    public function testSettingsApiWithUserId()
+    public function testSettingsApiWithUserIdOngoingUser()
     {
-        $this->markTestSkipped();
+        $generalSetting = new WebchatSetting();
+        $generalSetting->name = 'general';
+        $generalSetting->value = 'general';
+        $generalSetting->type = 'object';
+        $generalSetting->save();
 
+        $setting = new WebchatSetting();
+        $setting->name = 'ongoingUserStartMinimized';
+        $setting->value = false;
+        $setting->type = 'boolean';
+        $setting->parent()->associate($generalSetting);
+        $setting->save();
+
+        $setting = new WebchatSetting();
+        $setting->name = 'ongoingUserOpenCallback';
+        $setting->value = 'ongoing_user_open_callback';
+        $setting->type = 'string';
+        $setting->parent()->associate($generalSetting);
+        $setting->save();
+
+        $userId = 'test';
+
+        $this->mockUserContext($userId, 1);
+
+        $this->json('GET', '/webchat-config?user_id=' . $userId)
+            ->assertStatus(200)
+            ->assertJson([
+                'userType' => 'ongoing',
+                'showMinimized' => false,
+                'openIntent' => 'ongoing_user_open_callback',
+            ], true);
+    }
+
+    public function testSettingsApiWithUserIdReturningUser()
+    {
+        $generalSetting = new WebchatSetting();
+        $generalSetting->name = 'general';
+        $generalSetting->value = 'general';
+        $generalSetting->type = 'object';
+        $generalSetting->save();
+
+        $setting = new WebchatSetting();
+        $setting->name = 'returningUserStartMinimized';
+        $setting->value = false;
+        $setting->type = 'boolean';
+        $setting->parent()->associate($generalSetting);
+        $setting->save();
+
+        $setting = new WebchatSetting();
+        $setting->name = 'returningUserOpenCallback';
+        $setting->value = 'returning_user_open_callback';
+        $setting->type = 'string';
+        $setting->parent()->associate($generalSetting);
+        $setting->save();
+
+        $userId = 'test';
+
+        $this->mockUserContext($userId, 'undefined');
+
+        $this->json('GET', '/webchat-config?user_id=' . $userId)
+            ->assertStatus(200)
+            ->assertJson([
+                'userType' => 'returning',
+                'showMinimized' => false,
+                'openIntent' => 'returning_user_open_callback',
+            ], true);
+    }
+
+    public function testSettingsApiWithUserIdNewUser()
+    {
         $generalSetting = new WebchatSetting();
         $generalSetting->name = 'general';
         $generalSetting->value = 'general';
@@ -115,7 +189,7 @@ class SettingsEndpointTest extends TestCase
 
         $setting = new WebchatSetting();
         $setting->name = 'newUserStartMinimized';
-        $setting->value = TRUE;
+        $setting->value = true;
         $setting->type = 'boolean';
         $setting->parent()->associate($generalSetting);
         $setting->save();
@@ -127,76 +201,51 @@ class SettingsEndpointTest extends TestCase
         $setting3->parent()->associate($generalSetting);
         $setting3->save();
 
-        $setting4 = new WebchatSetting();
-        $setting4->name = 'returningUserStartMinimized';
-        $setting4->value = FALSE;
-        $setting4->type = 'boolean';
-        $setting4->parent()->associate($generalSetting);
-        $setting4->save();
-
-        $setting6 = new WebchatSetting();
-        $setting6->name = 'returningUserOpenCallback';
-        $setting6->value = 'returning_user_open_callback';
-        $setting6->type = 'string';
-        $setting6->parent()->associate($generalSetting);
-        $setting6->save();
-
-        $setting7 = new WebchatSetting();
-        $setting7->name = 'ongoingUserStartMinimized';
-        $setting7->value = FALSE;
-        $setting7->type = 'boolean';
-        $setting7->parent()->associate($generalSetting);
-        $setting7->save();
-
-        $setting9 = new WebchatSetting();
-        $setting9->name = 'ongoingUserOpenCallback';
-        $setting9->value = 'ongoing_user_open_callback';
-        $setting9->type = 'string';
-        $setting9->parent()->associate($generalSetting);
-        $setting9->save();
-
         $userId = 'test';
 
+        $this->mockUserContext($userId, null, false);
 
-        $this->instance(UserService::class, Mockery::mock(UserService::class, function ($mock) {
-            $mock->shouldReceive('getUserType')->andReturn('new');
-        }));
-
-        $response = $this->json('GET', '/webchat-config?user_id=' . $userId);
-        $response
+        $this->json('GET', '/webchat-config?user_id=' . $userId)
             ->assertStatus(200)
             ->assertJson([
                 'userType' => 'new',
                 'showMinimized' => true,
                 'openIntent' => 'new_user_open_callback',
-            ], TRUE);
+            ], true);
+    }
 
+    /**
+     * @param string $userId
+     * @param $conversationId
+     */
+    private function mockUserContext(string $userId, $conversationId, $userRecordExists = true): void
+    {
+        $userHistoryRecord = Mockery::mock(UserHistoryRecord::class)->makePartial();
+        $userHistoryRecord->shouldReceive('getConversationId')
+            ->andReturn($conversationId);
 
-        $this->instance(UserService::class, Mockery::mock(UserService::class, function ($mock) {
-            $mock->shouldReceive('getUserType')->andReturn('ongoing');
-        }));
+        $userHistoryRecord->shouldReceive('getId')
+            ->andReturn('history_record');
 
-        $response = $this->json('GET', '/webchat-config?user_id=' . $userId);
-        $response
-            ->assertStatus(200)
-            ->assertJson([
-                'userType' => 'ongoing',
-                'showMinimized' => false,
-                'openIntent' => 'ongoing_user_open_callback',
-            ], TRUE);
+        $userAttribute = new UserAttribute($userId);
+        $userAttribute->setUserHistoryRecord($userHistoryRecord);
 
+        $userContext = Mockery::mock(UserContext::class)->makePartial();
+        if ($userRecordExists) {
+            $userContext->shouldReceive('getAttribute')
+                ->withArgs(['utterance_user', true])
+                ->andReturn($userAttribute);
+        } else {
+            $userContext->shouldReceive('getAttribute')
+                ->withArgs(['utterance_user', true])
+                ->andThrow(AttributeDoesNotExistException::class);
+        }
 
-        $this->instance(UserService::class, Mockery::mock(UserService::class, function ($mock) {
-            $mock->shouldReceive('getUserType')->andReturn('returning');
-        }));
+        $userContext->shouldReceive('setUserId')
+            ->andReturn(true);
 
-        $response = $this->json('GET', '/webchat-config?user_id=' . $userId);
-        $response
-            ->assertStatus(200)
-            ->assertJson([
-                'userType' => 'returning',
-                'showMinimized' => false,
-                'openIntent' => 'returning_user_open_callback',
-            ], TRUE);
+        ContextService::shouldReceive('getContext')
+            ->withArgs(['user'])
+            ->andReturn($userContext);
     }
 }
