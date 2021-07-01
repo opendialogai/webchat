@@ -8,6 +8,7 @@
       :onExpand="onExpand"
       :showExpandButton="showExpandButton"
       :showRestartButton="showRestartButton"
+      :showDownloadButton="showDownloadButton"
       :onRestartButtonClick="onRestartButtonClick"
       :onDownload="onDownload"
       :isOpen="isOpen"
@@ -68,7 +69,6 @@
         :placeholder="placeholder"
         :mode-data="modeData"
         :showEndChatButton="showEndChatButton"
-        :showDownloadButton="showDownloadButton"
         @setChatMode="setChatMode" />
     </template>
   </div>
