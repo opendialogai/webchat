@@ -3,6 +3,7 @@
     "license": "proprietary",
     "description": "Webchat front end component for the Open Dialog project",
     "type": "library",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Stuart Haigh",
