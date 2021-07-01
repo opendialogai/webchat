@@ -3,8 +3,12 @@
 namespace OpenDialogAi\Webchat\Http\Controllers;
 
 use Illuminate\Http\Request;
-use OpenDialogAi\ContextEngine\Contexts\User\UserService;
-use OpenDialogAi\Core\Conversation\ChatbotUser;
+use OpenDialogAi\AttributeEngine\CoreAttributes\UserAttribute;
+use OpenDialogAi\AttributeEngine\CoreAttributes\UtteranceAttribute;
+use OpenDialogAi\AttributeEngine\Exceptions\AttributeDoesNotExistException;
+use OpenDialogAi\ContextEngine\Contexts\User\UserContext;
+use OpenDialogAi\ContextEngine\Facades\ContextService;
+use OpenDialogAi\Core\Conversation\Conversation;
 use OpenDialogAi\Webchat\WebchatSetting;
 use OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service\WebchatSettingsConfigurationPageInformation;
 use OpenDialogAi\Webchat\WebchatSettingsConfiguration\Service\WebchatSettingsConfigurationServiceInterface;
@@ -18,7 +22,7 @@ class WebchatSettings
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request)
@@ -62,16 +66,9 @@ class WebchatSettings
         $config[WebchatSetting::SHOW_MINIMIZED] = false;
         $config[WebchatSetting::OPEN_INTENT] = 'WELCOME';
 
-        // TODO: Get the user type once core 1.x is more complete
-//        $userId = $request->get('user_id') ?? null;
-//        try {
-//            $userService = resolve(UserService::class);
-//            $userType = $userService->getUserType($userId);
-//        } catch (\Exception $e) {
-//            $userType = self::NEW_USER;
-//        }
-//
-//        $config[WebchatSetting::USER_TYPE] = $userType;
+        if ($request->get('user_id')) {
+            $config[WebchatSetting::USER_TYPE] = $this->getUserType($request->get('user_id'));
+        }
 
         /** @var WebchatSettingsConfigurationServiceInterface $configurationService */
         $configurationService = resolve(WebchatSettingsConfigurationServiceInterface::class);
@@ -148,7 +145,7 @@ class WebchatSettings
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return string|null
      */
     private function validateRequest(Request $request)
@@ -162,5 +159,34 @@ class WebchatSettings
         }
 
         return null;
+    }
+
+    /**
+     * Uses the user history record to establish whether this is a new, returning or ongoing user.
+     * If there is no user context available => new user
+     * If the user is currently in a conversation => ongoing user
+     * If the user is not currently in a conversation => returning user
+     *
+     * @param $userId
+     * @return string
+     */
+    private function getUserType($userId): string
+    {
+        /** @var UserContext $userContext */
+        $userContext = ContextService::getContext(UserContext::USER_CONTEXT);
+        $userContext->setUserId($userId);
+
+        try {
+            /** @var UserAttribute $userAttribute */
+            $userAttribute = $userContext->getAttribute(UtteranceAttribute::UTTERANCE_USER, true);
+
+            if ($userAttribute->getUserHistoryRecord()->getConversationId() === Conversation::UNDEFINED) {
+                return self::RETURNING_USER;
+            }
+
+            return self::ONGOING_USER;
+        } catch (AttributeDoesNotExistException $e) {
+            return self::NEW_USER;
+        }
     }
 }
