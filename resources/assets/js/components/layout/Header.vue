@@ -319,10 +319,10 @@ export default {
 
     .od-header-nav__branding {
       width: 100%;
-      order: 2;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: space-evenly;
 
       * + * {
         margin-top: 10px;
@@ -353,7 +353,10 @@ export default {
       }
 
       img {
+        width: 100%;
+        height: 100%;
         object-fit: contain;
+        object-position: left center;
       }
     }
 
