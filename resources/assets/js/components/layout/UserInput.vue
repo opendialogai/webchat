@@ -68,7 +68,8 @@
         </button>
 
         <EndChatButton
-          @close-chat="closeChat"
+            v-if="showEndChatButton"
+            @close-chat="closeChat"
         />
       </div>
     </form>
@@ -126,6 +127,10 @@ export default {
     modeData: {
       type: Object,
       required: true
+    },
+    showEndChatButton: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

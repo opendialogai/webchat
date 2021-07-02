@@ -41,6 +41,8 @@
         :content-editable="contentEditable"
         :show-expand-button="false"
         :show-restart-button="showRestartButton"
+        :show-end-chat-button="showEndChatButton"
+        :show-download-button="showDownloadButton"
         :show-typing-indicator="showTypingIndicator"
         :show-long-text-input="showLongTextInput"
         :show-full-page-form-input="showFullPageFormInput"
@@ -141,6 +143,8 @@ export default {
       default: ""
     },
     showRestartButton: Boolean,
+    showEndChatButton: Boolean,
+    showDownloadButton: Boolean,
     showExpandButton: Boolean,
     useBotAvatar: Boolean,
     useHumanAvatar: Boolean,

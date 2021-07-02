@@ -8,6 +8,7 @@
       :onExpand="onExpand"
       :showExpandButton="showExpandButton"
       :showRestartButton="showRestartButton"
+      :showDownloadButton="showDownloadButton"
       :onRestartButtonClick="onRestartButtonClick"
       :onDownload="onDownload"
       :isOpen="isOpen"
@@ -67,6 +68,7 @@
         :showFile="showFile"
         :placeholder="placeholder"
         :mode-data="modeData"
+        :showEndChatButton="showEndChatButton"
         @setChatMode="setChatMode" />
     </template>
   </div>
@@ -193,6 +195,14 @@ export default {
       default: 'Write a reply'
     },
     showRestartButton: {
+      type: Boolean,
+      default: () => false
+    },
+    showEndChatButton: {
+      type: Boolean,
+      default: () => false
+    },
+    showDownloadButton: {
       type: Boolean,
       default: () => false
     },

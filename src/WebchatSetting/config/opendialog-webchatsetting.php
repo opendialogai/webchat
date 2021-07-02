@@ -134,6 +134,24 @@ return [
         ],
         WebchatSetting::SHOW_RESTART_BUTTON => [
             WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
+            WebchatSetting::SECTION => 'General Settings',
+            WebchatSetting::SUBSECTION => 'Chatbot Controls',
+            WebchatSetting::DISPLAY_NAME => 'Show Restart Button',
+            WebchatSetting::DESCRIPTION => 'Whether to show the restart button in the chatbot header',
+        ],
+        WebchatSetting::SHOW_END_CHAT_BUTON => [
+            WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
+            WebchatSetting::SECTION => 'General Settings',
+            WebchatSetting::SUBSECTION => 'Chatbot Controls',
+            WebchatSetting::DISPLAY_NAME => 'Show Chat End Button',
+            WebchatSetting::DESCRIPTION => 'Whether to show name the Chat End button in the chatbot footer',
+        ],
+        WebchatSetting::SHOW_DOWNLOAD_BUTON => [
+            WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
+            WebchatSetting::SECTION => 'General Settings',
+            WebchatSetting::SUBSECTION => 'Chatbot Controls',
+            WebchatSetting::DISPLAY_NAME => 'Show Download Button',
+            WebchatSetting::DESCRIPTION => 'Whether to show name the download button in the chatbot header',
         ],
         WebchatSetting::SHOW_HEADER_CLOSE_BUTTON => [
             WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
@@ -149,12 +167,25 @@ return [
         ],
         WebchatSetting::NEW_USER_START_MINIMIZED => [
             WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
+            WebchatSetting::SECTION => 'General Settings',
+            WebchatSetting::SUBSECTION => 'Start Options',
+            WebchatSetting::DISPLAY_NAME => 'Start Minimized For New Users',
+            WebchatSetting::DESCRIPTION => 'Whether the chatbot starts minimized for new users we\' never seen before',
         ],
         WebchatSetting::RETURNING_USER_START_MINIMIZED => [
             WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
+            WebchatSetting::SECTION => 'General Settings',
+            WebchatSetting::SUBSECTION => 'Start Options',
+            WebchatSetting::DISPLAY_NAME => 'Start Minimized For Returning Users',
+            WebchatSetting::DESCRIPTION =>
+                'Whether the chatbot starts minimized for users we\'ve seen before but aren\'t in a conversation',
         ],
         WebchatSetting::ONGOING_USER_START_MINIMIZED => [
             WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
+            WebchatSetting::SECTION => 'General Settings',
+            WebchatSetting::SUBSECTION => 'Start Options',
+            WebchatSetting::DISPLAY_NAME => 'Start Minimized For Ongoing Users',
+            WebchatSetting::DESCRIPTION => 'Whether the chatbot starts minimized for users who are mid-conversation',
         ],
         WebchatSetting::SCROLL_TO_FIRST_NEW_MESSAGE => [
             WebchatSetting::TYPE => WebchatSetting::BOOLEAN,
