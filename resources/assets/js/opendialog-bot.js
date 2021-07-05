@@ -67,7 +67,9 @@ const defaultBootstrapFunctions = {
     ifrm.style.width = '130px';
     ifrm.frameBorder = '0';
 
-    window.document.body.appendChild(ifrm);
+    const el = window.openDialogSettings.parentEl ? document.querySelector(window.openDialogSettings.parentEl) : window.document.body
+
+    el.appendChild(ifrm);
 
     ifrm.contentWindow.openDialogWebchat = window.openDialogWebchat;
 

@@ -65,9 +65,10 @@ export default {
     height: 53px;
     width: 53px;
     object-fit: contain;
+    object-position: center center;
+    border-radius: 100%;
 
     @media screen and (min-width: 900px) {
-      border-radius: 0;
       width: 80px;
       height: 80px;
     }

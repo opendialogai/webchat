@@ -49,6 +49,7 @@
           <div v-else class="od-header-nav__restart-button"></div>
 
           <div
+            v-if="showDownloadButton"
             class="od-header-nav__download-button"
             @click.stop="onDownload"
           >
@@ -124,6 +125,10 @@ export default {
       required: true
     },
     showRestartButton: {
+      type: Boolean,
+      default: () => false
+    },
+    showDownloadButton: {
       type: Boolean,
       default: () => false
     },
@@ -314,10 +319,10 @@ export default {
 
     .od-header-nav__branding {
       width: 100%;
-      order: 2;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: space-evenly;
 
       * + * {
         margin-top: 10px;
@@ -348,7 +353,10 @@ export default {
       }
 
       img {
+        width: 100%;
+        height: 100%;
         object-fit: contain;
+        object-position: left center;
       }
     }
 

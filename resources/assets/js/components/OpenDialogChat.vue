@@ -95,6 +95,8 @@
         :restart-button-callback="restartButtonCallback"
         :show-expand-button="false"
         :show-restart-button="showRestartButton"
+        :show-end-chat-button="showEndChatButton"
+        :show-download-button="showDownloadButton"
         :use-bot-avatar="useBotAvatar"
         :use-human-avatar="useHumanAvatar"
         :use-bot-name="useBotName"
@@ -180,6 +182,8 @@ export default {
       settingsInitialised: false,
       showExpandButton: true,
       showRestartButton: false,
+      showEndChatButton: false,
+      showDownloadButton: false,
       showTabs: false,
       timezoneInitialised: false,
       chatBotCssPath: null,
@@ -614,6 +618,14 @@ export default {
 
         if (general.showRestartButton) {
           this.showRestartButton = general.showRestartButton;
+        }
+
+        if (general.showEndChatButton) {
+          this.showEndChatButton = general.showEndChatButton;
+        }
+
+        if (general.showDownloadButton) {
+          this.showDownloadButton = general.showDownloadButton;
         }
 
         if (general.restartButtonCallback) {

@@ -21,6 +21,8 @@
       :showExpandButton="showExpandButton"
       :placeholder="placeholder"
       :showRestartButton="showRestartButton"
+      :showEndChatButton="showEndChatButton"
+      :showDownloadButton="showDownloadButton"
       :showTypingIndicator="showTypingIndicator"
       :showLongTextInput="showLongTextInput"
       :showFullPageFormInput="showFullPageFormInput"
@@ -112,6 +114,14 @@ export default {
       default: 'Enter your message'
     },
     showRestartButton: {
+      type: Boolean,
+      default: () => false
+    },
+    showEndChatButton: {
+      type: Boolean,
+      default: () => false
+    },
+    showDownloadButton: {
       type: Boolean,
       default: () => false
     },
