@@ -49,6 +49,7 @@
           <div v-else class="od-header-nav__restart-button"></div>
 
           <div
+            v-if="showDownloadButton"
             class="od-header-nav__download-button"
             @click.stop="onDownload"
           >
@@ -124,6 +125,10 @@ export default {
       required: true
     },
     showRestartButton: {
+      type: Boolean,
+      default: () => false
+    },
+    showDownloadButton: {
       type: Boolean,
       default: () => false
     },
