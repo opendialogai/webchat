@@ -80,10 +80,10 @@
 </template>
 
 <script>
-import axios from "axios";
-import chatService from "../services/ChatService";
-import SessionStorageMixin from "../mixins/SessionStorageMixin";
-import {mapState} from 'vuex'
+import axios from 'axios';
+import chatService from '../services/ChatService';
+import SessionStorageMixin from '../mixins/SessionStorageMixin';
+import { mapState } from 'vuex';
 
 const moment = require("moment-timezone");
 
@@ -657,6 +657,7 @@ export default {
           type: 'trigger',
           author: 'me',
           callback_id: this.restartButtonCallback,
+          escalating: true,
           data: {},
         }).then(() => {
           setTimeout(() => {

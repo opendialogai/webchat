@@ -81,9 +81,9 @@
 
 
 <script>
-import {mapState} from 'vuex';
-import ExternalButtons from "./ExternalButtons.vue";
-import EndChatButton from "./EndChatButton";
+import { mapState } from 'vuex';
+import ExternalButtons from './ExternalButtons.vue';
+import EndChatButton from './EndChatButton';
 import Autocomplete from '../messages/Autocomplete';
 import Datepicker from '../messages/Datepicker';
 import moment from 'moment';
@@ -270,7 +270,8 @@ export default {
         this.$parent.$parent.$parent.sendMessage({
           type: "button_response",
           author: "me",
-          callback_id: "intent.app.end_chat",
+          callback_id: "intent.core.EndChat",
+          escalating: true,
           data: {
             text: messageText,
             value: ''
