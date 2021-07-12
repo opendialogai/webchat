@@ -102,7 +102,8 @@ return [
             WebchatSetting::DESCRIPTION => 'CSS for the full-page chatbot',
             WebchatSetting::TYPE => WebchatSetting::STRING,
             WebchatSetting::SECTION => "Custom CSS",
-            WebchatSetting::SUBSECTION => 'CSS for full-page Chatbot'
+            WebchatSetting::SUBSECTION => 'CSS for full-page Chatbot',
+            WebchatSetting::DISPLAY => false
         ],
 
         WebchatSetting::PAGE_CSS_PATH => [
@@ -299,7 +300,7 @@ return [
         ],
         WebchatSetting::USER_INPUT_TEXT => [
             WebchatSetting::TYPE => WebchatSetting::COLOUR,
-            WebchatSetting::DISPLAY_NAME => 'Background Colour',
+            WebchatSetting::DISPLAY_NAME => 'Text Colour',
             WebchatSetting::DESCRIPTION => '',
             WebchatSetting::SECTION => "Layout Settings",
             WebchatSetting::SUBSECTION => 'User Input Field',
