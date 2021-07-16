@@ -74,6 +74,7 @@
         "vue-linkify": "^1.0.1",
         "vue-long-click": "0.0.4",
         "vue-plain-slider": "^1.1.1",
+        "vue-sanitize": "^0.2.1",
         "vue-select": "^3.10.8",
         "vue-uuid": "^1.1.1",
         "vue2-animate": "^2.1.4",

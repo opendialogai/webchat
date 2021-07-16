@@ -39,6 +39,17 @@ window.Vue.use(BootstrapVue);
 window.Vue.use(VueJsCookie);
 window.Vue.use(PerfectScrollbar)
 
+import VueSanitize from "vue-sanitize";
+let defaultOptions = {
+  allowedTags: ['a'],
+  allowedAttributes: {
+    'a': [ 'href', 'target', 'class']
+  }
+};
+window.Vue.use(VueSanitize, defaultOptions)
+window.Vue.filter('sanitize', value => {
+  return window.Vue.prototype.$sanitize(value)
+})
 window.Vue.prototype.$chat = {
     _setDynamicContainer: function(dynamicContainer) {
         Plugin.dynamicContainer = dynamicContainer
