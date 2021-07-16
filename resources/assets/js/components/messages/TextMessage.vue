@@ -46,9 +46,6 @@ export default {
           this.onLinkClick(e.target.offsetParent.href, e.target.offsetParent.textContent);
       }
     },
-    sanitize(value) {
-      return this.$sanitize(value)
-    }
   },
   mounted() {
     if (this.data.animate) {
@@ -91,9 +88,6 @@ export default {
         this.$refs.message.style.height = null;
       });
     }
-  },
-  filters: {
-
   }
 };
 </script>
