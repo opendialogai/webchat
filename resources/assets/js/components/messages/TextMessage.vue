@@ -11,7 +11,9 @@
     }]"
     v-linkified:options="{ format: function (value, type) { return '<span>' + value + '</span>'; } }"
   >
-    <span class="fade-enter-active">{{ data.text }}</span>
+
+    <span class="fade-enter-active" v-html="$options.filters.sanitize(data.text)" v-if="this.author==='them'"/>
+    <span class="fade-enter-active" v-else>{{ data.text }}</span>
       <p v-if="data.meta" class="sc-message--meta" >{{data.meta}}</p>
   </div>
 </template>
@@ -43,9 +45,8 @@ export default {
       } else if (e.target.offsetParent.tagName === 'A') {
           this.onLinkClick(e.target.offsetParent.href, e.target.offsetParent.textContent);
       }
-    }
+    },
   },
-
   mounted() {
     if (this.data.animate) {
       const w = this.$refs.message.offsetWidth + 1 + "px";
