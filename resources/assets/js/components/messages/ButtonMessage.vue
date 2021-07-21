@@ -9,7 +9,7 @@
     }]"
   >
     <div v-if="data.text" class="mt reap od-message-button__text">
-      <span v-linkified>{{ data.text }}</span>
+      <span v-linkified v-html="$options.filters.sanitize(data.text)"/>
       <template v-if="data.buttons.length && !data.external">
         <div class="od-message-button__inline-buttons">
           <template v-for="(button, idx) in data.buttons">
